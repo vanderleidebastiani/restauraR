@@ -49,5 +49,69 @@ po/*~
 rsconnect/
 .Rproj.user
 
-# macOS files
+# macOS - General
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS - Icon must end with two \r
+Icon
+
+# macOS - Thumbnails
+._*
+
+# macOS - Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# macOS - Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows - thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Windows - Dump file
+*.stackdump
+
+# Windows - Folder config file
+[Dd]esktop.ini
+
+# Windows - Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows - Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows - Windows shortcuts
+*.lnk
+
+# Linux
+*~
+
+# Linux - temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# Linux - KDE directory preferences
+.directory
+
+# Linux - Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# Linux - .nfs files are created when an open file is removed but is still being accessed
+.nfs*
