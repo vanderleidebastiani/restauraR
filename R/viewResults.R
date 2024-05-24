@@ -24,17 +24,13 @@
 #' @examples
 #' @export
 viewResults <- function(x, y, sim,
-						cols = c('grey', 'black', brewer.pal(3, 'Paired')),
+						cols = c('grey', 'black', '#A6CEE3', '#1F78B4', '#B2DF8A'),
 						xlab, ylab,
 						legend,
 						xlim = range(sim$sim_communities$parameters[,x]),
 						ylim = range(sim$sim_communities$parameters[,y]),
 						hide_notsel = FALSE, hide_una = FALSE,
 						hide_ref = FALSE, hide_sel = FALSE){
-	if(!require(RColorBrewer)){
-		stop("Package RColorBrewer not found")
-	}
-	
 	all <- sim$sim_communities$parameters
 	if(!hide_ref){
 		ref <- sim$ref_communities$parameters

@@ -2,7 +2,7 @@
 #' @description Calculate functional dissimilarity between simulated communities and reference sites
 #' @details
 #' @encoding UTF-8
-#' @importFrom
+#' @importFrom adiv discomQE
 #' @aliases
 #' @param sim data frame or matrix with species proportions in simulated communities. Species as columns and simulated communities as rows.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
@@ -34,7 +34,7 @@ disCalculation <- function(sim, trait, dis, ref){
 			setTxtProgressBar(pb, j)
 			j <<- j +1
 			comm <- rbind(r, p)
-			DISSIM_j <- discomQE(comm, dis, formula = "QE")
+			DISSIM_j <- adiv::discomQE(comm, dis, formula = "QE")
 			return(DISSIM_j)
 		})
 		close(pb)

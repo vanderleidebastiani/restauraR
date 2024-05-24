@@ -5,6 +5,11 @@ Version: 0.0.01
 Date: 2024-05-18
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
+Imports:
+    Select,
+    fundiversity,
+    adiv
 Description: More about what it does (maybe more than one line).
 License: What license is it under?
+Encoding: UTF-8
 RoxygenNote: 7.3.1

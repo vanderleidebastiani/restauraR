@@ -2,7 +2,8 @@
 #' @description generates simulated communities and calculate its parameters.
 #' @details
 #' @encoding UTF-8
-#' @importFrom
+#' @importFrom Select selectSpecies
+#' @importFrom fundiversity fd_raoq
 #' @aliases
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava vector indicating availability of species (1 or 0)
@@ -22,7 +23,7 @@
 #' @keywords
 #' @examples
 #' @export
-comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi = 1){
+comSimulation <- function(trait, ava, it, rich, cwm, rao, cost, dens, ref, phi = 1){
 	# OUTPUTS ###############################################
 	simComm <- list(composition = c(), parameters = c())
 	refComm <- list(composition = c(), parameters = c())
@@ -52,7 +53,7 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 				selSpp_i <- c()
 				for(j in cons_i){
 					names(j) <- colnames(t2c_i)
-					invisible(capture.output(selSpp_j <- selectSpecies(t2c_i, j, t2d, phi = phi) ) ) 
+					invisible(capture.output(selSpp_j <- Select::selectSpecies(t2c_i, j, t2d, phi = phi) ) ) 
 					selSpp_i <- cbind(selSpp_i, selSpp_j$prob)
 				}
 				selSpp[[i]] <- selSpp_i 
@@ -67,7 +68,7 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 			}
 			propMatrixSelSpp <- round(t(propMatrixSelSpp),3)
 		} else {
-			invisible( capture.output( selSpp <- selectSpecies(t2d = t2d, phi = phi)$prob ))
+			invisible( capture.output( selSpp <- Select::selectSpecies(t2d = t2d, phi = phi)$prob ))
 			propMatrixSelSpp <- selSpp
 			sppMax <- c()
 			propMin <- 0.1
@@ -76,7 +77,7 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 				propMin <- 0.5*propMin
 			}
 		}
-		
+	  
 		# Find distant species that are available: <<<<<<<<<<<<<<
 		avaLog <- as.logical(ava)
 		speciesAva <- species[avaLog]
@@ -99,7 +100,7 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 				selSppAva_i <- c()
 				for(j in cons_i){
 					names(j) <- colnames(t2c_i)
-					invisible(capture.output(selSppAva_j <- selectSpecies(t2c_i, j, t2d, phi = phi) ))
+					invisible(capture.output(selSppAva_j <- Select::selectSpecies(t2c_i, j, t2d, phi = phi) ))
 					selSppAva_i <- cbind(selSppAva_i, selSppAva_j$prob)
 				}
 				selSppAva[[i]] <- selSppAva_i 
@@ -114,7 +115,7 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 			}
 			propMatrixSelSppAva <- round(t(propMatrixSelSppAva),3)
 		} else {
-			invisible(capture.output(selSppAva <- selectSpecies(t2d = t2d, phi = phi)$prob ))
+			invisible(capture.output(selSppAva <- Select::selectSpecies(t2d = t2d, phi = phi)$prob ))
 			propMatrixSelSppAva <- selSpp
 			sppMaxAva <- c() 
 			propMin <- 0.1 
@@ -123,7 +124,8 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 				propMin <- 0.5*propMin
 			}
 		}
-		
+		propMatrixSelSpp
+		propMatrixSelSppAva
 		# number of iterations for simulations: <<<<<<<<<<<<<<<<<
 		itMax <- round(0.25*it)
 		itMaxAva <- round(0.25*it)
@@ -163,8 +165,8 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 		sppMaxAvaPos <- species %in% sppMaxAva
 		for(i in 1:itMaxAva){
 			nsp_i <-  resample(rich[1]:nsp, 1)
-			ocor = sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
-			abund = rlnorm(vLen)
+			ocor <- sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
+			abund <- rlnorm(vLen)
 			abund <- abund * ocor
 			prop <- abund/sum(abund)
 			propMatrixSelSppAva2[i,sppMaxAvaPos] <- prop
@@ -191,8 +193,8 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 	}
 	for(i in 1:itAva){
 		nsp_i <-  resample(c(rich[1]:nsp), 1)
-		ocor = sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
-		abund = rlnorm(vLen)
+		ocor <- sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
+		abund <- rlnorm(vLen)
 		abund <- abund * ocor
 		prop <- abund/sum(abund)
 		propMatrixAva[i,avaLog] <- prop
@@ -204,8 +206,8 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 							 ncol=length(species), nrow=itAll)
 	for(i in 1:itAll){
 		nsp_i <-  resample(c(rich[1]:rich[2]), 1)
-		ocor = sample( c(rep(1, nsp_i), rep(0, nsp - nsp_i)) )
-		abund = abund = rlnorm(nsp)
+		ocor <- sample( c(rep(1, nsp_i), rep(0, nsp - nsp_i)) )
+		abund <- rlnorm(nsp)
 		abund <- abund * ocor
 		prop <- abund/sum(abund)
 		propMatrixPool[i,] <- prop
@@ -224,13 +226,6 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 	simComm$composition <- propMatrix
 	
 	# CALCULATE PARAMETERS ##################################
-	if(!require(adiv)){
-		stop("Package adiv not found")
-	}
-	if(!require(fundiversity)){
-		stop("Package fundiversity not found")
-	}
-	
 	out <- NULL
 	
 	if(!missing(ref)){
@@ -263,9 +258,9 @@ comSimulation <- function(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi 
 	if(!missing(rao)){
 		if(inherits(rao, 'character')){
 			traitSub <- scale(trait[,rao, drop=FALSE] )
-			RAO <- fd_raoq(traitSub, x)$Q
+			RAO <- fundiversity::fd_raoq(traitSub, x)$Q
 		} else if(inherits(rao, 'dist')){
-			RAO <- fd_raoq(sp_com = x, dist_matrix = rao)$Q
+			RAO <- fundiversity::fd_raoq(sp_com = x, dist_matrix = rao)$Q
 		} else{
 			message('** RAO skipped')
 		}

@@ -5,9 +5,11 @@
 \alias{comSimulation}
 \title{function to generate simulated communities}
 \usage{
-comSimulation(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi = 1)
+comSimulation(trait, ava, it, rich, cwm, rao, cost, dens, ref, phi = 1)
 }
 \arguments{
+\item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
+
 \item{ava}{vector indicating availability of species (1 or 0)}
 
 \item{it}{number of iterations (communities)}
@@ -25,8 +27,6 @@ comSimulation(traits, ava, it, rich, cwm, rao, cost, dens, ref, phi = 1)
 \item{ref}{matrix with proportion of species in the reference sites. NAs not accepted.}
 
 \item{phi}{phi}
-
-\item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
 }
 \description{
 generates simulated communities and calculate its parameters.

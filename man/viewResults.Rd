@@ -9,7 +9,7 @@ viewResults(
   x,
   y,
   sim,
-  cols = c("grey", "black", brewer.pal(3, "Paired")),
+  cols = c("grey", "black", "#A6CEE3", "#1F78B4", "#B2DF8A"),
   xlab,
   ylab,
   legend,
