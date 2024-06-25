@@ -127,6 +127,7 @@ comSimulation2 <- function(trait, ava, it, rich, cwm, cwv, rao, cost, dens, ref,
         propMin <- 0.5*propMin
       }
     }
+    # IGUAL
     
     # number of iterations for simulations: <<<<<<<<<<<<<<<<<
     itMax <- round(0.25*it)

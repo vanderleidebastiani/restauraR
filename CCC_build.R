@@ -5,6 +5,8 @@ setwd("CCC")
 
 
 require(CCC)
+data("dados")
+
 
 setwd("..")
 system("R CMD build CCC")

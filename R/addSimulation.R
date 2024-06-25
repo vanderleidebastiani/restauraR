@@ -125,7 +125,7 @@ addSimulation <- function(trait, ava, und, it, rich, cwm, cwv, rao, cost, dens,
         propMin <- 0.5*propMin
       }
     }
-    
+    # IGUAL 
     # number of iterations for simulations: <<<<<<<<<<<<<<<<<
     itMax <- round(0.25*it)
     itMaxAva <- round(0.25*it)
@@ -234,6 +234,8 @@ addSimulation <- function(trait, ava, und, it, rich, cwm, cwv, rao, cost, dens,
   }
   
   row.names(propMatrix) <- sprintf("sim%d",seq(1:nrow(propMatrix)))
+  
+  # ATE AQUI NA FUNCAO propMatrix ----
   
   # TRANSFORM PROPORTIONS AND SUM TO REST #################
   propMatrixAdd <- propMatrix * max_add #transforma matriz
