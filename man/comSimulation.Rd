@@ -16,7 +16,8 @@ comSimulation(
   rest,
   max_add,
   min_p,
-  phi = 1
+  phi = 1,
+  prefix = NULL
 )
 }
 \description{

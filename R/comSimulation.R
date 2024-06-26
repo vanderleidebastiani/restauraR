@@ -15,7 +15,7 @@
 #' @keywords
 #' @examples
 #' @export
-comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, min_p, phi = 1){
+comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, min_p, phi = 1, prefix = NULL){
   RES <- vector("list")
   RES$sim$parameters$trait <- trait
   RES$sim$parameters$ava <- ava
@@ -27,6 +27,8 @@ comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, mi
   # 						 rich = rich, cwm = cwm, cwv = cwv, rao = rao, phi = phi)
   # ATE AQUI NA FUNCAO propMatrix ----
   if(!missing(rest)){
+    rowNameProMatrix <- rownames(propMatrix)
+    rowNameRest <- rownames(rest)
     template1 <- propMatrix[0,]
     template2 <- rest[0,]
     template0 <- data.table::rbindlist(list(as.data.table(template1), as.data.table(template2)), use.names = TRUE, fill = TRUE)
@@ -34,6 +36,8 @@ comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, mi
     rest <- data.table::rbindlist(list(template0, as.data.table(rest)), use.names = TRUE, fill = TRUE)
     propMatrix <- as.matrix(propMatrix)
     rest <- as.matrix(rest)
+    rownames(propMatrix) <- rowNameProMatrix
+    rownames(rest) <- rowNameRest
     propMatrix[is.na(propMatrix)] <- 0
     rest[is.na(rest)] <- 0
     # TRANSFORM PROPORTIONS AND SUM TO REST #################
@@ -46,7 +50,7 @@ comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, mi
       # pos <- is.na(propMatrixAdd[,1])
       # propMatrixAdd <- propMatrixAdd[!pos,]
     }
-    propMatrixList <- apply(rest, 1, FUN=function(x){ #para cada comun restaurada
+    propMatrixList <- apply(rest, 1, FUN = function(x){ #para cada comun restaurada
       propMatrix_x <- apply(propMatrixAdd, 1, FUN = function(y){ #para cada comun simulada
         x_y <- x + y #restaurada + simulada
         return(x_y)
@@ -56,7 +60,11 @@ comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, mi
       return(propMatrix_x)
     }, simplify = FALSE)
     propMatrixTab <- do.call(rbind, propMatrixList)
-  } else{ propMatrixTab <- propMatrix}
+    rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
+  } else { 
+    propMatrixTab <- propMatrix
+  }
+  rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   RES$sim$composition <- propMatrixTab
   return(RES)
 }

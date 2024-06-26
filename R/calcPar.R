@@ -3,7 +3,7 @@ calcPar <- function(x){
   # und, cost, dens,
   # stan, ref, rest
   
-  
+  # x <- RES0
   # ATE AQUI NA FUNCAO comSimulation ----
   # CALCULATE PARAMETERS ##################################
   # TEMP
@@ -35,7 +35,7 @@ calcPar <- function(x){
   if(!is.null(cwm)){
     if(inherits(cwm, 'character')){
       traitSub <- trait[,cwm, drop=FALSE]
-      CWM <- matrix.t(composition, traitSub, scale = FALSE)$matrix.T
+      CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
       out <- cbind(out, CWM)
     }
   }

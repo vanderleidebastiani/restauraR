@@ -300,7 +300,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi){
 
 # CMV
 FCWV <- function(x, traitSub){
-  temp <- matrix.t(x, traitSub, scale = FALSE)
+  temp <- SYNCSA::matrix.t(x, traitSub, scale = FALSE)
   MW <- temp$matrix.w
   MCWM <- temp$matrix.T
   MCWV <- matrix(NA, nrow(MW), ncol(MCWM))

@@ -11,12 +11,14 @@ RES0 <- CCC::comSimulation(dados$trait,
                            rich = dados$rich, 
                            cwm = dados$cwm, 
                            rao = dados$cwm,
-                           phi = 1)
+                           phi = 1,
+                           prefix = "New")
 RES0
 RES0$sim$parameters
 RES0$sim$composition 
 RES0$sim$composition %>% dim
 
+dados$rest %>% dim
 RES1 <- CCC::comSimulation(trait = dados$trait[80:120,],
                            ava = dados$ava,
                            und = dados$und,
@@ -27,8 +29,14 @@ RES1 <- CCC::comSimulation(trait = dados$trait[80:120,],
                            rest = dados$rest,
                            max_add = dados$max_add, 
                            min_p = dados$min_p,
-                           phi = 1)
+                           phi = 1, 
+                           prefix = "Ongoing")
 RES1
 RES1$sim$parameters
-RES0$sim$composition 
-RES0$sim$composition %>% dim
+RES1$sim$composition
+RES1$sim$composition %>% dim
+
+
+allSim0 <- CCC::mergeSimulations(RES0, RES1)
+allSim1 <- CCC::mergeSimulations(RES0, RES1, ref = dados$ref[,1:22])
+
