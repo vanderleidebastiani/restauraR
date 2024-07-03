@@ -13,22 +13,25 @@
 #' @keywords
 #' @examples
 #' @export
-mergeSimulations <- function(..., ref = NULL) {
+mergeSimulations <- function(...) {
+  # ref = NULL
   RES <- vector("list")
-  if(is.null(ref)){
-    argg <- list(...)
-  } else{
-    argg <- c(as.list(environment()), list(...))
-  }
-  f1 <- function(x) {
-    if(inherits(x, "list")) {
-      res <- x$sim$composition
-    } else {
-      res <- x
-    }
-    return(res)
-  }
-  argg <- lapply(argg, f1)
+  # if(is.null(ref)){
+  #   argg <- list(...)
+  # } else{
+  #   argg <- c(as.list(environment()), list(...))
+  # }
+  # f1 <- function(x) {
+  #   if(inherits(x, "list")) {
+  #     res <- x$sim$composition
+  #   } else {
+  #     res <- x/rowSums(x) # Force reference composition to proportions
+  #     # res <- x
+  #   }
+  #   return(res)
+  # }
+  argg <- list(...)
+  argg <- lapply(argg, function(x) x$sim$composition)
   argg <- lapply(argg, as.data.table, keep.rownames = TRUE)
   comp <- data.table::rbindlist(argg, use.names = TRUE, fill = TRUE)
   resRowNames <- comp$rn

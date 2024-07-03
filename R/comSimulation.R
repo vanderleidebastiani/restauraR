@@ -66,5 +66,8 @@ comSimulation <- function(trait, ava, und, it, rich, cwm, rao, rest, max_add, mi
   }
   rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   RES$sim$composition <- propMatrixTab
+  
+  # Composicao pode ter linhas e/ou colunas com tudo zero. Remover?
+  
   return(RES)
 }

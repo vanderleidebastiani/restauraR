@@ -5,14 +5,14 @@
 \alias{comSelection}
 \title{function to select communities}
 \usage{
-comSelection(param, comp, tests)
+comSelection(x, tests, where = "global")
 }
 \arguments{
+\item{tests}{list with tests to be performed}
+
 \item{param}{data.frame with parameters of simulated communities}
 
 \item{comp}{data.frame with compositions of simulated communities}
-
-\item{tests}{list with tests to be performed}
 }
 \description{
 select simulated communities based on tests provided and add information to x

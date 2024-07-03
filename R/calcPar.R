@@ -1,38 +1,100 @@
-calcPar <- function(x){
+calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, supplementary = NULL){
   
-  # und, cost, dens,
+  # cost, dens,
   # stan, ref, rest
   
   # x <- RES0
   # ATE AQUI NA FUNCAO comSimulation ----
   # CALCULATE PARAMETERS ##################################
   # TEMP
-  
   composition <- x$sim$composition
-  trait <- x$sim$parameters$trait
-  ava <- x$sim$parameters$ava
-  cwm <- x$sim$parameters$cwm
-  rao <- x$sim$parameters$rao
-  cwv <- x$sim$parameters$cwv
-  cost <- x$sim$parameters$cost
+  nSim <- nrow(composition)
+  if(!is.null(ref) && is.null(supplementary)){
+    rowNameComposition <- rownames(composition)
+    rowNameRef <- rownames(ref)
+    nRef <- nrow(ref)
+    template1 <- composition[0,]
+    template2 <- ref[0,]
+    template0 <- data.table::rbindlist(list(as.data.table(template1), as.data.table(template2)), use.names = TRUE, fill = TRUE)
+    composition <- data.table::rbindlist(list(template0, as.data.table(composition)), use.names = TRUE, fill = TRUE)
+    ref <- data.table::rbindlist(list(template0, as.data.table(ref)), use.names = TRUE, fill = TRUE)
+    composition <- as.matrix(composition)
+    ref <- as.matrix(ref)
+    rownames(composition) <- rowNameComposition
+    rownames(ref) <- rowNameRef
+    composition[is.na(composition)] <- 0
+    ref[is.na(ref)] <- 0
+    composition <- rbind(ref, composition)
+    x$ref$composition <- ref
+  }
+  if(!is.null(supplementary) && is.null(ref)){
+    rowNameComposition <- rownames(composition)
+    rowNameSupple <- rownames(supplementary)
+    nSupple <- nrow(supplementary)
+    template1 <- composition[0,]
+    template2 <- supplementary[0,]
+    template0 <- data.table::rbindlist(list(as.data.table(template1), as.data.table(template2)), use.names = TRUE, fill = TRUE)
+    composition <- data.table::rbindlist(list(template0, as.data.table(composition)), use.names = TRUE, fill = TRUE)
+    supplementary <- data.table::rbindlist(list(template0, as.data.table(supplementary)), use.names = TRUE, fill = TRUE)
+    composition <- as.matrix(composition)
+    supplementary <- as.matrix(supplementary)
+    rownames(composition) <- rowNameComposition
+    rownames(supplementary) <- rowNameSupple
+    composition[is.na(composition)] <- 0
+    supplementary[is.na(supplementary)] <- 0
+    composition <- rbind(composition, supplementary)
+    x$supplementary$composition <- supplementary
+  }
+  if(!is.null(ref) && !is.null(supplementary)){
+    rowNameComposition <- rownames(composition)
+    rowNameRef <- rownames(ref)
+    rowNameSupple <- rownames(supplementary)
+    nRef <- nrow(ref)
+    nSupple <- nrow(supplementary)
+    template0 <- list(composition[0,], ref[0,], supplementary[0,])
+    template0 <- lapply(template0, as.data.table, keep.rownames = TRUE)
+    template0 <- data.table::rbindlist(template0, use.names = TRUE, fill = TRUE)
+    composition <- data.table::rbindlist(list(template0, as.data.table(composition)), use.names = TRUE, fill = TRUE)
+    ref <- data.table::rbindlist(list(template0, as.data.table(ref)), use.names = TRUE, fill = TRUE)
+    supplementary <- data.table::rbindlist(list(template0, as.data.table(supplementary)), use.names = TRUE, fill = TRUE)
+    composition <- as.matrix(composition)
+    ref <- as.matrix(ref)
+    supplementary <- as.matrix(supplementary)
+    rownames(composition) <- rowNameComposition
+    rownames(ref) <- rowNameRef
+    rownames(supplementary) <- rowNameSupple
+    composition[is.na(composition)] <- 0
+    ref[is.na(ref)] <- 0
+    supplementary[is.na(supplementary)] <- 0
+    composition <- rbind(ref, composition, supplementary)
+    x$ref$composition <- ref
+    x$supplementary$composition <- supplementary
+  }
+  # composition <- x$sim$composition
+  # trait <- x$sim$parameters$trait
+  # ava <- x$sim$parameters$ava
+  # cwm <- x$sim$parameters$cwm
+  # rao <- x$sim$parameters$rao
+  # cwv <- x$sim$parameters$cwv
+  # cost <- x$sim$parameters$cost
   
   out <- NULL
   
   #rest <- rest/rowSums(rest)
   # x <- rbind(propMatrixTab, rest)
   # 
-  # if(!missing(ref)){
-  #   ref <- ref/rowSums(ref)
-  #   x <- rbind(x, ref)
-  # } else {x <- x}
   
-  UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(trait[,ava])] > 0) )
-  out <- cbind(out, unavailable = UNA)
+  if(!missing(ava)){
+    if(inherits(ava, 'character')){
+      UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(trait[,ava])] > 0) )
+      out <- cbind(out, unavailable = UNA)
+    }
+  }
   
   S <- apply(composition, 1, FUN = function(a) sum(a > 0))
   out <- cbind(out, richness = S)
   
-  if(!is.null(cwm)){
+  if(!missing(cwm)){
     if(inherits(cwm, 'character')){
       traitSub <- trait[,cwm, drop=FALSE]
       CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
@@ -40,7 +102,7 @@ calcPar <- function(x){
     }
   }
   
-  if(!is.null(cwv)){
+  if(!missing(cwv)){
     if(inherits(cwv, 'character')){
       traitSub <- trait[,cwv, drop=FALSE]
       CWV <- FCWV(composition, traitSub)
@@ -48,7 +110,7 @@ calcPar <- function(x){
     }
   }
   
-  if(!is.null(rao)){
+  if(!missing(rao)){
     if(inherits(rao, 'character')){
       traitSub <- scale(trait[,rao, drop=FALSE] )
       RAO <- fundiversity::fd_raoq(traitSub, composition)$Q
@@ -60,18 +122,18 @@ calcPar <- function(x){
     # colnames(out)[colnames(out) == 'rao'] <- rao
   }
   
-  # if(!is.null(cost)){
-  #   COST <- apply(x, 1, FUN=function(p){
-  #     COST_i <- sum(p*cost*dens, na.rm = TRUE)
-  #     return(COST_i)
-  #   })
-  #   out <- cbind(out, cost = COST)
-  # }
-  # 
-  # if(!missing(stan)){
-  #   out[,stan] <- out[,stan,drop=F]/max(out[,stan,drop=F])
-  # } #$$$$$$$$$$$$$$$$$$$
-  # 
+  if(!missing(cost)){
+    COST <- apply(x, 1, FUN=function(p){
+      COST_i <- sum(p*cost*dens, na.rm = TRUE)
+      return(COST_i)
+    })
+    out <- cbind(out, cost = COST)
+  }
+  
+  if(!missing(stan)){
+    out[ , stan] <- out[ , stan, drop = FALSE]/max(out[ , stan, drop = FALSE])
+  } 
+  
   # if(!missing(ref)){
   #   f <- c(rep(row.names(rest),each = nrow(propMatrixList$X1) ), #posicao comunidades restauradas modificadas
   #          rep('restored', nrow(rest)), #posicao comunidades restauradas
@@ -105,6 +167,24 @@ calcPar <- function(x){
   # all(names(outList) == names(propMatrixList2))
   # 
   # out2 <- list(compositions = propMatrixList2, parameters = outList)
-  x$sim$results <- out
+  if(!is.null(ref) || !is.null(supplementary)){
+    if(!is.null(ref) && is.null(supplementary)){
+      x$ref$results <- out[seq.int(nRef),]
+      x$sim$results <- out[-1*seq.int(nRef),]
+    }
+    if(!is.null(supplementary) && is.null(ref)){
+      nTotal <- nrow(out)
+      x$sim$results <- out[seq.int(nTotal-nSupple),]
+      x$supplementary$results <- out[-1*seq.int(nTotal-nSupple),]
+    }
+    if(!is.null(ref) && !is.null(supplementary)){
+      nTotal <- nrow(out)
+      x$ref$results <- out[seq.int(nRef),]
+      x$sim$results <- out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],]
+      x$supplementary$results <- out[seq.int(nTotal)[(nRef+nSim+1):nTotal],]
+    }
+  } else {
+    x$sim$results <- out  
+  }
   return(x)
 }

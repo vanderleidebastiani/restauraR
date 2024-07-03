@@ -15,13 +15,22 @@
 #' @keywords
 #' @examples
 #' @export
-comSelection <- function(param, comp, tests){
-	xPar <- param
+comSelection <- function(x, tests, where = "global"){
+  # param, comp
+  if(where == "global"){
+    xPar <- x$sim$results
+    composition <- x$sim$composition
+  } else{
+    xPar <- x$selection$results
+    composition <- x$selection$composition
+  }
+	xPar <- as.data.frame(xPar) # Force to data.frame
 	completeString <- paste0('xPar', '$', tests)
 	testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
 	pos <- apply(testsEval, 1, all) 
 	selPar <- xPar[pos,] 
-	selCom <- comp[pos,]
+	# selCom <- comp[pos,]
+	selCom <- composition[pos,]
 	
 	#number of selected communities:
 	nSel <- apply(testsEval, 2, sum)
@@ -33,11 +42,13 @@ comSelection <- function(param, comp, tests){
 	trsh <- as.numeric(sapply(testsSplit, '[', 3))
 	names(trsh) <- sapply(testsSplit, '[', 1)
 	
-	outSel <- list(parameters = selPar,
-				   composition = selCom,
-				   N = nSel,
-				   thresholds = trsh)
-	
-	return(outSel)
-	
+	# outSel <- list(parameters = selPar,
+	# 			   composition = selCom,
+	# 			   N = nSel,
+	# 			   thresholds = trsh)
+	x$selection$results <- selPar
+	x$selection$composition <- selCom
+	x$selection$N <- nSel
+	x$selection$thresholds <- trsh
+	return(x)
 }

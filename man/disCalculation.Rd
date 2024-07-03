@@ -5,12 +5,12 @@
 \alias{disCalculation}
 \title{function to calculate functional dissimilarity}
 \usage{
-disCalculation(sim, trait, dis, ref)
+disCalculation(x, trait, where = "global")
 }
 \arguments{
-\item{sim}{data frame or matrix with species proportions in simulated communities. Species as columns and simulated communities as rows.}
-
 \item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
+
+\item{sim}{data frame or matrix with species proportions in simulated communities. Species as columns and simulated communities as rows.}
 
 \item{dis}{matrix of trait distances}
 

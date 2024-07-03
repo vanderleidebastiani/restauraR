@@ -16,21 +16,26 @@
 #' @keywords
 #' @examples
 #' @export
-disCalculation <- function(sim, trait, dis, ref){
+disCalculation <- function(x, trait, where = "global"){
+  if(where == "global"){
+    sim <- x$sim$composition
+  } else{
+    sim <- x$selection$composition
+  }
+  ref <- x$ref$composition
 	if(inherits(trait, 'data.frame') | inherits(trait, 'matrix')){
 		dis <- dist(scale(trait))
-		message('*** Calculating functional dissimilarity. This may take a while. ***')
 	} else if(inherits(trait, 'dist')){
 		dis <- trait
-		message('*** Calculating functional dissimilarity. This may take a while. ***')
 	}
+  message('*** Calculating functional dissimilarity. This may take a while. ***')
 	i = 0
-	DISSIM <- apply(ref, 1, FUN=function(r){
+	DISSIM <- apply(ref, 1, FUN = function(r){
 		i <<-  i+1 
 		message(paste('##### Reference site number: ',i, '#####') )
 		j = 1
 		pb <- txtProgressBar(min = 0, max = nrow(sim), style = 3)
-		DISSIM_i <- apply(sim, 1, FUN=function(p){ 
+		DISSIM_i <- apply(sim, 1, FUN = function(p){ 
 			setTxtProgressBar(pb, j)
 			j <<- j +1
 			comm <- rbind(r, p)
@@ -42,7 +47,13 @@ disCalculation <- function(sim, trait, dis, ref){
 	})
 	DISSIM <- apply(DISSIM, 1, mean)
 	DISSIM <- DISSIM/max(DISSIM)
-	
-	return(DISSIM)
-	
+	class(x$sim$results)
+	if(where == "global"){
+	  x$sim$results <- as.data.frame(x$sim$results)
+	  x$sim$results$dissim <- DISSIM
+	} else{
+	  x$selection$results <- as.data.frame(x$selection$results)
+	  x$selection$results$dissim <- DISSIM
+	}
+	return(x)
 }

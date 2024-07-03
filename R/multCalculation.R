@@ -16,6 +16,9 @@
 #' @examples
 #' @export
 multCalculation <- function(x, th, bel){
+  # x <- selSim$selection$results
+  # th <- apply(x[c(-1,-2)], 2, mean)
+  # bel <- 
   funs <- names(th) #functions
   if(!missing(bel)){
     th[bel] <- -th[bel]
@@ -37,7 +40,5 @@ multCalculation <- function(x, th, bel){
     return(x3)
     x2_nrow <- c(x2_nrow, nrow(x3))
   })
-  
   return(x2)
-  
 }
