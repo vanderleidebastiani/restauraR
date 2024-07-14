@@ -39,9 +39,9 @@ comSelection <- function(x, tests, where = "global"){
 	
 	#thresholds:
 	testsSplit <- strsplit(tests, ' ')
-	trsh <- as.numeric(sapply(testsSplit, '[', 3))
+	# trsh <- as.numeric(sapply(testsSplit, '[', 3))
+	trsh <- sapply(testsSplit, '[', 3)
 	names(trsh) <- sapply(testsSplit, '[', 1)
-	
 	# outSel <- list(parameters = selPar,
 	# 			   composition = selCom,
 	# 			   N = nSel,

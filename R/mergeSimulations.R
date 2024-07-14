@@ -30,8 +30,9 @@ mergeSimulations <- function(...) {
   #   }
   #   return(res)
   # }
-  argg <- list(...)
-  argg <- lapply(argg, function(x) x$sim$composition)
+  ARGS <- list(...)
+  # ARGS <- list(RES0, RES1)
+  argg <- lapply(ARGS, function(x) x$sim$composition)
   argg <- lapply(argg, as.data.table, keep.rownames = TRUE)
   comp <- data.table::rbindlist(argg, use.names = TRUE, fill = TRUE)
   resRowNames <- comp$rn
@@ -39,5 +40,15 @@ mergeSimulations <- function(...) {
   rownames(comp) <- resRowNames
   comp[is.na(comp)] <- 0
   RES$sim$composition <- comp
+  
+  
+  argg <- lapply(ARGS, function(x) x$sim$restGroup)
+  argg <- lapply(argg, as.data.table, keep.rownames = FALSE)
+  comp <- data.table::rbindlist(argg, use.names = TRUE, fill = TRUE)
+  # resRowNames <- comp$rn
+  # comp <- data.frame(comp)
+  # rownames(comp) <- resRowNames
+  RES$sim$restGroup <- data.frame(comp)
+  
   return(RES)
 }

@@ -1,9 +1,31 @@
+# x = RES1
+# trait = dados$trait
+# cwm = dados$cwm
+# rao = dados$cwm
+# cwv = dados$cwm
+# ava = dados$ava
+# ref = dados$ref[1:10,]
+# supplementary = dados$ref[11:19,]
+
+
+
+# x <- allSim
+# trait = dados$trait
+# cwm = dados$cwm
+# rao = dados$cwm
+# cwv = dados$cwm
+# ava = dados$ava
+# ref = dados$ref[1:10,]
+# supplementary = dados$ref[11:19,]
+
+
+
+
 calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, supplementary = NULL){
   
   # cost, dens,
   # stan, ref, rest
-  
-  # x <- RES0
+  # x <- RES1
   # ATE AQUI NA FUNCAO comSimulation ----
   # CALCULATE PARAMETERS ##################################
   # TEMP
@@ -96,7 +118,7 @@ calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, 
   
   if(!missing(cwm)){
     if(inherits(cwm, 'character')){
-      traitSub <- trait[,cwm, drop=FALSE]
+      traitSub <- trait[,cwm, drop = FALSE]
       CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
       out <- cbind(out, CWM)
     }
@@ -170,21 +192,45 @@ calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, 
   if(!is.null(ref) || !is.null(supplementary)){
     if(!is.null(ref) && is.null(supplementary)){
       x$ref$results <- out[seq.int(nRef),]
-      x$sim$results <- out[-1*seq.int(nRef),]
+      # x$sim$results <- out[-1*seq.int(nRef),]
+      # if(!is.null(x$sim$restName)){
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, restName = x$sim$restName, out[-1*seq.int(nRef),])  
+      # } else{
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, out[-1*seq.int(nRef),])  
+      # }
+      x$sim$results <- cbind.data.frame(x$sim$restGroup, out[-1*seq.int(nRef),])  
     }
     if(!is.null(supplementary) && is.null(ref)){
       nTotal <- nrow(out)
-      x$sim$results <- out[seq.int(nTotal-nSupple),]
+      # x$sim$results <- out[seq.int(nTotal-nSupple),]
+      # if(!is.null(x$sim$restName)){
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, restName = x$sim$restName, out[seq.int(nTotal-nSupple),])  
+      # } else{
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, out[seq.int(nTotal-nSupple),])  
+      # }
+      x$sim$results <- cbind.data.frame(x$sim$restGroup, out[seq.int(nTotal-nSupple),])  
       x$supplementary$results <- out[-1*seq.int(nTotal-nSupple),]
     }
     if(!is.null(ref) && !is.null(supplementary)){
       nTotal <- nrow(out)
       x$ref$results <- out[seq.int(nRef),]
-      x$sim$results <- out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],]
+      # x$sim$results <- out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],]
+      # if(!is.null(x$sim$restName)){
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, restName = x$sim$restName, out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],])
+      # } else{
+      #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],])  
+      # }
+      x$sim$results <- cbind.data.frame(x$sim$restGroup, out[seq.int(nTotal)[(nRef+1):(nSim+nRef)],])
       x$supplementary$results <- out[seq.int(nTotal)[(nRef+nSim+1):nTotal],]
     }
   } else {
-    x$sim$results <- out  
+    # x$sim$results <- out  
+    # if(!is.null(x$sim$restName)){
+    #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, restName = x$sim$restName, out)  
+    # } else{
+    #   x$sim$results <- cbind.data.frame(prefix = x$sim$prefix, out)  
+    # }
+    x$sim$results <- cbind.data.frame(x$sim$restGroup, out)  
   }
   return(x)
 }

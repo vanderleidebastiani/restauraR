@@ -17,6 +17,7 @@ comSimulation(
   max_add,
   min_p,
   phi = 1,
+  restGroup,
   prefix = NULL
 )
 }

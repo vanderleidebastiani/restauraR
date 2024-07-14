@@ -7,7 +7,7 @@ setwd("CCC")
 require(CCC)
 data("dados")
 
-
+dados$restGroup
 setwd("..")
 system("R CMD build CCC")
 system("R CMD INSTALL CCC")

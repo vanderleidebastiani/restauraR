@@ -5,14 +5,14 @@
 \alias{multCalculation}
 \title{function to calculate multifunctionality}
 \usage{
-multCalculation(x, th, bel)
+multCalculation(x, tests, where = "global")
 }
 \arguments{
-\item{x}{list of table with parameters of different areas}
+\item{x}{x}
 
-\item{th}{named vector of thresholds. Names must match x columns}
+\item{tests}{tests}
 
-\item{bel}{character vector indicating functions that must be below threshold. Must match x columns.}
+\item{where}{where}
 }
 \description{
 function to calculate multifunctionality
