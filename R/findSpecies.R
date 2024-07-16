@@ -16,6 +16,7 @@
 #' @references
 #' @keywords
 #' @examples
+#' @export
 findSpecies <- function(trait, rao, cwm, n, phi){
   nSpeciesInt <- nrow(trait)
   species <- rownames(trait)

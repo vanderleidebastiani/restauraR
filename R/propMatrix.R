@@ -18,6 +18,7 @@
 #' @references
 #' @keywords
 #' @examples
+#' @export
 propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi){
   # Auxiliary functions
   resample <- function(x, ...) x[sample.int(length(x), ...)]

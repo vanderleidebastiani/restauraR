@@ -1,26 +1,18 @@
-# x = RES1
-# trait = dados$trait
-# cwm = dados$cwm
-# rao = dados$cwm
-# cwv = dados$cwm
-# ava = dados$ava
-# ref = dados$ref[1:10,]
-# supplementary = dados$ref[11:19,]
-
-
-
-# x <- allSim
-# trait = dados$trait
-# cwm = dados$cwm
-# rao = dados$cwm
-# cwv = dados$cwm
-# ava = dados$ava
-# ref = dados$ref[1:10,]
-# supplementary = dados$ref[11:19,]
-
-
-
-
+#' @title calcPar
+#' @description calcPar
+#' @details
+#' @encoding UTF-8
+#' @importFrom data.table rbindlist
+#' @aliases
+#' @param x
+#' @return 
+#' @note 
+#' @author 
+#' @seealso
+#' @references
+#' @keywords
+#' @examples
+#' @export
 calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, supplementary = NULL){
   
   # cost, dens,
@@ -29,6 +21,25 @@ calcPar <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, ref = NULL, 
   # ATE AQUI NA FUNCAO comSimulation ----
   # CALCULATE PARAMETERS ##################################
   # TEMP
+  # x = RES1
+  # trait = dados$trait
+  # cwm = dados$cwm
+  # rao = dados$cwm
+  # cwv = dados$cwm
+  # ava = dados$ava
+  # ref = dados$ref[1:10,]
+  # supplementary = dados$ref[11:19,]
+  
+  
+  
+  # x <- allSim
+  # trait = dados$trait
+  # cwm = dados$cwm
+  # rao = dados$cwm
+  # cwv = dados$cwm
+  # ava = dados$ava
+  # ref = dados$ref[1:10,]
+  # supplementary = dados$ref[11:19,]
   composition <- x$sim$composition
   nSim <- nrow(composition)
   if(!is.null(ref) && is.null(supplementary)){

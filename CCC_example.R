@@ -17,6 +17,12 @@ args(comSimulation)
 
 head(dados$trait)
 
+checkReference(dados$ref,
+               trait = dados$trait,
+               cwm = dados$cwm[c(1,6)], 
+               rao = dados$cwm)
+
+
 RES0 <- comSimulation(dados$trait[70:110,], 
                            ava = dados$ava, 
                            it = dados$it, 
