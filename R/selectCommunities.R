@@ -1,4 +1,4 @@
-#' @title function to select communities
+#' @title function to select communities (comSelection)
 #' @description select simulated communities based on tests provided and add information to x
 #' @details
 #' @encoding UTF-8
@@ -14,40 +14,43 @@
 #' @references
 #' @keywords
 #' @examples
-#' @export
-comSelection <- function(x, tests, where = "global"){
-  # param, comp
-  if(where == "global"){
-    xPar <- x$sim$results
-    composition <- x$sim$composition
-  } else{
-    xPar <- x$selection$results
-    composition <- x$selection$composition
+#' @export 
+selectCommunities <- function(x, tests, where = "global"){
+  argOptions <- c("selection", "global")
+  where <- pmatch(where, argOptions)
+  if (length(where) > 1 || any(is.na(where))) {
+    stop("Invalid where argument\n")
   }
-	xPar <- as.data.frame(xPar) # Force to data.frame
+  # Get parameters and composition
+  if(where == 1){ # if selection
+    xPar <- x$selection$results
+    comp <- x$selection$composition
+    group <- x$selection$group
+  } else{
+    xPar <- x$simulation$results
+    comp <- x$simulation$composition
+    group <- x$simulation$group
+  }
+  # Evaluate test
 	completeString <- paste0('xPar', '$', tests)
 	testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
 	pos <- apply(testsEval, 1, all) 
-	selPar <- xPar[pos,] 
-	# selCom <- comp[pos,]
-	selCom <- composition[pos,]
-	
-	#number of selected communities:
+	# Select 
+	selPar <- xPar[pos, , drop = FALSE] 
+	selCom <- comp[pos, , drop = FALSE]
+	selGroup <- group[pos, , drop = FALSE]
+	# Number of selected communities
 	nSel <- apply(testsEval, 2, sum)
 	names(nSel) <- tests
 	nSel <- c(nSel, all = sum(pos))
-	
-	#thresholds:
+	# Format thresholds
 	testsSplit <- strsplit(tests, ' ')
-	# trsh <- as.numeric(sapply(testsSplit, '[', 3))
 	trsh <- sapply(testsSplit, '[', 3)
 	names(trsh) <- sapply(testsSplit, '[', 1)
-	# outSel <- list(parameters = selPar,
-	# 			   composition = selCom,
-	# 			   N = nSel,
-	# 			   thresholds = trsh)
+	# Set results
 	x$selection$results <- selPar
 	x$selection$composition <- selCom
+	x$selection$group <- group
 	x$selection$N <- nSel
 	x$selection$thresholds <- trsh
 	return(x)

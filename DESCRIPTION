@@ -1,8 +1,8 @@
 Package: CCC
 Type: Package
 Title: What the Package Does (Short Line)
-Version: 0.0.01
-Date: 2024-05-18
+Version: 0.0.02
+Date: 2024-07-20
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Imports:

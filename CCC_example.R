@@ -1,3 +1,4 @@
+# Packages ----
 require(CCC)
 require(magrittr)
 require(data.table)
@@ -11,76 +12,90 @@ require(data.table)
 #   print(data.table::data.table(x, keep.rownames = TRUE))
 # }
 
+# Data ----
 data("dados")
 ls(dados)
-args(comSimulation)
 
+# Initial check of the reference community ----
 head(dados$trait)
-
-checkReference(dados$ref,
-               trait = dados$trait,
-               cwm = dados$cwm[c(1,6)], 
-               rao = dados$cwm)
-
-
-RES0 <- comSimulation(dados$trait[70:110,], 
-                           ava = dados$ava, 
-                           it = dados$it, 
-                           rich = dados$rich, 
-                           cwm = dados$cwm, 
-                           rao = dados$cwm,
-                           phi = 1,
-                          # prefix = "New"
-                      )
-RES0
-# RES0$sim$parameters
-RES0$sim$composition
-RES0$sim$composition %>% head
-RES0$sim$composition
-RES0$sim$restGroup
-RES0$sim$restGroup %>% head
-
-dados$rest %>% dim
-dados$restGroup %>% dim
-
-RES1 <- comSimulation(trait = dados$trait[80:120,],
-                           ava = dados$ava,
-                           und = dados$und,
-                           it = dados$it,
-                           rich = c(10, 12),
+resCheck <- checkReference(dados$ref,
+                           trait = dados$trait,
                            cwm = dados$cwm,
                            rao = dados$cwm,
-                           rest = dados$rest,
-                           restGroup = dados$restGroup,
-                           max_add = dados$max_add, 
-                           min_p = dados$min_p,
-                           phi = 1, 
-                           # prefix = "Ongoing"
-                      )
-RES1
-# RES1$sim$parameters
-RES1$sim$composition %>% head
-RES1$sim$composition %>% dim
-# RES1$sim$restName
-# RES1$sim$prefix
-RES1$sim$restGroup
-RES1$sim$restGroup %>% head
+                           supplementary = dados$supplementary
+)
+str(resCheck)
+resCheck$reference$results 
+resCheck$reference$summary
+resCheck$supplementary$results
+resCheck$supplementary$summary
 
-colnames(dados$rest)
-head(dados$rest)
-# ref <- dados$ref[,1:22]
-# ref <- ref[, !colSums(ref)==0]
-allSim <- mergeSimulations(RES0, RES1)
-# allSim1 <- CCC::mergeSimulations(RES0, RES1, ref = ref)
-allSim$sim$composition %>% dim
-allSim$sim$restGroup %>% head
-# allSim1$sim$composition %>% dim
+# Simulation ----
+resSIM0 <- simulateCommunities(dados$trait[70:110,], 
+                               ava = dados$ava, 
+                               it = dados$it, 
+                               rich = dados$rich, 
+                               cwm = dados$cwm, 
+                               rao = dados$cwm,
+                               phi = 1,
+                               prefix = "New"
+)
+str(resSIM0)
+resSIM0$simulation$group %>% class()
+resSIM0$simulation$composition %>% class()
+resSIM0$simulation$composition
+resSIM0$simulation$composition %>% head
+resSIM0$simulation$group
+resSIM0$simulation$group %>% head
+resSIM0$simulation$group %>% dim
 
-RES0$sim$prefix
+resSIM1 <- simulateCommunities(trait = dados$trait[80:120,],
+                               ava = dados$ava,
+                               und = dados$und,
+                               it = dados$it,
+                               rich = c(10, 12),
+                               cwm = dados$cwm,
+                               rao = dados$cwm,
+                               rest = dados$rest,
+                               restGroup = dados$restGroup,
+                               max_add = dados$max_add, 
+                               min_p = dados$min_p,
+                               phi = 1, 
+                               prefix = "Ongoing"
+)
 
-allSim$sim$composition
+str(resSIM1)
+resSIM1$simulation$group %>% class()
+resSIM1$simulation$composition %>% class()
+resSIM1$simulation$composition
+resSIM1$simulation$composition %>% head
+resSIM1$simulation$group
+resSIM1$simulation$group %>% head
+resSIM1$simulation$group %>% dim
+
+## Merge simulation ----
+allSIM <- mergeSimulations(resSIM0, resSIM1)
+
+str(allSIM)
+allSIM$simulation$composition %>% dim
+allSIM$simulation$group %>% head
+allSIM$simulation$group %>% dim
+
+# Calculate parameters ----
+## Basic parameters ----
 # CONFERIR calcPar quando agrupada
-resPar0 <- calcPar(allSim, 
+resParAllSIM <- calculateParameters(allSIM, 
+                                    trait = dados$trait, 
+                                    cwm = dados$cwm,
+                                    rao = dados$cwm,
+                                    # cwv = dados$cwm,
+                                    ava = dados$ava,
+                                    ref = dados$ref[1:10,],
+                                    supplementary = dados$ref[11:19,]
+)
+str(resParAllSIM, 2)
+
+resParSIM0 <- calculateParameters(resSIM0, 
                    trait = dados$trait, 
                    cwm = dados$cwm,
                    rao = dados$cwm,
@@ -88,66 +103,69 @@ resPar0 <- calcPar(allSim,
                    ava = dados$ava,
                    ref = dados$ref[1:10,],
                    supplementary = dados$ref[11:19,]
-                   )
-str(RES1, 2)
-resPar1 <- calcPar(RES1, 
-                   trait = dados$trait, 
-                   cwm = dados$cwm,
-                   rao = dados$cwm,
-                   cwv = dados$cwm,
-                   ava = dados$ava,
-                   ref = dados$ref[1:10,],
-                   supplementary = dados$ref[11:19,]
-                   )
-
-resPar0$sim$composition
-resPar0$sim$results
-resPar0$ref$composition
-resPar0$ref$results
-resPar0$supplementary$composition
-resPar0$supplementary$results
-
-resPar1$sim$composition
-resPar1$sim$results
-resPar1$ref$composition
-resPar1$ref$results
-resPar1$supplementary$composition
-resPar1$supplementary$results
-
-RES1$sim$restGroup
-
-# multi aqui, antes da selecao
-resPar0$sim$results %>% head
-# thresholds if you have calculated CWM for a single trait, for example,
-thresholds1 <- c("Zooc > 0.02", "rao > 3.7", "Resprouter < 8 ")
-
-resPar0 <- multCalculation(resPar0, tests = thresholds1)
-resPar0$sim$multifunctionality
+)
 
 
-# thresholds1 <- c("Zooc > 0.02", "rao > 3.7", "restName == 'X1' ")
+str(resParSIM0, 2)
+resParAllSIM$simulation$composition
+resParAllSIM$simulation$group
+resParAllSIM$simulation$results
 
-selSim <- comSelection(resPar1, tests = thresholds1)
-selSim$selection$results
+resParAllSIM$reference$composition
+resParAllSIM$reference$results
 
-selSim$selection$N
-selSim$selection$thresholds
-selSim$selection$results
-selSim$selection$composition
+resParAllSIM$supplementary$composition
+resParAllSIM$supplementary$results
 
 
-selSim <- disCalculation(selSim, trait)
-selSim$sim$results
+## Multifunctionality ----
+resCheck$reference$summary
 
-tests <- c("unavailable > 12.6", "richness < 14.6", "LMA > 0.06983576")
+target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
 
-thresholds2 <- c("dissim < 0.2")
-thresholds <- c(thresholds1, thresholds2)
-selSim2 <- comSelection(selSim,
-                        test = thresholds2,
-                        where = "global")
-selSim2$selection$N
-selSim2$selection$composition[, !colSums(selSim2$selection$composition)==0]
+resParAllSIM <- calculateMultifunctionality(resParAllSIM,
+                            tests = target,
+                            where = "global")
+resParAllSIM$simulation$multifunctionality
+resParAllSIM$simulation$results
 
-# multCalculation(selSim2$selection$results, th)
+## Dissimilarity ----
+resParAllSIM <- calculateDissimilarity(resParAllSIM, dados$trait[,1:2], where = "global")
+resParAllSIM$simulation$results
+
+
+# Select communities ----
+
+## Global selection (first step) ----
+targetSelect1 <- c("CWM_LMA > 0.09", "rao > 2.9", "CWM_Resprouter > 0.5")
+resSelectSim <- selectCommunities(resParAllSIM, 
+                                  tests = targetSelect1,
+                                  where = "global")
+resSelectSim$selection$results
+resSelectSim$selection$N
+resSelectSim$selection$thresholds
+
+## Additional selection (second step) ----
+targetSelect2 <- c("CWM_LMA > 0.09", "rao < 3.2", "CWM_Resprouter > 0.5")
+resSelectSim <- selectCommunities(resSelectSim, 
+                                  tests = targetSelect2,
+                                  where = "selection")
+resSelectSim$selection$results
+resSelectSim$selection$N
+resSelectSim$selection$thresholds
+
+## Global selection with dissimilarity and/or multifunctionality ----
+targetSelect3 <- c("multifunctionality >= 2", "dissimilarity < 0.1")
+resSelectSim3 <- selectCommunities(resParAllSIM, 
+                                   tests = targetSelect3,
+                                   where = "global")
+resSelectSim3$selection$results
+resSelectSim3$selection$N
+resSelectSim3$selection$thresholds
+
+
+
+str(resSelectSim, 1)
+str(resSelectSim$simulation, 1)
+# VER DE AGRUPAR DIFERENTES SELECOES ----
 

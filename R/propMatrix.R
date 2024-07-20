@@ -52,7 +52,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi){
       stop("Minimum richness is higher than number of available species")
     }
   }
-  # Number of iterations for simulations
+  # Set number of iterations for simulations
   if(!missing(rao)){
     if(!missing(ava)){
       itMax <- round(0.25*it)

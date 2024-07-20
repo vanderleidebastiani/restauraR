@@ -14,41 +14,22 @@
 #' @examples
 #' @export
 mergeSimulations <- function(...) {
-  # ref = NULL
   RES <- vector("list")
-  # if(is.null(ref)){
-  #   argg <- list(...)
-  # } else{
-  #   argg <- c(as.list(environment()), list(...))
-  # }
-  # f1 <- function(x) {
-  #   if(inherits(x, "list")) {
-  #     res <- x$sim$composition
-  #   } else {
-  #     res <- x/rowSums(x) # Force reference composition to proportions
-  #     # res <- x
-  #   }
-  #   return(res)
-  # }
   ARGS <- list(...)
-  # ARGS <- list(RES0, RES1)
-  argg <- lapply(ARGS, function(x) x$sim$composition)
-  argg <- lapply(argg, as.data.table, keep.rownames = TRUE)
-  comp <- data.table::rbindlist(argg, use.names = TRUE, fill = TRUE)
+  # Group
+  group <- lapply(ARGS, function(x) x$simulation$group)
+  group <- lapply(group, as.data.table, keep.rownames = FALSE)
+  group <- data.table::rbindlist(group, use.names = TRUE, fill = TRUE)
+  RES$simulation$group <- data.frame(group)
+  # Composition
+  comp <- lapply(ARGS, function(x) x$simulation$composition)
+  comp <- lapply(comp, as.data.table, keep.rownames = TRUE)
+  comp <- data.table::rbindlist(comp, use.names = TRUE, fill = TRUE)
   resRowNames <- comp$rn
   comp <- as.matrix(comp[,-1])
   rownames(comp) <- resRowNames
   comp[is.na(comp)] <- 0
-  RES$sim$composition <- comp
-  
-  
-  argg <- lapply(ARGS, function(x) x$sim$restGroup)
-  argg <- lapply(argg, as.data.table, keep.rownames = FALSE)
-  comp <- data.table::rbindlist(argg, use.names = TRUE, fill = TRUE)
-  # resRowNames <- comp$rn
-  # comp <- data.frame(comp)
-  # rownames(comp) <- resRowNames
-  RES$sim$restGroup <- data.frame(comp)
-  
+  RES$simulation$composition <- comp
+  class(RES) <- "simRest"
   return(RES)
 }
