@@ -5,7 +5,7 @@
 \alias{calculateMultifunctionality}
 \title{function to calculate multifunctionality (multCalculation)}
 \usage{
-calculateMultifunctionality(x, tests, where = "global")
+calculateMultifunctionality(x, tests)
 }
 \arguments{
 \item{x}{x}

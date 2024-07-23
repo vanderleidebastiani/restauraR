@@ -5,7 +5,7 @@
 \alias{calculateDissimilarity}
 \title{function to calculate functional dissimilarity (distCalculation)}
 \usage{
-calculateDissimilarity(x, trait, where = "global")
+calculateDissimilarity(x, trait)
 }
 \arguments{
 \item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}

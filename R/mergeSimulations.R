@@ -16,6 +16,8 @@
 mergeSimulations <- function(...) {
   RES <- vector("list")
   ARGS <- list(...)
+  # Incluir checagem
+  sapply(ARGS, function(x) inherits(x, "simRest"))
   # Group
   group <- lapply(ARGS, function(x) x$simulation$group)
   group <- lapply(group, as.data.table, keep.rownames = FALSE)

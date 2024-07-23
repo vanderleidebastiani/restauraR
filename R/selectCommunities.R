@@ -15,43 +15,72 @@
 #' @keywords
 #' @examples
 #' @export 
-selectCommunities <- function(x, tests, where = "global"){
-  argOptions <- c("selection", "global")
-  where <- pmatch(where, argOptions)
-  if (length(where) > 1 || any(is.na(where))) {
-    stop("Invalid where argument\n")
-  }
+selectCommunities <- function(x, tests){
+  # where = "global"
+  # argOptions <- c("selection", "global")
+  # where <- pmatch(where, argOptions)
+  # if (length(where) > 1 || any(is.na(where))) {
+  #   stop("Invalid where argument\n")
+  # }
   # Get parameters and composition
-  if(where == 1){ # if selection
-    xPar <- x$selection$results
-    comp <- x$selection$composition
-    group <- x$selection$group
-  } else{
+  # if(where == 1){
+  #   xPar <- x$selection$results
+  #   comp <- x$selection$composition
+  #   group <- x$selection$group
+  # } else{
+  #   xPar <- x$simulation$results
+  #   comp <- x$simulation$composition
+  #   group <- x$simulation$group
+  # }
+  RES <- vector("list")
+  if(inherits(x, "simRest")){
     xPar <- x$simulation$results
     comp <- x$simulation$composition
     group <- x$simulation$group
+  } else{
+    xPar <- x$selection$results
+    comp <- x$selection$composition
+    group <- x$selection$group
   }
   # Evaluate test
-	completeString <- paste0('xPar', '$', tests)
-	testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
-	pos <- apply(testsEval, 1, all) 
-	# Select 
-	selPar <- xPar[pos, , drop = FALSE] 
-	selCom <- comp[pos, , drop = FALSE]
-	selGroup <- group[pos, , drop = FALSE]
-	# Number of selected communities
-	nSel <- apply(testsEval, 2, sum)
-	names(nSel) <- tests
-	nSel <- c(nSel, all = sum(pos))
-	# Format thresholds
-	testsSplit <- strsplit(tests, ' ')
-	trsh <- sapply(testsSplit, '[', 3)
-	names(trsh) <- sapply(testsSplit, '[', 1)
-	# Set results
-	x$selection$results <- selPar
-	x$selection$composition <- selCom
-	x$selection$group <- group
-	x$selection$N <- nSel
-	x$selection$thresholds <- trsh
-	return(x)
+  completeString <- paste0('xPar', '$', tests)
+  testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
+  pos <- apply(testsEval, 1, all) 
+  # Select 
+  selPar <- xPar[pos, , drop = FALSE] 
+  selCom <- comp[pos, , drop = FALSE]
+  selGroup <- group[pos, , drop = FALSE]
+  # Number of selected communities
+  nSel <- apply(testsEval, 2, sum)
+  names(nSel) <- tests
+  nSel <- c(nSel, all = sum(pos))
+  # Format thresholds
+  testsSplit <- strsplit(tests, ' ')
+  trsh <- sapply(testsSplit, '[', 3)
+  names(trsh) <- sapply(testsSplit, '[', 1)
+  # Set results
+  # x$selection$results <- selPar
+  # x$selection$composition <- selCom
+  # x$selection$group <- group
+  # x$selection$N <- nSel
+  # x$selection$thresholds <- trsh
+  RES$selection$composition <- selCom
+  RES$selection$group <- selGroup
+  RES$selection$results <- selPar
+  RES$selection$N <- nSel
+  RES$selection$thresholds <- trsh
+  if(!is.null(x$reference$composition)){
+    RES$reference$composition <- x$reference$composition
+  }
+  if(!is.null(x$supplementary$composition)){
+    RES$supplementary$composition <- x$supplementary$composition
+  }
+  if(!is.null(x$reference$results)){
+    RES$reference$results <- x$reference$results
+  }
+  if(!is.null(x$supplementary$results)){
+    RES$supplementary$results <- x$supplementary$results
+  }
+  class(RES) <- "simRestSelect"
+  return(RES)
 }

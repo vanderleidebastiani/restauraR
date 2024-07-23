@@ -5,7 +5,7 @@
 \alias{selectCommunities}
 \title{function to select communities (comSelection)}
 \usage{
-selectCommunities(x, tests, where = "global")
+selectCommunities(x, tests)
 }
 \arguments{
 \item{tests}{list with tests to be performed}
