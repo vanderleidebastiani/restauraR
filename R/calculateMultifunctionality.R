@@ -47,10 +47,10 @@ calculateMultifunctionality <- function(x, tests){
   # }
   if(inherits(x, "simRest")){
     x$simulation$multifunctionality <- testsEval
-    x$simulation$results$multifunctionality <- rowSums(testsEval)
+    x$simulation$results$alphamultifunctionality <- rowSums(testsEval)
   } else{
     x$selection$multifunctionality <- testsEval
-    x$selection$results$multifunctionality <- rowSums(testsEval)
+    x$selection$results$alphamultifunctionality <- rowSums(testsEval)
   }
   return(x)
 }

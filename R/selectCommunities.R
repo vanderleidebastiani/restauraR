@@ -32,7 +32,8 @@ selectCommunities <- function(x, tests){
   #   comp <- x$simulation$composition
   #   group <- x$simulation$group
   # }
-  RES <- vector("list")
+  # RES <- vector("list")
+  RES <- list(call = match.call())
   if(inherits(x, "simRest")){
     xPar <- x$simulation$results
     comp <- x$simulation$composition

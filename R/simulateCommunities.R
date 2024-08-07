@@ -16,7 +16,8 @@
 #' @examples
 #' @export
 simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
-  RES <- vector("list")
+  # RES <- vector("list")
+  RES <- list(call = match.call())
   # Generate species proportions
   propMatrix <- propMatrix(trait = trait, ava = ava, und = und, it = it, 
                            rich = rich, cwm = cwm, rao = rao, phi = phi)

@@ -14,7 +14,8 @@
 #' @examples
 #' @export
 mergeSelection <- function(...) {
-  RES <- vector("list")
+  # RES <- vector("list")
+  RES <- list(call = match.call())
   ARGS <- list(...)
   # Incluir checagem
   sapply(ARGS, function(x) inherits(x, "simRestSelect"))
