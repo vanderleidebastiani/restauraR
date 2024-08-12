@@ -5,7 +5,16 @@
 \alias{checkReference}
 \title{checkReference}
 \usage{
-checkReference(reference, trait, cwm, cwv, rao, stan, supplementary = NULL)
+checkReference(
+  reference,
+  trait,
+  cwm,
+  cwv,
+  rao,
+  stan,
+  supplementary = NULL,
+  props = NULL
+)
 }
 \arguments{
 \item{reference}{description}

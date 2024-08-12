@@ -28,12 +28,16 @@ resCheck <- checkReference(dados$ref,
 )
 resCheck
 str(resCheck, 1)
-resCheck$pool$results 
-resCheck$reference$results 
+resCheck$pool$results
+resCheck$pool$summary
+resCheck$reference$results
 resCheck$reference$summary
 resCheck$supplementary$results
 resCheck$supplementary$summary
 
+require(ggplot2)
+
+createReport(dados$trait)
 # FINALIZAR ----
 # require(DataExplorer)
 # create_report(dados$trait, y = "Y")
@@ -147,15 +151,14 @@ head(resParAllSIM$simulation$results)
 # TAREFAS ----
 # funcao para definir os target (percentil?)
 # referencia, pool, ...
-# etapa previa
 # testar se tem atributos apartir da literatura
 # etapa exploratoria
 # pensar em percentil na funcao da multi
-# poderia retornar uma tabela
 # incluir os graficos exploratorios
 
 target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
-# CONFERIR - QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS ----
+# CONFERIR ----
+# QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS 
 target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
 
 resParAllSIM <- calculateMultifunctionality(resParAllSIM,
@@ -280,7 +283,7 @@ viewMultifunctionality(resParAllSIM)
 # CONFERIR ----
 # viewMultifunctionality(resParSelectExtra)
 
-save.image("CCC_workspace_202408076")
+# save.image("CCC_workspace_202408076")
 # load("CCC_workspace_202408076")
 
 # END ----
