@@ -35,14 +35,9 @@ resCheck$reference$summary
 resCheck$supplementary$results
 resCheck$supplementary$summary
 
-require(ggplot2)
-
-createReport(dados$trait)
+## Exploratory report (html)
+createReport(dados$trait, props = c(0.1, 0.5, 0.75))
 # FINALIZAR ----
-# require(DataExplorer)
-# create_report(dados$trait, y = "Y")
-# create_report(dados$trait)
-# hist(dados$trait$LMA)
 
 ## Simulation ----
 
