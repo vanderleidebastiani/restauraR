@@ -8,8 +8,10 @@ Maintainer: Who to complain to <yourfault@somewhere.net>
 Imports:
     Select,
     fundiversity,
-    adiv
+    adiv,
+    knitr
 Description: More about what it does (maybe more than one line).
 License: What license is it under?
 Encoding: UTF-8
+VignetteBuilder: knitr
 RoxygenNote: 7.3.2

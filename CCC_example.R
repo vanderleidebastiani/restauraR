@@ -24,7 +24,8 @@ resCheck <- checkReference(dados$ref,
                            trait = dados$trait,
                            cwm = dados$cwm,
                            rao = dados$cwm,
-                           supplementary = dados$supplementary
+                           supplementary = dados$supplementary,
+                           props = c(0.75)
 )
 resCheck
 str(resCheck, 1)
@@ -44,7 +45,7 @@ createReport(dados$trait, props = c(0.1, 0.5, 0.75))
 ### Simulate communities starting without species ----
 resSIM0 <- simulateCommunities(dados$trait[70:110,], 
                                ava = dados$ava, 
-                               it = dados$it, 
+                               it = 500, #dados$it, 
                                rich = dados$rich, 
                                cwm = dados$cwm, 
                                rao = dados$cwm,
@@ -67,7 +68,7 @@ resSIM0$simulation$group %>% dim
 resSIM1 <- simulateCommunities(trait = dados$trait[80:120,],
                                ava = dados$ava,
                                und = dados$und,
-                               it = dados$it,
+                               it = 500, # dados$it,
                                rich = c(10, 12),
                                cwm = dados$cwm,
                                rao = dados$cwm,
@@ -156,12 +157,16 @@ target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
 # QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS 
 target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
 
+# TAREFA ----
+# conferir se colunas foram encontradas
+# calcular multi das referencia tambem
 resParAllSIM <- calculateMultifunctionality(resParAllSIM,
                             tests = target
                             # where = "global"
                             )
 resParAllSIM
-resParAllSIM$simulation$multifunctionality
+head(resParAllSIM$simulation$results)
+head(resParAllSIM$simulation$multifunctionality)
 head(resParAllSIM$simulation$multifunctionality)
 dim(resParAllSIM$simulation$multifunctionality)
 resParAllSIM$simulation$results
@@ -213,6 +218,7 @@ resSelectSim3$selection$thresholds
 
 ## Merge selections ----
 ### Selections ----
+resParAllSIM$simulation$results
 targetSelect4 <- c("PREFIX == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 3.6")
 resSelectSimPart1 <- selectCommunities(resParAllSIM, 
                                   tests = targetSelect4)
@@ -220,6 +226,7 @@ resSelectSimPart1
 resSelectSimPart1$selection$results
 resSelectSimPart1$selection$N
 
+resParAllSIM$simulation$group
 targetSelect5 <- c("PREFIX == 'Ongoing'", "restGroup == 'edge'", "rao > 3.6")
 resSelectSimPart2 <- selectCommunities(resParAllSIM, 
                                    tests = targetSelect5)
@@ -270,15 +277,23 @@ resParSelectExtra$supplementary$results
 
 ### View results
 viewResults(resParAllSIM, "CWM_LMA", "richness")
+viewResults(resParAllSIM, "CWM_LMA", "restGroup")
 viewResults(resSelectSim, "CWM_LMA", "richness")
 viewResults(resSelectSimMerged, "CWM_LMA", "richness")
 
 ### View multifunctionality results
+resParAllSIM
+
+# Ver de mudar as cores das barras mo grafico
+head(resParAllSIM$simulation$multifunctionality)
+
+colSums(resParAllSIM$simulation$multifunctionality)
 viewMultifunctionality(resParAllSIM)
+viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6)
 # CONFERIR ----
 # viewMultifunctionality(resParSelectExtra)
 
-# save.image("CCC_workspace_202408076")
+# save.image("CCC_workspace_20240814")
 # load("CCC_workspace_202408076")
 
 # END ----
