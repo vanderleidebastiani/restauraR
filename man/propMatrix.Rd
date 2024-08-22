@@ -3,15 +3,34 @@
 \encoding{UTF-8}
 \name{propMatrix}
 \alias{propMatrix}
-\title{propMatrix}
+\title{Internal function to generate communities proportion matrix}
 \usage{
 propMatrix(trait, ava, und, it, rich, cwm, rao, phi)
 }
 \arguments{
-\item{ava}{}
+\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{und}{}
+\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
+
+\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in trait data.}
+
+\item{it}{Number of iterations (communities).}
+
+\item{rich}{The range of richness values in each community.}
+
+\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+
+\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+
+\item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
+}
+\value{
+A community matrix with species relative abundances.
 }
 \description{
-propMatrix
+Internal function to generate communities proportion matrix
 }
+\seealso{
+\code{\link{simulateCommunities}}, \code{\link{findSpecies}}
+}
+\keyword{Auxiliary}

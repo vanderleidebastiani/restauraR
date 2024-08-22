@@ -1,17 +1,6 @@
-#' @title function to visualize results
-#' @description Visualize parameters of simulated and selected communities and reference sites
-#' @details
+#' @rdname viewResults
+#' @include viewResults.R
 #' @encoding UTF-8
-#' @importFrom ComplexUpset upset
-#' @aliases
-#' @param x 
-#' @return 
-#' @note 
-#' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
 #' @export
 viewMultifunctionality <- function(x, ...){
   if(inherits(x, "simRest")){

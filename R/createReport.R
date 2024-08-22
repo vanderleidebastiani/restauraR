@@ -1,5 +1,5 @@
-#' @title 
-#' @description 
+#' @title Create report 
+#' @description Creates a data profiling report 
 #' @details
 #' @encoding UTF-8
 #' @import ggplot2
@@ -7,8 +7,9 @@
 #' @import patchwork
 #' @import ggpubr
 #' @aliases
-#' @param 
-#' @return 
+#' @param x Input data
+#' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @returns
 #' @note 
 #' @author 
 #' @seealso

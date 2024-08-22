@@ -2,10 +2,16 @@
 #' @description checkReference
 #' @details
 #' @encoding UTF-8
-#' @aliases
-#' @param reference description
-#' @param trait description
-#' @return 
+#' @aliases print.simRestCheck
+#' @param reference A matrix with species proportions in the reference sites. NAs not accepted.
+#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
+#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
+#' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
+#' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @returns 
 #' @note 
 #' @author 
 #' @seealso

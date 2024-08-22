@@ -1,17 +1,6 @@
-#' @title 
-#' @description 
-#' @details
+#' @rdname simulateCommunities
+#' @include simulateCommunities.R
 #' @encoding UTF-8
-#' @importFrom data.table rbindlist as.data.table
-#' @aliases
-#' @param 
-#' @return 
-#' @note 
-#' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
 #' @export
 mergeSimulations <- function(...) {
   # RES <- vector("list")

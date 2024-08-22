@@ -1,7 +1,13 @@
-# For check function
+#' @title Internal function to calculate descriptive statistics
+#' @encoding UTF-8
+#' @param x A numeric vector to calculate descriptive statistics.
+#' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @returns A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles
+#' @author 
+#' @seealso 
+#' @keywords Auxiliary
+#' @export
 resSummary <- function(x, props = NULL, ...){
-  # x <- x$Height
-  # class(x)
   if(!c(inherits(x, what = "numeric") || inherits(x, what = "integer"))){
     res <- data.frame(matrix(NA, nrow = 1, ncol = 4+length(props)))
     if(!is.null(props)) {
@@ -30,22 +36,4 @@ resSummary <- function(x, props = NULL, ...){
     res <- as.data.frame(l1)
   }
   return(res)
-}
-
-
-
-# CMV
-FCWV <- function(x, traitSub){
-  temp <- SYNCSA::matrix.t(x, traitSub, scale = FALSE)
-  MW <- temp$matrix.w
-  MCWM <- temp$matrix.T
-  MCWV <- matrix(NA, nrow(MW), ncol(MCWM))
-  for(i in 1:nrow(MW)){
-    for(j in 1:ncol(MCWM)){
-      MCWV[i, j] <- sum(MW[i,]*(traitSub[,j]-MCWM[i,j])^2)
-    }
-  }
-  rownames(MCWV) <- rownames(MCWM)
-  colnames(MCWV) <- colnames(MCWM)
-  return(MCWV)
 }

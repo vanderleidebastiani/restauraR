@@ -15,3 +15,22 @@ License: What license is it under?
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
+Collate: 
+    'FCWV.R'
+    'calculateParameters.R'
+    'calculateDissimilarity.R'
+    'calculateMultifunctionality.R'
+    'checkReference.R'
+    'createReport.R'
+    'findSpecies.R'
+    'selectCommunities.R'
+    'mergeSelection.R'
+    'simulateCommunities.R'
+    'mergeSimulations.R'
+    'print.simRest.R'
+    'print.simRestCheck.R'
+    'print.simRestSelect.R'
+    'propMatrix.R'
+    'resSummary.R'
+    'viewResults.R'
+    'viewMultifunctionality.R'

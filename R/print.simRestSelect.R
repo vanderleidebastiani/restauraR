@@ -1,3 +1,5 @@
+#' @rdname selectCommunities
+#' @include selectCommunities.R
 #' @encoding UTF-8
 #' @export
 print.simRestSelect <- function(x, ...) {

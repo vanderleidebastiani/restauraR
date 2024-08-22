@@ -1,17 +1,6 @@
-#' @title mergeSelection
-#' @description mergeSelection
-#' @details
+#' @rdname selectCommunities
+#' @include selectCommunities.R
 #' @encoding UTF-8
-#' @importFrom data.table rbindlist as.data.table
-#' @aliases
-#' @param 
-#' @return 
-#' @note 
-#' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
 #' @export
 mergeSelection <- function(...) {
   # RES <- vector("list")

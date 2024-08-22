@@ -1,11 +1,25 @@
-#' @title calcPar
-#' @description calcPar
+#' @title Calculate functional parameters in communities
+#' @description Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy, functional dissimilarity and multifunctionality.
 #' @details
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
-#' @aliases
-#' @param x
-#' @return 
+#' @importFrom fundiversity fd_raoq
+#' @importFrom SYNCSA matrix.t
+#' @importFrom adiv discomQE
+#' @aliases calculateDissimilarity calculateMultifunctionality
+#' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
+#' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
+#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
+#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param cost
+#' @param dens
+#' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
+#' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
+#' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
+#' @param tests A vector with multifunctionality criteria to be performed. 
+#' @returns A list (class "simRest" or "simRestSelect") with the elements:
 #' @note 
 #' @author 
 #' @seealso

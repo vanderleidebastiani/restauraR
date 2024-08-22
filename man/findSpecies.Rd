@@ -3,10 +3,28 @@
 \encoding{UTF-8}
 \name{findSpecies}
 \alias{findSpecies}
-\title{findSpecies}
+\title{Internal function to select species to generates simulated communities}
 \usage{
-findSpecies(trait, rao, cwm, n, phi)
+findSpecies(trait, cwm, rao, n, phi)
+}
+\arguments{
+\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+
+\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+
+\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+
+\item{n}{Number of species to select.}
+
+\item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
+}
+\value{
+A vector with selected species names based on their traits and a desired trait profile.
 }
 \description{
-findSpecies
+Internal function to select species to generates simulated communities
 }
+\seealso{
+\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+}
+\keyword{Auxiliary}

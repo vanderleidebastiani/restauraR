@@ -1,3 +1,5 @@
+#' @rdname simulateCommunities
+#' @include simulateCommunities.R
 #' @encoding UTF-8
 #' @export
 print.simRest <- function(x, ...) {

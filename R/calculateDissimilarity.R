@@ -1,20 +1,6 @@
-#' @title function to calculate functional dissimilarity (distCalculation)
-#' @description Calculate functional dissimilarity between simulated communities and reference sites
-#' @details
+#' @rdname calculateParameters
+#' @include calculateParameters.R
 #' @encoding UTF-8
-#' @importFrom adiv discomQE
-#' @aliases
-#' @param sim data frame or matrix with species proportions in simulated communities. Species as columns and simulated communities as rows.
-#' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param dis matrix of trait distances
-#' @param ref data frame or matrix with species proportions in reference sites. Species as columns and simulated communities as rows.
-#' @return 
-#' @note 
-#' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
 #' @export
 calculateDissimilarity <- function(x, trait){
   # where = "global"

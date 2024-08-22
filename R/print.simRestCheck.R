@@ -1,3 +1,5 @@
+#' @rdname checkReference
+#' @include checkReference.R
 #' @encoding UTF-8
 #' @export
 print.simRestCheck <- function(x, ...) {

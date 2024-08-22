@@ -1,13 +1,13 @@
-#' @title function to select communities (comSelection)
-#' @description select simulated communities based on tests provided and add information to x
+#' @title Select communities
+#' @description Select simulated communities based on tests provided
 #' @details
 #' @encoding UTF-8
-#' @importFrom
-#' @aliases
-#' @param param data.frame with parameters of simulated communities
-#' @param comp data.frame with compositions of simulated communities
-#' @param tests list with tests to be performed
-#' @return 
+#' @importFrom data.table rbindlist
+#' @aliases mergeSelection print.simRestSelect
+#' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection).
+#' @param tests A vector with selection criteria to be performed.
+#' @param ... Objects of class "simRestSelect" to be concatenated.
+#' @returns A list (class "simRestSelect") with the elements:
 #' @note 
 #' @author 
 #' @seealso

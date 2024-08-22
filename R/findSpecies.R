@@ -1,23 +1,17 @@
-#' @title findSpecies
-#' @description findSpecies
-#' @details
+#' @title Internal function to select species to generates simulated communities
 #' @encoding UTF-8
 #' @importFrom Select selectSpecies
-#' @aliases
-#' @param trait
-#' @param rao
-#' @param cwm
-#' @param n
-#' @param phi
-#' @return 
-#' @note 
+#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param n Number of species to select.
+#' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
+#' @returns A vector with selected species names based on their traits and a desired trait profile.
 #' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+#' @keywords Auxiliary
 #' @export
-findSpecies <- function(trait, rao, cwm, n, phi){
+findSpecies <- function(trait, cwm, rao, n, phi){
   nSpeciesInt <- nrow(trait)
   species <- rownames(trait)
   if(inherits(rao, 'character')){

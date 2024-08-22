@@ -1,19 +1,6 @@
-#' @title function to calculate multifunctionality (multCalculation)
-#' @description function to calculate multifunctionality
-#' @details
+#' @rdname calculateParameters
+#' @include calculateParameters.R
 #' @encoding UTF-8
-#' @importFrom
-#' @aliases
-#' @param x x
-#' @param tests tests
-#' @param where where
-#' @return 
-#' @note 
-#' @author 
-#' @seealso
-#' @references
-#' @keywords
-#' @examples
 #' @export
 calculateMultifunctionality <- function(x, tests){
   # where = "global"

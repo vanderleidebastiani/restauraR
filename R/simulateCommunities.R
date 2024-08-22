@@ -1,13 +1,24 @@
-#' @title function to generate simulated communities (comSimulation)
-#' @description generates simulated communities and calculate its parameters.
+#' @title Generate simulated communities to restoration
+#' @description Generates simulated communities.
 #' @details
 #' @encoding UTF-8
-#' @importFrom Select selectSpecies
-#' @importFrom fundiversity fd_raoq
 #' @importFrom data.table rbindlist
-#' @aliases
-#' @param 
-#' @return 
+#' @aliases mergeSimulations print.simRest
+#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param restComp 
+#' @param restGroup
+#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
+#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in trait data.
+#' @param it Number of iterations (communities).
+#' @param rich The range of richness values in each community.
+#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param max_add
+#' @param min_p
+#' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy (default phi = 1).
+#' @param prefix 
+#' @param ... Objects of class "simRest" to be concatenated.
+#' @returns A list (class "simRest") with the elements:
 #' @note 
 #' @author 
 #' @seealso
