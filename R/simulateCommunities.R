@@ -2,7 +2,7 @@
 #' @description Generates simulated communities.
 #' @details
 #' @encoding UTF-8
-#' @importFrom data.table rbindlist
+#' @importFrom data.table rbindlist as.data.table
 #' @aliases mergeSimulations print.simRest
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp 
@@ -27,7 +27,6 @@
 #' @examples
 #' @export
 simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
-  # RES <- vector("list")
   RES <- list(call = match.call())
   # Generate species proportions
   propMatrix <- propMatrix(trait = trait, ava = ava, und = und, it = it, 
@@ -38,9 +37,9 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
     rowNameRest <- rownames(restComp)
     template1 <- propMatrix[0,]
     template2 <- restComp[0,]
-    template0 <- data.table::rbindlist(list(as.data.table(template1), as.data.table(template2)), use.names = TRUE, fill = TRUE)
-    propMatrix <- data.table::rbindlist(list(template0, as.data.table(propMatrix)), use.names = TRUE, fill = TRUE)
-    restComp <- data.table::rbindlist(list(template0, as.data.table(restComp)), use.names = TRUE, fill = TRUE)
+    template0 <- data.table::rbindlist(list(data.table::as.data.table(template1), data.table::as.data.table(template2)), use.names = TRUE, fill = TRUE)
+    propMatrix <- data.table::rbindlist(list(template0, data.table::as.data.table(propMatrix)), use.names = TRUE, fill = TRUE)
+    restComp <- data.table::rbindlist(list(template0, data.table::as.data.table(restComp)), use.names = TRUE, fill = TRUE)
     propMatrix <- as.matrix(propMatrix)
     restComp <- as.matrix(restComp)
     rownames(propMatrix) <- rowNameProMatrix

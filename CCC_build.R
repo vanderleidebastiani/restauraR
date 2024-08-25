@@ -2,7 +2,7 @@ rm(list = ls())
 require(devtools)
 devtools::document()
 devtools::build_vignettes()
-# devtools::clean_vignettes()
+devtools::clean_vignettes()
 setwd("CCC")
 
 require(CCC)

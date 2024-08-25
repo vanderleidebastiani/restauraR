@@ -8,7 +8,7 @@
 resSummary(x, props = NULL, ...)
 }
 \arguments{
-\item{x}{A numeric vector to calculate descriptive statistics.}
+\item{x}{A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.}
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }

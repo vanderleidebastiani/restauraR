@@ -133,7 +133,7 @@ dens <- "Density"
 ```
 
 ```{r, eval = FALSE}
-resSIM <- calculateParameters(resSIM,
+resSIM <- computeParameters(resSIM,
                                     trait = traits,
                                     cwm = traits2cwm,
                                     rao = traits2rao,
@@ -191,7 +191,7 @@ If you have reference sites, you can calculate functional dissimilarity between 
 
 # NAO IMPLEMENTADO AINDA
 
-Because the functional dissimilarity returned is the average dissimilarity between each simulated community and each reference site, the dissimilarity among reference sites can also be calculated. For these reason, you should bind simulated communities with reference sites to have a single input in the function disCalculation. This step is required to #plot reference areas in the functional dissimilarity axis using viewResults.
+Because the functional dissimilarity returned is the average dissimilarity between each simulated community and each reference site, the dissimilarity among reference sites can also be calculated. For these reason, you should bind simulated communities with reference sites to have a single input in the function `computeDissimilarity` This step is required to #plot reference areas in the functional dissimilarity axis using viewResults.
 
 Now, you need to provide a trait data with traits that should be used to calculate functional dissimilarity. A distance matrix (dist object) is also accepted.
 
@@ -199,10 +199,10 @@ Now, you need to provide a trait data with traits that should be used to calcula
 traitDis <- dist(scale(traits[, c("BT", "SLA", "Seed")]))
 ```
 
-Now, use function `calculateDissimilarity` to calculate functional dissimilarity depending on your species trait values, some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
+Now, use function `computeDissimilarity` to calculate functional dissimilarity depending on your species trait values, some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
 
 ```{r, warning = FALSE, eval = FALSE}
-resSEL <- calculateDissimilarity(resSEL, traitDis)
+resSEL <- computeDissimilarity(resSEL, traitDis)
 resSEL
 ```
 

@@ -61,22 +61,6 @@ createReport <- function(x, props = NULL){
   
   
   # Global summary table
-  # cat(sprintf('
-  # <table>
-  #  <thead>
-  #    <tr>
-  #     <th style="text-align: center" >Species pool</th>
-  #     <th style="text-align: center" >Number of traits</th>
-  #    <tr>
-  #  </thead>
-  #  <tbody>
-  #   <tr>
-  #    <td style="text-align: center">%s</td>
-  #    <td style="text-align: center">%s</td>
-  #   </tr>
-  #  </tbody>
-  # </table>\n\n', nrow(x), ncol(x)), file = htmlfile, append = TRUE)
-  
   cat(sprintf('
   <table>
   <thead>
@@ -96,6 +80,9 @@ createReport <- function(x, props = NULL){
    </tr>
   </tbody>
   </table>\n\n', nrow(x), ncol(x)), file = htmlfile, append = TRUE)
+  dfInfo <- data.frame(Name = c("Species pool", "Number of traits"),
+                       Value = c(nrow(x), ncol(x)))
+  cat(tableHTML::tableHTML(dfInfo, rownames = FALSE), file = htmlfile, append=TRUE)
   # Plots
   for (group.name in traitsNames) {
     cat(sprintf('<h2><a name="%s">Plots for %s</a></h2>\n', group.name, group.name), file=htmlfile, append=TRUE)
@@ -114,9 +101,10 @@ createReport <- function(x, props = NULL){
         ggplot2::geom_histogram(bins = nclass.FD(x[[group.name]]), col = "white")
     }
     
-    
     df <- resSummary(x[,group.name], props = props)
-    df <- round(df, 3)
+    df <- round(t(df), 3)
+    # write_tableHTML(tableHTML(df), file = htmlfile, complete_html = FALSE)
+    cat(tableHTML::tableHTML(df, rownames = FALSE), file = htmlfile, append=TRUE)
     p2 <- ggpubr::ggtexttable(df, rows = NULL)
     # p2 <- tab_add_title(p2, text = group.name, face = "bold")
     ggplot2::ggsave(file.path(dir, gname), 

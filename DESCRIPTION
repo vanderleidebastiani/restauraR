@@ -17,10 +17,10 @@ VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
     'FCWV.R'
-    'calculateParameters.R'
-    'calculateDissimilarity.R'
-    'calculateMultifunctionality.R'
     'checkReference.R'
+    'computeParameters.R'
+    'computeDissimilarity.R'
+    'computeMultifunctionality.R'
     'createReport.R'
     'findSpecies.R'
     'selectCommunities.R'

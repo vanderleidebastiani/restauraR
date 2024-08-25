@@ -1,4 +1,4 @@
-#' @title Calculate functional parameters in communities
+#' @title Compute functional parameters in communities
 #' @description Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy, functional dissimilarity and multifunctionality.
 #' @details
 #' @encoding UTF-8
@@ -6,7 +6,7 @@
 #' @importFrom fundiversity fd_raoq
 #' @importFrom SYNCSA matrix.t
 #' @importFrom adiv discomQE
-#' @aliases calculateDissimilarity calculateMultifunctionality
+#' @aliases computeDissimilarity computeMultifunctionality
 #' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
@@ -27,7 +27,11 @@
 #' @keywords
 #' @examples
 #' @export
-calculateParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, reference = NULL, supplementary = NULL){
+  # Check object class
+  if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
+    stop("x must be of the simRest or simRestSelect class")
+  }
   composition <- x$simulation$composition
   nSim <- nrow(composition)
   if(!is.null(reference) && is.null(supplementary)){

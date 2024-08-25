@@ -3,7 +3,7 @@
 ## Packages ----
 require(CCC)
 require(magrittr)
-require(data.table)
+# require(data.table)
 
 # Print data.frame as data.table class
 # getOption("datatable.print.class")
@@ -20,7 +20,7 @@ ls(dados)
 
 ## Initial check of the reference community ----
 head(dados$trait)
-resCheck <- checkReference(dados$ref,
+resCheck <- checkReference(reference = dados$ref,
                            trait = dados$trait,
                            cwm = dados$cwm,
                            rao = dados$cwm,
@@ -103,7 +103,7 @@ allSIM$simulation$group %>% dim
 ### Basic parameters ----
 
 #### Merged simulation ----
-resParAllSIM <- calculateParameters(allSIM, 
+resParAllSIM <- computeParameters(allSIM, 
                                     trait = dados$trait, 
                                     cwm = dados$cwm,
                                     rao = dados$cwm,
@@ -117,7 +117,7 @@ class(resParAllSIM)
 str(resParAllSIM, 2)
 
 #### Non merged simulation ----
-resParSIM0 <- calculateParameters(resSIM0, 
+resParSIM0 <- computeParameters(resSIM0, 
                    trait = dados$trait, 
                    cwm = dados$cwm,
                    rao = dados$cwm,
@@ -160,7 +160,7 @@ target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowe
 # TAREFA ----
 # conferir se colunas foram encontradas
 # calcular multi das referencia tambem
-resParAllSIM <- calculateMultifunctionality(resParAllSIM,
+resParAllSIM <- computeMultifunctionality(resParAllSIM,
                             tests = target
                             # where = "global"
                             )
@@ -172,7 +172,7 @@ dim(resParAllSIM$simulation$multifunctionality)
 resParAllSIM$simulation$results
 
 ### Dissimilarity ----
-resParAllSIM <- calculateDissimilarity(resParAllSIM, 
+resParAllSIM <- computeDissimilarity(resParAllSIM, 
                                        dados$trait[,1:2] 
                                        # where = "global"
                                        )
@@ -235,7 +235,7 @@ resSelectSimPart2$selection$results
 resSelectSimPart2$selection$N
 
 ### Merge ----
-resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2)
+resSelectSimMerged <- mergeSelection(resParAllSIM, resSelectSimPart2)
 resSelectSimMerged
 resSelectSimMerged$selection$group %>% dim
 resSelectSimMerged$selection$composition %>% dim
@@ -243,7 +243,7 @@ resSelectSimMerged$selection$results %>% dim
 
 ## Extras ----
 
-### Selection then calculate dissimilarity and multifunctionality ----
+### Selection then compute dissimilarity and multifunctionality ----
 
 #### First selection ----
 targetSelect6 <- c("rao > 5")
@@ -254,13 +254,13 @@ resParSelectExtra$selection$N
 resParSelectExtra$selection$results
 
 #### Dissimilarity ----
-resParSelectExtra <- calculateDissimilarity(resParSelectExtra, dados$trait[,1:2])
+resParSelectExtra <- computeDissimilarity(resParSelectExtra, dados$trait[,1:2])
 resParSelectExtra
 resParSelectExtra$selection$results
 
 #### Multifunctionality ----
 targetMulti <- c("CWM_Height > 50", "CWM_Resprouter > 0.05")
-resParSelectExtra <- calculateMultifunctionality(resParSelectExtra, tests = targetMulti)
+resParSelectExtra <- computeMultifunctionality(resParSelectExtra, tests = targetMulti)
 resParSelectExtra
 resParSelectExtra$selection$multifunctionality
 resParSelectExtra$selection$results
