@@ -19,7 +19,7 @@ mergeSimulations <- function(...) {
   comp <- lapply(comp, data.table::as.data.table, keep.rownames = TRUE)
   comp <- data.table::rbindlist(comp, use.names = TRUE, fill = TRUE)
   resRowNames <- comp$rn
-  comp <- as.matrix(comp[,-1])
+  comp <- as.matrix(comp[, -1, drop = FALSE])
   rownames(comp) <- resRowNames
   comp[is.na(comp)] <- 0
   RES$simulation$composition <- comp

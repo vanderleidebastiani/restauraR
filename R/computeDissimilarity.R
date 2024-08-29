@@ -13,7 +13,7 @@ computeDissimilarity <- function(x, trait){
     comp <- x$selection$composition
   }
   ref <- x$reference$composition
-	if(inherits(trait, 'data.frame') | inherits(trait, 'matrix')){
+	if(inherits(trait, 'data.frame') || inherits(trait, 'matrix')){
 		dis <- dist(scale(trait))
 	} else if(inherits(trait, 'dist')){
 		dis <- trait

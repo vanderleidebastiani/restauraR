@@ -39,6 +39,10 @@ computeMultifunctionality(x, tests)
 
 \item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
 
+\item{cost}{A vector with trait name with of species cost per individual}
+
+\item{dens}{A vector with trait name with species planting density}
+
 \item{stan}{A vector with parameters names to specify which parameters should be standardized by the maximum.}
 
 \item{reference}{A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)}

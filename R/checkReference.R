@@ -21,7 +21,7 @@
 #' @export
 checkReference <- function(reference, trait, cwm, cwv, rao, stan, supplementary = NULL, props = NULL){
   RES <- list(call = match.call())
-  # Create list to use in calculateParameters
+  # Create list to use in computeParameters
   x <- list()
   x$simulation$composition <- reference
   x$simulation$group <- data.frame(NAMES = rownames(reference))

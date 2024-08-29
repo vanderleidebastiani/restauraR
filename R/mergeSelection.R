@@ -28,10 +28,11 @@ mergeSelection <- function(...) {
   results <- lapply(results, data.table::as.data.table, keep.rownames = TRUE)
   results <- data.table::rbindlist(results, use.names = TRUE, fill = TRUE)
   resultRowNames <- results$rn
-  results <- as.data.frame(results[,-1])
+  results <- as.data.frame(results[, -1, drop = FALSE])
   rownames(results) <- resultRowNames
   RES$selection$results <- results
-  x <- ARGS[[1]] # Extract only reference and supplementary information for the first object
+  # Extract reference and supplementary information only for the first object
+  x <- ARGS[[1]] 
   if(!is.null(x$reference$composition)){
     RES$reference$composition <- x$reference$composition
   }

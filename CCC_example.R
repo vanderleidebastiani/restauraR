@@ -17,6 +17,7 @@ require(magrittr)
 ## Data ----
 data("dados")
 ls(dados)
+?checkReference
 
 ## Initial check of the reference community ----
 head(dados$trait)
@@ -277,9 +278,9 @@ resParSelectExtra$supplementary$results
 
 ### View results
 viewResults(resParAllSIM, "CWM_LMA", "richness")
-viewResults(resParAllSIM, "CWM_LMA", "restGroup")
+# viewResults(resParAllSIM, "CWM_LMA", "restGroup")
 viewResults(resSelectSim, "CWM_LMA", "richness")
-viewResults(resSelectSimMerged, "CWM_LMA", "richness")
+# viewResults(resSelectSimMerged, "CWM_LMA", "richness")
 
 ### View multifunctionality results
 resParAllSIM
@@ -293,7 +294,7 @@ viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6)
 # CONFERIR ----
 # viewMultifunctionality(resParSelectExtra)
 
-# save.image("CCC_workspace_20240814")
-# load("CCC_workspace_202408076")
+# save.image("CCC_workspace_20240829")
+load("CCC_workspace_20240829")
 
 # END ----

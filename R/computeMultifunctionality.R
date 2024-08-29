@@ -13,7 +13,7 @@ computeMultifunctionality <- function(x, tests){
     xPar <- x$selection$results
   }
   completeString <- paste0('xPar', '$', tests)
-  testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text=a))))
+  testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
   testsSplit <- strsplit(tests, ' ')
   colnames(testsEval) <- sapply(testsSplit, '[', 1)
   testsEval <- as.data.frame(testsEval)

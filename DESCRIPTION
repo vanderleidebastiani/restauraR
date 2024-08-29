@@ -23,6 +23,8 @@ Collate:
     'computeMultifunctionality.R'
     'createReport.R'
     'findSpecies.R'
+    'reorganizeMatrix.R'
+    'makeMatrixTemplate.R'
     'selectCommunities.R'
     'mergeSelection.R'
     'simulateCommunities.R'
