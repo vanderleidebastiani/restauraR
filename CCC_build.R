@@ -15,7 +15,7 @@ remove.packages("CCC")
 
 system("R CMD check CCC_0.0.01.tar.gz")
 system("R CMD INSTALL CCC_0.0.02.tar.gz")
-# system("R CMD check --as-cran XXXX_0.0.0.tar.gz")
+system("R CMD check --as-cran CCC_0.0.02.tar.gz")
 # system("R CMD check XXX")
 
 require(CCC)

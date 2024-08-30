@@ -162,9 +162,7 @@ target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowe
 # conferir se colunas foram encontradas
 # calcular multi das referencia tambem
 resParAllSIM <- computeMultifunctionality(resParAllSIM,
-                            tests = target
-                            # where = "global"
-                            )
+                            tests = target)
 resParAllSIM
 head(resParAllSIM$simulation$results)
 head(resParAllSIM$simulation$multifunctionality)
@@ -174,9 +172,7 @@ resParAllSIM$simulation$results
 
 ### Dissimilarity ----
 resParAllSIM <- computeDissimilarity(resParAllSIM, 
-                                       dados$trait[,1:2] 
-                                       # where = "global"
-                                       )
+                                       dados$trait[,1:2])
 resParAllSIM$simulation$results
 
 # TAREFAS ----
@@ -290,7 +286,11 @@ head(resParAllSIM$simulation$multifunctionality)
 
 colSums(resParAllSIM$simulation$multifunctionality)
 viewMultifunctionality(resParAllSIM)
-viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6)
+viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "exclusive_intersection")
+viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inclusive_intersection")
+
+# Ver se tem como tirar a linha ----
+
 # CONFERIR ----
 # viewMultifunctionality(resParSelectExtra)
 

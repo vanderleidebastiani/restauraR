@@ -21,7 +21,7 @@
 #' @export
 checkReference <- function(reference, trait, cwm, cwv, rao, stan, supplementary = NULL, props = NULL){
   RES <- list(call = match.call())
-  # Create list to use in computeParameters
+  # Create list, simRest class, to use in computeParameters
   x <- list()
   x$simulation$composition <- reference
   x$simulation$group <- data.frame(NAMES = rownames(reference))
@@ -31,12 +31,12 @@ checkReference <- function(reference, trait, cwm, cwv, rao, stan, supplementary 
   colnames(maxCom) <- rownames(trait)
   resPar <- computeParameters(x, trait = trait, cwm = cwm, cwv = cwv, rao = rao, stan = stan, reference = maxCom, supplementary = supplementary)
   RES$pool$results <- resPar$reference$results
-  RES$pool$summary <- resSummary(trait)
+  RES$pool$summary <- resSummary(trait, props = props)
   RES$reference$results <- resPar$simulation$results[ , -1, drop = FALSE]
-  RES$reference$summary <- resSummary(RES$reference$results)
+  RES$reference$summary <- resSummary(RES$reference$results, props = props)
   if(!is.null(supplementary)){
     RES$supplementary$results <- resPar$supplementary$results
-    RES$supplementary$summary <- resSummary(RES$supplementary$results)
+    RES$supplementary$summary <- resSummary(RES$supplementary$results, props = props)
   }
   class(RES) <- "simRestCheck"
   return(RES)

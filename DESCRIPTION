@@ -9,6 +9,12 @@ Imports:
     Select,
     fundiversity,
     adiv,
+    SYNCSA,
+    mcmcplots,
+    data.table,
+    ggplot2,
+    tableHTML,
+    ComplexUpset,
     knitr
 Description: More about what it does (maybe more than one line).
 License: What license is it under?
