@@ -44,7 +44,7 @@ require(CCC)
 
 ### The dataset
 
-The `cerrado` dataset contain traits to 483 species used in restoration projects in the savannas in the cerrado biome. The dataset arranged as a list: `traits` object with traits data and `reference` object the composition of 6 reference sites.
+The `cerrado` dataset contain traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The dataset arranged as a list: `traits` object with traits data and `reference` object the composition of 6 reference sites.
 
 The data frame `traits` contain four traits: `BT` (bark thickness), `SLA` (specific leaf area), `Height` (maximum height) and `Seed` (seed mass). Furthermore, the column `Available` indicates if species available on the market, column `Cost` the cost per individual and the column `Density` planting density for each species. The species names are arranged as the row names of data frame.
 
@@ -340,12 +340,18 @@ knitr::kable(parametersSEL, digits = 3, row.names = FALSE)
 
 Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 
+```{r}
+# Necessary species
+unavailableSpecies <- extractResults(resSEL, trait = traits, ava = ava, type = "unavailableSpecies")
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(unavailableSpecies$necessarySpp), row.names = FALSE, caption = "Necessary species (first 6 rows only)")
+```
+
 # NAO IMPLEMENTADO AINDA
 
-sppSelected \<-selcomposition[,colSums(selcomposition)\>0] unaSpp \<- data$all_species[data$available == 0] necessary.spp \<- data.frame(unavailable_spp = intersect(unaSpp, colnames(sppSelected) ) ) necessary.spp
-
-
-dissimilarity
+Dissimilarity
 
 Because the functional dissimilarity returned is the average dissimilarity between each simulated community and each reference site, the dissimilarity among reference sites can also be calculated. For these reason, you should bind simulated communities with reference sites to have a single input in the function `computeDissimilarity` This step is required to #plot reference areas in the functional dissimilarity axis using viewResults.
 

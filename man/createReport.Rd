@@ -13,5 +13,6 @@ createReport(x, props = NULL)
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
 \description{
-Creates a data profiling report
+Creates a data profiling report Based on the mcmcplots package
 }
+\keyword{MainFunction}

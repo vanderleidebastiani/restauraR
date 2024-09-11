@@ -9,7 +9,6 @@ print.simRest <- function(x, ...) {
   cat(" Pool size: ")
   cat(ncol(x$simulation$composition), "\n")
   cat(" Number of simulations: ")
-  # cat(deparse(nrow(x$simulation$composition)), "\n")
   cat(nrow(x$simulation$composition), "\n")
   cat(" Reference communities: ")
   cat(ifelse(is.null(x$reference), "No", "Yes"), "\n")
@@ -23,8 +22,6 @@ print.simRest <- function(x, ...) {
   } else{
     cat(ifelse(is.null(x$simulation$results), "No", "Yes"), "\n\n")
   }
-  # sprintf("%.3f", eig.temp$p_value) 
-  # print(x$simulation$results)
   cat("List of results:\n")
   CollectNames <- function(l, prefix = NULL) {
     if (!is.list(l)) return(NULL)

@@ -1,8 +1,8 @@
 Package: CCC
 Type: Package
 Title: What the Package Does (Short Line)
-Version: 0.0.02
-Date: 2024-07-20
+Version: 0.0.03
+Date: 2024-09-07
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Imports:
@@ -10,9 +10,9 @@ Imports:
     fundiversity,
     adiv,
     SYNCSA,
-    mcmcplots,
     data.table,
     ggplot2,
+    R2HTML,
     tableHTML,
     ComplexUpset,
     knitr
@@ -22,12 +22,15 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
+    'CCC-package.R'
     'FCWV.R'
+    'cerrado.R'
     'checkReference.R'
     'computeParameters.R'
     'computeDissimilarity.R'
     'computeMultifunctionality.R'
     'createReport.R'
+    'extractResults.R'
     'findSpecies.R'
     'reorganizeMatrix.R'
     'makeMatrixTemplate.R'

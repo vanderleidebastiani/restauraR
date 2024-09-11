@@ -40,7 +40,12 @@ resCheck$supplementary$summary
 ## Exploratory report (html)
 createReport(dados$trait, props = c(0.1, 0.5, 0.75))
 # FINALIZAR ----
-
+# funcao para definir os target (percentil?)
+# referencia, pool, ...
+# testar se tem atributos apartir da literatura
+# etapa exploratoria
+# pensar em percentil na funcao da multi
+# incluir os graficos exploratorios
 ## Simulation ----
 
 ### Simulate communities starting without species ----
@@ -144,14 +149,6 @@ resParAllSIM$supplementary$results
 ### Multifunctionality ----
 resCheck$reference$summary
 head(resParAllSIM$simulation$results)
-
-# TAREFAS ----
-# funcao para definir os target (percentil?)
-# referencia, pool, ...
-# testar se tem atributos apartir da literatura
-# etapa exploratoria
-# pensar em percentil na funcao da multi
-# incluir os graficos exploratorios
 
 target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
 # CONFERIR ----
@@ -297,4 +294,40 @@ viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inc
 # save.image("CCC_workspace_20240829")
 load("CCC_workspace_20240829")
 
+resParAllSIM_TESTE <- computeParameters(allSIM, 
+                                        trait = dados$trait, 
+                                        # cwm = dados$cwm,
+                                        rao = dados$cwm,
+                                        # cwv = dados$cwm,
+                                        # ava = dados$ava,
+                                        ref = dados$ref[1:10,],
+                                        supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE$simulation$results
+
+
+resParAllSIM_TESTE2 <- computeParameters(allSIM, 
+                                         trait = dados$trait, 
+                                         # cwm = dados$cwm,
+                                         rao = list(dados$cwm, c("LMA", "Zooc")),
+                                         # cwv = dados$cwm,
+                                         # ava = dados$ava,
+                                         ref = dados$ref[1:10,],
+                                         supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE2$simulation$results
+
+listarao <- list(dados$cwm, c("LMA", "Zooc"))
+names(listarao) <- c("Tudo", "LMAZooc")
+listarao
+resParAllSIM_TESTE3 <- computeParameters(resSIM1, 
+                                         trait = dados$trait, 
+                                         # cwm = dados$cwm,
+                                         rao = listarao,
+                                         # cwv = dados$cwm,
+                                         # ava = dados$ava,
+                                         ref = dados$ref[1:10,],
+                                         supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE3$simulation$results
 # END ----

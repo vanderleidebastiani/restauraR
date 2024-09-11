@@ -23,6 +23,35 @@ mergeSimulations <- function(...) {
   rownames(comp) <- resRowNames
   comp[is.na(comp)] <- 0
   RES$simulation$composition <- comp
+  # Results
+  results <- lapply(ARGS, function(x) x$simulation$results)
+  checkNull <- sapply(results, function(x) is.null(x))
+  if(!c(all(checkNull == TRUE) || all(checkNull == FALSE))){
+    stop("all objects must contain (or none of them must contain) the calculated results")
+  }
+  if(!all(checkNull)){
+    results <- lapply(results, data.table::as.data.table, keep.rownames = TRUE)
+    results <- data.table::rbindlist(results, use.names = TRUE, fill = TRUE)
+    resultRowNames <- results$rn
+    results <- as.data.frame(results[, -1, drop = FALSE])
+    rownames(results) <- resultRowNames
+    RES$simulation$results <- results  
+  }
+  # Extract reference and supplementary information only for the first object
+  x <- ARGS[[1]] 
+  if(!is.null(x$reference$composition)){
+    RES$reference$composition <- x$reference$composition
+  }
+  if(!is.null(x$supplementary$composition)){
+    RES$supplementary$composition <- x$supplementary$composition
+  }
+  if(!is.null(x$reference$results)){
+    RES$reference$results <- x$reference$results
+  }
+  if(!is.null(x$supplementary$results)){
+    RES$supplementary$results <- x$supplementary$results
+  }
   class(RES) <- "simRest"
   return(RES)
+  # Precisa incluir a multifunctionality? Se sim adicionar descricao do objeto no help
 }

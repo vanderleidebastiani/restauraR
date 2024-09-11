@@ -12,11 +12,10 @@
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns 
-#' @note 
 #' @author 
 #' @seealso
 #' @references
-#' @keywords
+#' @keywords MainFunction
 #' @examples
 #' @export
 checkReference <- function(reference, trait, cwm, cwv, rao, stan, supplementary = NULL, props = NULL){

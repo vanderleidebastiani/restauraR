@@ -11,11 +11,10 @@
 #' @param hideref Logical argument to specify if hide reference sites
 #' @param ... Arguments passed to \code{\link{ComplexUpset::upset}} function.
 #' @returns A ggplot plot object.
-#' @note 
 #' @author 
 #' @seealso
 #' @references
-#' @keywords
+#' @keywords MainFunction
 #' @examples
 #' @export
 viewResults <- function(x, xvar, yvar, hideref = FALSE){

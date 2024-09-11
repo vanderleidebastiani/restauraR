@@ -2,13 +2,12 @@
 #' @description
 #' @details
 #' @encoding UTF-8
-#' @aliases
+#' @aliases makeMatrixTemplate
 #' @param template 
 #' @param x 
 #' @param fillNA 
 #' @param ...
 #' @returns 
-#' @note 
 #' @author 
 #' @seealso
 #' @references

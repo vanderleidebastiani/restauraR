@@ -8,31 +8,49 @@
 #' @param tests A vector with selection criteria to be performed.
 #' @param ... Objects of class "simRestSelect" to be concatenated.
 #' @returns A list (class "simRestSelect") with the elements:
-#' @note 
+#' \item{call}{The arguments used.}
+#' \item{selection$composition}{A matrix with species composition for selected communities.}
+#' \item{selection$group}{A data frame with complementary information for selected sites.}
+#' \item{selection$results}{A data frame with calculated parameters in each selected community.}
+#' \item{selection$N}{FINALIZAR}
+#' \item{selection$thresholds}{FINALIZAR}
+#' \item{reference$composition}{A matrix with species composition for reference sites}
+#' \item{reference$results}{A data frame with calculated parameters in reference sites.}
+#' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
+#' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 #' @author 
 #' @seealso
 #' @references
-#' @keywords
+#' @keywords MainFunction
 #' @examples
+#' data("cerrado.mini")
+#' head(cerrado.mini$traits)
+#' # Simulation
+#' scenario <- simulateCommunities(trait = cerrado.mini$traits,
+#'                          ava = "Available",
+#'                          cwm = "BT",
+#'                          rao = c("SLA", "Height", "Seed"),
+#'                          rich = c(10, 15),
+#'                          it = 100)
+#' scenario
+#' # Compute functional parameters
+#' scenario <- computeParameters(x = scenario,
+#'                               trait = cerrado.mini$traits,
+#'                     ava = "Available",
+#'                     cwm = "BT",
+#'                     rao = c("SLA", "Height", "Seed"),
+#'                     cost = "Cost",
+#'                     dens = "Density",
+#'                     reference = cerrado.mini$reference,
+#'                     supplementary = cerrado.mini$supplementary)
+#' scenario
+#' # Select communities
+#' scenarioSelected <- selectCommunities(x = scenario,
+#'                                       tests = c("CWM_BT > 8",
+#'                                                 "rao > 2.5"))
+#' scenarioSelected
 #' @export 
 selectCommunities <- function(x, tests){
-  # where = "global"
-  # argOptions <- c("selection", "global")
-  # where <- pmatch(where, argOptions)
-  # if (length(where) > 1 || any(is.na(where))) {
-  #   stop("Invalid where argument\n")
-  # }
-  # Get parameters and composition
-  # if(where == 1){
-  #   xPar <- x$selection$results
-  #   comp <- x$selection$composition
-  #   group <- x$selection$group
-  # } else{
-  #   xPar <- x$simulation$results
-  #   comp <- x$simulation$composition
-  #   group <- x$simulation$group
-  # }
-  # RES <- vector("list")
   RES <- list(call = match.call())
   if(inherits(x, "simRest")){
     xPar <- x$simulation$results

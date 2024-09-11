@@ -1,0 +1,583 @@
+---
+title: "Vignette Title2"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title2}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: none
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE, 
+  echo = TRUE,
+  collapse = TRUE,
+  results = 'hold',
+  fig.height = 5, 
+  fig.width = 6, 
+  fig.align = 'center',
+  comment = "#>"
+)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+The document illustrate the main features of CCC package. Set seed to be able to repeat the same simulation.
+
+```{r, echo = FALSE}
+set.seed(2024)
+```
+
+## Package load
+
+```{r, message = FALSE}
+require(CCC)
+```
+
+## The dataset
+
+The `cerrado.mini` is a toy dataset containing only 50 sampled species of the `cerrado` dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset was arranged to illustrate the main features of CCC packages, including scenarios with reference sites, restoration sites and supplementary sites. 
+
+The dataset is arranged as a list: `traits` object with traits data, `reference` object the composition of 2 reference sites, `restoration` composition of 2 restoration sites and `supplementary` composition of 2 supplementary sites. The supplementary sites are similar to the reference sites but arranged in the framework only to illustrative propose, thus, the parameters can be calculated and plotted to help the interpretation of the results. 
+
+The data frame `traits` contain four traits: `BT` (bark thickness), `SLA` (specific leaf area), `Height` (maximum height) and `Seed` (seed mass). Furthermore, the column `Available` indicates if species available on the market, column `Cost` the cost per individual and the column `Density` planting density for each species. The species names are arranged as the row names of data frame.
+
+The composition data are matrix and contain modified relative abundances. The species names are arranged as the column names of the matrix and site names as row names.
+
+```{r}
+# Load cerrado data
+data(cerrado.mini)
+# Traits data
+traits <- cerrado.mini$traits
+# Species composition in reference sites
+referenceSites <- cerrado.mini$reference
+# Species composition in restoration sites
+restorationSites <- cerrado.mini$restoration
+# Species composition in supplementary sites
+supplementarySites <- cerrado.mini$supplementary
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(traits), digits = 3, row.names = TRUE, caption = "Traits data (first 6 rows only)")
+knitr::kable(head(referenceSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Reference sites (first 3 columns only)")
+knitr::kable(head(restorationSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Restoration sites (first 3 columns only)")
+knitr::kable(head(supplementarySites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Supplementary sites (first 3 columns only)")
+```
+
+## Generate simulated communities
+
+The simulation are performed using `simulateCommunities` function, specifying input parameters. The function return an object of class `simRest` (a list object) with basic information of input parameters and a list of results.
+
+### Simulate communities starting without species
+
+```{r}
+scenarioA <- simulateCommunities(trait = traits, 
+                               ava = "Available", 
+                               it = 100, 
+                               rich = c(10, 15), 
+                               cwm = "BT", 
+                               rao = c("BT", "SLA", "Height", "Seed"),
+                               phi = 1,
+                               prefix = "New"
+)
+scenarioA
+scenarioA$simulation$group
+scenarioA$simulation$composition
+```
+
+
+### Simulate communities starting with existing species
+
+```{r}
+scenarioB <- simulateCommunities(trait = traits, 
+                              restComp = restorationSites,
+                               ava = "Available", 
+                               it = 100, 
+                               rich = c(10, 15), 
+                               cwm = "BT", 
+                               rao = c("BT", "SLA", "Height", "Seed"),
+                               phi = 1,
+                              max_add = 1,
+                               prefix = "Ongoing"
+)
+scenarioB
+scenarioB$simulation$group
+scenarioB$simulation$composition
+```
+
+### Merge simulation
+
+```{r}
+allScenarios <- mergeSimulations(scenarioA, scenarioB)
+allScenarios 
+allScenarios$simulation$group
+allScenarios$simulation$composition
+```
+
+## Calculate functional parameters
+
+For each simulated communities, you can count species unavailable, compute richness, CWM, Rao and estimate the restoration cost. 
+
+```{r}
+# Compute functional parameters
+allScenarios <- computeParameters(x = allScenarios,
+                              trait = traits,
+                    ava = "Available",
+                    cwm = "BT",
+                    rao = c("SLA", "Height", "Seed"),
+                    cost = "Cost",
+                    dens = "Density",
+                    reference = referenceSites,
+                    supplementary = supplementarySites)
+allScenarios
+# Compute dissimilarity
+allScenarios <- computeDissimilarity(x = allScenarios, 
+                                 trait = traits)
+allScenarios
+# Compute multifunctionality
+allScenarios <- computeMultifunctionality(x = allScenarios, 
+                                 tests = c("CWM_BT > 8",
+                                           "rao > 2.5"))
+allScenarios
+```
+
+# AQUI
+
+### Restoration costs
+
+If you want to calculate cost, you need to provide a vector of species cost per individual and a vector of planting density (for example, number of individuals per hectare) for each species. 
+
+```{r}
+# Species cost
+cost <- "Cost"
+# Species planting density
+dens <- "Density"
+```
+
+
+
+## Select simulated communities
+
+Now, use `selectCommunities` to filter selected communities that satisfies these thresholds.
+Now, define the desired thresholds to select communities. The thresholds can be set of one or more parameters, but the names must match the parameters names in `resSIM` object. For example, CWM bark thickness higher than 6 mm and Rao higher than 0.7.
+
+```{r}
+### Global selection (first step) ----
+targetSelect1 <- c("CWM_LMA > 0.08", "rao > 2.9", "CWM_Resprouter > 0.5")
+resSelectSim <- selectCommunities(resParAllSIM, 
+                                  tests = targetSelect1)
+resSelectSim
+class(resSelectSim)
+resSelectSim$selection$results %>% dim
+resSelectSim$selection$results
+resSelectSim$selection$N
+resSelectSim$selection$thresholds
+
+### Additional selection (second step) ----
+targetSelect2 <- c("CWM_LMA > 0.08", "rao < 3", "CWM_Resprouter > 0.5")
+resSelectSim <- selectCommunities(resSelectSim, 
+                                  tests = targetSelect2)
+resSelectSim
+str(resSelectSim,1)
+resSelectSim$selection$group %>% dim
+resSelectSim$selection$composition
+resSelectSim$selection$results
+resSelectSim$selection$N
+resSelectSim$selection$thresholds
+
+### Global selection with dissimilarity and/or multifunctionality ----
+# targetSelect3 <- c("multifunctionality >= 2", "dissimilarity < 0.1")
+targetSelect3 <- c("alphamultifunctionality >= 2")
+resSelectSim3 <- selectCommunities(resParAllSIM, 
+                                   tests = targetSelect3)
+resSelectSim3
+resSelectSim3$selection$results
+resSelectSim3$selection$N
+resSelectSim3$selection$thresholds
+
+## Merge selections ----
+### Selections ----
+resParAllSIM$simulation$results
+targetSelect4 <- c("PREFIX == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 3.6")
+resSelectSimPart1 <- selectCommunities(resParAllSIM, 
+                                  tests = targetSelect4)
+resSelectSimPart1
+resSelectSimPart1$selection$results
+resSelectSimPart1$selection$N
+
+resParAllSIM$simulation$group
+targetSelect5 <- c("PREFIX == 'Ongoing'", "restGroup == 'edge'", "rao > 3.6")
+resSelectSimPart2 <- selectCommunities(resParAllSIM, 
+                                   tests = targetSelect5)
+resSelectSimPart2
+resSelectSimPart2$selection$results
+resSelectSimPart2$selection$N
+
+### Merge ----
+resSelectSimMerged <- mergeSelection(resParAllSIM, resSelectSimPart2)
+resSelectSimMerged
+resSelectSimMerged$selection$group %>% dim
+resSelectSimMerged$selection$composition %>% dim
+resSelectSimMerged$selection$results %>% dim
+```
+
+### Explore the results
+
+First, use the function `viewResults` to compare different parameters and define the thresholds. In the example below view the relationship between bark thickness CWM and Rao a plot similar to Figure 2A in the manuscript will be produced.
+
+```{r}
+viewResults(resSIM, xvar = "CWM_BT", yvar = "rao")
+```
+
+### Select communities
+
+
+```{r}
+# Set thresholds
+thresholds <- c("CWM_BT > 6", "rao > 0.7")
+```
+
+
+
+```{r}
+# Select communities
+resSEL <- selectCommunities(resSIM,
+                                 tests = thresholds)
+```
+
+```{r}
+resSEL
+```
+
+See the number of selected communities for each threshold (and for all them).
+
+```{r}
+# See the number of selected communities
+resSEL$selection$N
+```
+
+### Calculating functional dissimilarity
+
+If you have reference sites, you can calculate functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than a reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function `discomQE` from the package `adiv` using the default formula "QE". Therefore, it corresponds to the Rao's dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity). For more details and references, please see the `adiv` package R documentation.
+
+Now, you need to provide a trait data with traits that should be used to calculate functional dissimilarity. A distance matrix (`dist` object) is also accepted.
+
+```{r}
+traitDis <- dist(scale(traits[, c("BT", "SLA", "Seed")]))
+```
+
+Now, use function `computeDissimilarity` to calculate functional dissimilarity depending on your species trait values, some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
+
+```{r, echo = FALSE}
+resSEL <- readRDS("vignettes/resSEL.rds")
+```
+
+
+```{r, warning = FALSE, eval = FALSE}
+resSEL <- computeDissimilarity(resSEL, traitDis)
+```
+
+```{r}
+resSEL
+```
+
+
+```{r, echo = FALSE, eval = FALSE}
+saveRDS(resSEL, "vignettes/resSEL.rds")
+```
+
+Now you can check the functional dissimilarity between your selected simulated communities and reference sites. This is useful to explore the results and help to define a feasible threshold for functional dissimilarity. You can plot functional dissimilarity against any other parameter with the code below.
+
+```{r}
+viewResults(resSEL, xvar = "dissimilarity", yvar = "rao", hideref = TRUE)
+```
+
+### Additional selection
+
+A addiction threshold can be set to select simulated communities again
+
+```{r}
+# New threshold
+thresholds2 <- c("dissimilarity < 0.35")
+```
+
+Now, use `selectCommunities` to apply the second filter to select communities that satisfies these threshold.
+
+```{r}
+# Select communities
+resSEL <- selectCommunities(resSEL,
+                                tests = thresholds2)
+```
+
+```{r}
+resSEL
+```
+
+```{r}
+# See the number of selected communities for new threshold
+resSEL$selection$N
+```
+
+It is possible to explore functional dissimilarity between reference sites and N-communities assembled at random. Note this will take some time, depending on how many reference sites you have, the number of random communities and the processing power of your computer. This is necessary if you want to recreate figure 2B of the manuscript.
+
+## Step 3: Visualize and save the results
+
+The function `viewResults` return a `ggplot` object, thus additional function of package `ggplot2` can be used to customize the plots such titles, labels and plot themes.
+
+### View Rao vs. CWM
+
+A plot similar to Figure 2A in the manuscript will be produced.
+
+```{r}
+# Customized plot
+viewResults(resSEL, xvar = "CWM_BT", yvar = "rao") +
+  ggplot2::labs(x = "CWM Bark thickness", y = "Rao")
+```
+
+### Rao vs. functional dissimilarity
+
+If you calculated functional dissimilarity View Rao vs. functional dissimilarity. A plot similar to Figure 2B in the manuscript will be produced but only with selected communities. If this functional dissimilarity was only calculated for selected simulated communities, only these communities must be plotted.
+
+```{r}
+# Customized plot
+viewResults(resSEL, xvar = "dissimilarity", yvar = "rao", hideref = TRUE) +
+  ggplot2::labs(x = "Functional dissimilarity", y = "Rao")
+```
+
+### Cost vs. species richness
+
+View cost vs. species richness. A plot similar to Figure 1S in the manuscript will be plotted. It is also possible to calculate the "cost" of reference sites setting `hideref = FALSE`. Such "cost" will refer to the cost to plant or sown the species found in reference sites. This may be of some use to put restoration cost into perspective. Note that cost will be a function of the density parameter (for example, the number of individuals to be planted or sown per hectare considering individual establishment and or survival; if these informations are available. Our default cost is in US dollars per hectare).
+
+```{r}
+# Customized plot
+viewResults(resSEL, xvar = "richness", yvar = "cost") +
+  ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)")
+```
+
+### Exporting your results
+
+Community matrix for selected communities
+
+```{r}
+compositionSEL <- resSEL$selection$composition
+```
+
+Parameters calculated for selected communities
+
+```{r}
+parametersSEL <- resSEL$selection$results
+```
+
+```{r, echo = FALSE}
+knitr::kable(parametersSEL, digits = 3, row.names = FALSE)
+```
+
+### Unavailable species
+
+Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+
+```{r}
+# Necessary species
+unavailableSpecies <- extractResults(resSEL, trait = traits, ava = ava, type = "unavailableSpecies")
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(unavailableSpecies$necessarySpp), row.names = FALSE, caption = "Necessary species (first 6 rows only)")
+```
+
+```{r, echo = FALSE, eval = FALSE}
+
+
+# CCC Example ----
+
+?checkReference
+
+## Initial check of the reference community ----
+head(dados$trait)
+resCheck <- checkReference(reference = dados$ref,
+                           trait = dados$trait,
+                           cwm = dados$cwm,
+                           rao = dados$cwm,
+                           supplementary = dados$supplementary,
+                           props = c(0.75)
+)
+resCheck
+str(resCheck, 1)
+resCheck$pool$results
+resCheck$pool$summary
+resCheck$reference$results
+resCheck$reference$summary
+resCheck$supplementary$results
+resCheck$supplementary$summary
+
+## Exploratory report (html)
+createReport(dados$trait, props = c(0.1, 0.5, 0.75))
+
+## Calculate parameters ----
+### Basic parameters ----
+
+#### Merged simulation ----
+resParAllSIM <- computeParameters(allSIM, 
+                                    trait = dados$trait, 
+                                    cwm = dados$cwm,
+                                    rao = dados$cwm,
+                                    # cwv = dados$cwm,
+                                    ava = dados$ava,
+                                    ref = dados$ref[1:10,],
+                                    supplementary = dados$ref[11:19,]
+)
+resParAllSIM
+class(resParAllSIM)
+str(resParAllSIM, 2)
+
+#### Non merged simulation ----
+resParSIM0 <- computeParameters(resSIM0, 
+                   trait = dados$trait, 
+                   cwm = dados$cwm,
+                   rao = dados$cwm,
+                   cwv = dados$cwm,
+                   ava = dados$ava,
+                   ref = dados$ref[1:10,],
+                   supplementary = dados$ref[11:19,]
+)
+resParSIM0
+class(resParSIM0)
+str(resParSIM0, 2)
+resParAllSIM$simulation$composition
+resParAllSIM$simulation$group
+resParAllSIM$simulation$results
+
+resParAllSIM$reference$composition
+resParAllSIM$reference$results
+
+resParAllSIM$supplementary$composition
+resParAllSIM$supplementary$results
+
+
+### Multifunctionality ----
+resCheck$reference$summary
+head(resParAllSIM$simulation$results)
+
+target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
+# CONFERIR ----
+# QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS 
+target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
+
+# TAREFA ----
+# conferir se colunas foram encontradas
+# calcular multi das referencia tambem
+resParAllSIM <- computeMultifunctionality(resParAllSIM,
+                            tests = target)
+resParAllSIM
+head(resParAllSIM$simulation$results)
+head(resParAllSIM$simulation$multifunctionality)
+head(resParAllSIM$simulation$multifunctionality)
+dim(resParAllSIM$simulation$multifunctionality)
+resParAllSIM$simulation$results
+
+### Dissimilarity ----
+resParAllSIM <- computeDissimilarity(resParAllSIM, 
+                                       dados$trait[,1:2])
+resParAllSIM$simulation$results
+
+# TAREFAS ----
+# incluir dissimilaridade entre comunidades selecionadas
+
+# Select communities ----
+
+
+
+## Extras ----
+
+### Selection then compute dissimilarity and multifunctionality ----
+
+#### First selection ----
+targetSelect6 <- c("rao > 5")
+resParSelectExtra <- selectCommunities(resParSIM0, 
+                                   tests = targetSelect6)
+resParSelectExtra
+resParSelectExtra$selection$N
+resParSelectExtra$selection$results
+
+#### Dissimilarity ----
+resParSelectExtra <- computeDissimilarity(resParSelectExtra, dados$trait[,1:2])
+resParSelectExtra
+resParSelectExtra$selection$results
+
+#### Multifunctionality ----
+targetMulti <- c("CWM_Height > 50", "CWM_Resprouter > 0.05")
+resParSelectExtra <- computeMultifunctionality(resParSelectExtra, tests = targetMulti)
+resParSelectExtra
+resParSelectExtra$selection$multifunctionality
+resParSelectExtra$selection$results
+
+#### Additional selection (second step) ----
+targetSelect7 <- c("alphamultifunctionality >= 2")
+resParSelectExtra <- selectCommunities(resParSelectExtra, tests = targetSelect7)
+resParSelectExtra
+resParSelectExtra$selection$results
+resParSelectExtra$reference$results
+resParSelectExtra$supplementary$results
+
+## Plots ----
+
+### View results
+viewResults(resParAllSIM, "CWM_LMA", "richness")
+# viewResults(resParAllSIM, "CWM_LMA", "restGroup")
+viewResults(resSelectSim, "CWM_LMA", "richness")
+# viewResults(resSelectSimMerged, "CWM_LMA", "richness")
+
+### View multifunctionality results
+resParAllSIM
+
+# Ver de mudar as cores das barras mo grafico
+head(resParAllSIM$simulation$multifunctionality)
+
+colSums(resParAllSIM$simulation$multifunctionality)
+viewMultifunctionality(resParAllSIM)
+viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "exclusive_intersection")
+viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inclusive_intersection")
+
+
+resParAllSIM_TESTE <- computeParameters(allSIM, 
+                                        trait = dados$trait, 
+                                        # cwm = dados$cwm,
+                                        rao = dados$cwm,
+                                        # cwv = dados$cwm,
+                                        # ava = dados$ava,
+                                        ref = dados$ref[1:10,],
+                                        supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE$simulation$results
+
+
+resParAllSIM_TESTE2 <- computeParameters(allSIM, 
+                                         trait = dados$trait, 
+                                         # cwm = dados$cwm,
+                                         rao = list(dados$cwm, c("LMA", "Zooc")),
+                                         # cwv = dados$cwm,
+                                         # ava = dados$ava,
+                                         ref = dados$ref[1:10,],
+                                         supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE2$simulation$results
+
+listarao <- list(dados$cwm, c("LMA", "Zooc"))
+names(listarao) <- c("Tudo", "LMAZooc")
+listarao
+resParAllSIM_TESTE3 <- computeParameters(resSIM1, 
+                                         trait = dados$trait, 
+                                         # cwm = dados$cwm,
+                                         rao = listarao,
+                                         # cwv = dados$cwm,
+                                         # ava = dados$ava,
+                                         ref = dados$ref[1:10,],
+                                         supplementary = dados$ref[11:19,]
+)
+resParAllSIM_TESTE3$simulation$results
+# END ----
+```

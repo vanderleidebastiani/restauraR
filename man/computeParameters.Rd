@@ -37,7 +37,7 @@ computeMultifunctionality(x, tests)
 
 \item{cwv}{A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
-\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.}
 
 \item{cost}{A vector with trait name with of species cost per individual}
 
@@ -53,7 +53,49 @@ computeMultifunctionality(x, tests)
 }
 \value{
 A list (class "simRest" or "simRestSelect") with the elements:
+\item{call}{The arguments used.}
+\item{simulation$composition}{A matrix with species composition for simulated communities.}
+\item{simulation$group}{A data frame with complementary information for restoration sites.}
+\item{simulation$results}{A data frame with calculated parameters in each simulated community.}
+\item{simulation$multifunctionality}{A binary matrix with multifunctionality tests.}
+\item{reference$composition}{A matrix with species composition for reference sites}
+\item{reference$results}{A data frame with calculated parameters in reference sites.}
+\item{supplementary$composition}{A matrix with species composition for supplementary sites.}
+\item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 }
 \description{
 Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy, functional dissimilarity and multifunctionality.
 }
+\examples{
+data("cerrado.mini")
+head(cerrado.mini$traits)
+# Simulation
+scenario <- simulateCommunities(trait = cerrado.mini$traits,
+                         ava = "Available",
+                         cwm = "BT",
+                         rao = c("SLA", "Height", "Seed"),
+                         rich = c(10, 15),
+                         it = 100)
+scenario
+# Compute functional parameters
+scenario <- computeParameters(x = scenario,
+                              trait = cerrado.mini$traits,
+                    ava = "Available",
+                    cwm = "BT",
+                    rao = c("SLA", "Height", "Seed"),
+                    cost = "Cost",
+                    dens = "Density",
+                    reference = cerrado.mini$reference,
+                    supplementary = cerrado.mini$supplementary)
+scenario
+# Compute dissimilarity
+scenario <- computeDissimilarity(x = scenario, 
+                                 trait = cerrado.mini$traits)
+scenario
+# Compute multifunctionality
+scenario <- computeMultifunctionality(x = scenario, 
+                                 tests = c("CWM_BT > 8",
+                                           "rao > 2.5"))
+scenario
+}
+\keyword{MainFunction}

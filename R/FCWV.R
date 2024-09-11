@@ -6,7 +6,6 @@
 #' @param x A matrix with species proportions in the reference sites. NAs not accepted.
 #' @param traitSub Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
-#' @note 
 #' @author 
 #' @seealso
 #' @references
