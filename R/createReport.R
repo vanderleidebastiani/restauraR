@@ -5,13 +5,15 @@
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave
 #' @importFrom tableHTML tableHTML add_css_table
 #' @importFrom R2HTML HTMLInitFile HTMLCSS HTML.title HTMLli HTMLhr HTML HTMLInsertGraph HTMLbr
+#' @importFrom utils browseURL
+#' @importFrom grDevices dev.list dev.off nclass.FD
 #' @aliases
 #' @param x Input data
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns
-#' @note 
-#' @author 
-#' @seealso
+#' @author See \code{\link{CCC-package}}.
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
+#' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
 #' @keywords MainFunction
 #' @examples
@@ -22,8 +24,8 @@ createReport <- function(x, props = NULL){
   traitsNames <- colnames(x)
   dirTemp <- tempdir()
   ## Turn off graphics device if interrupted in the middle of plotting
-  current.devices <- dev.list()
-  on.exit( sapply(dev.list(), function(dev) if(!(dev %in% current.devices)) dev.off(dev)) )
+  current.devices <- grDevices::dev.list()
+  on.exit( sapply(grDevices::dev.list(), function(dev) if(!(dev %in% current.devices)) grDevices::dev.off(dev)) )
   # Load css file in mcmcplots package
   css.file <- system.file("style.css", package = "CCC")
   # css.file <- paste0(getwd(), "/inst/style.css")
@@ -65,7 +67,7 @@ createReport <- function(x, props = NULL){
       # Freedman-Diaconis method
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[group.name]]) +
-        ggplot2::geom_histogram(bins = nclass.FD(x[[group.name]]), col = "white")
+        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[[group.name]]), col = "white")
     }
     # Export temp plot
     ggplot2::ggsave(file.path(dirTemp, gname),
@@ -93,6 +95,6 @@ createReport <- function(x, props = NULL){
   # TEMP REMOVe
   print(css.file)
   print(full.name.path)
-  browseURL(full.name.path)
+  utils::browseURL(full.name.path)
   invisible(full.name.path)
 }

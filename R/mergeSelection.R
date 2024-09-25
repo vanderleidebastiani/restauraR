@@ -25,12 +25,21 @@ mergeSelection <- function(...) {
   RES$selection$composition <- comp
   # Results
   results <- lapply(ARGS, function(x) x$selection$results)
-  results <- lapply(results, data.table::as.data.table, keep.rownames = TRUE)
+  results <- lapply(results, data.table::as.data.table, keep.rownames = FALSE)
   results <- data.table::rbindlist(results, use.names = TRUE, fill = TRUE)
-  resultRowNames <- results$rn
-  results <- as.data.frame(results[, -1, drop = FALSE])
-  rownames(results) <- resultRowNames
-  RES$selection$results <- results
+  RES$selection$results <- as.data.frame(results)
+  # Multifunctionality
+  multifun <- lapply(ARGS, function(x) x$selection$multifunctionality)
+  checkNullMultifun <- sapply(multifun, function(x) is.null(x))
+  if(!c(all(checkNullMultifun == TRUE) || all(checkNullMultifun == FALSE))){
+    stop("all objects must contain (or none of them must contain) the multifunctionality results")
+  }
+  if(!all(checkNullMultifun)){
+    multifun <- lapply(multifun, data.table::as.data.table, keep.rownames = FALSE)
+    multifun <- data.table::rbindlist(multifun, use.names = TRUE, fill = TRUE)
+    RES$selection$multifunctionality <- as.data.frame(multifun)
+  }
+  # The thresholds are not merged/shown
   # Extract reference and supplementary information only for the first object
   x <- ARGS[[1]] 
   if(!is.null(x$reference$composition)){
@@ -47,5 +56,4 @@ mergeSelection <- function(...) {
   }
   class(RES) <- "simRestSelect"
   return(RES)
-  # Precisa incluir a multifunctionality, thresholds e N?
 }

@@ -2,3 +2,15 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+
+CCC_build.R
+CCC_example.R
+README.md
+LICENSE
+
+^data/dados.rda
+^vignettes/Vignette-Title.Rmd
+^vignettes/resSEL.rds
+^vignettes/resSIM.rds
+^vignettes/resSIM0.rds
+

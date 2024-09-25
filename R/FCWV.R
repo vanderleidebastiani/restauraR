@@ -2,15 +2,14 @@
 #' @description
 #' @details
 #' @encoding UTF-8
-#' @aliases
+#' @importFrom SYNCSA matrix.t
 #' @param x A matrix with species proportions in the reference sites. NAs not accepted.
 #' @param traitSub Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
-#' @author 
+#' @author See \code{\link{CCC-package}}.
 #' @seealso
 #' @references
 #' @keywords Auxiliary
-#' @examples
 #' @export
 FCWV <- function(x, traitSub){
   temp <- SYNCSA::matrix.t(x, traitSub, scale = FALSE)

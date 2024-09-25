@@ -4,20 +4,31 @@
 \name{reorganizeMatrix}
 \alias{reorganizeMatrix}
 \alias{makeMatrixTemplate}
-\title{reorganizeMatrix}
+\title{Internal function to reorganize matrix}
 \usage{
 reorganizeMatrix(template, x, fillNA = FALSE)
 
 makeMatrixTemplate(...)
 }
 \arguments{
-\item{template}{}
+\item{template}{A template matrix returned by the `makeMatrixTemplate` function.}
 
-\item{x}{}
+\item{x}{A data.frame or matrix to be reorganized.}
 
-\item{fillNA}{}
+\item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells with NAs are replaced with zero (0).}
+
+\item{...}{Objects of class data.frame (or matrix) to be concatenated.}
+}
+\value{
+The `makeMatrixTemplate` function returns a empty data.table object, `reorganizeMatrix` returns the reorganized matrix.
 }
 \description{
-reorganizeMatrix
+`makeMatrixTemplate` creates a template matrix. This function concatenates two or more data.frame (or matrix) 
+and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
+
+`reorganizeMatrix` rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
+}
+\author{
+See \code{\link{CCC-package}}.
 }
 \keyword{Auxiliary}

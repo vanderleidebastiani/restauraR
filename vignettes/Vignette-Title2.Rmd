@@ -1,10 +1,10 @@
 ---
-title: "Vignette Title2"
+title: "CCC - Overview"
 author: "Vignette Author"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title2}
+  %\VignetteIndexEntry{CCC - Overview}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -14,7 +14,7 @@ editor_options:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE, 
+  eval = TRUE, 
   echo = TRUE,
   collapse = TRUE,
   results = 'hold',
@@ -26,19 +26,88 @@ knitr::opts_chunk$set(
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-The document illustrate the main features of CCC package. Set seed to be able to repeat the same simulation.
+# Introduction
 
-```{r, echo = FALSE}
-set.seed(2024)
-```
+## The framework 
 
-## Package load
+The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval. 
+
+## Traits and additional species information
+
+Each species in the pool can be described by functional traits that represent the ecological functions of communities, ecosystem services, or desirable characteristics for novel or restored communities. Those species can be classified into species that are available on the market and those that are not. Furthermore, the cost per individual, observed frequencies occurring in reference sites, and any additional information can be used to select species composition.
+
+## Simulations
+
+The species assemblages are generated in the simulateCommunities function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets. 
+
+The sampling of species can be performed completely at random or selected species based on functional traits or a desired trait profile. If the cwm argument is set the species selections are constrained to specific community-weighted mean trait values, using the entire range of each trait. If the rao argument is set, the species selections are performed in order to optimize the functional diversity of a specific set of traits.
+
+To obtain a high number of restoration solutions, all runs of the simulateCommunities function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
+
+The framework returns a community matrix indicating the proportion of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with preexisting species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
+
+## Communities parameters
+
+After the initial step of species composition simulation, several function parameters can be calculated for each community. In the CCC package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters, computeDissimilarity and computeMultifunctionality can be used in this step. 
+
+The function computeParameters is mandatory and allows compute the basic parameters:  richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. 
+
+The function computeDissimilarity is optional and computes functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
+
+The function computeMultifunctionality is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.
+
+## Select communities
+
+The selections of simulated communities are performed using the function selectCommunities. Selections are based on simple logical tests based on thresholds. The user must define parameter thresholds, that indicate the level of functional composition above (or below) which the function is considered to be restored in each site. The thresholds can be set of one or more calculated parameters in the previous step. This is an essential step that must be based on previous studies that indicate the relationship between species traits and ecosystem functions related to the desired restoration targets. Knowledge of the regional species pool, species availability and reference sites are important to find solutions that adequately optimize restoration goals.
+
+Multiple selection steps can be performed sequentially, using more restrictive criteria (although the practical results will be the same when applied in a single step with the most restrictive criterion).
+
+## The reference sites
+
+Reference sites can be included in computeParameters step. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
+
+The ccc package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species same sites.
+
+## The outputs 
+
+The main outputs are a community matrix with species relative abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market. 
+
+## Multifunctionality
+
+The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the CCC package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.
+
+The selection of simulated species composition can be performed in alpha multifunctionality metric to maximize multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
+
+High values of alpha multifunctionality can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered. 
+
+## Visualization
+
+The results visualization functions are auxiliary to checking parameters in reference sites, analyzing the distribution of functional parameters in simulated communities and showing final solutions of selected species composition. 
+
+The function viewResults allows the visualization of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualization includes all simulated communities and allows includes also observed relations in reference sites. 
+
+The function viewMultifunctionality allows visualize the multifunctionality sets creating a graphical representation of the number of sites where each function has been restored, and the number of sites where combinations of functions were restored.
+
+## Merge functions
+
+The ccc package includes functions to merge results set in different operations. 
+
+The function mergeSimulations concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations. 
+
+The function mergeSelection concatenates different selection procedures. For example, if restoration sites have diverse desired restoration targets, the selection can be performed in distinct steps and then concatenated.
+
+# Main features
+
+The CCC package contains an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The main functions are shown below using an illustrative example. Set the seed to be able to repeat the same simulation.
 
 ```{r, message = FALSE}
+# Set seed
+set.seed(2024)
+# Package load
 require(CCC)
 ```
 
-## The dataset
+### The dataset
 
 The `cerrado.mini` is a toy dataset containing only 50 sampled species of the `cerrado` dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset was arranged to illustrate the main features of CCC packages, including scenarios with reference sites, restoration sites and supplementary sites. 
 
@@ -68,54 +137,68 @@ knitr::kable(head(restorationSites, n = c(6, 3)), digits = 3, row.names = TRUE, 
 knitr::kable(head(supplementarySites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Supplementary sites (first 3 columns only)")
 ```
 
+## Check species pool and reference sites
+
+The function `checkReference` allows check species pool and functional parameters in reference sites calculating basic functional parameters and returning the summary statistic those parameters. The function return an object of class `simRestCheck` (a list object) with the descriptive statistics.
+
+```{r}
+# Initial check of the reference community
+resCheck <- checkReference(reference = referenceSites,
+                           trait = traits,
+                           cwm = "BT", 
+                           rao = c("BT", "SLA", "Height", "Seed"),
+                           supplementary = supplementarySites,
+                           props = c(0.75)
+)
+resCheck
+```
+
 ## Generate simulated communities
 
 The simulation are performed using `simulateCommunities` function, specifying input parameters. The function return an object of class `simRest` (a list object) with basic information of input parameters and a list of results.
 
-### Simulate communities starting without species
+### Simulate communities starting with empty communities 
 
 ```{r}
+# First scenario
 scenarioA <- simulateCommunities(trait = traits, 
-                               ava = "Available", 
-                               it = 100, 
-                               rich = c(10, 15), 
-                               cwm = "BT", 
-                               rao = c("BT", "SLA", "Height", "Seed"),
-                               phi = 1,
-                               prefix = "New"
+                                 ava = "Available", 
+                                 it = 100, 
+                                 rich = c(10, 15), 
+                                 cwm = "BT", 
+                                 rao = c("BT", "SLA", "Height", "Seed"),
+                                 phi = 1,
+                                 prefix = "New"
 )
 scenarioA
-scenarioA$simulation$group
-scenarioA$simulation$composition
 ```
-
 
 ### Simulate communities starting with existing species
 
 ```{r}
+# Second scenario
 scenarioB <- simulateCommunities(trait = traits, 
-                              restComp = restorationSites,
-                               ava = "Available", 
-                               it = 100, 
-                               rich = c(10, 15), 
-                               cwm = "BT", 
-                               rao = c("BT", "SLA", "Height", "Seed"),
-                               phi = 1,
-                              max_add = 1,
-                               prefix = "Ongoing"
+                                 restComp = restorationSites,
+                                 ava = "Available", 
+                                 it = 100, 
+                                 rich = c(10, 15), 
+                                 cwm = "BT", 
+                                 rao = c("BT", "SLA", "Height", "Seed"),
+                                 phi = 1,
+                                 max_add = 1,
+                                 prefix = "Ongoing"
 )
 scenarioB
-scenarioB$simulation$group
-scenarioB$simulation$composition
 ```
 
 ### Merge simulation
 
+Concatenates simulated communities generated under different scenarios. 
+
 ```{r}
+# Merge all scenarios
 allScenarios <- mergeSimulations(scenarioA, scenarioB)
 allScenarios 
-allScenarios$simulation$group
-allScenarios$simulation$composition
 ```
 
 ## Calculate functional parameters
@@ -134,450 +217,134 @@ allScenarios <- computeParameters(x = allScenarios,
                     reference = referenceSites,
                     supplementary = supplementarySites)
 allScenarios
+```
+
+A list can be provided for the Rao parameter to calculate diversity for multiple trait sets.
+
+```{r}
+# Compute functional parameters using list in Rao
+# Make list
+list2rao <- list(c("BT", "SLA", "Height", "Seed"), 
+                 c("SLA", "Height", "Seed"))
+# The list can be named
+names(list2rao) <- c("allTraits", 
+                     "chosenTraits")
+list2rao
+```
+
+```{r}
+# Compute functional parameters
+allScenariosAlternative <- computeParameters(x = allScenarios,
+                              trait = traits,
+                    ava = "Available",
+                    cwm = "BT",
+                    rao = list2rao,
+                    cost = "Cost",
+                    dens = "Density",
+                    reference = referenceSites,
+                    supplementary = supplementarySites)
+allScenariosAlternative
+```
+
+The dissimilarity and multifunctionality also can be computed after the basic parameter calculation. Note that the dissimilarity and alpha multifunctionality are included in the result data frame.
+
+```{r}
 # Compute dissimilarity
 allScenarios <- computeDissimilarity(x = allScenarios, 
                                  trait = traits)
 allScenarios
+```
+
+```{r}
 # Compute multifunctionality
 allScenarios <- computeMultifunctionality(x = allScenarios, 
-                                 tests = c("CWM_BT > 8",
+                                 tests = c("CWM_BT > 6",
                                            "rao > 2.5"))
+# All parameters calculated
 allScenarios
 ```
 
-# AQUI
-
-### Restoration costs
-
-If you want to calculate cost, you need to provide a vector of species cost per individual and a vector of planting density (for example, number of individuals per hectare) for each species. 
-
-```{r}
-# Species cost
-cost <- "Cost"
-# Species planting density
-dens <- "Density"
-```
-
-
-
 ## Select simulated communities
 
-Now, use `selectCommunities` to filter selected communities that satisfies these thresholds.
-Now, define the desired thresholds to select communities. The thresholds can be set of one or more parameters, but the names must match the parameters names in `resSIM` object. For example, CWM bark thickness higher than 6 mm and Rao higher than 0.7.
+The selections are performed using the `selectCommunities` function. The filters selected communities that satisfy all input thresholds. The thresholds can be set of one or more parameters, but the names must match the parameters names in `resSIM` object. 
+
+### Sequential approach
+
+Multiple selection steps can be performed sequentially, using more restrictive criteria in each step.
 
 ```{r}
-### Global selection (first step) ----
-targetSelect1 <- c("CWM_LMA > 0.08", "rao > 2.9", "CWM_Resprouter > 0.5")
-resSelectSim <- selectCommunities(resParAllSIM, 
+# Global selection (first step)
+targetSelect1 <- c("CWM_BT > 6", "rao > 2.5")
+resSelectSim <- selectCommunities(allScenarios, 
                                   tests = targetSelect1)
-resSelectSim
-class(resSelectSim)
-resSelectSim$selection$results %>% dim
-resSelectSim$selection$results
-resSelectSim$selection$N
-resSelectSim$selection$thresholds
+```
 
-### Additional selection (second step) ----
-targetSelect2 <- c("CWM_LMA > 0.08", "rao < 3", "CWM_Resprouter > 0.5")
+```{r}
+# Additional selection (second step)
+targetSelect2 <- c("rao < 3", "cost < 8000")
 resSelectSim <- selectCommunities(resSelectSim, 
                                   tests = targetSelect2)
-resSelectSim
-str(resSelectSim,1)
-resSelectSim$selection$group %>% dim
-resSelectSim$selection$composition
-resSelectSim$selection$results
-resSelectSim$selection$N
-resSelectSim$selection$thresholds
+```
 
-### Global selection with dissimilarity and/or multifunctionality ----
-# targetSelect3 <- c("multifunctionality >= 2", "dissimilarity < 0.1")
+```{r}
+# Additional selection with dissimilarity and/or multifunctionality
 targetSelect3 <- c("alphamultifunctionality >= 2")
-resSelectSim3 <- selectCommunities(resParAllSIM, 
+resSelectSim <- selectCommunities(resSelectSim, 
                                    tests = targetSelect3)
-resSelectSim3
-resSelectSim3$selection$results
-resSelectSim3$selection$N
-resSelectSim3$selection$thresholds
+resSelectSim
+```
 
-## Merge selections ----
-### Selections ----
-resParAllSIM$simulation$results
-targetSelect4 <- c("PREFIX == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 3.6")
-resSelectSimPart1 <- selectCommunities(resParAllSIM, 
-                                  tests = targetSelect4)
-resSelectSimPart1
-resSelectSimPart1$selection$results
-resSelectSimPart1$selection$N
+### Distinct steps approach
 
-resParAllSIM$simulation$group
-targetSelect5 <- c("PREFIX == 'Ongoing'", "restGroup == 'edge'", "rao > 3.6")
-resSelectSimPart2 <- selectCommunities(resParAllSIM, 
-                                   tests = targetSelect5)
-resSelectSimPart2
-resSelectSimPart2$selection$results
-resSelectSimPart2$selection$N
+The selection can also be performed in distinct steps and then concatenated. For example, if restoration sites have diverse desired restoration targets.
 
-### Merge ----
-resSelectSimMerged <- mergeSelection(resParAllSIM, resSelectSimPart2)
+```{r}
+# Selection Sites with the prefix "New"
+target2New <- c("PREFIX == 'New'", "rao > 3")
+resSelectSimPart1 <- selectCommunities(allScenarios, 
+                                  tests = target2New)
+```
+
+```{r}
+# Selection Sites with the prefix "Ongoing"
+target2Ongoing <- c("PREFIX == 'Ongoing'", "rao < 1.5")
+resSelectSimPart2 <- selectCommunities(allScenarios, 
+                                   tests = target2Ongoing)
+```
+
+```{r}
+# Then merge
+resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2)
 resSelectSimMerged
-resSelectSimMerged$selection$group %>% dim
-resSelectSimMerged$selection$composition %>% dim
-resSelectSimMerged$selection$results %>% dim
 ```
 
-### Explore the results
-
-First, use the function `viewResults` to compare different parameters and define the thresholds. In the example below view the relationship between bark thickness CWM and Rao a plot similar to Figure 2A in the manuscript will be produced.
-
-```{r}
-viewResults(resSIM, xvar = "CWM_BT", yvar = "rao")
-```
-
-### Select communities
-
-
-```{r}
-# Set thresholds
-thresholds <- c("CWM_BT > 6", "rao > 0.7")
-```
-
-
-
-```{r}
-# Select communities
-resSEL <- selectCommunities(resSIM,
-                                 tests = thresholds)
-```
-
-```{r}
-resSEL
-```
-
-See the number of selected communities for each threshold (and for all them).
-
-```{r}
-# See the number of selected communities
-resSEL$selection$N
-```
-
-### Calculating functional dissimilarity
-
-If you have reference sites, you can calculate functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than a reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function `discomQE` from the package `adiv` using the default formula "QE". Therefore, it corresponds to the Rao's dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity). For more details and references, please see the `adiv` package R documentation.
-
-Now, you need to provide a trait data with traits that should be used to calculate functional dissimilarity. A distance matrix (`dist` object) is also accepted.
-
-```{r}
-traitDis <- dist(scale(traits[, c("BT", "SLA", "Seed")]))
-```
-
-Now, use function `computeDissimilarity` to calculate functional dissimilarity depending on your species trait values, some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
-
-```{r, echo = FALSE}
-resSEL <- readRDS("vignettes/resSEL.rds")
-```
-
-
-```{r, warning = FALSE, eval = FALSE}
-resSEL <- computeDissimilarity(resSEL, traitDis)
-```
-
-```{r}
-resSEL
-```
-
-
-```{r, echo = FALSE, eval = FALSE}
-saveRDS(resSEL, "vignettes/resSEL.rds")
-```
-
-Now you can check the functional dissimilarity between your selected simulated communities and reference sites. This is useful to explore the results and help to define a feasible threshold for functional dissimilarity. You can plot functional dissimilarity against any other parameter with the code below.
-
-```{r}
-viewResults(resSEL, xvar = "dissimilarity", yvar = "rao", hideref = TRUE)
-```
-
-### Additional selection
-
-A addiction threshold can be set to select simulated communities again
-
-```{r}
-# New threshold
-thresholds2 <- c("dissimilarity < 0.35")
-```
-
-Now, use `selectCommunities` to apply the second filter to select communities that satisfies these threshold.
-
-```{r}
-# Select communities
-resSEL <- selectCommunities(resSEL,
-                                tests = thresholds2)
-```
-
-```{r}
-resSEL
-```
-
-```{r}
-# See the number of selected communities for new threshold
-resSEL$selection$N
-```
-
-It is possible to explore functional dissimilarity between reference sites and N-communities assembled at random. Note this will take some time, depending on how many reference sites you have, the number of random communities and the processing power of your computer. This is necessary if you want to recreate figure 2B of the manuscript.
-
-## Step 3: Visualize and save the results
+## Visualize and explore the results
 
 The function `viewResults` return a `ggplot` object, thus additional function of package `ggplot2` can be used to customize the plots such titles, labels and plot themes.
 
-### View Rao vs. CWM
-
-A plot similar to Figure 2A in the manuscript will be produced.
+```{r}
+# Customized plot
+viewResults(allScenarios, xvar = "richness", yvar = "cost") +
+  ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)") +
+  ggplot2::labs(title = "All simulations")
+```
 
 ```{r}
 # Customized plot
-viewResults(resSEL, xvar = "CWM_BT", yvar = "rao") +
-  ggplot2::labs(x = "CWM Bark thickness", y = "Rao")
+viewResults(resSelectSimMerged, xvar = "richness", yvar = "cost") +
+  ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)") +
+  ggplot2::labs(title = "Selected simulations")
 ```
-
-### Rao vs. functional dissimilarity
-
-If you calculated functional dissimilarity View Rao vs. functional dissimilarity. A plot similar to Figure 2B in the manuscript will be produced but only with selected communities. If this functional dissimilarity was only calculated for selected simulated communities, only these communities must be plotted.
 
 ```{r}
-# Customized plot
-viewResults(resSEL, xvar = "dissimilarity", yvar = "rao", hideref = TRUE) +
-  ggplot2::labs(x = "Functional dissimilarity", y = "Rao")
-```
-
-### Cost vs. species richness
-
-View cost vs. species richness. A plot similar to Figure 1S in the manuscript will be plotted. It is also possible to calculate the "cost" of reference sites setting `hideref = FALSE`. Such "cost" will refer to the cost to plant or sown the species found in reference sites. This may be of some use to put restoration cost into perspective. Note that cost will be a function of the density parameter (for example, the number of individuals to be planted or sown per hectare considering individual establishment and or survival; if these informations are available. Our default cost is in US dollars per hectare).
-
-```{r}
-# Customized plot
-viewResults(resSEL, xvar = "richness", yvar = "cost") +
-  ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)")
-```
-
-### Exporting your results
-
-Community matrix for selected communities
-
-```{r}
-compositionSEL <- resSEL$selection$composition
-```
-
-Parameters calculated for selected communities
-
-```{r}
-parametersSEL <- resSEL$selection$results
-```
-
-```{r, echo = FALSE}
-knitr::kable(parametersSEL, digits = 3, row.names = FALSE)
-```
-
-### Unavailable species
-
-Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
-
-```{r}
-# Necessary species
-unavailableSpecies <- extractResults(resSEL, trait = traits, ava = ava, type = "unavailableSpecies")
-```
-
-```{r, echo = FALSE}
-knitr::kable(head(unavailableSpecies$necessarySpp), row.names = FALSE, caption = "Necessary species (first 6 rows only)")
-```
-
-```{r, echo = FALSE, eval = FALSE}
-
-
-# CCC Example ----
-
-?checkReference
-
-## Initial check of the reference community ----
-head(dados$trait)
-resCheck <- checkReference(reference = dados$ref,
-                           trait = dados$trait,
-                           cwm = dados$cwm,
-                           rao = dados$cwm,
-                           supplementary = dados$supplementary,
-                           props = c(0.75)
-)
-resCheck
-str(resCheck, 1)
-resCheck$pool$results
-resCheck$pool$summary
-resCheck$reference$results
-resCheck$reference$summary
-resCheck$supplementary$results
-resCheck$supplementary$summary
-
-## Exploratory report (html)
-createReport(dados$trait, props = c(0.1, 0.5, 0.75))
-
-## Calculate parameters ----
-### Basic parameters ----
-
-#### Merged simulation ----
-resParAllSIM <- computeParameters(allSIM, 
-                                    trait = dados$trait, 
-                                    cwm = dados$cwm,
-                                    rao = dados$cwm,
-                                    # cwv = dados$cwm,
-                                    ava = dados$ava,
-                                    ref = dados$ref[1:10,],
-                                    supplementary = dados$ref[11:19,]
-)
-resParAllSIM
-class(resParAllSIM)
-str(resParAllSIM, 2)
-
-#### Non merged simulation ----
-resParSIM0 <- computeParameters(resSIM0, 
-                   trait = dados$trait, 
-                   cwm = dados$cwm,
-                   rao = dados$cwm,
-                   cwv = dados$cwm,
-                   ava = dados$ava,
-                   ref = dados$ref[1:10,],
-                   supplementary = dados$ref[11:19,]
-)
-resParSIM0
-class(resParSIM0)
-str(resParSIM0, 2)
-resParAllSIM$simulation$composition
-resParAllSIM$simulation$group
-resParAllSIM$simulation$results
-
-resParAllSIM$reference$composition
-resParAllSIM$reference$results
-
-resParAllSIM$supplementary$composition
-resParAllSIM$supplementary$results
-
-
-### Multifunctionality ----
-resCheck$reference$summary
-head(resParAllSIM$simulation$results)
-
-target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
-# CONFERIR ----
-# QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS 
-target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
-
-# TAREFA ----
-# conferir se colunas foram encontradas
-# calcular multi das referencia tambem
-resParAllSIM <- computeMultifunctionality(resParAllSIM,
-                            tests = target)
-resParAllSIM
-head(resParAllSIM$simulation$results)
-head(resParAllSIM$simulation$multifunctionality)
-head(resParAllSIM$simulation$multifunctionality)
-dim(resParAllSIM$simulation$multifunctionality)
-resParAllSIM$simulation$results
-
-### Dissimilarity ----
-resParAllSIM <- computeDissimilarity(resParAllSIM, 
-                                       dados$trait[,1:2])
-resParAllSIM$simulation$results
-
-# TAREFAS ----
-# incluir dissimilaridade entre comunidades selecionadas
-
-# Select communities ----
-
-
-
-## Extras ----
-
-### Selection then compute dissimilarity and multifunctionality ----
-
-#### First selection ----
-targetSelect6 <- c("rao > 5")
-resParSelectExtra <- selectCommunities(resParSIM0, 
-                                   tests = targetSelect6)
-resParSelectExtra
-resParSelectExtra$selection$N
-resParSelectExtra$selection$results
-
-#### Dissimilarity ----
-resParSelectExtra <- computeDissimilarity(resParSelectExtra, dados$trait[,1:2])
-resParSelectExtra
-resParSelectExtra$selection$results
-
-#### Multifunctionality ----
-targetMulti <- c("CWM_Height > 50", "CWM_Resprouter > 0.05")
-resParSelectExtra <- computeMultifunctionality(resParSelectExtra, tests = targetMulti)
-resParSelectExtra
-resParSelectExtra$selection$multifunctionality
-resParSelectExtra$selection$results
-
-#### Additional selection (second step) ----
-targetSelect7 <- c("alphamultifunctionality >= 2")
-resParSelectExtra <- selectCommunities(resParSelectExtra, tests = targetSelect7)
-resParSelectExtra
-resParSelectExtra$selection$results
-resParSelectExtra$reference$results
-resParSelectExtra$supplementary$results
-
-## Plots ----
-
-### View results
-viewResults(resParAllSIM, "CWM_LMA", "richness")
-# viewResults(resParAllSIM, "CWM_LMA", "restGroup")
-viewResults(resSelectSim, "CWM_LMA", "richness")
-# viewResults(resSelectSimMerged, "CWM_LMA", "richness")
-
-### View multifunctionality results
-resParAllSIM
-
-# Ver de mudar as cores das barras mo grafico
-head(resParAllSIM$simulation$multifunctionality)
-
-colSums(resParAllSIM$simulation$multifunctionality)
-viewMultifunctionality(resParAllSIM)
-viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "exclusive_intersection")
-viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inclusive_intersection")
-
-
-resParAllSIM_TESTE <- computeParameters(allSIM, 
-                                        trait = dados$trait, 
-                                        # cwm = dados$cwm,
-                                        rao = dados$cwm,
-                                        # cwv = dados$cwm,
-                                        # ava = dados$ava,
-                                        ref = dados$ref[1:10,],
-                                        supplementary = dados$ref[11:19,]
-)
-resParAllSIM_TESTE$simulation$results
-
-
-resParAllSIM_TESTE2 <- computeParameters(allSIM, 
-                                         trait = dados$trait, 
-                                         # cwm = dados$cwm,
-                                         rao = list(dados$cwm, c("LMA", "Zooc")),
-                                         # cwv = dados$cwm,
-                                         # ava = dados$ava,
-                                         ref = dados$ref[1:10,],
-                                         supplementary = dados$ref[11:19,]
-)
-resParAllSIM_TESTE2$simulation$results
-
-listarao <- list(dados$cwm, c("LMA", "Zooc"))
-names(listarao) <- c("Tudo", "LMAZooc")
-listarao
-resParAllSIM_TESTE3 <- computeParameters(resSIM1, 
-                                         trait = dados$trait, 
-                                         # cwm = dados$cwm,
-                                         rao = listarao,
-                                         # cwv = dados$cwm,
-                                         # ava = dados$ava,
-                                         ref = dados$ref[1:10,],
-                                         supplementary = dados$ref[11:19,]
-)
-resParAllSIM_TESTE3$simulation$results
-# END ----
+# View multifunctionality results
+# viewMultifunctionality(allScenarios)
+# viewMultifunctionality(allScenarios, 
+#                        min_degree = 3, 
+#                        max_degree = 6, 
+#                        mode = "exclusive_intersection")
+# viewMultifunctionality(allScenarios, 
+#                        min_degree = 3, 
+#                        max_degree = 6, 
+#                        mode = "inclusive_intersection")
 ```

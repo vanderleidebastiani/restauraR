@@ -2,14 +2,16 @@
 #' @name cerrado
 #' @docType data
 #' @encoding UTF-8
-#' @description The cerrado dataset contain traits to 483 species used in restoration projects in the savannas in the Cerrado biome.
+#' @aliases cerrado.mini
+#' @description The `cerrado` dataset contains traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The `cerrado.mini` dataset contains a random subset of species (50 species) for running the examples.
 #' @format The dataset arranged as a list:
 #' \describe{
 #'   \item{traits}{A data frame object with traits data. The data frame contains four traits: BT (bark thickness), SLA (specific leaf area), Height (maximum height) and Seed (seed mass). The column Available indicates if species are available on the market, the column Cost the cost per individual and the column Density planting density for each species.}
 #'   \item{reference}{A matrix contains relative abundances for 118 species in six reference sites. The species are arranged as columns and sites in rows.}
 #' }
 #' @usage data(cerrado)
-#' @author 
 #' @keywords datasets
 #' @references 
+#' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+#' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 NULL

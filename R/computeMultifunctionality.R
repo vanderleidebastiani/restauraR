@@ -14,15 +14,19 @@ computeMultifunctionality <- function(x, tests){
   }
   completeString <- paste0('xPar', '$', tests)
   testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
-  testsSplit <- strsplit(tests, ' ')
-  colnames(testsEval) <- sapply(testsSplit, '[', 1)
-  testsEval <- as.data.frame(testsEval)
+  # testsSplit <- strsplit(tests, ' ')
+  # colnames(testsEval) <- sapply(testsSplit, '[', 1)
+  colnames(testsEval) <- tests
+  # rownames(testsEval) <- rownames(xPar)
+  # testsEval <- as.data.frame(testsEval)
+  resAlpha <- rowSums(testsEval)
+  testsEval <- cbind.data.frame(SIM = xPar$SIM, testsEval)
   if(inherits(x, "simRest")){
     x$simulation$multifunctionality <- testsEval
-    x$simulation$results$alphamultifunctionality <- rowSums(testsEval)
+    x$simulation$results$alphamultifunctionality <- resAlpha
   } else{
     x$selection$multifunctionality <- testsEval
-    x$selection$results$alphamultifunctionality <- rowSums(testsEval)
+    x$selection$results$alphamultifunctionality <- resAlpha
   }
   return(x)
 }

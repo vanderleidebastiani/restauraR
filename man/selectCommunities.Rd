@@ -27,8 +27,8 @@ A list (class "simRestSelect") with the elements:
 \item{selection$composition}{A matrix with species composition for selected communities.}
 \item{selection$group}{A data frame with complementary information for selected sites.}
 \item{selection$results}{A data frame with calculated parameters in each selected community.}
-\item{selection$N}{FINALIZAR}
-\item{selection$thresholds}{FINALIZAR}
+\item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
+\item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
 \item{reference$composition}{A matrix with species composition for reference sites}
 \item{reference$results}{A data frame with calculated parameters in reference sites.}
 \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
@@ -64,5 +64,20 @@ scenarioSelected <- selectCommunities(x = scenario,
                                       tests = c("CWM_BT > 8",
                                                 "rao > 2.5"))
 scenarioSelected
+}
+\references{
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
+
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+in preparation.
+}
+\seealso{
+\code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{computeParameters}},
+\code{\link{extractResults}}, \code{\link{viewResults}}
+}
+\author{
+See \code{\link{CCC-package}}.
 }
 \keyword{MainFunction}

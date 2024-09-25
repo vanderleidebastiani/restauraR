@@ -10,13 +10,15 @@ data("dados")
 
 setwd("..")
 system("R CMD build CCC")
+# system("R CMD build --no-build-vignettes")
 system("R CMD INSTALL CCC")
+# system("R CMD check CCC")
+
 remove.packages("CCC")
 
-system("R CMD check CCC_0.0.01.tar.gz")
 system("R CMD INSTALL CCC_0.0.03.tar.gz")
-system("R CMD check --as-cran CCC_0.0.02.tar.gz")
-# system("R CMD check XXX")
+system("R CMD check --as-cran CCC_0.0.03.tar.gz")
+system("R CMD check CCC_0.0.03.tar.gz")
 
 require(CCC)
 ?CCC::findSpecies

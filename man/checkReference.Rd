@@ -4,7 +4,7 @@
 \name{checkReference}
 \alias{checkReference}
 \alias{print.simRestCheck}
-\title{checkReference}
+\title{Check species pool and functional parameters in reference sites}
 \usage{
 checkReference(
   reference,
@@ -36,7 +36,32 @@ checkReference(
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
+\value{
+A list (class `simRestCheck`) with the elements:
+\item{call}{The arguments used.}
+\item{pool$results}{A data frame with calculated parameters in species pool.}
+\item{pool$summary}{A data frame with the descriptive statistics of the species pool.}
+\item{reference$results}{A data frame with calculated parameters in reference sites.}
+\item{reference$summary}{A data frame with the descriptive statistics of calculated parameters in reference sites.}
+\item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
+\item{supplementary$summary}{A data frame with the descriptive statistics of calculated parameters in supplementary sites.}
+}
 \description{
-checkReference
+Calculate basic parameters in reference community: richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy.
+}
+\examples{
+data("cerrado.mini")
+checkReference(reference = cerrado.mini$reference,
+               trait = cerrado.mini$traits,
+               cwm = "BT",
+               rao = c("SLA", "Height", "Seed"),
+               props = c(0.75, 0.9))
+}
+\seealso{
+\code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
+\code{\link{extractResults}}, \code{\link{viewResults}}
+}
+\author{
+See \code{\link{CCC-package}}.
 }
 \keyword{MainFunction}

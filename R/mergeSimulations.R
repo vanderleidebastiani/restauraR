@@ -30,12 +30,20 @@ mergeSimulations <- function(...) {
     stop("all objects must contain (or none of them must contain) the calculated results")
   }
   if(!all(checkNull)){
-    results <- lapply(results, data.table::as.data.table, keep.rownames = TRUE)
+    results <- lapply(results, data.table::as.data.table, keep.rownames = FALSE)
     results <- data.table::rbindlist(results, use.names = TRUE, fill = TRUE)
-    resultRowNames <- results$rn
-    results <- as.data.frame(results[, -1, drop = FALSE])
-    rownames(results) <- resultRowNames
-    RES$simulation$results <- results  
+    RES$simulation$results <- as.data.frame(results)
+  }
+  # Multifunctionality
+  multifun <- lapply(ARGS, function(x) x$simulation$multifunctionality)
+  checkNullMultifun <- sapply(multifun, function(x) is.null(x))
+  if(!c(all(checkNullMultifun == TRUE) || all(checkNullMultifun == FALSE))){
+    stop("all objects must contain (or none of them must contain) the multifunctionality results")
+  }
+  if(!all(checkNullMultifun)){
+    multifun <- lapply(multifun, data.table::as.data.table, keep.rownames = FALSE)
+    multifun <- data.table::rbindlist(multifun, use.names = TRUE, fill = TRUE)
+    RES$simulation$multifunctionality <- as.data.frame(multifun)
   }
   # Extract reference and supplementary information only for the first object
   x <- ARGS[[1]] 
@@ -53,5 +61,4 @@ mergeSimulations <- function(...) {
   }
   class(RES) <- "simRest"
   return(RES)
-  # Precisa incluir a multifunctionality? Se sim adicionar descricao do objeto no help
 }

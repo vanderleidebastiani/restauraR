@@ -5,6 +5,7 @@ Version: 0.0.03
 Date: 2024-09-07
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
+Depends: R (>= 3.5)
 Imports:
     Select,
     fundiversity,
@@ -15,7 +16,11 @@ Imports:
     R2HTML,
     tableHTML,
     ComplexUpset,
-    knitr
+    knitr,
+    rprojroot,
+    utils,
+    stats,
+    grDevices
 Description: More about what it does (maybe more than one line).
 License: What license is it under?
 Encoding: UTF-8

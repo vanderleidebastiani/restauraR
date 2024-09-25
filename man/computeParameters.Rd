@@ -27,7 +27,7 @@ computeDissimilarity(x, trait)
 computeMultifunctionality(x, tests)
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.}
+\item{x}{A object of class `simRest` or `simRestSelect` to perform calculate communities parameters.}
 
 \item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
 
@@ -52,12 +52,12 @@ computeMultifunctionality(x, tests)
 \item{tests}{A vector with multifunctionality criteria to be performed.}
 }
 \value{
-A list (class "simRest" or "simRestSelect") with the elements:
+A list (class `simRest` or `simRestSelect`) with the elements:
 \item{call}{The arguments used.}
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
 \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
-\item{simulation$multifunctionality}{A binary matrix with multifunctionality tests.}
+\item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{reference$composition}{A matrix with species composition for reference sites}
 \item{reference$results}{A data frame with calculated parameters in reference sites.}
 \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
@@ -80,13 +80,13 @@ scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
                               trait = cerrado.mini$traits,
-                    ava = "Available",
-                    cwm = "BT",
-                    rao = c("SLA", "Height", "Seed"),
-                    cost = "Cost",
-                    dens = "Density",
-                    reference = cerrado.mini$reference,
-                    supplementary = cerrado.mini$supplementary)
+                              ava = "Available",
+                              cwm = "BT",
+                              rao = c("SLA", "Height", "Seed"),
+                              cost = "Cost",
+                              dens = "Density",
+                              reference = cerrado.mini$reference,
+                              supplementary = cerrado.mini$supplementary)
 scenario
 # Compute dissimilarity
 scenario <- computeDissimilarity(x = scenario, 
@@ -97,5 +97,20 @@ scenario <- computeMultifunctionality(x = scenario,
                                  tests = c("CWM_BT > 8",
                                            "rao > 2.5"))
 scenario
+}
+\references{
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
+
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+in preparation.
+}
+\seealso{
+\code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{selectCommunities}},
+\code{\link{extractResults}}, \code{\link{viewResults}}
+}
+\author{
+See \code{\link{CCC-package}}.
 }
 \keyword{MainFunction}

@@ -22,8 +22,6 @@ print.simRestSelect <- function(x, ...) {
   } else{
     cat(ifelse(is.null(x$selection$results), "No", "Yes"), "\n\n")
   }
-  # Mostrar o N?
-  # print(x$selection$N)
   cat("List of results:\n")
   CollectNames <- function(l, prefix = NULL) {
     if (!is.list(l)) return(NULL)

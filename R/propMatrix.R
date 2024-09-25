@@ -1,5 +1,6 @@
 #' @title Internal function to generate communities proportion matrix
 #' @encoding UTF-8
+#' @importFrom stats rlnorm
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param und A vector indicating trait name which indicates undesired species (1 or 0) in trait data.
@@ -9,7 +10,7 @@
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
 #' @returns A community matrix with species relative abundances.
-#' @author 
+#' @author See \code{\link{CCC-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
@@ -19,7 +20,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi){
   sampleAbundance <- function(nRich1, nRich2, vLen){
     nsp_i <-  resample(nRich1:nRich2, 1)
     ocor <- sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
-    abund <- rlnorm(vLen)
+    abund <- stats::rlnorm(vLen)
     abund <- abund * ocor
     prop <- abund/sum(abund)
     return(prop)

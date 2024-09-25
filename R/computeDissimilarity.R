@@ -14,7 +14,7 @@ computeDissimilarity <- function(x, trait){
   }
   ref <- x$reference$composition
 	if(inherits(trait, 'data.frame') || inherits(trait, 'matrix')){
-		dis <- dist(scale(trait))
+		dis <- stats::dist(scale(trait))
 	} else if(inherits(trait, 'dist')){
 		dis <- trait
 	}
@@ -24,9 +24,9 @@ computeDissimilarity <- function(x, trait){
 		i <<-  i+1 
 		message(paste('##### Reference site number: ',i, '#####') )
 		j = 1
-		pb <- txtProgressBar(min = 0, max = nrow(comp), style = 3)
+		pb <- utils::txtProgressBar(min = 0, max = nrow(comp), style = 3)
 		DISSIM_i <- apply(comp, 1, FUN = function(p){ 
-			setTxtProgressBar(pb, j)
+		  utils::setTxtProgressBar(pb, j)
 			j <<- j +1
 			comm <- rbind(r, p)
 			DISSIM_j <- adiv::discomQE(comm, dis, formula = "QE")

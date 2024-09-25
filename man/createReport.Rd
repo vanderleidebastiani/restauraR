@@ -15,4 +15,11 @@ createReport(x, props = NULL)
 \description{
 Creates a data profiling report Based on the mcmcplots package
 }
+\seealso{
+\code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
+\code{\link{extractResults}}, \code{\link{viewResults}}
+}
+\author{
+See \code{\link{CCC-package}}.
+}
 \keyword{MainFunction}

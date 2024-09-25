@@ -1,13 +1,14 @@
 #' @title Compute functional parameters in communities
 #' @description Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy, functional dissimilarity and multifunctionality.
-#' @details
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
 #' @importFrom fundiversity fd_raoq
 #' @importFrom SYNCSA matrix.t
 #' @importFrom adiv discomQE
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom stats dist
 #' @aliases computeDissimilarity computeMultifunctionality
-#' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
+#' @param x A object of class `simRest` or `simRestSelect` to perform calculate communities parameters.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
@@ -19,19 +20,26 @@
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param tests A vector with multifunctionality criteria to be performed. 
-#' @returns A list (class "simRest" or "simRestSelect") with the elements:
+#' @returns A list (class `simRest` or `simRestSelect`) with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
 #' \item{simulation$group}{A data frame with complementary information for restoration sites.}
 #' \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
-#' \item{simulation$multifunctionality}{A binary matrix with multifunctionality tests.}
+#' \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
 #' \item{reference$results}{A data frame with calculated parameters in reference sites.}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
-#' @author 
-#' @seealso
+#' @author See \code{\link{CCC-package}}.
+#' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{selectCommunities}},
+#' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
+#' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+#' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
+#' 
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+#' in preparation.
 #' @keywords MainFunction
 #' @examples
 #' data("cerrado.mini")
@@ -47,13 +55,13 @@
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
 #'                               trait = cerrado.mini$traits,
-#'                     ava = "Available",
-#'                     cwm = "BT",
-#'                     rao = c("SLA", "Height", "Seed"),
-#'                     cost = "Cost",
-#'                     dens = "Density",
-#'                     reference = cerrado.mini$reference,
-#'                     supplementary = cerrado.mini$supplementary)
+#'                               ava = "Available",
+#'                               cwm = "BT",
+#'                               rao = c("SLA", "Height", "Seed"),
+#'                               cost = "Cost",
+#'                               dens = "Density",
+#'                               reference = cerrado.mini$reference,
+#'                               supplementary = cerrado.mini$supplementary)
 #' scenario
 #' # Compute dissimilarity
 #' scenario <- computeDissimilarity(x = scenario, 
@@ -222,6 +230,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
   } else {
     x$simulation$results <- cbind.data.frame(x$simulation$group, out)  
   }
+  rownames(x$simulation$results) <- NULL
   return(x)
   # Adicionar checagem no stan?
 }

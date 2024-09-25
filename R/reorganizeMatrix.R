@@ -1,18 +1,18 @@
-#' @title reorganizeMatrix
-#' @description
-#' @details
+#' @title Internal function to reorganize matrix
+#' @description `makeMatrixTemplate` creates a template matrix. This function concatenates two or more data.frame (or matrix) 
+#' and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
+#' 
+#' `reorganizeMatrix` rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
 #' @encoding UTF-8
 #' @aliases makeMatrixTemplate
-#' @param template 
-#' @param x 
-#' @param fillNA 
-#' @param ...
-#' @returns 
-#' @author 
-#' @seealso
-#' @references
+#' @importFrom data.table as.data.table rbindlist
+#' @param template A template matrix returned by the `makeMatrixTemplate` function.
+#' @param x A data.frame or matrix to be reorganized.
+#' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells with NAs are replaced with zero (0).
+#' @param ... Objects of class data.frame (or matrix) to be concatenated.
+#' @returns The `makeMatrixTemplate` function returns a empty data.table object, `reorganizeMatrix` returns the reorganized matrix.
+#' @author See \code{\link{CCC-package}}.
 #' @keywords Auxiliary
-#' @examples
 #' @export
 reorganizeMatrix <- function(template, x, fillNA = FALSE){
   rowNameX <- rownames(x)

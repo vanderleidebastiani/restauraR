@@ -1,13 +1,13 @@
 #' @title Internal function to calculate descriptive statistics
 #' @encoding UTF-8
+#' @importFrom stats median quantile
 #' @param x A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles
-#' @author 
-#' @seealso 
+#' @author See \code{\link{CCC-package}}.
 #' @keywords Auxiliary
 #' @export
-resSummary <- function(x, props = NULL, ...){
+resSummary <- function(x, props = NULL){
   if(!c(is.atomic(x) || c(inherits(x, what = "data.frame") || inherits(x, what = "matrix")))){
     stop("x must be a vector, data.frame or matrix")
   }
@@ -26,11 +26,11 @@ resSummary <- function(x, props = NULL, ...){
     # Descriptive statistics
     res  <- data.frame(min = min(x, na.rm = TRUE),
                        mean = mean(x, na.rm = TRUE),
-                       median = median(x, na.rm = TRUE),
+                       median = stats::median(x, na.rm = TRUE),
                        max = max(x, na.rm = TRUE))
     # Quantiles
     if(!is.null(props)) {
-      d2 <- data.frame(t(quantile(x, probs = props)))
+      d2 <- data.frame(t(stats::quantile(x, probs = props)))
       colnames(d2) <- paste0("quantile_", props)
       res <- cbind.data.frame(res, d2)
     }

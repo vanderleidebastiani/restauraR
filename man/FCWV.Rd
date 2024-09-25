@@ -18,4 +18,7 @@ A matrix with Community Weighted Variance.
 \description{
 Internal function to calculate Community Weighted Variance (CWV)
 }
+\author{
+See \code{\link{CCC-package}}.
+}
 \keyword{Auxiliary}

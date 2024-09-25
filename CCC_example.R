@@ -226,10 +226,11 @@ resSelectSimPart2 <- selectCommunities(resParAllSIM,
                                    tests = targetSelect5)
 resSelectSimPart2
 resSelectSimPart2$selection$results
+resSelectSimPart2$selection$results
 resSelectSimPart2$selection$N
 
 ### Merge ----
-resSelectSimMerged <- mergeSelection(resParAllSIM, resSelectSimPart2)
+resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2)
 resSelectSimMerged
 resSelectSimMerged$selection$group %>% dim
 resSelectSimMerged$selection$composition %>% dim
@@ -268,7 +269,7 @@ resParSelectExtra$reference$results
 resParSelectExtra$supplementary$results
 
 ## Plots ----
-
+simulateCommunities
 ### View results
 viewResults(resParAllSIM, "CWM_LMA", "richness")
 # viewResults(resParAllSIM, "CWM_LMA", "restGroup")

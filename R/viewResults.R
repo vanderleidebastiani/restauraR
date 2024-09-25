@@ -1,19 +1,25 @@
 #' @title Visualize results
 #' @description Visualize parameters of simulated and selected communities and reference sites
-#' @details
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual
-#' @importFrom ComplexUpset upset
+#' @importFrom ComplexUpset upset intersection_size
 #' @aliases viewMultifunctionality
 #' @param x A object of class "simRest" or "simRestSelect" to visualize results
 #' @param xvar Name of the variable (parameter) in x axis.
 #' @param yvar Name of the variable (parameter) in y axis.
-#' @param hideref Logical argument to specify if hide reference sites
-#' @param ... Arguments passed to \code{\link{ComplexUpset::upset}} function.
+#' @param hideref Logical argument (TRUE or FALSE) to specify if hide reference sites
+#' @param ... Arguments passed to upset function.
 #' @returns A ggplot plot object.
-#' @author 
-#' @seealso
+#' @author See \code{\link{CCC-package}}.
+#' @seealso \code{\link{simulateCommunities}},\code{\link{computeParameters}}, \code{\link{selectCommunities}}
+#' \code{\link{extractResults}}
 #' @references
+#' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+#' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
+#' 
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+#' in preparation.
 #' @keywords MainFunction
 #' @examples
 #' @export

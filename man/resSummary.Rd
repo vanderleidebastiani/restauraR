@@ -5,7 +5,7 @@
 \alias{resSummary}
 \title{Internal function to calculate descriptive statistics}
 \usage{
-resSummary(x, props = NULL, ...)
+resSummary(x, props = NULL)
 }
 \arguments{
 \item{x}{A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.}
@@ -17,5 +17,8 @@ A data frame with descriptive statistics: minimum, mean, median, maximum and qua
 }
 \description{
 Internal function to calculate descriptive statistics
+}
+\author{
+See \code{\link{CCC-package}}.
 }
 \keyword{Auxiliary}

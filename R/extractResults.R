@@ -1,6 +1,6 @@
 #' @title extractResults
-#' @description Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market
-#' @details
+#' @description Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds 
+#' when selected communities have at least one species not available on the market.
 #' @encoding UTF-8
 #' @aliases 
 #' @param x A object of class "simRest" or "simRestSelect" to visualize results
@@ -8,10 +8,16 @@
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param type unavailableSpecies
 #' @returns 
-#' @note 
-#' @author 
-#' @seealso
+#' @author See \code{\link{CCC-package}}.
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
+#' \code{\link{viewResults}}
 #' @references
+#' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+#' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
+#' 
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+#' in preparation.
 #' @keywords MainFunction
 #' @examples
 #' @export
