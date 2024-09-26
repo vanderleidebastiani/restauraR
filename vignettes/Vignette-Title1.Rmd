@@ -2,7 +2,7 @@
 title: "Vignette Title"
 author: "Vignette Author"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: pdf_document
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEncoding{UTF-8}

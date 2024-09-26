@@ -1,19 +1,18 @@
 rm(list = ls())
 require(devtools)
+require(rmarkdown)
 devtools::document()
 devtools::build_vignettes()
 devtools::clean_vignettes()
+# rmarkdown::render("vignettes/Vignette-Title1.Rmd", 
+#                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
 setwd("CCC")
-
-require(CCC)
-data("dados")
 
 setwd("..")
 system("R CMD build CCC")
 # system("R CMD build --no-build-vignettes")
-system("R CMD INSTALL CCC")
+# system("R CMD INSTALL CCC")
 # system("R CMD check CCC")
-
 remove.packages("CCC")
 
 system("R CMD INSTALL CCC_0.0.03.tar.gz")
