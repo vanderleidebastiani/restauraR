@@ -3,7 +3,7 @@ require(devtools)
 require(rmarkdown)
 devtools::document()
 devtools::build_vignettes()
-devtools::clean_vignettes()
+# devtools::clean_vignettes()
 # rmarkdown::render("vignettes/Vignette-Title1.Rmd", 
 #                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
 setwd("CCC")

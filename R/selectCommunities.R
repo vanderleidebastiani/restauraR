@@ -4,7 +4,9 @@
 #' @importFrom data.table rbindlist
 #' @aliases mergeSelection print.simRestSelect
 #' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection).
-#' @param tests A vector with selection criteria to be performed.
+#' @param testsDet A vector with the deterministic selection criteria to be executed.
+#' @param testsHie A vector with the hierarchical selection criteria to be executed.
+#' @param group A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.
 #' @param ... Objects of class "simRestSelect" to be concatenated.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
@@ -50,13 +52,19 @@
 #'                     reference = cerrado.mini$reference,
 #'                     supplementary = cerrado.mini$supplementary)
 #' scenario
-#' # Select communities
+#' # Select communities - Deterministic selection
 #' scenarioSelected <- selectCommunities(x = scenario,
-#'                                       tests = c("CWM_BT > 8",
+#'                                       testsDet = c("CWM_BT > 6",
 #'                                                 "rao > 2.5"))
 #' scenarioSelected
+#' # Select communities - Hierarchical selection
+#' scenarioSelected <- selectCommunities(x = scenario,
+#'                                       testsHie = c("CWM_BT > 6",
+#'                                                 "rao > 2.5",
+#'                                                 "cost == 'MIN'"))
+#' scenarioSelected
 #' @export 
-selectCommunities <- function(x, tests){
+selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL){
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
@@ -64,44 +72,144 @@ selectCommunities <- function(x, tests){
   }
   if(inherits(x, "simRest")){
     xPar <- x$simulation$results
-    comp <- x$simulation$composition
-    group <- x$simulation$group
+    xComp <- x$simulation$composition
+    xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
   } else{
     xPar <- x$selection$results
-    comp <- x$selection$composition
-    group <- x$selection$group
+    xComp <- x$selection$composition
+    xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
   }
-  # Evaluate test
-  completeString <- paste0('xPar', '$', tests)
-  testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
-  pos <- apply(testsEval, 1, all) 
-  # Select 
-  selPar <- xPar[pos, , drop = FALSE] 
-  selCom <- comp[pos, , drop = FALSE]
-  selGroup <- group[pos, , drop = FALSE]
-  # Multifunctionality
-  if(!is.null(xMulti)){
-    RES$selection$multifunctionality <- xMulti[pos, , drop = FALSE]
+  # Deterministic tests
+  if(!is.null(testsDet)){
+    # Evaluate test
+    completeString <- paste0('xPar', '$', testsDet)
+    testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
+    pos <- apply(testsEval, 1, all) 
+    # Select 
+    selPar <- xPar[pos, , drop = FALSE] 
+    selCom <- xComp[pos, , drop = FALSE]
+    selGroup <- xGroup[pos, , drop = FALSE]
+    # Multifunctionality
+    if(!is.null(xMulti)){
+      selMulti <- xMulti[pos, , drop = FALSE]
+    }  
+  } else{
+    # Select all
+    selPar <- xPar
+    selCom <- xComp
+    selGroup <- xGroup
+    # Multifunctionality
+    if(!is.null(xMulti)){
+      selMulti <- xMulti
+    }
+  }
+  # Hierarchical tests
+  if(!is.null(testsHie)){
+    # Set groups
+    if(!is.null(group)){
+      uniqueGroups <- unique(selPar[,group])
+      nGroups <- length(uniqueGroups)
+    } else{
+      nGroups <- 1
+    }
+    # Selected positions
+    selectedPos <- c()
+    # For all groups
+    for(i in 1:nGroups){
+      # Sequence for all rows
+      selPosTemp <- seq_len(nrow(selPar))
+      if(!is.null(group)){
+        # Filter in each group
+        selPosTemp <- selPosTemp[selPar[,group] == uniqueGroups[i]]
+      }
+      # Filter parameters
+      selParTemp <- selPar[selPosTemp, , drop = FALSE]
+      # For all hierarchical tests
+      for(j in 1:length(testsHie)){
+        if(nrow(selParTemp)==1){
+          break
+        }
+        # Split test
+        splitTestTemp <- strsplit(testsHie[j], "<|>|==|<=|>=|!=")[[1]]
+        # Value part
+        testValueTemp <- splitTestTemp[2]
+        # If MIN or MAX
+        if(grepl("MAX", testValueTemp) || grepl("MIN", testValueTemp)){
+          # Variable part
+          testVarTemp <- splitTestTemp[1]
+          # String to select the variable
+          completeStringTemp <- paste0('selParTemp', '$', testVarTemp)
+          # Evaluation
+          testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+          # If MAX
+          if(grepl("MAX", testValueTemp)){
+            testsEvalTemp <- testsEvalTemp == max(testsEvalTemp, na.rm = TRUE)
+          }
+          # If MIN
+          if(grepl("MIN", testValueTemp)){
+            testsEvalTemp <- testsEvalTemp == min(testsEvalTemp, na.rm = TRUE)
+          }
+        } else{
+          # String to select the variable
+          completeStringTemp <- paste0('selParTemp', '$', testsHie[j])
+          # Evaluation
+          testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+        }
+        # Filter if any TRUE in the evaluation, else try next test
+        if(sum(testsEvalTemp)>0){
+          selPosTemp <- selPosTemp[testsEvalTemp]
+          selParTemp <- selParTemp[testsEvalTemp, , drop = FALSE]  
+        } else{
+          # Try next test
+          if(j < length(testsHie)){
+            next
+          }
+          # # tipo dois, para por ai
+          # # if(nrow(selParTemp)>1){
+          #   sampleTemp <- sample(nrow(selParTemp), size = 1)
+          #   selPosTemp <- selPosTemp[sampleTemp]
+          #   selParTemp <- selParTemp[sampleTemp,]
+          # # }
+          # break
+        }
+        # If last test, sample 1
+        if(j == length(testsHie) && nrow(selParTemp)>1){
+          sampleTemp <- sample(nrow(selParTemp), size = 1)
+          selPosTemp <- selPosTemp[sampleTemp]
+          selParTemp <- selParTemp[sampleTemp, , drop = FALSE]
+        }
+      }
+      # Concatenate the selected positions
+      selectedPos <- c(selectedPos, selPosTemp)
+    }
+    # Hierarchical selection
+    selPar <- selPar[selectedPos, , drop = FALSE] 
+    selCom <- selCom[selectedPos, , drop = FALSE]
+    selGroup <- selGroup[selectedPos, , drop = FALSE]
+    # Multifunctionality
+    if(!is.null(xMulti)){
+      selMulti <- selMulti[selectedPos, , drop = FALSE]
+    }
   }
   # Number of selected communities
-  nSel <- apply(testsEval, 2, sum)
-  names(nSel) <- tests
-  nSel <- c(nSel, all = sum(pos))
+  # nSel <- apply(testsEval, 2, sum)
+  # names(nSel) <- tests
+  # nSel <- c(nSel, all = sum(pos))
+  nSel <- c(all = nrow(selCom))
   # Format thresholds (removed for now)
   # testsSplit <- strsplit(tests, ' ')
   # trsh <- sapply(testsSplit, '[', 3)
   # names(trsh) <- sapply(testsSplit, '[', 1)
   # Set results
-  # x$selection$results <- selPar
-  # x$selection$composition <- selCom
-  # x$selection$group <- group
-  # x$selection$N <- nSel
-  # x$selection$thresholds <- trsh
   RES$selection$composition <- selCom
   RES$selection$group <- selGroup
   RES$selection$results <- selPar
+  # Multifunctionality
+  if(!is.null(xMulti)){
+    RES$selection$multifunctionality <- selMulti
+  }
   # RES$selection$N <- nSel
   # RES$selection$thresholds <- trsh
   RES$selection$thresholds <- nSel

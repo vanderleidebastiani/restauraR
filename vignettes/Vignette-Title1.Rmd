@@ -206,7 +206,7 @@ Now, use `selectCommunities` to filter selected communities that satisfies these
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSIM,
-                                 tests = thresholds)
+                                 testsDet = thresholds)
 ```
 
 ```{r}
@@ -270,7 +270,7 @@ Now, use `selectCommunities` to apply the second filter to select communities th
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSEL,
-                                tests = thresholds2)
+                                testsDet = thresholds2)
 ```
 
 ```{r}

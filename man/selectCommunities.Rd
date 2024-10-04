@@ -8,7 +8,7 @@
 \alias{print.simRestSelect}
 \title{Select communities}
 \usage{
-selectCommunities(x, tests)
+selectCommunities(x, testsDet = NULL, testsHie = NULL, group = NULL)
 
 mergeSelection(...)
 
@@ -17,7 +17,11 @@ mergeSelection(...)
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection).}
 
-\item{tests}{A vector with selection criteria to be performed.}
+\item{testsDet}{A vector with the deterministic selection criteria to be executed.}
+
+\item{testsHie}{A vector with the hierarchical selection criteria to be executed.}
+
+\item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.}
 
 \item{...}{Objects of class "simRestSelect" to be concatenated.}
 }
@@ -59,10 +63,16 @@ scenario <- computeParameters(x = scenario,
                     reference = cerrado.mini$reference,
                     supplementary = cerrado.mini$supplementary)
 scenario
-# Select communities
+# Select communities - Deterministic selection
 scenarioSelected <- selectCommunities(x = scenario,
-                                      tests = c("CWM_BT > 8",
+                                      testsDet = c("CWM_BT > 6",
                                                 "rao > 2.5"))
+scenarioSelected
+# Select communities - Hierarchical selection
+scenarioSelected <- selectCommunities(x = scenario,
+                                      testsHie = c("CWM_BT > 6",
+                                                "rao > 2.5",
+                                                "cost == 'MIN'"))
 scenarioSelected
 }
 \references{
