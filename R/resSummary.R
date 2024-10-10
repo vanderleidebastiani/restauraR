@@ -4,7 +4,7 @@
 #' @param x A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @keywords Auxiliary
 #' @export
 resSummary <- function(x, props = NULL){

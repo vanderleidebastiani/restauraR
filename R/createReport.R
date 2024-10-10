@@ -11,7 +11,7 @@
 #' @param x Input data
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
@@ -27,10 +27,10 @@ createReport <- function(x, props = NULL){
   current.devices <- grDevices::dev.list()
   on.exit( sapply(grDevices::dev.list(), function(dev) if(!(dev %in% current.devices)) grDevices::dev.off(dev)) )
   # Load css file in mcmcplots package
-  css.file <- system.file("style.css", package = "CCC")
+  css.file <- system.file("style.css", package = "resbiota")
   # css.file <- paste0(getwd(), "/inst/style.css")
   # Start html file
-  htmlfile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "CCCoutput", CSSFile = css.file, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
+  htmlfile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "resbiotaoutput", CSSFile = css.file, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
   # Include css file
   R2HTML::HTMLCSS(file = htmlfile, append = TRUE, CSSfile = css.file)
   # Title
@@ -90,7 +90,7 @@ createReport <- function(x, props = NULL){
     R2HTML::HTMLbr(file = htmlfile, append = TRUE)
   }
   # End html file
-  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>CCC</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlfile)
+  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>resbiota</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlfile)
   full.name.path <- paste("file://", htmlfile, sep = "")
   # TEMP REMOVe
   print(css.file)

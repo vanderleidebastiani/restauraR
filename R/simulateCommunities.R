@@ -21,7 +21,7 @@
 #' 
 #' \strong{Communities parameters}
 #' 
-#' After the initial step of species composition simulation, several function parameters can be calculated for each community. In the CCC package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters, computeDissimilarity and computeMultifunctionality can be used in this step. 
+#' After the initial step of species composition simulation, several function parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters, computeDissimilarity and computeMultifunctionality can be used in this step. 
 #' 
 #' The function computeParameters is mandatory and allows compute the basic parameters:  richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. 
 #' 
@@ -41,7 +41,7 @@
 #' 
 #' Reference sites can be included in computeParameters step. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
 #' 
-#' The ccc package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species same sites.
+#' The resbiota package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species same sites.
 #' 
 #' \strong{The outputs}
 #' 
@@ -49,7 +49,7 @@
 #' 
 #' \strong{Multifunctionality}
 #' 
-#' The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the CCC package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.
+#' The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.
 #' 
 #' The selection of simulated species composition can be performed in alpha multifunctionality metric to maximize multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
 #' 
@@ -65,7 +65,7 @@
 #' 
 #' \strong{Merge functions}
 #' 
-#' The ccc package includes functions to merge results set in different operations. 
+#' The resbiota package includes functions to merge results set in different operations. 
 #' 
 #' The function mergeSimulations concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations. 
 #' 
@@ -97,7 +97,7 @@
 #' \item{reference$results}{A data frame with calculated parameters in reference sites.}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references 

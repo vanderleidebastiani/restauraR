@@ -8,7 +8,7 @@
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param type unavailableSpecies
 #' @returns 
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 #' \code{\link{viewResults}}
 #' @references

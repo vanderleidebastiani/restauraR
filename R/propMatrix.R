@@ -10,7 +10,7 @@
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
 #' @returns A community matrix with species relative abundances.
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export

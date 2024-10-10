@@ -40,6 +40,6 @@ in preparation.
 \code{\link{extractResults}}
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{MainFunction}

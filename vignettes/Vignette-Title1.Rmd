@@ -39,7 +39,7 @@ set.seed(2022)
 ### Load the package
 
 ```{r, message = FALSE}
-require(CCC)
+require(resbiota)
 ```
 
 ### The dataset
@@ -66,7 +66,7 @@ knitr::kable(head(referenceSites, n = c(6, 3)), digits = 3, row.names = TRUE, ca
 
 ### Species traits
 
-In the CCC package the selection of traits which will be used in each step is done using traits names in character type.
+In the resbiota package the selection of traits which will be used in each step is done using traits names in character type.
 
 ```{r}
 allTraits <- c("BT", "SLA", "Height", "Seed")

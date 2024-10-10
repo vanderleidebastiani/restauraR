@@ -28,6 +28,6 @@ Internal function to select species to generates simulated communities
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}

@@ -8,7 +8,7 @@
 #' @param n Number of species to select.
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
 #' @returns A vector with selected species names based on their traits and a desired trait profile.
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary
 #' @export

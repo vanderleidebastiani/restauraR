@@ -1,12 +1,12 @@
-#' @title CCC
-#' @name CCC-package
+#' @title resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
+#' @name resbiota-package
 #' @docType package
 #' @encoding UTF-8
 #' @importFrom rprojroot find_rstudio_root_file
 #' @description Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
-#' @details The function in the CCC package contains an integrative set of tools to create restoration solutions to assemble communities from a regional 
+#' @details The function in the resbiota package contains an integrative set of tools to create restoration solutions to assemble communities from a regional 
 #' species pool. The framework allows achieving functional targets following multiple approaches from empty communities and/or adding species to ongoing 
-#' restoration sites. Details are presented in the main function \code{\link{simulateCommunities}} and the vignettes can be browsed with `browseVignettes("CCC")`.
+#' restoration sites. Details are presented in the main function \code{\link{simulateCommunities}} and the vignettes can be browsed with `browseVignettes("resbiota")`.
 #' @author INCLUIR
 #' @references 
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

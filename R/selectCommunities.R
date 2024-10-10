@@ -19,7 +19,7 @@
 #' \item{reference$results}{A data frame with calculated parameters in reference sites.}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{computeParameters}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references

@@ -6,7 +6,7 @@
 #' @param x A matrix with species proportions in the reference sites. NAs not accepted.
 #' @param traitSub Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso
 #' @references
 #' @keywords Auxiliary

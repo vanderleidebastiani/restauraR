@@ -29,6 +29,6 @@ and return an empty data.table object (template) with 0 rows and columns equal t
 `reorganizeMatrix` rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}

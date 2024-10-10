@@ -11,7 +11,7 @@
 #' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells with NAs are replaced with zero (0).
 #' @param ... Objects of class data.frame (or matrix) to be concatenated.
 #' @returns The `makeMatrixTemplate` function returns a empty data.table object, `reorganizeMatrix` returns the reorganized matrix.
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @keywords Auxiliary
 #' @export
 reorganizeMatrix <- function(template, x, fillNA = FALSE){

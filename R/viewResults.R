@@ -10,7 +10,7 @@
 #' @param hideref Logical argument (TRUE or FALSE) to specify if hide reference sites
 #' @param ... Arguments passed to upset function.
 #' @returns A ggplot plot object.
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}},\code{\link{computeParameters}}, \code{\link{selectCommunities}}
 #' \code{\link{extractResults}}
 #' @references

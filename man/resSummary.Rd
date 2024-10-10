@@ -19,6 +19,6 @@ A data frame with descriptive statistics: minimum, mean, median, maximum and qua
 Internal function to calculate descriptive statistics
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}

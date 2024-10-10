@@ -19,6 +19,6 @@ A matrix with Community Weighted Variance.
 Internal function to calculate Community Weighted Variance (CWV)
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}

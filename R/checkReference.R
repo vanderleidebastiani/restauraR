@@ -18,7 +18,7 @@
 #' \item{reference$summary}{A data frame with the descriptive statistics of calculated parameters in reference sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 #' \item{supplementary$summary}{A data frame with the descriptive statistics of calculated parameters in supplementary sites.}
-#' @author See \code{\link{CCC-package}}.
+#' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @keywords MainFunction

@@ -1,8 +1,8 @@
-Package: CCC
+Package: resbiota
 Type: Package
-Title: What the Package Does (Short Line)
-Version: 0.0.03
-Date: 2024-09-07
+Title: resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
+Version: 0.0.1
+Date: 2024-10-10
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Depends: R (>= 3.5)
@@ -21,13 +21,12 @@ Imports:
     utils,
     stats,
     grDevices
-Description: More about what it does (maybe more than one line).
-License: What license is it under?
+Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
+License: GPL (>= 3)
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
-    'CCC-package.R'
     'FCWV.R'
     'cerrado.R'
     'checkReference.R'
@@ -48,5 +47,6 @@ Collate:
     'print.simRestSelect.R'
     'propMatrix.R'
     'resSummary.R'
+    'resbiota-package.R'
     'viewResults.R'
     'viewMultifunctionality.R'

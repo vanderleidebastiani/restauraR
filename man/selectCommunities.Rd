@@ -88,6 +88,6 @@ in preparation.
 \code{\link{extractResults}}, \code{\link{viewResults}}
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{MainFunction}

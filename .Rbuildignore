@@ -3,8 +3,8 @@
 ^doc$
 ^Meta$
 
-CCC_build.R
-CCC_example.R
+resbiota_build.R
+resbiota_example.R
 README.md
 LICENSE
 

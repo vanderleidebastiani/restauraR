@@ -34,6 +34,6 @@ Internal function to generate communities proportion matrix
 \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 }
 \author{
-See \code{\link{CCC-package}}.
+See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}

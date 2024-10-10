@@ -1,7 +1,7 @@
-# CCC Example ----
+# resbiota Example ----
 
 ## Packages ----
-require(CCC)
+require(resbiota)
 require(magrittr)
 # require(data.table)
 
@@ -293,7 +293,7 @@ viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inc
 # viewMultifunctionality(resParSelectExtra)
 
 # save.image("CCC_workspace_20240829")
-load("CCC_workspace_20240829")
+# load("CCC_workspace_20240829")
 
 resParAllSIM_TESTE <- computeParameters(allSIM, 
                                         trait = dados$trait, 
@@ -331,4 +331,103 @@ resParAllSIM_TESTE3 <- computeParameters(resSIM1,
                                          supplementary = dados$ref[11:19,]
 )
 resParAllSIM_TESTE3$simulation$results
+# NEW ----
+
+data("cerrado.mini")
+head(cerrado.mini$traits)
+# Simulation
+scenario <- simulateCommunities(trait = cerrado.mini$traits,
+                                ava = "Available",
+                                cwm = "BT",
+                                rao = c("SLA", "Height", "Seed"),
+                                rich = c(10, 15),
+                                it = 100)
+scenario
+# Compute functional parameters
+scenario <- computeParameters(x = scenario,
+                              trait = cerrado.mini$traits,
+                              ava = "Available",
+                              cwm = "BT",
+                              rao = c("SLA", "Height", "Seed"),
+                              cost = "Cost",
+                              dens = "Density",
+                              reference = cerrado.mini$reference,
+                              supplementary = cerrado.mini$supplementary)
+scenario
+scenario$simulation$results
+
+# Select communities - Deterministic selection
+scenarioSelected <- selectCommunities(x = scenario,
+                                      testsDet = c("CWM_BT > 6",
+                                                   "rao > 2.5"))
+scenarioSelected
+# Select communities - Hierarchical selection
+scenarioSelected <- selectCommunities(x = scenario,
+                                      testsHie = c("CWM_BT > 6",
+                                                   "rao > 2.5",
+                                                   "cost == 'MIN'"))
+scenarioSelected
+
+
+scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
+                                 restComp = cerrado.mini$restoration,
+                                 ava = "Available",
+                                 cwm = "BT",
+                                 rao = c("SLA", "Height", "Seed"),
+                                 rich = c(10, 15),
+                                 it = 100,
+                                 max_add = 10)
+scenarioB
+
+scenarioB <- computeParameters(x = scenarioB,
+                               trait = cerrado.mini$traits,
+                               ava = "Available",
+                               cwm = "BT",
+                               rao = c("SLA", "Height", "Seed"),
+                               cost = "Cost",
+                               dens = "Density",
+                               reference = cerrado.mini$reference,
+                               supplementary = cerrado.mini$supplementary)
+scenarioB
+scenarioB$simulation$results
+
+# Select communities - Hierarchical selection
+scenarioSelectedB <- selectCommunities(x = scenarioB,
+                                       testsHie = c("CWM_BT > 6",
+                                                    "rao > 2.5"),
+                                       group = "NAME")
+scenarioSelectedB
+
+scenarioSelectedB$selection$results
+scenarioSelectedB$selection$composition
+
+scenarioSelectedB2 <- selectCommunities(x = scenarioB,
+                                       testsDet = c("CWM_BT > 6",
+                                                    "rao > 2.5"),
+                                       group = "NAME")
+scenarioSelectedB2
+scenarioSelectedB2$selection$results
+
+
+
+
+selectCommunities(scenarioA,
+                  testsDet = c("CWM_BT >= 8"))$selection$results
+selectCommunities(scenarioA,
+                  testsDet = c("CWM_BT >= 8", "richness < 20"))$selection$results
+selectCommunities(scenarioA,
+                  testsDet = c("CWM_BT >= 8", "richness < 20"),
+                  testsHie = c("CWM_BT == 'MAX'"))$selection$results
+
+
+selectCommunities(scenarioB,
+                  testsDet = c("CWM_BT >= 8"))$selection$results
+selectCommunities(scenarioB,
+                  testsDet = c("CWM_BT >= 8", "richness > 28"))$selection$results
+selectCommunities(scenarioB,
+                  testsHie = c("CWM_BT >= 8", "richness < 20"))$selection$results
+selectCommunities(scenarioB,
+                  testsHie = c("CWM_BT >= 8", "richness > 20", "cost == 'MIN'"),
+                  group = "NAME")$selection$results
+
 # END ----
