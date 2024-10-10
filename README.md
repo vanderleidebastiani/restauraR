@@ -1,5 +1,4 @@
 # R Package - resbiota - v0.0.1
-======
 
 resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
 
@@ -7,7 +6,7 @@ Create restoration solutions to assemble communities from a regional species poo
 
 ## Installation
   
-To install the latest version of this package, use [`devtools`](https://devtools.r-lib.org):
+To install the latest version of this package, use [`devtools`](https://CRAN.R-project.org/package=devtools):
 
 ```r
 require(devtools)
