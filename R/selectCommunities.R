@@ -7,6 +7,7 @@
 #' @param testsDet A vector with the deterministic selection criteria to be executed.
 #' @param testsHie A vector with the hierarchical selection criteria to be executed.
 #' @param group A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.
+#' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the hierarchical selection.
 #' @param ... Objects of class "simRestSelect" to be concatenated.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
@@ -64,7 +65,7 @@
 #'                                                 "cost == 'MIN'"))
 #' scenarioSelected
 #' @export 
-selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL){
+selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL, singleselection = TRUE){
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
@@ -175,7 +176,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL)
           # break
         }
         # If last test, sample 1
-        if(j == length(testsHie) && nrow(selParTemp)>1){
+        if(j == length(testsHie) && nrow(selParTemp)>1 && singleselection){
           sampleTemp <- sample(nrow(selParTemp), size = 1)
           selPosTemp <- selPosTemp[sampleTemp]
           selParTemp <- selParTemp[sampleTemp, , drop = FALSE]

@@ -20,4 +20,4 @@ system("R CMD check --as-cran resbiota_0.0.1.tar.gz")
 system("R CMD check resbiota_0.0.1.tar.gz")
 
 require(resbiota)
-?resbiota::findSpecies
+?resbiota::simulateCommunities

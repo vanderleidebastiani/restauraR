@@ -332,7 +332,7 @@ resParAllSIM_TESTE3 <- computeParameters(resSIM1,
 )
 resParAllSIM_TESTE3$simulation$results
 # NEW ----
-
+require(resbiota)
 data("cerrado.mini")
 head(cerrado.mini$traits)
 # Simulation
@@ -395,7 +395,8 @@ scenarioB$simulation$results
 scenarioSelectedB <- selectCommunities(x = scenarioB,
                                        testsHie = c("CWM_BT > 6",
                                                     "rao > 2.5"),
-                                       group = "NAME")
+                                       group = "NAME",
+                                       singleselection = TRUE)
 scenarioSelectedB
 
 scenarioSelectedB$selection$results
