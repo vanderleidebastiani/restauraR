@@ -1,22 +1,18 @@
 #' @title Create report 
 #' @description Creates a data profiling report Based on the mcmcplots package
-#' @details
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave
 #' @importFrom tableHTML tableHTML add_css_table
 #' @importFrom R2HTML HTMLInitFile HTMLCSS HTML.title HTMLli HTMLhr HTML HTMLInsertGraph HTMLbr
 #' @importFrom utils browseURL
 #' @importFrom grDevices dev.list dev.off nclass.FD
-#' @aliases
 #' @param x Input data
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
-#' @returns
+#' @returns The report in html format.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
-#' @references
 #' @keywords MainFunction
-#' @examples
 #' @export
 createReport <- function(x, props = NULL){
   # Get basic parameters

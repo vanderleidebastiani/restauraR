@@ -2,7 +2,6 @@
 #' @description Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds 
 #' when selected communities have at least one species not available on the market.
 #' @encoding UTF-8
-#' @aliases 
 #' @param x A object of class "simRest" or "simRestSelect" to visualize results
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.

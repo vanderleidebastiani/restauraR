@@ -1,6 +1,5 @@
 #' @title Internal function to calculate Community Weighted Variance (CWV)
 #' @description
-#' @details
 #' @encoding UTF-8
 #' @importFrom SYNCSA matrix.t
 #' @param x A matrix with species proportions in the reference sites. NAs not accepted.

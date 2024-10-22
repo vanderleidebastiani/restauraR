@@ -126,13 +126,13 @@
 #'                          it = 100)
 #' scenarioA
 #' # Restoration existing sites
-#' scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
-#'                     restComp = cerrado.mini$restoration,
-#'                     ava = "Available",
-#'                     cwm = "BT",
-#'                     rao = c("SLA", "Height", "Seed"),
-#'                     rich = c(10, 15),
-#'                     it = 100)
+#' scenarioB <- simulateCommunities(trait = cerrado.mini$traits, 
+#'                                  restComp = cerrado.mini$restoration, 
+#'                                  ava = "Available", 
+#'                                  cwm = "BT", 
+#'                                  rao = c("SLA", "Height", "Seed"), 
+#'                                  rich = c(10, 15), 
+#'                                  it = 100)
 #' scenarioB
 #' # Merge all scenarios
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
