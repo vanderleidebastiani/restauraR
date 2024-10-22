@@ -3,12 +3,12 @@
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
 #' @aliases mergeSelection print.simRestSelect
-#' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection).
+#' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.
 #' @param testsDet A vector with the deterministic selection criteria to be executed.
 #' @param testsHie A vector with the hierarchical selection criteria to be executed.
 #' @param group A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.
 #' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the hierarchical selection.
-#' @param ... Objects of class "simRestSelect" to be concatenated.
+#' @param ... Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}

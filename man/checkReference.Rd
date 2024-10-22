@@ -35,6 +35,10 @@ checkReference(
 \item{supplementary}{A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
+
+\item{x}{Objects of class "simRestCheck" to print.}
+
+\item{...}{Additional arguments for respective methods.}
 }
 \value{
 A list (class `simRestCheck`) with the elements:

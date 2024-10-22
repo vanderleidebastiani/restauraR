@@ -5,7 +5,23 @@
 \alias{propMatrix}
 \title{Internal function to generate communities proportion matrix}
 \usage{
-propMatrix(trait, ava, und, it, rich, cwm, rao, phi)
+propMatrix(
+  trait,
+  ava,
+  und,
+  it,
+  rich,
+  cwm,
+  rao,
+  phi,
+  nInd,
+  cvAbund,
+  prob,
+  method,
+  group,
+  probGroupRich,
+  probGroupAbund
+)
 }
 \arguments{
 \item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
@@ -23,6 +39,20 @@ propMatrix(trait, ava, und, it, rich, cwm, rao, phi)
 \item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
 
 \item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
+
+\item{nInd}{The number of individuals to draw. Used only in method "individuals".}
+
+\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
+
+\item{prob}{A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
+
+\item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
+
+\item{group}{A vector with traits name which indicates the group to which species belongs.}
+
+\item{probGroupRich}{Vector of probabilities to draw species richness in each group.}
+
+\item{probGroupAbund}{Vector of probabilities to draw individuals or relative abundances in each group.}
 }
 \value{
 A community matrix with species relative abundances.

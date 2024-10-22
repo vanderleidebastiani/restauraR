@@ -82,11 +82,17 @@
 #' @param rich The range of richness values in each community.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
-#' @param max_add
-#' @param min_p
+#' @param prob A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy (default phi = 1).
+#' @param nInd The number of individuals to draw in each site. Used only in method "individuals".
+#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prefix A prefix to use in current simulation.
-#' @param ... Objects of class "simRest" to be concatenated.
+#' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
+#' @param group A vector with traits name which indicates the group to which species belongs.
+#' @param probGroupRich Vector of probabilities to draw species richness in each group.
+#' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
+#' @param ... Objects of class "simRest" to be concatenated. Additional arguments for respective methods.
+#' @param x Objects of class "simRest" to print.
 #' @returns A list (class "simRest") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
@@ -126,18 +132,41 @@
 #'                     cwm = "BT",
 #'                     rao = c("SLA", "Height", "Seed"),
 #'                     rich = c(10, 15),
-#'                     it = 100,
-#'                     max_add = 10)
+#'                     it = 100)
 #' scenarioB
 #' # Merge all scenarios
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
+simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, prob, phi = 1, nInd, cvAbund = 1, prefix = NULL, method = "proportions", group, probGroupRich, probGroupAbund){
+# simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
   RES <- list(call = match.call())
+  # Check method
+  METHOD <- c("proportions", "individuals")
+  methodTest <- pmatch(method, METHOD)
+  if (length(methodTest) > 1) {
+    stop("Only one argument is accepted in method")
+  }
+  if (is.na(methodTest)) {
+    stop("Invalid method")
+  }
+  if (methodTest == 2 && missing(nInd)){
+    stop("For the 'individuals' method it is mandatory specify the 'nInd' argument")
+  }
+  if(it<4){
+    stop("The argument 'it' must be at minimum 4")
+  }
+  # Transform the rich argument in range vector
+  if(length(rich) == 1){
+    rich <- rep(rich, 2)
+  }
   # Generate species proportions
+  # propMatrix <- propMatrix(trait = trait, ava = ava, und = und, it = it, 
+  #                          rich = rich, cwm = cwm, rao = rao, phi = phi)
   propMatrix <- propMatrix(trait = trait, ava = ava, und = und, it = it, 
-                           rich = rich, cwm = cwm, rao = rao, phi = phi)
+                           rich = rich, cwm = cwm, rao = rao, phi = phi, 
+                           nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
+                           group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
   # Include species proportions in restoration sites
   if(!missing(restComp)){
     rowNameProMatrix <- rownames(propMatrix)
@@ -157,23 +186,28 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
     propMatrix <- reorganizeMatrix(template = template0, propMatrix, fillNA = TRUE)
     restComp <- reorganizeMatrix(template = template0, restComp, fillNA = TRUE)
     # TRANSFORM PROPORTIONS AND SUM TO REST 
-    propMatrixAdd <- propMatrix * max_add #transforma matriz
-    # Set prop = 0 to rare species
-    if(!missing(min_p)){
-      pos <- propMatrixAdd < min_p
-      propMatrixAdd[pos] <- 0
-      propMatrixAdd <- (propMatrixAdd/rowSums(propMatrixAdd)) * max_add
-    }
+    propMatrixAdd <- propMatrix
+    # AQUI ESTA COMENTADO POR HORA
+    # propMatrixAdd <- propMatrix * max_add #transforma matriz
+    # # Set prop = 0 to rare species
+    # if(!missing(min_p)){
+    #   pos <- propMatrixAdd < min_p
+    #   propMatrixAdd[pos] <- 0
+    #   propMatrixAdd <- (propMatrixAdd/rowSums(propMatrixAdd)) * max_add
+    # }
     propMatrixList <- apply(restComp, 1, FUN = function(x){ #para cada comun restaurada
       propMatrix_x <- apply(propMatrixAdd, 1, FUN = function(y){ #para cada comun simulada
         x_y <- x + y #restaurada + simulada
         return(x_y)
       })
       propMatrix_x <- t(propMatrix_x)
-      propMatrix_x <- propMatrix_x/rowSums(propMatrix_x)
       return(propMatrix_x)
     }, simplify = FALSE)
     propMatrixTab <- do.call(rbind, propMatrixList)
+    # If "proportions" method (re)calculate species proportions
+    if(methodTest == 1){
+      propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)  
+    }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))
     if(!missing(restGroup)){

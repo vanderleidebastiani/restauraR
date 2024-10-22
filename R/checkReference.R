@@ -10,6 +10,8 @@
 #' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @param x Objects of class "simRestCheck" to print.
+#' @param ... Additional arguments for respective methods.
 #' @returns A list (class `simRestCheck`) with the elements:
 #' \item{call}{The arguments used.}
 #' \item{pool$results}{A data frame with calculated parameters in species pool.}

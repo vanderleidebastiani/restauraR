@@ -2,6 +2,7 @@
 #' @name resbiota-package
 #' @docType package
 #' @encoding UTF-8
+#' @import knitr
 #' @importFrom rprojroot find_rstudio_root_file
 #' @description Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 #' @details The function in the resbiota package contains an integrative set of tools to create restoration solutions to assemble communities from a regional 

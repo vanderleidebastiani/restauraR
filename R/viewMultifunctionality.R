@@ -8,7 +8,8 @@ viewMultifunctionality <- function(x, ...){
   } else{
     resMulti <- x$selection$multifunctionality
   }
-  groupsMulti <- colnames(resMulti)
+  # Remove first name (SIM)
+  groupsMulti <- colnames(resMulti)[-1]
   p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
                       keep_empty_groups = TRUE,
                       name = "Groups",

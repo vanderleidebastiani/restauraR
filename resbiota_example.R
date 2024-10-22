@@ -367,17 +367,20 @@ scenarioSelected <- selectCommunities(x = scenario,
                                                    "rao > 2.5",
                                                    "cost == 'MIN'"))
 scenarioSelected
-
-
+data("cerrado.mini")
+sum(cerrado.mini$traits$Available)
 scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                                  restComp = cerrado.mini$restoration,
                                  ava = "Available",
                                  cwm = "BT",
                                  rao = c("SLA", "Height", "Seed"),
-                                 rich = c(10, 15),
-                                 it = 100,
-                                 max_add = 10)
-scenarioB
+                                 rich = 18,
+                                 it = 10,
+                                 # max_add = 10,
+                                 method = "ind",
+                                 nInd = 1000,
+                                 prob = "Density")
+scenarioB$simulation$composition
 
 scenarioB <- computeParameters(x = scenarioB,
                                trait = cerrado.mini$traits,
@@ -431,4 +434,47 @@ selectCommunities(scenarioB,
                   testsHie = c("CWM_BT >= 8", "richness > 20", "cost == 'MIN'"),
                   group = "NAME")$selection$results
 
+
+## ABUNDANCIAs
+data("cerrado.mini")
+head(cerrado.mini$traits)
+# Restoration new sites
+scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
+                                 ava = "Available",
+                                 cwm = "BT",
+                                 rao = c("SLA", "Height", "Seed"),
+                                 rich = c(10, 15),
+                                 it = 100)
+scenarioA
+# Restoration existing sites
+cerrado.mini$traits$Tipo <- rep(c("A", "B"), each = 25)
+cerrado.mini$traits
+scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
+                                 # restComp = cerrado.mini$restoration,
+                                 ava = "Available",
+                                 cwm = "BT",
+                                 rao = c("SLA", "Height", "Seed"),
+                                 rich = c(10, 15),
+                                 it = 4,
+                                 nInd = 1000,
+                                 method = "ind",
+                                 group = "Tipo",
+                                 probGroupRich = c("A" = 0.5, "B" = 0.5),
+                                 probGroupAbund = c("A" = 0.5, "B" = 0.5))
+sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[1:25]])
+sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[26:50]])
+
+cerrado.mini$traits$Tipo <- factor(cerrado.mini$traits$Tipo)
+str(cerrado.mini$traits)
+scenario <- computeParameters(x = scenarioB,
+                              trait = cerrado.mini$traits,
+                              ava = "Available",
+                              cwm = "BT",
+                              rao = c("SLA", "Height", "Seed"),
+                              cost = "Cost",
+                              dens = "Density",
+                              reference = cerrado.mini$reference,
+                              supplementary = cerrado.mini$supplementary)
+scenario
+scenario$simulation$results
 # END ----

@@ -12,7 +12,11 @@ computeDissimilarity <- function(x, trait){
   } else{
     comp <- x$selection$composition
   }
+  # Calculate species proportions
+  comp <- sweep(comp, MARGIN = 1, rowSums(comp), FUN = "/")
   ref <- x$reference$composition
+  # Calculate species proportions
+  ref <- sweep(ref, MARGIN = 1, rowSums(ref), FUN = "/")
 	if(inherits(trait, 'data.frame') || inherits(trait, 'matrix')){
 		dis <- stats::dist(scale(trait))
 	} else if(inherits(trait, 'dist')){

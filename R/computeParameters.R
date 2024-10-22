@@ -113,8 +113,12 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
     x$reference$composition <- reference
     x$supplementary$composition <- supplementary
   }
+  # Calculate species proportions
+  composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
-  trait <- SYNCSA::organize.syncsa(comm = composition, traits = trait, check.comm = FALSE)$traits
+  # trait <- SYNCSA::organize.syncsa(comm = composition, traits = trait, check.comm = FALSE)$traits
+  matchNames <- match(colnames(composition), rownames(trait))
+  trait <- as.data.frame(trait[matchNames, , drop = FALSE])
   # Calculate parameters
   out <- NULL
   # Count species unavailable

@@ -13,10 +13,10 @@ system("R CMD build resbiota")
 # system("R CMD build --no-build-vignettes")
 # system("R CMD INSTALL resbiota")
 # system("R CMD check resbiota")
-remove.packages("resbiota")
+# remove.packages("resbiota")
 
 system("R CMD INSTALL resbiota_0.0.1.tar.gz")
-system("R CMD check --as-cran resbiota_0.0.1.tar.gz")
+# system("R CMD check --as-cran resbiota_0.0.1.tar.gz")
 system("R CMD check resbiota_0.0.1.tar.gz")
 
 require(resbiota)

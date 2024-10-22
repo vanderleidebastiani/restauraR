@@ -8,14 +8,20 @@
 \alias{print.simRestSelect}
 \title{Select communities}
 \usage{
-selectCommunities(x, testsDet = NULL, testsHie = NULL, group = NULL)
+selectCommunities(
+  x,
+  testsDet = NULL,
+  testsHie = NULL,
+  group = NULL,
+  singleselection = TRUE
+)
 
 mergeSelection(...)
 
 \method{print}{simRestSelect}(x, ...)
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection).}
+\item{x}{A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.}
 
 \item{testsDet}{A vector with the deterministic selection criteria to be executed.}
 
@@ -23,7 +29,9 @@ mergeSelection(...)
 
 \item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.}
 
-\item{...}{Objects of class "simRestSelect" to be concatenated.}
+\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the hierarchical selection.}
+
+\item{...}{Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.}
 }
 \value{
 A list (class "simRestSelect") with the elements:

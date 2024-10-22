@@ -43,7 +43,7 @@ viewResults <- function(x, xvar, yvar, hideref = FALSE){
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["PLOTCOL"]]) +
       ggplot2::geom_point(data = all) +
       # ggplot2::geom_point(data = sel) +
-      ggplot2::geom_point(data = ref) +
+      ggplot2::geom_point(data = ref) #+
       ggplot2::scale_color_manual(values = pal)
   } else{
     p <- ggplot2::ggplot() +

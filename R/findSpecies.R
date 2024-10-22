@@ -48,6 +48,9 @@ findSpecies <- function(trait, cwm, rao, n, phi){
       sppMax <- which(propMatrixSelSpp > propMin, arr.ind = TRUE)
       sppMax <- unique(species[sppMax[,1]])
       propMin <- 0.5*propMin
+      if(length(sppMax) == nSpeciesInt){
+        break
+      }
     }
   } else {
     # CONFERIR obj ----

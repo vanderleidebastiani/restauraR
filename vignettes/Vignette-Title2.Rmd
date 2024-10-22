@@ -190,7 +190,6 @@ scenarioB <- simulateCommunities(trait = traits,
                                  cwm = "BT", 
                                  rao = c("BT", "SLA", "Height", "Seed"),
                                  phi = 1,
-                                 max_add = 1,
                                  prefix = "Ongoing"
 )
 scenarioB

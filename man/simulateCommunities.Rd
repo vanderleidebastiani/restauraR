@@ -18,10 +18,15 @@ simulateCommunities(
   rich,
   cwm,
   rao,
-  max_add,
-  min_p,
+  prob,
   phi = 1,
-  prefix = NULL
+  nInd,
+  cvAbund = 1,
+  prefix = NULL,
+  method = "proportions",
+  group,
+  probGroupRich,
+  probGroupAbund
 )
 
 mergeSimulations(...)
@@ -47,11 +52,27 @@ mergeSimulations(...)
 
 \item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
 
+\item{prob}{A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
+
 \item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy (default phi = 1).}
+
+\item{nInd}{The number of individuals to draw in each site. Used only in method "individuals".}
+
+\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
 
 \item{prefix}{A prefix to use in current simulation.}
 
-\item{...}{Objects of class "simRest" to be concatenated.}
+\item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
+
+\item{group}{A vector with traits name which indicates the group to which species belongs.}
+
+\item{probGroupRich}{Vector of probabilities to draw species richness in each group.}
+
+\item{probGroupAbund}{Vector of probabilities to draw individuals or relative abundances in each group.}
+
+\item{...}{Objects of class "simRest" to be concatenated. Additional arguments for respective methods.}
+
+\item{x}{Objects of class "simRest" to print.}
 }
 \value{
 A list (class "simRest") with the elements:
@@ -157,8 +178,7 @@ scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                     cwm = "BT",
                     rao = c("SLA", "Height", "Seed"),
                     rich = c(10, 15),
-                    it = 100,
-                    max_add = 10)
+                    it = 100)
 scenarioB
 # Merge all scenarios
 allScenarios <- mergeSimulations(scenarioA, scenarioB)

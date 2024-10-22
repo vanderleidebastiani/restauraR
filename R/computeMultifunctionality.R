@@ -14,6 +14,9 @@ computeMultifunctionality <- function(x, tests){
   }
   completeString <- paste0('xPar', '$', tests)
   testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+  if(!inherits(testsEval, "matrix")){
+    testsEval <- t(as.matrix(testsEval))  
+  }
   # testsSplit <- strsplit(tests, ' ')
   # colnames(testsEval) <- sapply(testsSplit, '[', 1)
   colnames(testsEval) <- tests
