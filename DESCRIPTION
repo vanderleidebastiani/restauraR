@@ -20,7 +20,10 @@ Imports:
     rprojroot,
     utils,
     stats,
-    grDevices
+    grDevices,
+    shiny, 
+    shinydashboard,
+    shinydashboardPlus
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -28,6 +31,7 @@ VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
     'FCWV.R'
+    'app.R'
     'cerrado.R'
     'checkReference.R'
     'computeParameters.R'
@@ -50,6 +54,7 @@ Collate:
     'randDivision.R'
     'resSummary.R'
     'resbiota-package.R'
+    'resbiotaRun.R'
     'roundDivision.R'
     'sampleAbundance.R'
     'sampleAbundanceGroups.R'
