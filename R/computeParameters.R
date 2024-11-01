@@ -73,7 +73,7 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, stan = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
@@ -122,7 +122,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
   # Calculate parameters
   out <- NULL
   # Count species unavailable
-  if(!missing(ava)){
+  if(!is.null(ava)){
     if(!inherits(ava, 'character') || !all(ava %in% traitsNames) || length(ava)>1){
       stop("ava must be a character indicating a single column of the trait data frame")
     }
@@ -135,7 +135,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
   S <- apply(composition, 1, FUN = function(a) sum(a > 0))
   out <- cbind(out, richness = S)
   # CWM
-  if(!missing(cwm)){
+  if(!is.null(cwm)){
     if(!inherits(cwm, 'character') || !all(cwm %in% traitsNames)){
       stop("cwm must be a character indicating one or more columns of the trait data frame")
     }
@@ -147,7 +147,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
     # }
   }
   # CWV
-  if(!missing(cwv)){
+  if(!is.null(cwv)){
     if(!inherits(cwv, 'character') || !all(cwv %in% traitsNames)){
       stop("cwv must be a character indicating one or more columns of the trait data frame")
     }
@@ -159,7 +159,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
     # }
   }
   # Rao diversity
-  if(!missing(rao)){
+  if(!is.null(rao)){
     # If a list
     if(inherits(rao, 'list')){
       RAOlist <- NULL
@@ -195,7 +195,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
     }
   }
   # Cost - It require species cost and planting density
-  if(!missing(cost) || !missing(dens)){
+  if(!is.null(cost) || !is.null(dens)){
     if(!inherits(cost, 'character') || !all(cost %in% traitsNames) || length(cost)>1){
       stop("cost must be a character indicating a single column of the trait data frame")
     }
@@ -211,7 +211,7 @@ computeParameters <- function(x, trait, ava, cwm, cwv, rao, cost, dens, stan, re
     out <- cbind(out, cost = COST)
   }
   # Standardization
-  if(!missing(stan)){
+  if(!is.null(stan)){
     out[ , stan] <- out[ , stan, drop = FALSE]/max(out[ , stan, drop = FALSE])
   } 
   # Results organization

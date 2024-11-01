@@ -138,7 +138,7 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, prob, phi = 1, nInd, cvAbund = 1, prefix = NULL, method = "proportions", group, probGroupRich, probGroupAbund){
+simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
 # simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
   RES <- list(call = match.call())
   # Check method
@@ -150,7 +150,7 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
   if (is.na(methodTest)) {
     stop("Invalid method")
   }
-  if (methodTest == 2 && missing(nInd)){
+  if (methodTest == 2 && is.null(nInd)){
     stop("For the 'individuals' method it is mandatory specify the 'nInd' argument")
   }
   if(it<4){
@@ -168,7 +168,7 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
                            nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
                            group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
   # Include species proportions in restoration sites
-  if(!missing(restComp)){
+  if(!is.null(restComp)){
     rowNameProMatrix <- rownames(propMatrix)
     rowNameRest <- rownames(restComp)
     # template1 <- propMatrix[0,]
@@ -190,7 +190,7 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
     # AQUI ESTA COMENTADO POR HORA
     # propMatrixAdd <- propMatrix * max_add #transforma matriz
     # # Set prop = 0 to rare species
-    # if(!missing(min_p)){
+    # if(!is.null(min_p)){
     #   pos <- propMatrixAdd < min_p
     #   propMatrixAdd[pos] <- 0
     #   propMatrixAdd <- (propMatrixAdd/rowSums(propMatrixAdd)) * max_add
@@ -210,7 +210,7 @@ simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, 
     }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))
-    if(!missing(restGroup)){
+    if(!is.null(restGroup)){
       restGroup <- restGroup[rep(seq_len(nrow(restGroup)), each = length(rowNameProMatrix)),, drop = FALSE]
       restGroup <- data.frame(SIM = paste0(prefix, rownames(propMatrixTab)), NAME = restName, restGroup)
     } else{

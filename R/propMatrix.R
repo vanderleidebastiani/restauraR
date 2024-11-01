@@ -34,11 +34,11 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   #   return(prop)
   # }
   # Print warning if ava is missing
-  if(missing(ava)){
-    warning("Missing the ava argument. All species are considered available")
-  }
+  # if(is.null(ava)){
+  #   warning("Missing the ava argument. All species are considered available")
+  # }
   # Remove undesired species
-  if(!missing(und)){
+  if(!is.null(und)){
     undLog <- as.logical(trait[,und])
     trait <- trait[!undLog,] # remove undesired species
   }
@@ -49,15 +49,15 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   if(rich[1] > nSpecies){
     stop("Minimum richness is higher than number of species")
   }
-  if(!missing(ava)){
+  if(!is.null(ava)){
     nAva <- sum(as.logical(trait[,ava]))
     if(rich[1] > nAva){
       stop("Minimum richness is higher than number of available species")
     }
   }
   # Set number of iterations for simulations
-  if(!missing(rao)){
-    if(!missing(ava)){
+  if(!is.null(rao)){
+    if(!is.null(ava)){
       itMax <- round(0.25*it)
       itMaxAva <- round(0.25*it)
       itAva <- round(0.25*it)
@@ -67,7 +67,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
       itAll <- it - itMax
     }
   } else {
-    if(!missing(ava)){
+    if(!is.null(ava)){
       itAva <- round(0.5*it)
       itAll <- it - itAva
     } else{
@@ -75,17 +75,17 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     }
   }
   # Probabilities to draw individuals
-  if(!missing(prob)){
+  if(!is.null(prob)){
     probVector <- trait[,prob]
   } else{
     probVector <- NULL
   }
   # Simulation in each group of species
-  if(!missing(group)){
+  if(!is.null(group)){
     group <- as.character(trait[, group])
     uniqueGroups <- unique(group)
     # probGroupRich is optional
-    if(!missing(probGroupRich)){
+    if(!is.null(probGroupRich)){
       if(!all(names(probGroupRich) %in% uniqueGroups)){
         stop("names in probGroupRich must match the group names")
       }  
@@ -96,7 +96,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     } 
   }
   # Run simulation with all available species
-  if(!missing(ava)){
+  if(!is.null(ava)){
     avaLog <- as.logical(trait[,ava])
     if(sum(avaLog) < rich[2]){
       nsp <- sum(avaLog) 
@@ -108,7 +108,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     propMatrixAva <- matrix(0, ncol = nSpecies, nrow = itAva)
     for(i in 1:itAva){
       # propMatrixAva[i, avaLog] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
-      if(!missing(group)){
+      if(!is.null(group)){
         propMatrixAva[i, avaLog] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                           nRich2 = nsp, 
                                                           nInd = nInd, 
@@ -133,7 +133,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   propMatrixPool <- matrix(0, ncol = nSpecies, nrow = itAll)
   for(i in 1:itAll){
     # propMatrixPool[i,] <- sampleAbundance(nRich1 = rich[1], nRich2 = rich[2], sPool = nSpecies)
-    if(!missing(group)){
+    if(!is.null(group)){
       propMatrixPool[i, ] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                    nRich2 = rich[2], 
                                                    nInd = nInd, 
@@ -154,7 +154,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     }
   }
   # Maximize diversity
-  if(!missing(rao)){
+  if(!is.null(rao)){
     # Find distant species 
     sppMax <- findSpecies(trait, cwm, rao, rich[1], phi)
     # Run simulation with species that maximize rao
@@ -169,7 +169,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     sppMaxPos <- species %in% sppMax
     for(i in 1:itMax){
       # propMatrixSelSpp2[i, sppMaxPos] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
-      if(!missing(group)){
+      if(!is.null(group)){
         propMatrixSelSpp2[i, sppMaxPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                  nRich2 = nsp, 
                                                                  nInd = nInd, 
@@ -189,7 +189,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
                                                            method = method)
       }
     }
-    if(!missing(ava)){
+    if(!is.null(ava)){
       # Find distant species that are available
       avaLog <- as.logical(trait[,ava])
       sppMaxAva <- findSpecies(trait[avaLog, ], cwm, rao, rich[1], phi)
@@ -205,7 +205,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
       sppMaxAvaPos <- species %in% sppMaxAva
       for(i in 1:itMaxAva){
         # propMatrixSelSppAva2[i, sppMaxAvaPos] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
-        if(!missing(group)){
+        if(!is.null(group)){
           propMatrixSelSppAva2[i, sppMaxAvaPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                          nRich2 = nsp, 
                                                                          nInd = nInd, 
@@ -228,8 +228,8 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     }
   }
   # Bind all matrices
-  if(!missing(rao)){
-    if(!missing(ava)){
+  if(!is.null(rao)){
+    if(!is.null(ava)){
       propMatrix <- rbind(propMatrixSelSpp2, propMatrixSelSppAva2,
                           propMatrixAva, propMatrixPool)
     } else{
@@ -237,7 +237,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
                           propMatrixPool)
     }
   } else {
-    if(!missing(ava)){
+    if(!is.null(ava)){
       propMatrix <- rbind(propMatrixAva, propMatrixPool)
     } else{
       propMatrix <- propMatrixPool

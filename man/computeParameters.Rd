@@ -11,13 +11,13 @@
 computeParameters(
   x,
   trait,
-  ava,
-  cwm,
-  cwv,
-  rao,
-  cost,
-  dens,
-  stan,
+  ava = NULL,
+  cwm = NULL,
+  cwv = NULL,
+  rao = NULL,
+  cost = NULL,
+  dens = NULL,
+  stan = NULL,
   reference = NULL,
   supplementary = NULL
 )

@@ -19,8 +19,8 @@ findSpecies <- function(trait, cwm, rao, n, phi){
     t2d <- as.matrix(scale(trait[, rao, drop = FALSE]))
   } else if(inherits(rao, 'dist')){
     t2d <- rao
-  }
-  if(!missing(cwm)){
+  }  
+  if(!is.null(cwm)){
     t2c <- as.matrix(trait[ , cwm, drop = FALSE])
     constraints <- apply(t2c, 2, function(x){
       cons <- seq(min(x), max(x), length.out = 8)
@@ -36,7 +36,7 @@ findSpecies <- function(trait, cwm, rao, n, phi){
         jj <- cons_i[j]
         names(jj) <- colnames(t2c_i)
         # CONFERIR obj ----
-        invisible(utils::capture.output(selSpp_j <- Select::selectSpecies(t2c = t2c_i, constraints = jj, t2d = t2d, phi = phi, obj = "QH")))
+        invisible(utils::capture.output(selSpp_j <- Select::selectSpecies(t2c = t2c_i, constraints = jj, t2d = t2d, phi = phi, obj = "QH")))    
         selSpp_i[,j] <- selSpp_j$prob
       }
       selSpp[[i]] <- selSpp_i 

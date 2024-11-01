@@ -32,7 +32,7 @@
 #'                rao = c("SLA", "Height", "Seed"),
 #'                props = c(0.75, 0.9))
 #' @export
-checkReference <- function(reference, trait, cwm, cwv, rao, stan, supplementary = NULL, props = NULL){
+checkReference <- function(reference, trait, cwm = NULL, cwv = NULL, rao = NULL, stan = NULL, supplementary = NULL, props = NULL){
   RES <- list(call = match.call())
   # Create list, simRest class, to use in computeParameters
   x <- list()

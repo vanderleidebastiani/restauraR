@@ -12,14 +12,14 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
   # Sample richness
   nSppi <-  richTemp[sample.int(length(richTemp), 1)]
   # Split richness in the groups
-  if(!missing(probGroupRich)){
+  if(!is.null(probGroupRich)){
     splitRichRand <- roundDivision(nSppi, probGroupRich[uniqueGroups])  
   } else{
     splitRichRand <- randDivision(nSppi, length(uniqueGroups))
   }
   probGroupAbund <- probGroupAbund/sum(probGroupAbund)
   # Split abundances in groups
-  if(!missing(nInd)){
+  if(!is.null(nInd)){
     nIndTEMP <- roundDivision(nInd, probGroupAbund[uniqueGroups])
   } else{
     nIndTEMP <- NULL

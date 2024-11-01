@@ -9,10 +9,10 @@
 checkReference(
   reference,
   trait,
-  cwm,
-  cwv,
-  rao,
-  stan,
+  cwm = NULL,
+  cwv = NULL,
+  rao = NULL,
+  stan = NULL,
   supplementary = NULL,
   props = NULL
 )

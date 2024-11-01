@@ -10,23 +10,23 @@
 \usage{
 simulateCommunities(
   trait,
-  restComp,
-  restGroup,
-  ava,
-  und,
-  it,
+  restComp = NULL,
+  restGroup = NULL,
+  ava = NULL,
+  und = NULL,
+  it = 1000,
   rich,
-  cwm,
-  rao,
-  prob,
+  cwm = NULL,
+  rao = NULL,
+  prob = NULL,
   phi = 1,
-  nInd,
+  nInd = NULL,
   cvAbund = 1,
   prefix = NULL,
   method = "proportions",
-  group,
-  probGroupRich,
-  probGroupAbund
+  group = NULL,
+  probGroupRich = NULL,
+  probGroupAbund = NULL
 )
 
 mergeSimulations(...)

@@ -440,8 +440,8 @@ data("cerrado.mini")
 head(cerrado.mini$traits)
 # Restoration new sites
 scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
-                                 ava = "Available",
-                                 cwm = "BT",
+                                 # ava = "Available",
+                                 cwm = c("Height", "Seed"),
                                  rao = c("SLA", "Height", "Seed"),
                                  rich = c(10, 15),
                                  it = 100)
@@ -459,7 +459,7 @@ scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                                  nInd = 1000,
                                  method = "ind",
                                  group = "Tipo",
-                                 probGroupRich = c("A" = 0.5, "B" = 0.5),
+                                 # probGroupRich = c("A" = 0.5, "B" = 0.5),
                                  probGroupAbund = c("A" = 0.5, "B" = 0.5))
 sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[1:25]])
 sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[26:50]])
