@@ -451,18 +451,42 @@ cerrado.mini$traits$Tipo <- rep(c("A", "B"), each = 25)
 cerrado.mini$traits
 scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                                  # restComp = cerrado.mini$restoration,
-                                 ava = "Available",
-                                 cwm = "BT",
-                                 rao = c("SLA", "Height", "Seed"),
+                                 # ava = "Available",
+                                 # cwm = "BT",
+                                 # rao = c("SLA", "Height", "Seed"),
                                  rich = c(10, 15),
+                                 it = 4000,
+                                 nInd = 1000,
+                                 method = "ind",
+                                 prob = "SLA",
+                                 group = "Tipo",
+                                 probGroupRich = c("A" = 0.5, "B" = 0.5),
+                                 probGroupAbund = c("A" = 0.5, "B" = 0.5)
+                                 )
+sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[1:25]])
+sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[26:50]])
+
+cerrado.mini$traits$Density
+scenario <- simulateCommunities(trait = cerrado.mini$traits,
+                                 # restComp = cerrado.mini$restoration,
+                                 # ava = "Available",
+                                 # cwm = "BT",
+                                 # rao = c("SLA", "Height", "Seed"),
+                                 rich = c(50),
                                  it = 4,
                                  nInd = 1000,
                                  method = "ind",
-                                 group = "Tipo",
-                                 # probGroupRich = c("A" = 0.5, "B" = 0.5),
-                                 probGroupAbund = c("A" = 0.5, "B" = 0.5))
-sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[1:25]])
-sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[26:50]])
+                                 # prob = "SLA",
+                                 group = "Density",
+                                 # probGroupRich = c("2777" = 0, "10000" = 0.5),
+                                 probGroupAbund = c("2777" = 0, "10000" = 0.5)
+)
+nrow(scenario$simulation$composition)
+
+
+plot(apply(scenarioB$simulation$composition, 2, sum), cerrado.mini$traits$SLA)
+plot(apply(scenarioB$simulation$composition, 2, sum), cerrado.mini$traits$Density)
+
 
 cerrado.mini$traits$Tipo <- factor(cerrado.mini$traits$Tipo)
 str(cerrado.mini$traits)

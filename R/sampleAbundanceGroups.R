@@ -5,6 +5,8 @@
 sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL, 
                                   returnProp = FALSE, method = "proportions",
                                   group, probGroupRich, probGroupAbund){
+  METHOD <- c("proportions", "individuals")
+  method0 <- pmatch(method, METHOD)
   # The length of group is equal the sPool
   res <- rep(0, length = length(group))
   uniqueGroups <- unique(group)
@@ -35,7 +37,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
     if(nSppiTEMP<splitRichRand[l]){
       splitRichRand[l] <- nSppiTEMP
     }
-    if(nSppiTEMP>0){
+    if(nSppiTEMP>0 && splitRichRand[l]>0 && nIndTEMP[l]){
       res[secFilter] <- sampleAbundance(nRich1 = splitRichRand[l], 
                                         nRich2 = splitRichRand[l], 
                                         sPool = nSppiTEMP, 
@@ -45,13 +47,13 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
                                         returnProp = returnProp,
                                         method = method)
       # If proportions recalculate the proportions
-      if(method == "proportions"){
+      if(method0 == 1){
         res[secFilter] <- res[secFilter]*probGroupAbund[uniqueGroups[l]]
       }
     }
   }
   # If proportions recalculate the proportions after all groups set
-  if(method == "proportions"){
+  if(method0 == 1){
     res <- res/sum(res)
   }
   return(res)
