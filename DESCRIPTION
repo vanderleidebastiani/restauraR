@@ -32,6 +32,8 @@ RoxygenNote: 7.3.2
 Collate: 
     'FCWV.R'
     'app.R'
+    'appServer.R'
+    'appUI.R'
     'cerrado.R'
     'checkReference.R'
     'computeParameters.R'
