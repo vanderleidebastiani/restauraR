@@ -37,7 +37,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
     if(nSppiTEMP<splitRichRand[l]){
       splitRichRand[l] <- nSppiTEMP
     }
-    if(nSppiTEMP>0 && splitRichRand[l]>0 && nIndTEMP[l]){
+    if(nSppiTEMP>0 && splitRichRand[l]>0 && (method0 == 1 || (method0 == 2 && nIndTEMP[l] > 0))){
       res[secFilter] <- sampleAbundance(nRich1 = splitRichRand[l], 
                                         nRich2 = splitRichRand[l], 
                                         sPool = nSppiTEMP, 
