@@ -87,7 +87,9 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     # Evaluate test
     completeString <- paste0('xPar', '$', testsDet)
     testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
-    pos <- apply(testsEval, 1, all) 
+    pos <- apply(testsEval, 1, all)
+    # Remove NA (set to FALSE)
+    pos[is.na(pos)] <- FALSE
     # Select 
     selPar <- xPar[pos, , drop = FALSE] 
     selCom <- xComp[pos, , drop = FALSE]
@@ -95,7 +97,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti[pos, , drop = FALSE]
-    }  
+    } 
   } else{
     # Select all
     selPar <- xPar
@@ -158,6 +160,8 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           # Evaluation
           testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
         }
+        # Remove NA (set to FALSE)
+        testsEvalTemp[is.na(testsEvalTemp)] <- FALSE
         # Filter if any TRUE in the evaluation, else try next test
         if(sum(testsEvalTemp)>0){
           selPosTemp <- selPosTemp[testsEvalTemp]
