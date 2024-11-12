@@ -22,6 +22,9 @@ Imports:
     stats,
     grDevices,
     shiny, 
+    shinyBS,
+    shiny.i18n,
+    sortable,
     shinydashboard,
     shinydashboardPlus
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
@@ -31,6 +34,7 @@ VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
     'FCWV.R'
+    'adjString.R'
     'app.R'
     'appServer.R'
     'appUI.R'

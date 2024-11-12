@@ -64,7 +64,7 @@
 #'                                                 "rao > 2.5",
 #'                                                 "cost == 'MIN'"))
 #' scenarioSelected
-#' @export 
+#' @export
 selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL, singleselection = TRUE){
   RES <- list(call = match.call())
   # Check object class
@@ -84,8 +84,9 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
   }
   # Deterministic tests
   if(!is.null(testsDet)){
+    # Adjust string to test
+    completeString <- adjString("xPar", testsDet)
     # Evaluate test
-    completeString <- paste0('xPar', '$', testsDet)
     testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
     pos <- apply(testsEval, 1, all)
     # Remove NA (set to FALSE)
@@ -134,12 +135,15 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
         if(nrow(selParTemp)==1){
           break
         }
+        multipleTests <- strsplit(testsHie[j], "&|\\|")[[1]]
+        multipleTests
         # Split test
         splitTestTemp <- strsplit(testsHie[j], "<|>|==|<=|>=|!=")[[1]]
+        splitTestTemp
         # Value part
         testValueTemp <- splitTestTemp[2]
         # If MIN or MAX
-        if(grepl("MAX", testValueTemp) || grepl("MIN", testValueTemp)){
+        if(length(multipleTests)==1 && (grepl("MAX", testValueTemp) || grepl("MIN", testValueTemp))){
           # Variable part
           testVarTemp <- splitTestTemp[1]
           # String to select the variable
@@ -156,7 +160,8 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           }
         } else{
           # String to select the variable
-          completeStringTemp <- paste0('selParTemp', '$', testsHie[j])
+          # completeStringTemp <- paste0('selParTemp', '$', testsHie[j])
+          completeStringTemp <- adjString("selParTemp", testsHie[j])
           # Evaluation
           testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
         }
