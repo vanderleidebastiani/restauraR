@@ -392,7 +392,21 @@ scenarioB <- computeParameters(x = scenarioB,
                                reference = cerrado.mini$reference,
                                supplementary = cerrado.mini$supplementary)
 scenarioB
+str(scenarioB)
+colnames(scenarioB$simulation$results)
 scenarioB$simulation$results
+
+class(scenarioB$simulation$results$unavailable)
+
+all(scenarioB$simulation$results$unavailable == floor(scenarioB$simulation$results$unavailable))
+y <- 1:10
+y <- rep(NA, 10)
+y <- c(NA, 1:10)
+y 
+
+all(y == floor(y), na.rm = TRUE)
+all(is.na(y))
+
 
 # Select communities - Hierarchical selection
 scenarioSelectedB <- selectCommunities(x = scenarioB,
@@ -456,11 +470,11 @@ scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                                  # rao = c("SLA", "Height", "Seed"),
                                  rich = c(10, 15),
                                  it = 4000,
-                                 nInd = 1000,
-                                 method = "ind",
-                                 prob = "SLA",
+                                 # nInd = 1000,
+                                 method = "pro",
+                                 # prob = "SLA",
                                  group = "Tipo",
-                                 probGroupRich = c("A" = 0.5, "B" = 0.5),
+                                 # probGroupRich = c("A" = 0.5, "B" = 0.5),
                                  probGroupAbund = c("A" = 0.5, "B" = 0.5)
                                  )
 sum(scenarioB$simulation$composition[,rownames(cerrado.mini$traits)[1:25]])

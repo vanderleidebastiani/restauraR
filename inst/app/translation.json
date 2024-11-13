@@ -1,0 +1,21 @@
+{
+  "languages": ["en", "pt"],
+  "translation": [
+      {
+        "en": "Hello Shiny!", 
+        "pt": "Olá!"
+      },
+      {
+        "en": "This is the title of the selectInput",
+        "pt": "Este é o título do selectInput"
+      },
+      {
+        "en": "Ribeye steak, grilled jumbo shrimp, butter roasted potato medley grilled asparagus.",
+        "pt": "Bife de filé camarão jumbo grelhado mistura de batatas assadas na manteiga aspargos grelhados."
+      },
+      {
+        "en": "Test:", 
+        "pt": "áêç"
+      }
+    ]
+}

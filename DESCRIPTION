@@ -23,6 +23,7 @@ Imports:
     grDevices,
     shiny, 
     shinyBS,
+    shinyalert,
     shiny.i18n,
     sortable,
     shinydashboard,
@@ -40,6 +41,7 @@ Collate:
     'appUI.R'
     'cerrado.R'
     'checkReference.R'
+    'classSimplerVector.R'
     'computeParameters.R'
     'computeDissimilarity.R'
     'computeMultifunctionality.R'
