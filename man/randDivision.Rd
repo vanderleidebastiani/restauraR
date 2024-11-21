@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{randDivision}
 \alias{randDivision}
-\title{Internal function to randomly divide total into groups}
+\title{Internal function to randomly divide a total number into groups.}
 \usage{
 randDivision(n, k)
 }
@@ -16,7 +16,7 @@ randDivision(n, k)
 A numeric vector with the random division.
 }
 \description{
-Internal function to randomly divide total into groups
+Internal function to randomly divide a total number into groups.
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}

@@ -20,12 +20,6 @@
 sampleAbundance <- function(nRich1, nRich2, sPool, nInd, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions"){
   METHOD <- c("proportions", "individuals")
   method <- pmatch(method, METHOD)
-  # if (length(method) > 1) {
-  #   stop("Only one argument is accepted in method")
-  # }
-  # if (is.na(method)) {
-  #   stop("Invalid method")
-  # }
 	# Richness vector
 	richness <- nRich1:nRich2
 	# Sample richness

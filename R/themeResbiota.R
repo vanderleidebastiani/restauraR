@@ -1,33 +1,35 @@
-themeResbiota <- function(base_size = 10){
-  theme(
+#' @title Internal function. A customized theme to use in ggplot2 objects.
+#' @encoding UTF-8
+#' @importFrom ggplot2 theme element_text element_line element_blank element_rect
+#' @param baseSize Baseline text size (default baseSize = 10).
+#' @param legendPosition The position of legends (default legendPosition = "left").
+#' @returns Theme to ggplot objects.
+#' @author See \code{\link{resbiota-package}}.
+#' @seealso \code{\link{simulateCommunities}}
+#' @keywords Auxiliary
+#' @export
+themeResbiota <- function(baseSize = 10, legendPosition = "left"){
+  ggplot2::theme(
     # Titles
-    plot.tag = element_text(size = base_size),
-    plot.title = element_text(size = base_size, face = "bold"),
-    plot.subtitle = element_text(size = base_size*0.9),
-    plot.caption = element_text(size = base_size*0.9),
+    plot.tag = ggplot2::element_text(size = baseSize),
+    plot.title = ggplot2::element_text(size = baseSize, face = "bold"),
+    plot.subtitle = ggplot2::element_text(size = baseSize*0.9),
+    plot.caption = ggplot2::element_text(size = baseSize*0.9),
     # Axis
-    axis.title = element_text(size = base_size*0.9, face = "bold"),
-    axis.text.y = element_text(size = base_size*0.8, hjust = 1),
-    axis.text.x = element_text(size = base_size*0.8, angle = 0, vjust = 1),
-    axis.line = element_line(linewidth = 0.5),
+    axis.title = ggplot2::element_text(size = baseSize*0.9, face = "bold"),
+    axis.text.y = ggplot2::element_text(size = baseSize*0.8, hjust = 1),
+    axis.text.x = ggplot2::element_text(size = baseSize*0.8, angle = 0, vjust = 1),
+    axis.line = ggplot2::element_line(linewidth = 0.5),
     # Legend
-    legend.key = element_blank(),
-    legend.position = "none",
+    legend.key = ggplot2::element_blank(),
+    legend.position = legendPosition,
     legend.justification = "center",
-    legend.title = element_text(size = base_size*0.8, face = "bold"),
-    legend.text = element_text(size = base_size*0.7),
-    # Grids
-    strip.text = element_text(size = base_size*0.8, face = "bold"),
-    strip.text.x = element_text(margin = margin(1,1,1,1)),
-    strip.text.y = element_text(angle = -90, margin = margin(1,1,1,1)),
-    # Margins/spacing/borders
-    plot.margin = margin(12, 10, 12, 10),
-    panel.spacing = unit(0.75, "lines"),
-    panel.border = element_blank(),
+    legend.title = ggplot2::element_text(size = baseSize*0.8, face = "bold"),
+    legend.text = ggplot2::element_text(size = baseSize*0.7),
     # Background
-    plot.background = element_rect(fill = "#ffffff", color = NA),
-    panel.background = element_rect(fill  = "#ffffff", color = NA),
-    legend.background = element_rect(fill = "#ffffff", color = NA),
-    strip.background = element_rect(fill = "#dbdbdb", color = NA)
+    plot.background = ggplot2::element_rect(fill = "#ffffff", color = NA),
+    panel.background = ggplot2::element_rect(fill  = "#ffffff", color = NA),
+    legend.background = ggplot2::element_rect(fill = "#ffffff", color = NA),
+    strip.background = ggplot2::element_rect(fill = "#dbdbdb", color = NA)
   )
 }

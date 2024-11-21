@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{adjString}
 \alias{adjString}
-\title{Internal function to adjust a vector of logical tests to be evaluate on a data.frame}
+\title{Internal function to adjust a vector of logical tests to be evaluate on a data.frame.}
 \usage{
 adjString(prefix, logicTest)
 }
@@ -16,7 +16,7 @@ adjString(prefix, logicTest)
 The vector of logical tests adjusted.
 }
 \description{
-Internal function to adjust a vector of logical tests to be evaluate on a data.frame
+Internal function to adjust a vector of logical tests to be evaluate on a data.frame.
 }
 \seealso{
 \code{\link{selectCommunities}}

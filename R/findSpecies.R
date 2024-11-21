@@ -35,7 +35,6 @@ findSpecies <- function(trait, cwm, rao, n, phi){
       for(j in 1:length(cons_i)){
         jj <- cons_i[j]
         names(jj) <- colnames(t2c_i)
-        # CONFERIR obj ----
         invisible(utils::capture.output(selSpp_j <- Select::selectSpecies(t2c = t2c_i, constraints = jj, t2d = t2d, phi = phi, obj = "QH")))    
         selSpp_i[,j] <- selSpp_j$prob
       }
@@ -53,7 +52,6 @@ findSpecies <- function(trait, cwm, rao, n, phi){
       }
     }
   } else {
-    # CONFERIR obj ----
     invisible(utils::capture.output(selSpp <- Select::selectSpecies(t2d = t2d, phi = phi, obj = "QH")))
     propMatrixSelSpp <- selSpp$prob
     sppMax <- c()

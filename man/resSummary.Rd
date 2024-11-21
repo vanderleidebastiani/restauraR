@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{resSummary}
 \alias{resSummary}
-\title{Internal function to calculate descriptive statistics}
+\title{Internal function to calculate descriptive statistics.}
 \usage{
 resSummary(x, props = NULL)
 }
@@ -13,10 +13,10 @@ resSummary(x, props = NULL)
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
 \value{
-A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles
+A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles.
 }
 \description{
-Internal function to calculate descriptive statistics
+Internal function to calculate descriptive statistics.
 }
 \author{
 See \code{\link{resbiota-package}}.

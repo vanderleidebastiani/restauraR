@@ -1,9 +1,9 @@
-#' @title Internal function to calculate descriptive statistics
+#' @title Internal function to calculate descriptive statistics.
 #' @encoding UTF-8
 #' @importFrom stats median quantile
 #' @param x A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
-#' @returns A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles
+#' @returns A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles.
 #' @author See \code{\link{resbiota-package}}.
 #' @keywords Auxiliary
 #' @export

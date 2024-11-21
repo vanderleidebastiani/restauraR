@@ -23,18 +23,13 @@ print.simRest <- function(x, ...) {
     cat(ifelse(is.null(x$simulation$results), "No", "Yes"), "\n\n")
   }
   cat("List of results:\n")
-  CollectNames <- function(l, prefix = NULL) {
-    if (!is.list(l)) return(NULL)
-    names <- Map(paste, names(l), lapply(l, CollectNames), sep = "$")
-    names <- gsub("\\$$", "", unlist(names, use.names = FALSE))
-    names <- paste(prefix, names, sep = "")
-    return(names)
-  }
+  # Avoid collecting the names of the following objects
   if(!is.null(x$simulation$group)) x$simulation$group <- as.matrix(x$simulation$group)
   if(!is.null(x$simulation$results)) x$simulation$results <- as.matrix(x$simulation$results)
   if(!is.null(x$simulation$multifunctionality)) x$simulation$multifunctionality <- as.matrix(x$simulation$multifunctionality)
   if(!is.null(x$reference$results)) x$reference$results <- as.matrix(x$reference$results)
   if(!is.null(x$supplementary$results)) x$supplementary$results <- as.matrix(x$supplementary$results)
-  cat(CollectNames(x, prefix = "..$"), sep = "\n")
+  # Collect list names to print
+  cat(collectNames(x, prefix = "..$"), sep = "\n")
   invisible(x)
 }
