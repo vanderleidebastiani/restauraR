@@ -3,12 +3,12 @@
 \encoding{UTF-8}
 \name{createReport}
 \alias{createReport}
-\title{Create report}
+\title{Creates a data profiling report.}
 \usage{
 createReport(x, props = NULL)
 }
 \arguments{
-\item{x}{Input data}
+\item{x}{A data.frame or matrix with the input data.}
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
@@ -16,7 +16,7 @@ createReport(x, props = NULL)
 The report in html format.
 }
 \description{
-Creates a data profiling report Based on the mcmcplots package
+Creates a data profiling report with descriptive statistics and univariate graphs.
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},

@@ -78,7 +78,6 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
   }
-  # inherits(ava, "character")
   composition <- x$simulation$composition
   nSim <- nrow(composition)
   traitsNames <- colnames(trait)
@@ -116,7 +115,6 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
   # Calculate species proportions
   composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
-  # trait <- SYNCSA::organize.syncsa(comm = composition, traits = trait, check.comm = FALSE)$traits
   matchNames <- match(colnames(composition), rownames(trait))
   trait <- as.data.frame(trait[matchNames, , drop = FALSE])
   # Calculate parameters

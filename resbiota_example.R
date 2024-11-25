@@ -15,7 +15,7 @@ require(magrittr)
 # }
 
 ## Data ----
-data("dados")
+load(file = "data/dados.rda")
 ls(dados)
 ?checkReference
 
@@ -39,6 +39,7 @@ resCheck$supplementary$summary
 
 ## Exploratory report (html)
 createReport(dados$trait, props = c(0.1, 0.5, 0.75))
+
 # FINALIZAR ----
 # funcao para definir os target (percentil?)
 # referencia, pool, ...
@@ -80,8 +81,8 @@ resSIM1 <- simulateCommunities(trait = dados$trait[80:120,],
                                rao = dados$cwm,
                                rest = dados$rest,
                                restGroup = dados$restGroup,
-                               max_add = dados$max_add, 
-                               min_p = dados$min_p,
+                               # max_add = dados$max_add, 
+                               # min_p = dados$min_p,
                                phi = 1, 
                                prefix = "Ongoing"
 )
@@ -115,7 +116,7 @@ resParAllSIM <- computeParameters(allSIM,
                                     rao = dados$cwm,
                                     # cwv = dados$cwm,
                                     ava = dados$ava,
-                                    ref = dados$ref[1:10,],
+                                    # ref = dados$ref[1:10,],
                                     supplementary = dados$ref[11:19,]
 )
 resParAllSIM
@@ -151,9 +152,8 @@ resCheck$reference$summary
 head(resParAllSIM$simulation$results)
 
 target <- c("CWM_LMA > 0.105", "rao > 2.9", "CWM_Resprouter < 0.76")
-# CONFERIR ----
-# QUANDO NAO TEM ESPACOS ELES FICAM NOS NOMES DAS COLUNAS 
-target <- c("richness > 10", "unavailable < 10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
+target <- c("CWM_LMA > 0.105")
+target <- c("richness>10", "unavailable<10", "CWM_LMA > 0.9", "CWM_Dur_flowering > 4", "rao > 2.9", "CWM_Resprouter < 0.76")
 
 # TAREFA ----
 # conferir se colunas foram encontradas
@@ -180,7 +180,7 @@ resParAllSIM$simulation$results
 ### Global selection (first step) ----
 targetSelect1 <- c("CWM_LMA > 0.08", "rao > 2.9", "CWM_Resprouter > 0.5")
 resSelectSim <- selectCommunities(resParAllSIM, 
-                                  tests = targetSelect1)
+                                  testsDet = targetSelect1)
 resSelectSim
 class(resSelectSim)
 resSelectSim$selection$results %>% dim
@@ -191,7 +191,7 @@ resSelectSim$selection$thresholds
 ### Additional selection (second step) ----
 targetSelect2 <- c("CWM_LMA > 0.08", "rao < 3", "CWM_Resprouter > 0.5")
 resSelectSim <- selectCommunities(resSelectSim, 
-                                  tests = targetSelect2)
+                                  testsDet = targetSelect2)
 resSelectSim
 str(resSelectSim,1)
 resSelectSim$selection$group %>% dim
@@ -204,7 +204,7 @@ resSelectSim$selection$thresholds
 # targetSelect3 <- c("multifunctionality >= 2", "dissimilarity < 0.1")
 targetSelect3 <- c("alphamultifunctionality >= 2")
 resSelectSim3 <- selectCommunities(resParAllSIM, 
-                                   tests = targetSelect3)
+                                   testsDet = targetSelect3)
 resSelectSim3
 resSelectSim3$selection$results
 resSelectSim3$selection$N
@@ -215,7 +215,7 @@ resSelectSim3$selection$thresholds
 resParAllSIM$simulation$results
 targetSelect4 <- c("PREFIX == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 3.6")
 resSelectSimPart1 <- selectCommunities(resParAllSIM, 
-                                  tests = targetSelect4)
+                                       testsDet = targetSelect4)
 resSelectSimPart1
 resSelectSimPart1$selection$results
 resSelectSimPart1$selection$N
@@ -223,7 +223,7 @@ resSelectSimPart1$selection$N
 resParAllSIM$simulation$group
 targetSelect5 <- c("PREFIX == 'Ongoing'", "restGroup == 'edge'", "rao > 3.6")
 resSelectSimPart2 <- selectCommunities(resParAllSIM, 
-                                   tests = targetSelect5)
+                                       testsDet = targetSelect5)
 resSelectSimPart2
 resSelectSimPart2$selection$results
 resSelectSimPart2$selection$results
@@ -243,7 +243,7 @@ resSelectSimMerged$selection$results %>% dim
 #### First selection ----
 targetSelect6 <- c("rao > 5")
 resParSelectExtra <- selectCommunities(resParSIM0, 
-                                   tests = targetSelect6)
+                                       testsDet = targetSelect6)
 resParSelectExtra
 resParSelectExtra$selection$N
 resParSelectExtra$selection$results
@@ -262,7 +262,8 @@ resParSelectExtra$selection$results
 
 #### Additional selection (second step) ----
 targetSelect7 <- c("alphamultifunctionality >= 2")
-resParSelectExtra <- selectCommunities(resParSelectExtra, tests = targetSelect7)
+resParSelectExtra <- selectCommunities(resParSelectExtra, 
+                                       testsDet = targetSelect7)
 resParSelectExtra
 resParSelectExtra$selection$results
 resParSelectExtra$reference$results

@@ -4,20 +4,20 @@
 \name{viewResults}
 \alias{viewResults}
 \alias{viewMultifunctionality}
-\title{Visualize results}
+\title{Visualize results.}
 \usage{
 viewResults(x, xvar, yvar, hideref = FALSE)
 
 viewMultifunctionality(x, ...)
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to visualize results}
+\item{x}{A object of class "simRest" or "simRestSelect" to visualize results.}
 
 \item{xvar}{Name of the variable (parameter) in x axis.}
 
 \item{yvar}{Name of the variable (parameter) in y axis.}
 
-\item{hideref}{Logical argument (TRUE or FALSE) to specify if hide reference sites}
+\item{hideref}{Logical argument (TRUE or FALSE) to specify if hide reference sites.}
 
 \item{...}{Arguments passed to upset function.}
 }
@@ -25,14 +25,14 @@ viewMultifunctionality(x, ...)
 A ggplot plot object.
 }
 \description{
-Visualize parameters of simulated and selected communities and reference sites
+Visualize parameters of simulated and selected communities and reference sites.
 }
 \references{
-Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological
 restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 
-Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript
 in preparation.
 }
 \seealso{

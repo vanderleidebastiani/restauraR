@@ -11,7 +11,7 @@ reorganizeMatrix(template, x, fillNA = FALSE)
 makeMatrixTemplate(...)
 }
 \arguments{
-\item{template}{A template matrix returned by the `makeMatrixTemplate` function.}
+\item{template}{A template matrix returned by the \code{makeMatrixTemplate} function.}
 
 \item{x}{A data.frame or matrix to be reorganized.}
 
@@ -20,13 +20,13 @@ makeMatrixTemplate(...)
 \item{...}{Objects of class data.frame (or matrix) to be concatenated.}
 }
 \value{
-The `makeMatrixTemplate` function returns a empty data.table object, `reorganizeMatrix` returns the reorganized matrix.
+The \code{makeMatrixTemplate} function returns a empty data.table object, \code{reorganizeMatrix} returns the reorganized matrix.
 }
 \description{
-`makeMatrixTemplate` creates a template matrix. This function concatenates two or more data.frame (or matrix) 
-and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
+\code{makeMatrixTemplate} creates a template matrix. This function concatenates two or more data.frame (or matrix)
+and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects.
 
-`reorganizeMatrix` rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
+\code{reorganizeMatrix} rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
 }
 \author{
 See \code{\link{resbiota-package}}.

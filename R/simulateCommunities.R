@@ -59,17 +59,17 @@
 #' 
 #' The results visualization functions are auxiliary to checking parameters in reference sites, analyzing the distribution of functional parameters in simulated communities and showing final solutions of selected species composition. 
 #' 
-#' The function viewResults allows the visualization of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualization includes all simulated communities and allows includes also observed relations in reference sites. 
+#' The function `viewResults` allows the visualization of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualization includes all simulated communities and allows includes also observed relations in reference sites. 
 #' 
-#' The function viewMultifunctionality allows visualize the multifunctionality sets creating a graphical representation of the number of sites where each function has been restored, and the number of sites where combinations of functions were restored.
+#' The function `viewMultifunctionality` allows visualize the multifunctionality sets creating a graphical representation of the number of sites where each function has been restored, and the number of sites where combinations of functions were restored.
 #' 
 #' \strong{Merge functions}
 #' 
 #' The resbiota package includes functions to merge results set in different operations. 
 #' 
-#' The function mergeSimulations concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations. 
+#' The function `mergeSimulations` concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations. 
 #' 
-#' The function mergeSelection concatenates different selection procedures. For example, if restoration sites have diverse desired restoration targets, the selection can be performed in distinct steps and then concatenated.
+#' The function `mergeSelection` concatenates different selection procedures. For example, if restoration sites have diverse desired restoration targets, the selection can be performed in distinct steps and then concatenated.
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist as.data.table
 #' @aliases mergeSimulations print.simRest
@@ -85,12 +85,12 @@
 #' @param prob A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy (default phi = 1).
 #' @param nInd The number of individuals to draw in each site. Used only in method "individuals".
-#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
+#' @param cvAbund Coefficient of variation (CV) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prefix A prefix to use in current simulation.
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
 #' @param group A vector with traits name which indicates the group to which species belongs.
-#' @param probGroupRich Vector of probabilities to draw species richness in each group.
-#' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
+#' @param probGroupRich Vector of probabilities to draw richness in each species group.
+#' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each species group.
 #' @param ... Objects of class "simRest" to be concatenated. Additional arguments for respective methods.
 #' @param x Objects of class "simRest" to print.
 #' @returns A list (class "simRest") with the elements:
@@ -139,7 +139,6 @@
 #' allScenarios
 #' @export
 simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
-# simulateCommunities <- function(trait, restComp, restGroup, ava, und, it, rich, cwm, rao, max_add, min_p, phi = 1, prefix = NULL){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
@@ -171,17 +170,6 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
   if(!is.null(restComp)){
     rowNameProMatrix <- rownames(propMatrix)
     rowNameRest <- rownames(restComp)
-    # template1 <- propMatrix[0,]
-    # template2 <- restComp[0,]
-    # template0 <- data.table::rbindlist(list(data.table::as.data.table(template1), data.table::as.data.table(template2)), use.names = TRUE, fill = TRUE)
-    # propMatrix <- data.table::rbindlist(list(template0, data.table::as.data.table(propMatrix)), use.names = TRUE, fill = TRUE)
-    # restComp <- data.table::rbindlist(list(template0, data.table::as.data.table(restComp)), use.names = TRUE, fill = TRUE)
-    # propMatrix <- as.matrix(propMatrix)
-    # restComp <- as.matrix(restComp)
-    # rownames(propMatrix) <- rowNameProMatrix
-    # rownames(restComp) <- rowNameRest
-    # propMatrix[is.na(propMatrix)] <- 0
-    # restComp[is.na(restComp)] <- 0
     template0 <- makeMatrixTemplate(propMatrix, restComp)
     propMatrix <- reorganizeMatrix(template = template0, propMatrix, fillNA = TRUE)
     restComp <- reorganizeMatrix(template = template0, restComp, fillNA = TRUE)

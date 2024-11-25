@@ -27,7 +27,7 @@ computeDissimilarity(x, trait)
 computeMultifunctionality(x, tests)
 }
 \arguments{
-\item{x}{A object of class `simRest` or `simRestSelect` to perform calculate communities parameters.}
+\item{x}{A object of class \code{simRest} or \code{simRestSelect} to perform calculate communities parameters.}
 
 \item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
 
@@ -52,7 +52,7 @@ computeMultifunctionality(x, tests)
 \item{tests}{A vector with multifunctionality criteria to be performed.}
 }
 \value{
-A list (class `simRest` or `simRestSelect`) with the elements:
+A list (class \code{simRest} or \code{simRestSelect}) with the elements:
 \item{call}{The arguments used.}
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
@@ -99,11 +99,11 @@ scenario <- computeMultifunctionality(x = scenario,
 scenario
 }
 \references{
-Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological
 restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 
-Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript
 in preparation.
 }
 \seealso{

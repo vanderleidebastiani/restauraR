@@ -12,17 +12,17 @@ computeMultifunctionality <- function(x, tests){
   } else{
     xPar <- x$selection$results
   }
-  completeString <- paste0('xPar', '$', tests)
+  # String to select the variable
+  completeString <- adjString("xPar", tests)
+  # Evaluation
   testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
   if(!inherits(testsEval, "matrix")){
     testsEval <- t(as.matrix(testsEval))  
   }
-  # testsSplit <- strsplit(tests, ' ')
-  # colnames(testsEval) <- sapply(testsSplit, '[', 1)
   colnames(testsEval) <- tests
-  # rownames(testsEval) <- rownames(xPar)
-  # testsEval <- as.data.frame(testsEval)
+  # Calculate alphamultifunctionality
   resAlpha <- rowSums(testsEval)
+  # Organize the multifunctionality matrix/data.frame
   testsEval <- cbind.data.frame(SIM = xPar$SIM, testsEval)
   if(inherits(x, "simRest")){
     x$simulation$multifunctionality <- testsEval

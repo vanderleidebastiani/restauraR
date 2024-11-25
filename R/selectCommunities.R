@@ -136,10 +136,8 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           break
         }
         multipleTests <- strsplit(testsHie[j], "&|\\|")[[1]]
-        multipleTests
         # Split test
         splitTestTemp <- strsplit(testsHie[j], "<|>|==|<=|>=|!=")[[1]]
-        splitTestTemp
         # Value part
         testValueTemp <- splitTestTemp[2]
         # If MIN or MAX
@@ -160,7 +158,6 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           }
         } else{
           # String to select the variable
-          # completeStringTemp <- paste0('selParTemp', '$', testsHie[j])
           completeStringTemp <- adjString("selParTemp", testsHie[j])
           # Evaluation
           testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]

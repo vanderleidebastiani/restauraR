@@ -5,7 +5,7 @@
 \alias{themeResbiota}
 \title{Internal function. A customized theme to use in ggplot2 objects.}
 \usage{
-themeResbiota(baseSize = 10, legendPosition = "left")
+themeResbiota(baseSize = 10, legendPosition = "right")
 }
 \arguments{
 \item{baseSize}{Baseline text size (default baseSize = 10).}

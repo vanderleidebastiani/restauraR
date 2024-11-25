@@ -32,6 +32,7 @@ Description: Create restoration solutions to assemble communities from a regiona
 License: GPL (>= 3)
 Encoding: UTF-8
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Collate: 
     'FCWV.R'

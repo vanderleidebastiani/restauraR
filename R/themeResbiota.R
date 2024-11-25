@@ -8,7 +8,7 @@
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary
 #' @export
-themeResbiota <- function(baseSize = 10, legendPosition = "left"){
+themeResbiota <- function(baseSize = 10, legendPosition = "right"){
   ggplot2::theme(
     # Titles
     plot.tag = ggplot2::element_text(size = baseSize),

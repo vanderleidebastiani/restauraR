@@ -41,7 +41,7 @@ checkReference(
 \item{...}{Additional arguments for respective methods.}
 }
 \value{
-A list (class `simRestCheck`) with the elements:
+A list (class \code{simRestCheck}) with the elements:
 \item{call}{The arguments used.}
 \item{pool$results}{A data frame with calculated parameters in species pool.}
 \item{pool$summary}{A data frame with the descriptive statistics of the species pool.}

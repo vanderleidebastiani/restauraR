@@ -1,12 +1,12 @@
-#' @title Create report 
-#' @description Creates a data profiling report Based on the mcmcplots package
+#' @title Creates a data profiling report.
+#' @description Creates a data profiling report with descriptive statistics and univariate graphs.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave
 #' @importFrom tableHTML tableHTML add_css_table
 #' @importFrom R2HTML HTMLInitFile HTMLCSS HTML.title HTMLli HTMLhr HTML HTMLInsertGraph HTMLbr
 #' @importFrom utils browseURL
 #' @importFrom grDevices dev.list dev.off nclass.FD
-#' @param x Input data
+#' @param x A data.frame or matrix with the input data.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns The report in html format.
 #' @author See \code{\link{resbiota-package}}.
@@ -17,80 +17,68 @@
 createReport <- function(x, props = NULL){
   # Get basic parameters
   ncall <- deparse(substitute(x))
-  traitsNames <- colnames(x)
+  colNamesX <- colnames(x)
   dirTemp <- tempdir()
   ## Turn off graphics device if interrupted in the middle of plotting
-  current.devices <- grDevices::dev.list()
-  on.exit( sapply(grDevices::dev.list(), function(dev) if(!(dev %in% current.devices)) grDevices::dev.off(dev)) )
-  # Load css file in mcmcplots package
-  css.file <- system.file("style.css", package = "resbiota")
-  # css.file <- paste0(getwd(), "/inst/style.css")
+  currentDevices <- grDevices::dev.list()
+  on.exit( sapply(grDevices::dev.list(), function(dev) if(!(dev %in% currentDevices)) grDevices::dev.off(dev)) )
+  # Load css file
+  cssFile <- system.file("style.css", package = "resbiota")
   # Start html file
-  htmlfile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "resbiotaoutput", CSSFile = css.file, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
+  htmlFile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "resbiotaoutput", CSSFile = cssFile, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
   # Include css file
-  R2HTML::HTMLCSS(file = htmlfile, append = TRUE, CSSfile = css.file)
+  R2HTML::HTMLCSS(file = htmlFile, append = TRUE, CSSfile = cssFile)
   # Title
-  # cat(sprintf('<h1>Descriptive statistics: %s</h1>', ncall), sep = "", file = htmlfile, append = TRUE)
-  R2HTML::HTML.title(sprintf("Descriptive statistics: %s", ncall), HR = 1, CSSclass = "title", file = htmlfile, append = TRUE)
+  R2HTML::HTML.title(sprintf("Descriptive statistics: %s", ncall), HR = 1, CSSclass = "title", file = htmlFile, append = TRUE)
   # Table of Contents
-  # cat('\n<h2>Table of Contents</h2>', file = htmlfile, append = TRUE)
-  R2HTML::HTML.title("Table of Contents", HR = 2, CSSclass = "title", file = htmlfile, append = TRUE)
-  # cat(sprintf('<li class="toc_item"><a href="#%s">%s</a></li>\n', "Summary table", "Summary table"), file = htmlfile, append = TRUE)
-  R2HTML::HTMLli(txt = sprintf('<a href="#%s">%s</a>', "Summary table", "Summary table"), file = htmlfile, append = TRUE)
-  for (group.name in traitsNames) {
-    # cat(sprintf('<li class="toc_item"><a href="#%s">%s</a></li>\n', group.name, group.name), file = htmlfile, append = TRUE)
-    R2HTML::HTMLli(txt = sprintf('<a href="#%s">%s</a>', group.name, group.name), file = htmlfile, append = TRUE)
+  R2HTML::HTML.title("Table of Contents", HR = 2, CSSclass = "title", file = htmlFile, append = TRUE)
+  R2HTML::HTMLli(txt = sprintf('<a href="#%s">%s</a>', "Summary table", "Summary table"), file = htmlFile, append = TRUE)
+  for (varName in colNamesX) {
+    R2HTML::HTMLli(txt = sprintf('<a href="#%s">%s</a>', varName, varName), file = htmlFile, append = TRUE)
   }
-  R2HTML::HTMLhr(file = htmlfile, append = TRUE)
+  # New line
+  R2HTML::HTMLhr(file = htmlFile, append = TRUE)
   # Global summary table
-  # cat(sprintf('<h2><a name="%s">Summary table</a></h2>\n', "Summary table"), file = htmlfile, append = TRUE)
-  R2HTML::HTML.title(sprintf('<a name="%s">Summary table</a>', "Summary table"), HR = 2, CSSclass = "title", file = htmlfile, append = TRUE)
-  dfInfo <- data.frame(Name = c("Species pool", "Number of traits"), Value = c(nrow(x), ncol(x)))
-  cat(tableHTML::add_css_table(tableHTML::tableHTML(dfInfo, rownames = FALSE), css = list('text-align', 'center')), file = htmlfile, append = TRUE)
-  # R2HTML::HTML(dfInfo, row.names = FALSE, file = htmlfile, append = TRUE)
-  # R2HTML::HTML(dfInfo, row.names = FALSE, file = htmlfile, append = TRUE, classtable = "table", Border = -1, innerBorder = 1)
+  R2HTML::HTML.title(sprintf('<a name="%s">Summary table</a>', "Summary table"), HR = 2, CSSclass = "title", file = htmlFile, append = TRUE)
+  dfInfo <- data.frame(Name = c("Number of rows", "Number of columns"), Value = c(nrow(x), ncol(x)))
+  cat(tableHTML::add_css_table(tableHTML::tableHTML(dfInfo, rownames = FALSE), css = list('text-align', 'center')), file = htmlFile, append = TRUE)
   # Plots
-  for (group.name in traitsNames) {
-    R2HTML::HTMLhr(file = htmlfile, append = TRUE)
-    # cat(sprintf('<h2><a name="%s">Plots for %s</a></h2>\n', group.name, group.name), file = htmlfile, append = TRUE)
-    R2HTML::HTML.title(sprintf('<a name="%s">Plots for %s</a>', group.name, group.name), HR = 2, CSSclass = "title", file = htmlfile, append = TRUE)
-    gname <- paste(group.name, ".png", sep="")
-    if(inherits(x[[group.name]], "factor") || inherits(x[[group.name]], "character")){
+  for (varName in colNamesX) {
+    R2HTML::HTMLhr(file = htmlFile, append = TRUE)
+    R2HTML::HTML.title(sprintf('<a name="%s"> %s</a>', varName, paste0(varName, " - ", vectorClass(x[,varName]))), HR = 2, CSSclass = "title", file = htmlFile, append = TRUE)
+    pName <- paste(varName, ".png", sep = "")
+    if(inherits(x[,varName], "factor") || inherits(x[,varName], "character")){
       p1 <- ggplot2::ggplot(data = x) +
-        ggplot2::aes(x = .data[[group.name]]) +
-        ggplot2::geom_bar()
+        ggplot2::aes(x = .data[[varName]]) +
+        ggplot2::geom_bar(fill = "#1F78B4", col = "#ffffff") +
+        themeResbiota(baseSize = 12)
     } else{
       # Freedman-Diaconis method
       p1 <- ggplot2::ggplot(data = x) +
-        ggplot2::aes(x = .data[[group.name]]) +
-        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[[group.name]]), col = "white")
+        ggplot2::aes(x = .data[[varName]]) +
+        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[,varName]), fill = "#1F78B4", col = "#ffffff") +
+        themeResbiota(baseSize = 12)
     }
     # Export temp plot
-    ggplot2::ggsave(file.path(dirTemp, gname),
+    ggplot2::ggsave(file.path(dirTemp, pName),
                     plot = p1,
                     width = 6, height = 5,
                     units = "in",
-                    # width = 500, height = 500,
-                    # units = "px",
                     dpi = 300)
     # Include summary table
-    df <- t(resSummary(x[,group.name], props = props))
-    df <- as.data.frame(df)
-    cat(tableHTML::add_css_table(tableHTML::tableHTML(df, rownames = FALSE, round = 3), css = list('text-align', 'center')), file = htmlfile, append = TRUE)
-    # R2HTML::HTML(df, row.names = FALSE, digits = 3, file = htmlfile, append = TRUE)
+    dfSummary <- t(resSummary(x[, varName], props = props))
+    dfSummary <- as.data.frame(dfSummary)
+    cat(tableHTML::add_css_table(tableHTML::tableHTML(dfSummary, rownames = FALSE, round = 3), css = list('text-align', 'center')), file = htmlFile, append = TRUE)
     # Include plot
-    R2HTML::HTMLInsertGraph(GraphFileName = gname, Caption="", GraphBorder = 0,
+    R2HTML::HTMLInsertGraph(GraphFileName = pName, Caption = "", GraphBorder = 1,
                     Align = "left", WidthHTML = 600, HeightHTML = 500,
-                    file = htmlfile, append = TRUE)
+                    file = htmlFile, append = TRUE)
     # New line
-    R2HTML::HTMLbr(file = htmlfile, append = TRUE)
+    R2HTML::HTMLbr(file = htmlFile, append = TRUE)
   }
   # End html file
-  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>resbiota</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlfile)
-  full.name.path <- paste("file://", htmlfile, sep = "")
-  # TEMP REMOVe
-  print(css.file)
-  print(full.name.path)
-  utils::browseURL(full.name.path)
-  invisible(full.name.path)
+  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>resbiota</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlFile)
+  fullPath <- paste("file://", htmlFile, sep = "")
+  utils::browseURL(fullPath)
+  invisible(fullPath)
 }
