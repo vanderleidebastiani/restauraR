@@ -1,4 +1,4 @@
-#' @title Visualize results.
+#' @title Visualize results
 #' @description Visualize parameters of simulated and selected communities and reference sites.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual theme element_text geom_bar

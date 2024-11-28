@@ -6,13 +6,13 @@
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
-#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
 #' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @param x Objects of class "simRestCheck" to print.
 #' @param ... Additional arguments for respective methods.
-#' @returns A list (class `simRestCheck`) with the elements:
+#' @returns A list (class "simRestCheck") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{pool$results}{A data frame with calculated parameters in species pool.}
 #' \item{pool$summary}{A data frame with the descriptive statistics of the species pool.}

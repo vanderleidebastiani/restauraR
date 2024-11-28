@@ -1,4 +1,4 @@
-#' @title Internal function to adjust a vector of logical tests to be evaluate on a data.frame.
+#' @title Internal function to adjust a vector of logical tests to be evaluate on a data.frame
 #' @encoding UTF-8
 #' @param prefix The name of data.frame object.
 #' @param logicTest The vector of logical tests.

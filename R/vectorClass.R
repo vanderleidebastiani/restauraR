@@ -1,4 +1,4 @@
-#' @title Internal function to return the vector class.
+#' @title Internal function to return the vector class
 #' @encoding UTF-8
 #' @param x A vector.
 #' @returns The vector class. 

@@ -1,4 +1,4 @@
-#' @title Launch the resbiota Shiny Application.
+#' @title Launch the resbiota Shiny Application
 #' @description Launches a local version of the resbiota application. 
 #' @encoding UTF-8
 #' @importFrom shiny runApp

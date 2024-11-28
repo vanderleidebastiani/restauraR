@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{createReport}
 \alias{createReport}
-\title{Creates a data profiling report.}
+\title{Creates a data profiling report}
 \usage{
 createReport(x, props = NULL)
 }

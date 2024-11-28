@@ -1,4 +1,4 @@
-#' @title Internal function to generate communities proportion matrix
+#' @title Internal function to generate communities matrix
 #' @encoding UTF-8
 #' @importFrom stats rlnorm
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
@@ -6,8 +6,8 @@
 #' @param und A vector indicating trait name which indicates undesired species (1 or 0) in trait data.
 #' @param it Number of iterations (communities).
 #' @param rich The range of richness values in each community.
-#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
-#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
+#' @param rao A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
 #' @param nInd The number of individuals to draw. Used only in method "individuals".
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
@@ -16,27 +16,12 @@
 #' @param group A vector with traits name which indicates the group to which species belongs.
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
-#' @returns A community matrix with species relative abundances.
+#' @returns A community matrix with relative or raw species abundances.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
 propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, group, probGroupRich, probGroupAbund){
-  # nInd = nInd, cvAbund = cvAbund, prob = prob, method = method
-  # # Auxiliary functions
-  # resample <- function(x, ...) x[sample.int(length(x), ...)]
-  # sampleAbundance <- function(nRich1, nRich2, vLen){
-  #   nsp_i <-  resample(nRich1:nRich2, 1)
-  #   ocor <- sample( c(rep(1, nsp_i), rep(0, vLen - nsp_i)) )
-  #   abund <- stats::rlnorm(vLen)
-  #   abund <- abund * ocor
-  #   prop <- abund/sum(abund)
-  #   return(prop)
-  # }
-  # Print warning if ava is missing
-  # if(is.null(ava)){
-  #   warning("Missing the ava argument. All species are considered available")
-  # }
   # Remove undesired species
   if(!is.null(und)){
     undLog <- as.logical(trait[,und])
@@ -107,7 +92,6 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     }
     propMatrixAva <- matrix(0, ncol = nSpecies, nrow = itAva)
     for(i in 1:itAva){
-      # propMatrixAva[i, avaLog] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
       if(!is.null(group)){
         propMatrixAva[i, avaLog] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                           nRich2 = nsp, 
@@ -132,7 +116,6 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   # Run simulation with all species
   propMatrixPool <- matrix(0, ncol = nSpecies, nrow = itAll)
   for(i in 1:itAll){
-    # propMatrixPool[i,] <- sampleAbundance(nRich1 = rich[1], nRich2 = rich[2], sPool = nSpecies)
     if(!is.null(group)){
       propMatrixPool[i, ] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                    nRich2 = rich[2], 
@@ -165,12 +148,11 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
       nsp <- rich[2]
       vLen <- length(sppMax)
     }
-    propMatrixSelSpp2 <- matrix(0, ncol = nSpecies, nrow = itMax)
+    propMatrixSelSpp <- matrix(0, ncol = nSpecies, nrow = itMax)
     sppMaxPos <- species %in% sppMax
     for(i in 1:itMax){
-      # propMatrixSelSpp2[i, sppMaxPos] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
       if(!is.null(group)){
-        propMatrixSelSpp2[i, sppMaxPos] <- sampleAbundanceGroups(nRich1 = rich[1],
+        propMatrixSelSpp[i, sppMaxPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                  nRich2 = nsp, 
                                                                  nInd = nInd, 
                                                                  cvAbund = cvAbund,
@@ -180,7 +162,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
                                                                  probGroupRich = probGroupRich, 
                                                                  probGroupAbund = probGroupAbund)
       } else{
-        propMatrixSelSpp2[i, sppMaxPos] <- sampleAbundance(nRich1 = rich[1], 
+        propMatrixSelSpp[i, sppMaxPos] <- sampleAbundance(nRich1 = rich[1], 
                                                            nRich2 = nsp, 
                                                            sPool = vLen, 
                                                            nInd = nInd, 
@@ -201,12 +183,11 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
         nsp <- rich[2]
         vLen <- length(sppMaxAva)
       }
-      propMatrixSelSppAva2 <- matrix(0, ncol = nSpecies, nrow = itMaxAva)
+      propMatrixSelSppAva <- matrix(0, ncol = nSpecies, nrow = itMaxAva)
       sppMaxAvaPos <- species %in% sppMaxAva
       for(i in 1:itMaxAva){
-        # propMatrixSelSppAva2[i, sppMaxAvaPos] <- sampleAbundance(nRich1 = rich[1], nRich2 = nsp, sPool = vLen)
         if(!is.null(group)){
-          propMatrixSelSppAva2[i, sppMaxAvaPos] <- sampleAbundanceGroups(nRich1 = rich[1],
+          propMatrixSelSppAva[i, sppMaxAvaPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                          nRich2 = nsp, 
                                                                          nInd = nInd, 
                                                                          cvAbund = cvAbund,
@@ -216,7 +197,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
                                                                          probGroupRich = probGroupRich, 
                                                                          probGroupAbund = probGroupAbund)
         } else{
-          propMatrixSelSppAva2[i, sppMaxAvaPos] <- sampleAbundance(nRich1 = rich[1], 
+          propMatrixSelSppAva[i, sppMaxAvaPos] <- sampleAbundance(nRich1 = rich[1], 
                                                                    nRich2 = nsp, 
                                                                    sPool = vLen, 
                                                                    nInd = nInd, 
@@ -230,10 +211,10 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   # Bind all matrices
   if(!is.null(rao)){
     if(!is.null(ava)){
-      propMatrix <- rbind(propMatrixSelSpp2, propMatrixSelSppAva2,
+      propMatrix <- rbind(propMatrixSelSpp, propMatrixSelSppAva,
                           propMatrixAva, propMatrixPool)
     } else{
-      propMatrix <- rbind(propMatrixSelSpp2,
+      propMatrix <- rbind(propMatrixSelSpp,
                           propMatrixPool)
     }
   } else {

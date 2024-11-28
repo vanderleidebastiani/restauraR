@@ -2,9 +2,7 @@
 #' @include sampleAbundance.R
 #' @encoding UTF-8
 #' @export
-sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL, 
-                                  returnProp = FALSE, method = "proportions",
-                                  group, probGroupRich, probGroupAbund){
+sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", group, probGroupRich, probGroupAbund){
   METHOD <- c("proportions", "individuals")
   method0 <- pmatch(method, METHOD)
   # The length of group is equal the sPool
@@ -19,6 +17,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
   } else{
     splitRichRand <- randDivision(nSppi, length(uniqueGroups))
   }
+  # Standardize group probabilities
   probGroupAbund <- probGroupAbund/sum(probGroupAbund)
   # Split abundances in groups
   if(!is.null(nInd)){
@@ -30,13 +29,12 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
   for(l in 1:length(uniqueGroups)){
     # Filter
     secFilter <- group==uniqueGroups[l]
-    # Combine filters
-    # secFilter <- sppMaxAvaPos & secFilter
     # Number of species in current group
     nSppiTEMP <- sum(secFilter)
     if(nSppiTEMP<splitRichRand[l]){
       splitRichRand[l] <- nSppiTEMP
     }
+    # Sample only if all key parameters are non-zero
     if(nSppiTEMP>0 && splitRichRand[l]>0 && (method0 == 1 || (method0 == 2 && nIndTEMP[l] > 0))){
       res[secFilter] <- sampleAbundance(nRich1 = splitRichRand[l], 
                                         nRich2 = splitRichRand[l], 
@@ -52,7 +50,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd, cvAbund = 1, prob = NULL
       }
     }
   }
-  # If proportions recalculate the proportions after all groups set
+  # If method is proportions, recalculate the proportions after all groups defined
   if(method0 == 1){
     res <- res/sum(res)
   }

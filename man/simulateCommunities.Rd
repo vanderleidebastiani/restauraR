@@ -48,9 +48,9 @@ mergeSimulations(...)
 
 \item{rich}{The range of richness values in each community.}
 
-\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
 
-\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
 
 \item{prob}{A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
 
@@ -92,7 +92,7 @@ Generates simulated communities.
 \details{
 \strong{The framework}
 
-The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval.
+The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval. 
 
 \strong{Traits and additional species information}
 
@@ -100,27 +100,27 @@ Each species in the pool can be described by functional traits that represent th
 
 \strong{Simulations}
 
-The species assemblages are generated in the simulateCommunities function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets.
+The species assemblages are generated in the \code{simulateCommunities} function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets. 
 
 The sampling of species can be performed completely at random or selected species based on functional traits or a desired trait profile. If the cwm argument is set the species selections are constrained to specific community-weighted mean trait values, using the entire range of each trait. If the rao argument is set, the species selections are performed in order to optimize the functional diversity of a specific set of traits.
 
-To obtain a high number of restoration solutions, all runs of the simulateCommunities function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
+To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
 
-The framework returns a community matrix indicating the proportion of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with preexisting species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
+The framework returns a community matrix indicating the proportion of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 
 \strong{Communities parameters}
 
-After the initial step of species composition simulation, several function parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters, computeDissimilarity and computeMultifunctionality can be used in this step.
+After the initial step of species composition simulation, several function parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions \code{computeParameters}, \code{computeDissimilarity} and \code{computeMultifunctionality} can be used in this step. 
 
-The function computeParameters is mandatory and allows compute the basic parameters:  richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community.
+The function \code{computeParameters} is mandatory and allows compute the basic parameters:  richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. 
 
-The function computeDissimilarity is optional and computes functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
+The function \code{computeDissimilarity} is optional and computes functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
 
-The function computeMultifunctionality is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.
+The function \code{computeMultifunctionality} is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.
 
 \strong{Select communities}
 
-The selections of simulated communities are performed using the function selectCommunities. Selections are based on simple logical tests based on thresholds. The user must define parameter thresholds, that indicate the level of functional composition above (or below) which the function is considered to be restored in each site. The thresholds can be set of one or more calculated parameters in the previous step. This is an essential step that must be based on previous studies that indicate the relationship between species traits and ecosystem functions related to the desired restoration targets. Knowledge of the regional species pool, species availability and reference sites are important to find solutions that adequately optimize restoration goals.
+The selections of simulated communities are performed using the function \code{selectCommunities}. Selections are based on simple logical tests based on thresholds. The user must define parameter thresholds, that indicate the level of functional composition above (or below) which the function is considered to be restored in each site. The thresholds can be set of one or more calculated parameters in the previous step. This is an essential step that must be based on previous studies that indicate the relationship between species traits and ecosystem functions related to the desired restoration targets. Knowledge of the regional species pool, species availability and reference sites are important to find solutions that adequately optimize restoration goals.
 
 The logical tests are specified using a vector of character class. Each test uses the parameter name, a logical operator and the value threshold. All basic logical tests can be used, setting the default operators: <, <=, >, >=, == and !=.  Each test must be in double or single quote signs. The selection of character type can be performed using different quotation marks than those used to define the entire test (e.g., single quote inside the double quote).
 
@@ -128,13 +128,13 @@ Two selection options can be used, individually or alternatively, based on deter
 
 \strong{The reference sites}
 
-Reference sites can be included in computeParameters step. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem.
+Reference sites can be included in \code{computeParameters} step. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
 
 The resbiota package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species same sites.
 
 \strong{The outputs}
 
-The main outputs are a community matrix with species relative abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market.
+The main outputs are a community matrix with species relative abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market. 
 
 \strong{Multifunctionality}
 
@@ -142,21 +142,21 @@ The restoration projects can target restoring multiple ecosystem services, calle
 
 The selection of simulated species composition can be performed in alpha multifunctionality metric to maximize multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
 
-High values of alpha multifunctionality can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered.
+High values of alpha multifunctionality can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered. 
 
 \strong{Visualization}
 
-The results visualization functions are auxiliary to checking parameters in reference sites, analyzing the distribution of functional parameters in simulated communities and showing final solutions of selected species composition.
+The results visualization functions are auxiliary to checking parameters in reference sites, analyzing the distribution of functional parameters in simulated communities and showing final solutions of selected species composition. 
 
-The function \code{viewResults} allows the visualization of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualization includes all simulated communities and allows includes also observed relations in reference sites.
+The function \code{viewResults} allows the visualization of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualization includes all simulated communities and allows includes also observed relations in reference sites. 
 
 The function \code{viewMultifunctionality} allows visualize the multifunctionality sets creating a graphical representation of the number of sites where each function has been restored, and the number of sites where combinations of functions were restored.
 
 \strong{Merge functions}
 
-The resbiota package includes functions to merge results set in different operations.
+The resbiota package includes functions to merge results set in different operations. 
 
-The function \code{mergeSimulations} concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations.
+The function \code{mergeSimulations} concatenates simulated communities generated under different scenarios. For example, part of restoration sites can be generated from empty communities, and in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated to subsequent steps as parameter calculations. 
 
 The function \code{mergeSelection} concatenates different selection procedures. For example, if restoration sites have diverse desired restoration targets, the selection can be performed in distinct steps and then concatenated.
 }
@@ -185,15 +185,15 @@ allScenarios <- mergeSimulations(scenarioA, scenarioB)
 allScenarios
 }
 \references{
-Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 
-Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration
-enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
 in preparation.
 }
 \seealso{
-\code{\link{checkReference}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
+\code{\link{checkReference}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 \code{\link{extractResults}}, \code{\link{viewResults}}
 }
 \author{

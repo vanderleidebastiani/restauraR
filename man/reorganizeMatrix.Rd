@@ -23,8 +23,8 @@ makeMatrixTemplate(...)
 The \code{makeMatrixTemplate} function returns a empty data.table object, \code{reorganizeMatrix} returns the reorganized matrix.
 }
 \description{
-\code{makeMatrixTemplate} creates a template matrix. This function concatenates two or more data.frame (or matrix)
-and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects.
+\code{makeMatrixTemplate} creates a template matrix. This function concatenates two or more data.frame (or matrix) 
+and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
 
 \code{reorganizeMatrix} rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
 }

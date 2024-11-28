@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{roundDivision}
 \alias{roundDivision}
-\title{Internal function to divide integers into groups.}
+\title{Internal function to divide integers into groups}
 \usage{
 roundDivision(n, prop)
 }
@@ -16,7 +16,7 @@ roundDivision(n, prop)
 An integer vector with division. The remainder parts are randomly distributed in each group.
 }
 \description{
-Internal function to divide integers into groups.
+Internal function to divide integers into groups
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}

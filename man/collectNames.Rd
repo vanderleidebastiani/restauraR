@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{collectNames}
 \alias{collectNames}
-\title{Internal function to collect the names of lists.}
+\title{Internal function to collect the names of lists}
 \usage{
 collectNames(x, prefix = NULL)
 }
@@ -16,7 +16,7 @@ collectNames(x, prefix = NULL)
 A character vector with collected names.
 }
 \description{
-Internal function to collect the names of lists.
+Internal function to collect the names of lists
 }
 \seealso{
 \code{\link{simulateCommunities}}

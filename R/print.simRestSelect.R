@@ -28,7 +28,9 @@ print.simRestSelect <- function(x, ...) {
   if(!is.null(x$selection$results)) x$selection$results <- as.matrix(x$selection$results)
   if(!is.null(x$selection$multifunctionality)) x$selection$multifunctionality <- as.matrix(x$selection$multifunctionality)
   if(!is.null(x$reference$results)) x$reference$results <- as.matrix(x$reference$results)
+  if(!is.null(x$reference$multifunctionality)) x$reference$multifunctionality <- as.matrix(x$reference$multifunctionality)
   if(!is.null(x$supplementary$results)) x$supplementary$results <- as.matrix(x$supplementary$results)
+  if(!is.null(x$supplementary$multifunctionality)) x$supplementary$multifunctionality <- as.matrix(x$supplementary$multifunctionality)
   # Collect list names to print
   cat(collectNames(x, prefix = "..$"), sep = "\n")
   invisible(x)

@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{resSummary}
 \alias{resSummary}
-\title{Internal function to calculate descriptive statistics.}
+\title{Internal function to calculate descriptive statistics}
 \usage{
 resSummary(x, props = NULL)
 }
@@ -16,7 +16,7 @@ resSummary(x, props = NULL)
 A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles.
 }
 \description{
-Internal function to calculate descriptive statistics.
+Internal function to calculate descriptive statistics
 }
 \author{
 See \code{\link{resbiota-package}}.

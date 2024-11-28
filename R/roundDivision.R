@@ -1,4 +1,4 @@
-#' @title Internal function to divide integers into groups.
+#' @title Internal function to divide integers into groups
 #' @encoding UTF-8
 #' @param n A integer to divide.
 #' @param prop A numeric vector with proportions to divide in each group.

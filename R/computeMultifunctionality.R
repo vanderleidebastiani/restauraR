@@ -31,5 +31,37 @@ computeMultifunctionality <- function(x, tests){
     x$selection$multifunctionality <- testsEval
     x$selection$results$alphamultifunctionality <- resAlpha
   }
+  # Compute multifunctionality to reference sites
+  if(!is.null(x$reference$results)){
+    xPar <- x$reference$results
+    # Evaluation
+    testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+    if(!inherits(testsEval, "matrix")){
+      testsEval <- t(as.matrix(testsEval))  
+    }
+    colnames(testsEval) <- tests
+    # Calculate alphamultifunctionality
+    resAlpha <- rowSums(testsEval)
+    # Organize the multifunctionality matrix/data.frame
+    testsEval <- cbind.data.frame(testsEval)
+    x$reference$multifunctionality <- testsEval
+    x$reference$results$alphamultifunctionality <- resAlpha
+  }
+  # Compute multifunctionality to supplementary sites
+  if(!is.null(x$supplementary$results)){
+    xPar <- x$supplementary$results
+    # Evaluation
+    testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+    if(!inherits(testsEval, "matrix")){
+      testsEval <- t(as.matrix(testsEval))  
+    }
+    colnames(testsEval) <- tests
+    # Calculate alphamultifunctionality
+    resAlpha <- rowSums(testsEval)
+    # Organize the multifunctionality matrix/data.frame
+    testsEval <- cbind.data.frame(testsEval)
+    x$supplementary$multifunctionality <- testsEval
+    x$supplementary$results$alphamultifunctionality <- resAlpha
+  }
   return(x)
 }

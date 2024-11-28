@@ -35,7 +35,7 @@ sampleAbundanceGroups(
 
 \item{nRich2}{Maximum richness for sample.}
 
-\item{sPool}{Number of species pool.}
+\item{sPool}{Species pool size.}
 
 \item{nInd}{The number of individuals to draw. Used only in method "individuals".}
 
@@ -47,7 +47,7 @@ sampleAbundanceGroups(
 
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
 
-\item{group}{A vector with the group to which each species pool belongs.}
+\item{group}{A vector with the group to which each species belongs.}
 
 \item{probGroupRich}{Vector of probabilities to draw species richness in each group.}
 

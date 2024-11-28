@@ -1,4 +1,4 @@
-#' @title Creates a data profiling report.
+#' @title Creates a data profiling report
 #' @description Creates a data profiling report with descriptive statistics and univariate graphs.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave

@@ -1,4 +1,4 @@
-#' @title Internal function. A customized theme to use in ggplot2 objects.
+#' @title Internal function. A customized theme to use in ggplot2 objects
 #' @encoding UTF-8
 #' @importFrom ggplot2 theme element_text element_line element_blank element_rect
 #' @param baseSize Baseline text size (default baseSize = 10).

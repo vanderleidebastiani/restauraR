@@ -54,6 +54,12 @@ mergeSelection <- function(...) {
   if(!is.null(x$supplementary$results)){
     RES$supplementary$results <- x$supplementary$results
   }
+  if(!is.null(x$reference$multifunctionality)){
+    RES$reference$multifunctionality <- x$reference$multifunctionality
+  }
+  if(!is.null(x$supplementary$multifunctionality)){
+    RES$supplementary$multifunctionality <- x$supplementary$multifunctionality
+  }
   class(RES) <- "simRestSelect"
   return(RES)
 }

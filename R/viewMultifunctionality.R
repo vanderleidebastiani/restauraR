@@ -2,14 +2,25 @@
 #' @include viewResults.R
 #' @encoding UTF-8
 #' @export
-viewMultifunctionality <- function(x, ...){
+viewMultifunctionality <- function(x, hideref = FALSE, ...){
   if(inherits(x, "simRest")){
     resMulti <- x$simulation$multifunctionality
   } else{
     resMulti <- x$selection$multifunctionality
   }
+  if(is.null(resMulti)){
+    stop("x must include multifunctionality results")
+  }
   # Remove first name (SIM)
   groupsMulti <- colnames(resMulti)[-1]
+  resMulti <- resMulti[, -1, drop =  FALSE]
+  if(!hideref){
+    resMultiRef <- x$reference$multifunctionality
+    template0 <- makeMatrixTemplate(resMulti, resMultiRef)
+    resMulti <- reorganizeMatrix(template = template0, resMulti, fillNA = FALSE)
+    resMultiRef <- reorganizeMatrix(template = template0, resMultiRef, fillNA = FALSE)
+    resMulti <- rbind.data.frame(resMulti, resMultiRef)
+  }
   p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
                            keep_empty_groups = TRUE,
                            name = "Groups",

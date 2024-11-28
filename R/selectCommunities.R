@@ -18,8 +18,10 @@
 #' \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
 #' \item{reference$results}{A data frame with calculated parameters in reference sites.}
+#' \item{reference$multifunctionality}{A data frame with binary multifunctionality tests to reference sites.}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
+#' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{computeParameters}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
@@ -201,14 +203,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     }
   }
   # Number of selected communities
-  # nSel <- apply(testsEval, 2, sum)
-  # names(nSel) <- tests
-  # nSel <- c(nSel, all = sum(pos))
   nSel <- c(all = nrow(selCom))
-  # Format thresholds (removed for now)
-  # testsSplit <- strsplit(tests, ' ')
-  # trsh <- sapply(testsSplit, '[', 3)
-  # names(trsh) <- sapply(testsSplit, '[', 1)
   # Set results
   RES$selection$composition <- selCom
   RES$selection$group <- selGroup
@@ -217,8 +212,6 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
   if(!is.null(xMulti)){
     RES$selection$multifunctionality <- selMulti
   }
-  # RES$selection$N <- nSel
-  # RES$selection$thresholds <- trsh
   RES$selection$thresholds <- nSel
   if(!is.null(x$reference$composition)){
     RES$reference$composition <- x$reference$composition
@@ -231,6 +224,12 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
   }
   if(!is.null(x$supplementary$results)){
     RES$supplementary$results <- x$supplementary$results
+  }
+  if(!is.null(x$reference$multifunctionality)){
+    RES$reference$multifunctionality <- x$reference$multifunctionality
+  }
+  if(!is.null(x$supplementary$multifunctionality)){
+    RES$supplementary$multifunctionality <- x$supplementary$multifunctionality
   }
   class(RES) <- "simRestSelect"
   return(RES)

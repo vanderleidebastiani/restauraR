@@ -3,8 +3,8 @@
 #' @importFrom Select selectSpecies
 #' @importFrom utils capture.output
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
-#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).
+#' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
+#' @param rao A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").
 #' @param n Number of species to select.
 #' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
 #' @returns A vector with selected species names based on their traits and a desired trait profile.

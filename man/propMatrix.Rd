@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{propMatrix}
 \alias{propMatrix}
-\title{Internal function to generate communities proportion matrix}
+\title{Internal function to generate communities matrix}
 \usage{
 propMatrix(
   trait,
@@ -34,9 +34,9 @@ propMatrix(
 
 \item{rich}{The range of richness values in each community.}
 
-\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
 
-\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
 
 \item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
 
@@ -55,10 +55,10 @@ propMatrix(
 \item{probGroupAbund}{Vector of probabilities to draw individuals or relative abundances in each group.}
 }
 \value{
-A community matrix with species relative abundances.
+A community matrix with relative or raw species abundances.
 }
 \description{
-Internal function to generate communities proportion matrix
+Internal function to generate communities matrix
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{findSpecies}}

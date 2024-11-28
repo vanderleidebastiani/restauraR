@@ -5,22 +5,21 @@
 #' @importFrom fundiversity fd_raoq
 #' @importFrom SYNCSA matrix.t
 #' @importFrom adiv discomQE
-#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom stats dist
 #' @aliases computeDissimilarity computeMultifunctionality
-#' @param x A object of class `simRest` or `simRestSelect` to perform calculate communities parameters.
+#' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
-#' @param cost A vector with trait name with of species cost per individual
-#' @param dens A vector with trait name with species planting density
+#' @param cost A vector with trait name with of species cost per individual.
+#' @param dens A vector with trait name with species planting density.
 #' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param tests A vector with multifunctionality criteria to be performed. 
-#' @returns A list (class `simRest` or `simRestSelect`) with the elements:
+#' @returns A list (class "simRest" or "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
 #' \item{simulation$group}{A data frame with complementary information for restoration sites.}
@@ -28,8 +27,10 @@
 #' \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
 #' \item{reference$results}{A data frame with calculated parameters in reference sites.}
+#' \item{reference$multifunctionality}{A data frame with binary multifunctionality tests to reference sites.}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
+#' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
@@ -124,10 +125,8 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     if(!inherits(ava, 'character') || !all(ava %in% traitsNames) || length(ava)>1){
       stop("ava must be a character indicating a single column of the trait data frame")
     }
-    # if(inherits(ava, 'character')){
-      UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(trait[,ava])] > 0) )
-      out <- cbind(out, unavailable = UNA)
-    # }
+    UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(trait[,ava])] > 0) )
+    out <- cbind(out, unavailable = UNA)
   }
   # Richness
   S <- apply(composition, 1, FUN = function(a) sum(a > 0))
@@ -137,24 +136,20 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     if(!inherits(cwm, 'character') || !all(cwm %in% traitsNames)){
       stop("cwm must be a character indicating one or more columns of the trait data frame")
     }
-    # if(inherits(cwm, 'character')){
-      traitSub <- trait[, cwm, drop = FALSE]
-      CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
-      colnames(CWM) <- paste0("CWM_", colnames(CWM))
-      out <- cbind(out, CWM)
-    # }
+    traitSub <- trait[, cwm, drop = FALSE]
+    CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
+    colnames(CWM) <- paste0("CWM_", colnames(CWM))
+    out <- cbind(out, CWM)
   }
   # CWV
   if(!is.null(cwv)){
     if(!inherits(cwv, 'character') || !all(cwv %in% traitsNames)){
       stop("cwv must be a character indicating one or more columns of the trait data frame")
     }
-    # if(inherits(cwv, 'character')){
-      traitSub <- trait[,cwv, drop=FALSE]
-      CWV <- FCWV(composition, traitSub)
-      colnames(CWV) <- paste0("CWV_", colnames(CWV))
-      out <- cbind(out, CWV)
-    # }
+    traitSub <- trait[, cwv, drop = FALSE]
+    CWV <- FCWV(composition, traitSub)
+    colnames(CWV) <- paste0("CWV_", colnames(CWV))
+    out <- cbind(out, CWV)
   }
   # Rao diversity
   if(!is.null(rao)){

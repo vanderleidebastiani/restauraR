@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{vectorClass}
 \alias{vectorClass}
-\title{Internal function to return the vector class.}
+\title{Internal function to return the vector class}
 \usage{
 vectorClass(x)
 }
@@ -14,7 +14,7 @@ vectorClass(x)
 The vector class.
 }
 \description{
-Internal function to return the vector class.
+Internal function to return the vector class
 }
 \seealso{
 \code{\link{simulateCommunities}}

@@ -1,4 +1,4 @@
-#' @title Internal function to randomly divide a total number into groups.
+#' @title Internal function to randomly divide a total number into groups
 #' @encoding UTF-8
 #' @importFrom stats runif
 #' @param n A integer to divide.

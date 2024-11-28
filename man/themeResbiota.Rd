@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{themeResbiota}
 \alias{themeResbiota}
-\title{Internal function. A customized theme to use in ggplot2 objects.}
+\title{Internal function. A customized theme to use in ggplot2 objects}
 \usage{
 themeResbiota(baseSize = 10, legendPosition = "right")
 }
@@ -16,7 +16,7 @@ themeResbiota(baseSize = 10, legendPosition = "right")
 Theme to ggplot objects.
 }
 \description{
-Internal function. A customized theme to use in ggplot2 objects.
+Internal function. A customized theme to use in ggplot2 objects
 }
 \seealso{
 \code{\link{simulateCommunities}}

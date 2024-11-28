@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{resbiotaRun}
 \alias{resbiotaRun}
-\title{Launch the resbiota Shiny Application.}
+\title{Launch the resbiota Shiny Application}
 \usage{
 resbiotaRun(launchBrowser = TRUE, ...)
 }

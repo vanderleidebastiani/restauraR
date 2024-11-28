@@ -10,9 +10,9 @@ findSpecies(trait, cwm, rao, n, phi)
 \arguments{
 \item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
 
-\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist).}
+\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
 
 \item{n}{Number of species to select.}
 

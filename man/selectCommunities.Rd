@@ -43,8 +43,10 @@ A list (class "simRestSelect") with the elements:
 \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
 \item{reference$composition}{A matrix with species composition for reference sites}
 \item{reference$results}{A data frame with calculated parameters in reference sites.}
+\item{reference$multifunctionality}{A data frame with binary multifunctionality tests to reference sites.}
 \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
+\item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 }
 \description{
 Select simulated communities based on tests provided
@@ -84,11 +86,11 @@ scenarioSelected <- selectCommunities(x = scenario,
 scenarioSelected
 }
 \references{
-Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological
+Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 
-Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration
-enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript
+Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
+enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
 in preparation.
 }
 \seealso{

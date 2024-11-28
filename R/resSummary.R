@@ -1,4 +1,4 @@
-#' @title Internal function to calculate descriptive statistics.
+#' @title Internal function to calculate descriptive statistics
 #' @encoding UTF-8
 #' @importFrom stats median quantile
 #' @param x A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.

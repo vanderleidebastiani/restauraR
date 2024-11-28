@@ -1,4 +1,4 @@
-#' @title Internal function to collect the names of lists.
+#' @title Internal function to collect the names of lists
 #' @encoding UTF-8
 #' @param x A list object.
 #' @param prefix A prefix to include in collected names (default prefix = NULL).

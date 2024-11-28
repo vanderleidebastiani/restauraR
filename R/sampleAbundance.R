@@ -3,13 +3,13 @@
 #' @importFrom stats rlnorm rmultinom
 #' @param nRich1 Minimum richness for sample.
 #' @param nRich2 Maximum richness for sample.
-#' @param sPool Number of species pool.
+#' @param sPool Species pool size.
 #' @param nInd The number of individuals to draw. Used only in method "individuals".
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prob Vector of probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param returnProp Logical argument to specify whether to return proportions of individuals rather than raw abundances.
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
-#' @param group A vector with the group to which each species pool belongs.
+#' @param group A vector with the group to which each species belongs.
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
 #' @returns A vector with species abundance or proportions.
