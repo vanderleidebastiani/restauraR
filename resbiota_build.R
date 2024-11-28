@@ -6,7 +6,7 @@ setwd("resbiota")
 devtools::document()
 # devtools::build_vignettes()
 # devtools::clean_vignettes()
-# rmarkdown::render("vignettes/Vignette-Title1.Rmd",
+# rmarkdown::render("vignettes/Framework-application.Rmd",
 #                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
 
 setwd("..")
@@ -17,9 +17,9 @@ system("R CMD build resbiota")
 # remove.packages("resbiota")
 
 system("R CMD INSTALL resbiota_0.0.2.tar.gz")
-# system("R CMD check --as-cran resbiota_0.0.1.tar.gz")
-# system("R CMD check resbiota_0.0.1.tar.gz")
+# system("R CMD check --as-cran resbiota_0.0.2.tar.gz")
+# system("R CMD check resbiota_0.0.2.tar.gz")
 
 require(resbiota)
-# ?resbiota::simulateCommunities
+?resbiota::simulateCommunities
 resbiotaRun()

@@ -1,8 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{Vignette-Title3}
-
-\begin{document}
-\SweaveOpts{concordance=TRUE}
-\includepdf[pages=-, fitpaper=true]{Vignette-Title1.pdf}
-\end{document}
