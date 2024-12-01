@@ -15,6 +15,7 @@
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
 #' @param cost A vector with trait name with of species cost per individual.
 #' @param dens A vector with trait name with species planting density.
+#' @param dissimilarity A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
 #' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
@@ -74,7 +75,7 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, stan = NULL, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, stan = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
@@ -202,6 +203,28 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
       return(COST_i)
     })
     out <- cbind(out, cost = COST)
+  }
+  # Dissimilatity
+  if(!is.null(dissimilarity) && !is.null(reference)){
+    nRef <- nrow(reference)
+    if(inherits(dissimilarity, 'character')){
+      if(!all(dissimilarity %in% traitsNames)){
+        stop("dissimilarity must be a character indicating one or more columns of the trait data frame, or distance matrix")
+      }
+      traitSub <- scale(trait[, dissimilarity, drop = FALSE])
+      dis <- stats::dist(traitSub)
+      resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
+    } else if(inherits(dissimilarity, 'dist')){
+      # Calculate dissimilarities between communities
+      resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
+    }
+    # Remove matrix diagonal
+    diag(resDis) <- NA
+    # Keep only values related to reference sites
+    resDis <- resDis[, seq.int(nRef), drop = FALSE]
+    # Calculate mean dissimilarities
+    resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
+    out <- cbind(out, dissimilarity = resDis)
   }
   # Standardization
   if(!is.null(stan)){

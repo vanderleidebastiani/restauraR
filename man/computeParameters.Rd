@@ -17,6 +17,7 @@ computeParameters(
   rao = NULL,
   cost = NULL,
   dens = NULL,
+  dissimilarity = NULL,
   stan = NULL,
   reference = NULL,
   supplementary = NULL
@@ -42,6 +43,8 @@ computeMultifunctionality(x, tests)
 \item{cost}{A vector with trait name with of species cost per individual.}
 
 \item{dens}{A vector with trait name with species planting density.}
+
+\item{dissimilarity}{A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).}
 
 \item{stan}{A vector with parameters names to specify which parameters should be standardized by the maximum.}
 
