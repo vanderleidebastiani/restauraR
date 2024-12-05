@@ -53,7 +53,7 @@ computeDissimilarity <- function(x, trait){
   # Calculate mean dissimilarities
   resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
   # Standardise
-  resDis <- resDis/max(resDis)
+  # resDis <- resDis/max(resDis)
   # Results organization
   if(is.null(supplementary)){
     if(inherits(x, "simRest")){

@@ -6,7 +6,7 @@
 #' @importFrom SYNCSA matrix.t
 #' @importFrom adiv discomQE
 #' @importFrom stats dist
-#' @aliases computeDissimilarity computeMultifunctionality
+#' @aliases computeDissimilarity computeMultifunctionality standardizeParameters
 #' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
@@ -16,10 +16,11 @@
 #' @param cost A vector with trait name with of species cost per individual.
 #' @param dens A vector with trait name with species planting density.
 #' @param dissimilarity A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
-#' @param stan A vector with parameters names to specify which parameters should be standardized by the maximum.
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
 #' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
 #' @param tests A vector with multifunctionality criteria to be performed. 
+#' @param parameters A vector with parameters names to standardized.
+#' @param method Standardization method, "max" or "standardize". 
 #' @returns A list (class "simRest" or "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
@@ -75,7 +76,7 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, stan = NULL, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
@@ -226,10 +227,6 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, dissimilarity = resDis)
   }
-  # Standardization
-  if(!is.null(stan)){
-    out[ , stan] <- out[ , stan, drop = FALSE]/max(out[ , stan, drop = FALSE])
-  } 
   # Results organization
   if(!is.null(reference) || !is.null(supplementary)){
     if(!is.null(reference) && is.null(supplementary)){
@@ -252,5 +249,4 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
   }
   rownames(x$simulation$results) <- NULL
   return(x)
-  # Adicionar checagem no stan?
 }

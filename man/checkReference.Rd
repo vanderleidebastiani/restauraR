@@ -12,7 +12,6 @@ checkReference(
   cwm = NULL,
   cwv = NULL,
   rao = NULL,
-  stan = NULL,
   supplementary = NULL,
   props = NULL
 )
@@ -29,8 +28,6 @@ checkReference(
 \item{cwv}{A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
 \item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.}
-
-\item{stan}{A vector with parameters names to specify which parameters should be standardized by the maximum.}
 
 \item{supplementary}{A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
 
