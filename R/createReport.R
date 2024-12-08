@@ -50,13 +50,13 @@ createReport <- function(x, props = NULL){
     if(inherits(x[,varName], "factor") || inherits(x[,varName], "character")){
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
-        ggplot2::geom_bar(fill = "#1F78B4", col = "#ffffff") +
+        ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
         themeResbiota(baseSize = 12)
     } else{
       # Freedman-Diaconis method
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
-        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[,varName]), fill = "#1F78B4", col = "#ffffff") +
+        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[,varName]), fill = "#1d4b61", col = "#ffffff") +
         themeResbiota(baseSize = 12)
     }
     # Export temp plot

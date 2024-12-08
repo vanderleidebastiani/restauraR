@@ -26,10 +26,10 @@
 viewResults <- function(x, xvar, yvar, hideref = FALSE){
   if(inherits(x, "simRest")){
     resResults <- x$simulation$results
-    pal <- c("#b5b5b5","#000000", "#9e0648")
+    pal <- c("#b5b5b5","#000000", "#BD0026")
   } else{
     resResults <- x$selection$results
-    pal <- c("#A6CEE3", "#1F78B4", "#9e0648")
+    pal <- c("#45a1d4", "#1d4b61", "#BD0026")
   }
   # Set names in the palette
   names(pal) <- c("Unavailable", "Available", "References")
@@ -43,7 +43,7 @@ viewResults <- function(x, xvar, yvar, hideref = FALSE){
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
       ggplot2::geom_point(data = resResults, size = 1.2) +
-      ggplot2::geom_point(data = ref, size = 1.2) +
+      ggplot2::geom_point(data = ref, size = 1.5) +
       ggplot2::scale_color_manual(values = pal) +
       themeResbiota(baseSize = 12)
   } else{

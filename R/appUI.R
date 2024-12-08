@@ -64,6 +64,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
     id = "menu",
     shinydashboardPlus::controlbarItem(
       title = "Global options",
+      shiny::textInput("projectName", label = "Project name", value = "Projet"),
       shinyWidgets::prettyRadioButtons(inputId = "fileSep",
                                        label = "Separator character",
                                        choices = c(",", ";"),
@@ -71,6 +72,12 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
                                        inline = TRUE,
                                        status = "primary"
       ),
+      uiOutput("decimalPlaces"),
+      # shiny::numericInput(inputId = "decimalPlaces",
+      # 					label = "Decimal places",
+      # 					value = 5,
+      # 					min = 3,
+      # 					step = 1),
       # radioGroupButtons(inputId = "selectedLanguage",
       # 					 label = i18n$t("Change language"),
       # 					 choices = setNames(
@@ -126,30 +133,82 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 8,
-                                                                              shiny::fileInput(inputId = "traitsInput",
-                                                                                               label = "Traits",
-                                                                                               accept = c(".csv"),
-                                                                                               buttonLabel = "Browse..."
+                                                                              # htmltools::h4("Load files"),
+                                                                              # htmltools::hr(),
+                                                                              splitLayout(cellWidths = c("80%", "20%"),
+                                                                                          shiny::fileInput(inputId = "traitsInput",
+                                                                                                           label = "Traits",
+                                                                                                           accept = c(".csv"),
+                                                                                                           buttonLabel = "Browse..."
+                                                                                          ),
+                                                                                          div(
+                                                                                            shinyWidgets::actionBttn(inputId = "doClearTraits", 
+                                                                                                                     label = "Clear",
+                                                                                                                     style = "fill",
+                                                                                                                     size = "sm",
+                                                                                                                     color = "default"),
+                                                                                            style = 'margin-top:25px'
+                                                                                          )
                                                                               ),
-                                                                              shiny::fileInput(inputId = "restCompInput",
-                                                                                               label = "Species composition of restoration sites",
-                                                                                               accept = c(".csv"),
-                                                                                               buttonLabel = "Browse..."
+                                                                              splitLayout(cellWidths = c("80%", "20%"),
+                                                                                          shiny::fileInput(inputId = "restCompInput",
+                                                                                                           label = "Species composition of restoration sites",
+                                                                                                           accept = c(".csv"),
+                                                                                                           buttonLabel = "Browse..."
+                                                                                          ),
+                                                                                          div(
+                                                                                            shinyWidgets::actionBttn(inputId = "doClearRestComp", 
+                                                                                                                     label = "Clear",
+                                                                                                                     style = "fill",
+                                                                                                                     size = "sm",
+                                                                                                                     color = "default"),
+                                                                                            style = 'margin-top:25px'
+                                                                                          )
                                                                               ),
-                                                                              shiny::fileInput(inputId = "restGroupInput",
-                                                                                               label = "Complementary information for restoration sites",
-                                                                                               accept = c(".csv"),
-                                                                                               buttonLabel = "Browse..."
+                                                                              splitLayout(cellWidths = c("80%", "20%"),
+                                                                                          shiny::fileInput(inputId = "restGroupInput",
+                                                                                                           label = "Complementary information for restoration sites",
+                                                                                                           accept = c(".csv"),
+                                                                                                           buttonLabel = "Browse..."
+                                                                                          ),
+                                                                                          div(
+                                                                                            shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
+                                                                                                                     label = "Clear",
+                                                                                                                     style = "fill",
+                                                                                                                     size = "sm",
+                                                                                                                     color = "default"),
+                                                                                            style = 'margin-top:25px'
+                                                                                          )
                                                                               ),
-                                                                              shiny::fileInput(inputId = "referenceInput",
-                                                                                               label = "Species composition of reference sites",
-                                                                                               accept = c(".csv"),
-                                                                                               buttonLabel = "Browse..."
+                                                                              splitLayout(cellWidths = c("80%", "20%"),
+                                                                                          shiny::fileInput(inputId = "referenceInput",
+                                                                                                           label = "Species composition of reference sites",
+                                                                                                           accept = c(".csv"),
+                                                                                                           buttonLabel = "Browse..."
+                                                                                          ),
+                                                                                          div(
+                                                                                            shinyWidgets::actionBttn(inputId = "doClearReference", 
+                                                                                                                     label = "Clear",
+                                                                                                                     style = "fill",
+                                                                                                                     size = "sm",
+                                                                                                                     color = "default"),
+                                                                                            style = 'margin-top:25px'
+                                                                                          )
                                                                               ),
-                                                                              shiny::fileInput(inputId = "supplementaryInput",
-                                                                                               label = "Species composition of supplementary sites",
-                                                                                               accept = c(".csv"),
-                                                                                               buttonLabel = "Browse..."
+                                                                              splitLayout(cellWidths = c("80%", "20%"),
+                                                                                          shiny::fileInput(inputId = "supplementaryInput",
+                                                                                                           label = "Species composition of supplementary sites",
+                                                                                                           accept = c(".csv"),
+                                                                                                           buttonLabel = "Browse..."
+                                                                                          ),
+                                                                                          div(
+                                                                                            shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
+                                                                                                                     label = "Clear",
+                                                                                                                     style = "fill",
+                                                                                                                     size = "sm",
+                                                                                                                     color = "default"),
+                                                                                            style = 'margin-top:25px'
+                                                                                          )
                                                                               )
                                                                 ), # End column
                                                                 shiny::column(width = 4, 
@@ -224,8 +283,8 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 8,
-                                                                              htmltools::h4("Basic parameters"),
-                                                                              htmltools::hr(),
+                                                                              # htmltools::h4("Basic parameters"),
+                                                                              # htmltools::hr(),
                                                                               shiny::textInput(inputId = "prefixSimInput",
                                                                                                label = "Simulation name",
                                                                                                value = "Sim_1"
@@ -332,10 +391,10 @@ body <- dashboardBody(
                                                                                                                               htmltools::br()
                                                                                                       )
                                                                               ),
-                                                                              htmltools::br(),
-                                                                              htmltools::br(),
-                                                                              htmltools::h4("Advanced parameters"),
-                                                                              htmltools::hr(),
+                                                                              # htmltools::br(),
+                                                                              # htmltools::br(),
+                                                                              # htmltools::h4("Advanced parameters"),
+                                                                              # htmltools::hr(),
                                                                               shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals')",
                                                                                                       shinyWidgets::pickerInput(inputId = "probSimInput",
                                                                                                                                 label = "Probabilities to draw individuals",
@@ -357,8 +416,8 @@ body <- dashboardBody(
                                                                 ), # End column
                                                                 shiny::column(width = 4, 
                                                                               # fixedPanel(width = "100%",
-                                                                              htmltools::h4("Run"),
-                                                                              htmltools::hr(),
+                                                                              # htmltools::h4("Run"),
+                                                                              # htmltools::hr(),
                                                                               shinyWidgets::actionBttn(inputId = "doSimulate",
                                                                                                        label = "Simulate",
                                                                                                        style = "fill",
@@ -374,7 +433,7 @@ body <- dashboardBody(
                                                                               htmltools::hr(),
                                                                               shiny::textInput(inputId = "mergeSimulateNameInput",
                                                                                                label = "Merged simulation name",
-                                                                                               value = "Merged_1"),
+                                                                                               value = "Sim_Merged_1"),
                                                                               shinyWidgets::pickerInput(inputId = "mergeSimulateInput",
                                                                                                         label = "Choose to merge",
                                                                                                         choices = NULL,
@@ -511,6 +570,44 @@ body <- dashboardBody(
                                                                 ) # End column
                                                               ) # End row
                                               ),
+                                              shiny::tabPanel("Standardize parameters", 
+                                                              shiny::fluidRow(
+                                                                htmltools::br(),
+                                                                shiny::column(width = 8,
+                                                                              shinyWidgets::pickerInput(inputId = "scenarioComStandParInput",
+                                                                                                        label = "Choose scenario",
+                                                                                                        choices = NULL,
+                                                                                                        multiple = TRUE,
+                                                                                                        options = list("max-options" = 1),
+                                                                                                        inline = FALSE
+                                                                              ),
+                                                                              shinyWidgets::pickerInput(inputId = "stanComParInput",
+                                                                                                        label = "Parameters to standardized",
+                                                                                                        choices = NULL,
+                                                                                                        multiple = TRUE,
+                                                                                                        options = list(`actions-box` = TRUE),
+                                                                                                        inline = FALSE
+                                                                              ),
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "speficyMethodStanInput",
+                                                                                                               label = "Standardization method",
+                                                                                                               choices = setNames(
+                                                                                                                 c("max", "standardize"),
+                                                                                                                 c("Maximum", "Standardize") # Set labels
+                                                                                                               ),
+                                                                                                               selected = "max",
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              )
+                                                                ),
+                                                                shiny::column(width = 4,
+                                                                              shinyWidgets::actionBttn(inputId = "doStandardize", 
+                                                                                                       label = "Standardize",
+                                                                                                       style = "fill",
+                                                                                                       size = "lg",
+                                                                                                       color = "success")
+                                                                )
+                                                              ) # End row
+                                              ), # End tabPanel
                                               shiny::tabPanel("Multifunctionality", 
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
@@ -531,7 +628,7 @@ body <- dashboardBody(
                                                                                                         options = list(`actions-box` = TRUE),
                                                                                                         inline = FALSE
                                                                               ),
-                                                                              shiny::uiOutput(outputId = "outputMultiList"),
+                                                                              # shiny::uiOutput(outputId = "outputMultiList"),
                                                                               shiny::conditionalPanel(condition = "output.showSlidersMulti == true",
                                                                                                       shiny::uiOutput("slidersMulti"),
                                                                                                       htmltools::br(),
@@ -562,115 +659,6 @@ body <- dashboardBody(
                                                                               shiny::htmlOutput(outputId = "outputComputeSummaryText")
                                                                 )
                                                               ) # End row
-                                              ), # End tabPanel
-                                              shiny::tabPanel("View simulated communities", 
-                                                              shiny::fluidRow(
-                                                                htmltools::br(),
-                                                                shiny::column(width = 12,
-                                                                              shiny::sliderInput("bins3", 
-                                                                                                 label = htmltools::p(i18n$t("Hello Shiny!"), 
-                                                                                                                      shiny::actionButton("titleBtId", 
-                                                                                                                                          label = "", 
-                                                                                                                                          icon = shiny::icon("info"), 
-                                                                                                                                          style = 'padding:4px; font-size:60%')), 
-                                                                                                 min = 1, max = 50, value = 30),
-                                                                              
-                                                                              
-                                                                              # shiny::sliderInput("bins4", label = p(i18n$t("Hello Shiny!"), 
-                                                                              # 									  shinyBS::bsButton("surf-info",
-                                                                              # 									  				  label = "",
-                                                                              # 									  				  icon = shiny::icon("info"),
-                                                                              # 									  				  style = "default",
-                                                                              # 									  				  size = "extra-small")), 
-                                                                              # 				   min = 1, max = 50, value = 30),
-                                                                              # shinyBS::bsPopover(
-                                                                              # 	id = "surf-info",
-                                                                              # 	# title = "More information",
-                                                                              # 	title = NULL,
-                                                                              # 	# content = shiny::HTML(paste0(
-                                                                              # 	# 	i18n$t("Ribeye steak, grilled jumbo shrimp, butter roasted potato medley grilled asparagus.")
-                                                                              # 	# )),
-                                                                              # 	# content = shiny::HTML("Test:"),
-                                                                              # 	content = shiny::HTML(i18n$t("Test:")),
-                                                                              # 	# content = as.character(i18n$t("Test:")),
-                                                                              # 	# content = testRV$t1,
-                                                                              # 	placement = "right",
-                                                                              # 	trigger = "hover"
-                                                                              # 	options = list(container = "body")
-                                                                              # ),
-                                                                              rhandsontable::rHandsontableOutput("traitsData3")	  
-                                                                )
-                                                                
-                                                                # x, trait, stan = NULL, reference = NULL, supplementary = NULL
-                                                                # shiny::sliderInput("bins1", label = i18n$t("Hello Shiny!"), min = 1, max = 50, value = 30),
-                                                                # shiny::sliderInput("bins1", label = "xy", min = 1, max = 50, value = 30),
-                                                                # shiny::sliderInput("bins2", label = i18n$t("Test:"), min = 1, max = 50, value = 30),
-                                                                # shinydashboardPlus::box(id = "box", width = NULL, title = NULL, headerBorder = FALSE,
-                                                                # 						shiny::sliderInput("bins2", label = i18n$t("Test:"), min = 1, max = 50, value = 30)
-                                                                # ),
-                                                                # shinydashboardPlus::box(id = "box22",
-                                                                # 	# title = p("Title 1", actionButton("titleBtId", "", icon = icon("refresh"), title = "Update")),
-                                                                # 	title = "xasxsa",
-                                                                # 	shiny::sliderInput("bins12", label = i18n$t("Test:::"), min = 1, max = 50, value = 30),
-                                                                # 	width = 4, solidHeader = TRUE #status = "warning"
-                                                                # ),
-                                                                # shinydashboardPlus::box(id = "box", width = NULL, title = NULL, headerBorder = FALSE,
-                                                                # 						footer = i18n$t("Hello Shiny!"),
-                                                                # 						shiny::sliderInput("bins2", label = i18n$t("Test:"), min = 1, max = 50, value = 30)
-                                                                # ),
-                                                                # shinydashboardPlus::box(id = "boxND", width = NULL, title = "xx", headerBorder = FALSE,
-                                                                # 						shiny::sliderInput("bins4", label = "Test:", min = 1, max = 50, value = 30),
-                                                                # 						sidebar = boxSidebar(
-                                                                # 							icon = shiny::icon("info"),
-                                                                # 							startOpen = FALSE,
-                                                                # 							id = "mycardsidebar",
-                                                                # 						)),
-                                                                # FUNCIONA
-                                                                # shinydashboardPlus::box(id = "box2", width = NULL, title = p(i18n$t("Hello Shiny!"), actionButton("titleBtId", "", icon = icon("refresh"), title = "Update")), headerBorder = FALSE,
-                                                                # 						footer = i18n$t("Hello Shiny!!"),
-                                                                # 						shinyWidgets::pickerInput(
-                                                                # 							inputId = "avaComputeInput2",
-                                                                # 							label = "Species availability",
-                                                                # 							choices = "---None---",
-                                                                # 							inline = FALSE
-                                                                # 						)
-                                                                # ),
-                                                                # actionButton("Button", icon = icon("house-user") , label = i18n$t("This is a button")),
-                                                                # actionButton("Button", icon = icon("house-user") , label = i18n$t("Test:")),
-                                                                # selectInput(inputId = "Select2",
-                                                                # 			# label = "xx",
-                                                                # 			label = shiny::HTML("This is the title of the selectInput", #"<font size='2'>",
-                                                                # 								as.character(shinyBS::bsButton("surf-info",
-                                                                # 															   label = "",
-                                                                # 															   icon = shiny::icon("info"),
-                                                                # 															   style = "default",
-                                                                # 															   size = "extra-small")),
-                                                                # 								"</font>"),
-                                                                # 			choices = 1:3),
-                                                                # shinyBS::bsPopover(
-                                                                # 	id = "surf-info",
-                                                                # 	# title = "More information",
-                                                                # 	title = NULL,
-                                                                # 	# content = shiny::HTML(paste0(
-                                                                # 	# 	i18n$t("Ribeye steak, grilled jumbo shrimp, butter roasted potato medley grilled asparagus.")
-                                                                # 	# )),
-                                                                # 	content = shiny::HTML("Test:"),
-                                                                # 	placement = "right",
-                                                                # 	trigger = "hover",
-                                                                # 	options = list(container = "body")
-                                                                # ),
-                                                                # shinyBS::bsPopover(
-                                                                # 	id = "bins1",
-                                                                # 	# title = "More information",
-                                                                # 	title = NULL,
-                                                                # 	# content = i18n$t("Hello Shiny!"),
-                                                                # 	content = "xx",
-                                                                # 	placement = "right",
-                                                                # 	trigger = "hover",
-                                                                # 	options = list(container = "body")
-                                                                # ),
-                                                                
-                                                              ) # End row
                                               ) # End tabPanel
                                             )
                               )
@@ -686,8 +674,8 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 8,
-                                                                              htmltools::h4("Set basic parameters"),
-                                                                              hr(),
+                                                                              # htmltools::h4("Set basic parameters"),
+                                                                              # hr(),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioSelInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -757,8 +745,8 @@ body <- dashboardBody(
                                                                               ),
                                                                 ),
                                                                 shiny::column(width = 4,
-                                                                              htmltools::h4("Select"),
-                                                                              hr(),
+                                                                              # htmltools::h4("Select"),
+                                                                              # hr(),
                                                                               shinyWidgets::actionBttn(inputId = "doSelect", 
                                                                                                        label = "Select",
                                                                                                        style = "fill",
@@ -774,7 +762,7 @@ body <- dashboardBody(
                                                                               htmltools::hr(),
                                                                               shiny::textInput(inputId = "mergeSelectNameInput",
                                                                                                label = "Merged selection name",
-                                                                                               value = "Merged_1"),
+                                                                                               value = "Sel_Merged_1"),
                                                                               shinyWidgets::pickerInput(inputId = "mergeSelectInput",
                                                                                                         label = "Choose to merge",
                                                                                                         choices = NULL,
@@ -835,8 +823,6 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 4,
-                                                                              # htmltools::h4("Set basic parameters"),
-                                                                              # hr(),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioViewParInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -858,43 +844,43 @@ body <- dashboardBody(
                                                                                                         options = list("max-options" = 1),
                                                                                                         inline = FALSE
                                                                               ),
-                                                                              hr(),
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
+                                                                                                               label = "Hide reference sites",
+                                                                                                               choices = setNames(
+                                                                                                                 c(TRUE, FALSE),
+                                                                                                                 c("Yes", "No") # Set labels
+                                                                                                               ),
+                                                                                                               selected = FALSE,
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              ),
+                                                                              # hr(),
                                                                               shiny::textInput(inputId = "xvarLab", 
                                                                                                label = "Label to x-axis", 
                                                                                                value = ""),
                                                                               shiny::textInput(inputId = "yvarLab", 
                                                                                                label = "Label to y-axis", 
                                                                                                value = ""),
-                                                                              shinyWidgets::actionBttn(inputId = "doPlot", 
+                                                                              shinyWidgets::actionBttn(inputId = "doPlotPar", 
                                                                                                        label = "Plot",
                                                                                                        style = "fill",
                                                                                                        size = "md",
                                                                                                        color = "success"),
-                                                                              shinyWidgets::actionBttn(inputId = "doPlotClear", 
+                                                                              shinyWidgets::actionBttn(inputId = "doPlotParClear", 
                                                                                                        label = "Clear",
                                                                                                        style = "fill",
                                                                                                        size = "md",
                                                                                                        color = "default")
                                                                 ), # End column
                                                                 shiny::column(width = 8,
-                                                                              # htmltools::h4("Plot"),
-                                                                              # hr(),
-                                                                              shiny::plotOutput("plot2"),
+                                                                              shiny::plotOutput("plotParOutput"),
                                                                               br(),
-                                                                              shiny::textInput("saveName", label = "File name", value = "Projet"),
-                                                                              downloadBttn(outputId = "doDownload",
+                                                                              downloadBttn(outputId = "doDownloadParPlot",
                                                                                            label = "Download",
                                                                                            style = "fill",
                                                                                            icon = NULL,
                                                                                            size = "md",
                                                                                            color = "success")
-                                                                              # shinyWidgets::actionBttn(inputId = "doPlotSave", 
-                                                                              # 						 label = "Save",
-                                                                              # 						 style = "fill",
-                                                                              # 						 size = "md",
-                                                                              # 						 color = "success")
-                                                                              
-                                                                              
                                                                 ) # End column
                                                               ) # End row
                                               ), # End tabPanel
@@ -902,8 +888,6 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 4,
-                                                                              # htmltools::h4("Set basic parameters"),
-                                                                              # hr(),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioViewMultiInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -911,35 +895,36 @@ body <- dashboardBody(
                                                                                                         options = list("max-options" = 1),
                                                                                                         inline = FALSE
                                                                               ),
-                                                                              shinyWidgets::actionBttn(inputId = "doPlot2", 
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
+                                                                                                               label = "Hide reference sites",
+                                                                                                               choices = setNames(
+                                                                                                                 c(TRUE, FALSE),
+                                                                                                                 c("Yes", "No") # Set labels
+                                                                                                               ),
+                                                                                                               selected = FALSE,
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              ),
+                                                                              shinyWidgets::actionBttn(inputId = "doPlotMulti", 
                                                                                                        label = "Plot",
                                                                                                        style = "fill",
                                                                                                        size = "md",
                                                                                                        color = "success"),
-                                                                              shinyWidgets::actionBttn(inputId = "doPlotClear2", 
+                                                                              shinyWidgets::actionBttn(inputId = "doPlotMultiClear", 
                                                                                                        label = "Clear",
                                                                                                        style = "fill",
                                                                                                        size = "md",
                                                                                                        color = "default")
                                                                 ), # End column
                                                                 shiny::column(width = 8,
-                                                                              # htmltools::h4("Plot"),
-                                                                              # hr(),
-                                                                              shiny::plotOutput("plot22"),
+                                                                              shiny::plotOutput("plotMultiOutput"),
                                                                               br(),
-                                                                              downloadBttn(outputId = "doDownload2",
+                                                                              downloadBttn(outputId = "doDownloadMultiPlot",
                                                                                            label = "Download",
                                                                                            style = "fill",
                                                                                            icon = NULL,
                                                                                            size = "md",
                                                                                            color = "success")
-                                                                              # shinyWidgets::actionBttn(inputId = "doPlotSave2", 
-                                                                              # 						 label = "Save",
-                                                                              # 						 style = "fill",
-                                                                              # 						 size = "md",
-                                                                              # 						 color = "success")
-                                                                              
-                                                                              
                                                                 ) # End column
                                                               ) # End row
                                               ) # End tabPanel
@@ -953,16 +938,35 @@ body <- dashboardBody(
                             fluidRow(
                               shiny::column(width = 12,
                                             shiny::tabsetPanel(
-                                              shiny::tabPanel("Select", 
+                                              shiny::tabPanel("Raw", 
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
-                                                                shiny::column(width = 8,
-                                                                              htmltools::h4("Set basic parameters"),
-                                                                              hr()
-                                                                ), # End column
                                                                 shiny::column(width = 4,
-                                                                              htmltools::h4("Select"),
-                                                                              hr()
+                                                                              # htmltools::h4("Set basic parameters"),
+                                                                              # hr(),
+                                                                              shinyWidgets::pickerInput(inputId = "scenarioExportInput",
+                                                                                                        label = "Choose scenario",
+                                                                                                        choices = NULL,
+                                                                                                        multiple = TRUE,
+                                                                                                        options = list("max-options" = 1),
+                                                                                                        inline = FALSE
+                                                                              ),
+                                                                              shinyWidgets::actionBttn(inputId = "doExport", 
+                                                                                                       label = "Export",
+                                                                                                       style = "fill",
+                                                                                                       size = "md",
+                                                                                                       color = "success"),
+                                                                              shiny::sliderInput("bins3", 
+                                                                                                 label = htmltools::p(i18n$t("Hello Shiny!"), 
+                                                                                                                      shiny::actionButton("titleBtId", 
+                                                                                                                                          label = "", 
+                                                                                                                                          icon = shiny::icon("info"), 
+                                                                                                                                          style = 'padding:4px; font-size:60%')), 
+                                                                                                 min = 1, max = 50, value = 30)
+                                                                ), # End column
+                                                                shiny::column(width = 8,
+                                                                              # htmltools::h4("Select"),
+                                                                              # hr()
                                                                 ) # End column
                                                               ) # End row
                                               ) # End tabPanel
