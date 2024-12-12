@@ -49,11 +49,11 @@ sidebar <- shinydashboardPlus::dashboardSidebar(
     shinydashboard::menuItem("Simulate", tabName = "simulateTab", icon = shiny::icon("sliders-h")),
     shinydashboard::menuItem("Compute", tabName = "computeTab", icon = shiny::icon("calculator")),
     shinydashboard::menuItem("Select", tabName = "selectTab", icon = shiny::icon("filter")),
-    shinydashboard::menuItem("View", tabName = "viewTab", icon = shiny::icon("newspaper")),
+    shinydashboard::menuItem("View", tabName = "viewTab", icon = shiny::icon("newspaper"))
     # shinydashboard::menuItem("Merge", tabName = "mergeTab", icon = shiny::icon("chart-simple")),
     # shinydashboard::menuItem("Merge", tabName = "mergeTab", icon = shiny::icon("code-merge"))
     # shinydashboard::menuItem("Traits data", tabName = "dataTab", icon = shiny::icon("th")),
-    shinydashboard::menuItem("Export", tabName = "exportTab", icon = shiny::icon("download"))
+    # shinydashboard::menuItem("Export", tabName = "exportTab", icon = shiny::icon("download"))
   )
 )
 
@@ -114,7 +114,8 @@ body <- dashboardBody(
   # Global CSS tags
   tags$head(
     tags$style(shiny::HTML(
-      "hr {border-top: 1px solid #000000;}"
+      "hr {border-top: 1px solid #000000;}",
+      '#boxNH .box-header{ display: none}'
     ))
   ),
   # tags$head(tags$style('#box .box-header{ display: none}')),
@@ -132,83 +133,83 @@ body <- dashboardBody(
                                               shiny::tabPanel("Load files", 
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
-                                                                shiny::column(width = 8,
+                                                                shiny::column(width = 8, headerBorder = FALSE, title = NULL, 
                                                                               # htmltools::h4("Load files"),
                                                                               # htmltools::hr(),
-                                                                              splitLayout(cellWidths = c("80%", "20%"),
-                                                                                          shiny::fileInput(inputId = "traitsInput",
-                                                                                                           label = "Traits",
-                                                                                                           accept = c(".csv"),
-                                                                                                           buttonLabel = "Browse..."
-                                                                                          ),
-                                                                                          div(
-                                                                                            shinyWidgets::actionBttn(inputId = "doClearTraits", 
-                                                                                                                     label = "Clear",
-                                                                                                                     style = "fill",
-                                                                                                                     size = "sm",
-                                                                                                                     color = "default"),
-                                                                                            style = 'margin-top:25px'
-                                                                                          )
+                                                                              box(id = 'boxNH', width = 12, title = NULL, headerBorder = FALSE,
+                                                                                  shiny::fileInput(inputId = "traitsInput",
+                                                                                                   label = "Traits",
+                                                                                                   accept = c(".csv"),
+                                                                                                   buttonLabel = "Browse..."
+                                                                                  ),
+                                                                                  div(
+                                                                                    shinyWidgets::actionBttn(inputId = "doClearTraits", 
+                                                                                                             label = "Clear",
+                                                                                                             style = "fill",
+                                                                                                             size = "sm",
+                                                                                                             color = "default"),
+                                                                                    style = 'margin-top:0px'
+                                                                                  )
                                                                               ),
-                                                                              splitLayout(cellWidths = c("80%", "20%"),
-                                                                                          shiny::fileInput(inputId = "restCompInput",
-                                                                                                           label = "Species composition of restoration sites",
-                                                                                                           accept = c(".csv"),
-                                                                                                           buttonLabel = "Browse..."
-                                                                                          ),
-                                                                                          div(
-                                                                                            shinyWidgets::actionBttn(inputId = "doClearRestComp", 
-                                                                                                                     label = "Clear",
-                                                                                                                     style = "fill",
-                                                                                                                     size = "sm",
-                                                                                                                     color = "default"),
-                                                                                            style = 'margin-top:25px'
-                                                                                          )
+                                                                              box(id = 'boxNH', width = 12, title = NULL, headerBorder = FALSE,
+                                                                                  shiny::fileInput(inputId = "restCompInput",
+                                                                                                   label = "Species composition of restoration sites",
+                                                                                                   accept = c(".csv"),
+                                                                                                   buttonLabel = "Browse..."
+                                                                                  ),
+                                                                                  div(
+                                                                                    shinyWidgets::actionBttn(inputId = "doClearRestComp", 
+                                                                                                             label = "Clear",
+                                                                                                             style = "fill",
+                                                                                                             size = "sm",
+                                                                                                             color = "default"),
+                                                                                    style = 'margin-top:0px'
+                                                                                  )
                                                                               ),
-                                                                              splitLayout(cellWidths = c("80%", "20%"),
-                                                                                          shiny::fileInput(inputId = "restGroupInput",
-                                                                                                           label = "Complementary information for restoration sites",
-                                                                                                           accept = c(".csv"),
-                                                                                                           buttonLabel = "Browse..."
-                                                                                          ),
-                                                                                          div(
-                                                                                            shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
-                                                                                                                     label = "Clear",
-                                                                                                                     style = "fill",
-                                                                                                                     size = "sm",
-                                                                                                                     color = "default"),
-                                                                                            style = 'margin-top:25px'
-                                                                                          )
+                                                                              box(id = 'boxNH', width = 12, title = NULL, headerBorder = FALSE,
+                                                                                  shiny::fileInput(inputId = "restGroupInput",
+                                                                                                   label = "Complementary information for restoration sites",
+                                                                                                   accept = c(".csv"),
+                                                                                                   buttonLabel = "Browse..."
+                                                                                  ),
+                                                                                  div(
+                                                                                    shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
+                                                                                                             label = "Clear",
+                                                                                                             style = "fill",
+                                                                                                             size = "sm",
+                                                                                                             color = "default"),
+                                                                                    style = 'margin-top:0px'
+                                                                                  )
                                                                               ),
-                                                                              splitLayout(cellWidths = c("80%", "20%"),
-                                                                                          shiny::fileInput(inputId = "referenceInput",
-                                                                                                           label = "Species composition of reference sites",
-                                                                                                           accept = c(".csv"),
-                                                                                                           buttonLabel = "Browse..."
-                                                                                          ),
-                                                                                          div(
-                                                                                            shinyWidgets::actionBttn(inputId = "doClearReference", 
-                                                                                                                     label = "Clear",
-                                                                                                                     style = "fill",
-                                                                                                                     size = "sm",
-                                                                                                                     color = "default"),
-                                                                                            style = 'margin-top:25px'
-                                                                                          )
+                                                                              box(id = 'boxNH', width = 12, title = NULL, headerBorder = FALSE,
+                                                                                  shiny::fileInput(inputId = "referenceInput",
+                                                                                                   label = "Species composition of reference sites",
+                                                                                                   accept = c(".csv"),
+                                                                                                   buttonLabel = "Browse..."
+                                                                                  ),
+                                                                                  div(
+                                                                                    shinyWidgets::actionBttn(inputId = "doClearReference", 
+                                                                                                             label = "Clear",
+                                                                                                             style = "fill",
+                                                                                                             size = "sm",
+                                                                                                             color = "default"),
+                                                                                    style = 'margin-top:0px'
+                                                                                  )
                                                                               ),
-                                                                              splitLayout(cellWidths = c("80%", "20%"),
-                                                                                          shiny::fileInput(inputId = "supplementaryInput",
-                                                                                                           label = "Species composition of supplementary sites",
-                                                                                                           accept = c(".csv"),
-                                                                                                           buttonLabel = "Browse..."
-                                                                                          ),
-                                                                                          div(
-                                                                                            shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
-                                                                                                                     label = "Clear",
-                                                                                                                     style = "fill",
-                                                                                                                     size = "sm",
-                                                                                                                     color = "default"),
-                                                                                            style = 'margin-top:25px'
-                                                                                          )
+                                                                              box(id = 'boxNH', width = 12, title = NULL, headerBorder = FALSE,
+                                                                                  shiny::fileInput(inputId = "supplementaryInput",
+                                                                                                   label = "Species composition of supplementary sites",
+                                                                                                   accept = c(".csv"),
+                                                                                                   buttonLabel = "Browse..."
+                                                                                  ),
+                                                                                  div(
+                                                                                    shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
+                                                                                                             label = "Clear",
+                                                                                                             style = "fill",
+                                                                                                             size = "sm",
+                                                                                                             color = "default"),
+                                                                                    style = 'margin-top:0px'
+                                                                                  )
                                                                               )
                                                                 ), # End column
                                                                 shiny::column(width = 4, 
@@ -823,6 +824,16 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 4,
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewParInput",
+                                                                                                               label = "Scenario type",
+                                                                                                               choices = setNames(
+                                                                                                                 c("Raw", "Selected"),
+                                                                                                                 c("Raw", "Selected") # Set labels
+                                                                                                               ),
+                                                                                                               selected = "Raw",
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              ),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioViewParInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -888,6 +899,16 @@ body <- dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 4,
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewMultiInput",
+                                                                                                               label = "Scenario type",
+                                                                                                               choices = setNames(
+                                                                                                                 c("Raw", "Selected"),
+                                                                                                                 c("Raw", "Selected") # Set labels
+                                                                                                               ),
+                                                                                                               selected = "Raw",
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              ),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioViewMultiInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -927,23 +948,23 @@ body <- dashboardBody(
                                                                                            color = "success")
                                                                 ) # End column
                                                               ) # End row
-                                              ) # End tabPanel
-                                            ) # End tabsetPanel
-                              ) # End column
-                            ) # End row
-    ), # End viewTab
-    #### exportTab ----
-    shinydashboard::tabItem(tabName = "exportTab",
-                            h2("Export results"),
-                            fluidRow(
-                              shiny::column(width = 12,
-                                            shiny::tabsetPanel(
-                                              shiny::tabPanel("Raw", 
+                                              ), # End tabPanel
+                                              shiny::tabPanel("Export", 
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 4,
                                                                               # htmltools::h4("Set basic parameters"),
                                                                               # hr(),
+                                                                              shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeExportInput",
+                                                                                                               label = "Scenario type",
+                                                                                                               choices = setNames(
+                                                                                                                 c("Raw", "Selected"),
+                                                                                                                 c("Raw", "Selected") # Set labels
+                                                                                                               ),
+                                                                                                               selected = "Raw",
+                                                                                                               inline = TRUE,
+                                                                                                               status = "primary"
+                                                                              ),
                                                                               shinyWidgets::pickerInput(inputId = "scenarioExportInput",
                                                                                                         label = "Choose scenario",
                                                                                                         choices = NULL,
@@ -951,29 +972,111 @@ body <- dashboardBody(
                                                                                                         options = list("max-options" = 1),
                                                                                                         inline = FALSE
                                                                               ),
-                                                                              shinyWidgets::actionBttn(inputId = "doExport", 
-                                                                                                       label = "Export",
+                                                                              shinyWidgets::pickerInput(inputId = "typeExportInput",
+                                                                                                        label = "Type of result",
+                                                                                                        choices = setNames(
+                                                                                                          c("simComposition",
+                                                                                                            "simResults", 
+                                                                                                            "simMultifunctionality",
+                                                                                                            "simUnavailableSpecies",
+                                                                                                            "refComposition",
+                                                                                                            "refResults",
+                                                                                                            "refMultifunctionality", 
+                                                                                                            "supComposition", 
+                                                                                                            "supResults",
+                                                                                                            "supMultifunctionality"),
+                                                                                                          c("simComposition",
+                                                                                                            "simResults", 
+                                                                                                            "simMultifunctionality",
+                                                                                                            "simUnavailableSpecies",
+                                                                                                            "refComposition",
+                                                                                                            "refResults",
+                                                                                                            "refMultifunctionality", 
+                                                                                                            "supComposition", 
+                                                                                                            "supResults",
+                                                                                                            "supMultifunctionality") # Set labels
+                                                                                                        ),
+                                                                                                        multiple = TRUE,
+                                                                                                        options = list("max-options" = 1),
+                                                                                                        inline = FALSE
+                                                                              ),
+                                                                              shiny::conditionalPanel(condition = "(input.typeExportInput == 'simUnavailableSpecies')",
+                                                                                                      shinyWidgets::pickerInput(inputId = "avaExpInput",
+                                                                                                                                label = "Species availability",
+                                                                                                                                choices = NULL,
+                                                                                                                                multiple = TRUE,
+                                                                                                                                options = list("max-options" = 1),
+                                                                                                                                inline = FALSE
+                                                                                                      )
+                                                                              ),
+                                                                              shiny::conditionalPanel(condition = "(input.typeExportInput == 'simComposition') ||
+												  									  						(input.typeExportInput == 'refComposition') ||
+												  									  						(input.typeExportInput == 'supComposition')",
+                                                                                                      shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
+                                                                                                                                       label = "Data base format",
+                                                                                                                                       choices = setNames(
+                                                                                                                                         c(TRUE, FALSE),
+                                                                                                                                         c("Yes", "No") # Set labels
+                                                                                                                                       ),
+                                                                                                                                       selected = FALSE,
+                                                                                                                                       inline = TRUE,
+                                                                                                                                       status = "primary"
+                                                                                                      )
+                                                                              ),
+                                                                              shinyWidgets::actionBttn(inputId = "doExport",
+                                                                                                       label = "Preview",
                                                                                                        style = "fill",
                                                                                                        size = "md",
                                                                                                        color = "success"),
-                                                                              shiny::sliderInput("bins3", 
-                                                                                                 label = htmltools::p(i18n$t("Hello Shiny!"), 
-                                                                                                                      shiny::actionButton("titleBtId", 
-                                                                                                                                          label = "", 
-                                                                                                                                          icon = shiny::icon("info"), 
-                                                                                                                                          style = 'padding:4px; font-size:60%')), 
-                                                                                                 min = 1, max = 50, value = 30)
                                                                 ), # End column
                                                                 shiny::column(width = 8,
-                                                                              # htmltools::h4("Select"),
-                                                                              # hr()
+                                                                              rhandsontable::rHandsontableOutput("outputExportTable"),
+                                                                              br(),
+                                                                              downloadBttn(outputId = "doDownloadExport",
+                                                                                           label = "Download",
+                                                                                           style = "fill",
+                                                                                           icon = NULL,
+                                                                                           size = "md",
+                                                                                           color = "success")
                                                                 ) # End column
                                                               ) # End row
                                               ) # End tabPanel
                                             ) # End tabsetPanel
                               ) # End column
                             ) # End row
-    ) # End exportTab
+    ) # End viewTab
+    #### exportTab ----
+    # shinydashboard::tabItem(tabName = "exportTab",
+    # 						h2("Export results"),
+    # 						fluidRow(
+    # 							shiny::column(width = 12,
+    # 										  shiny::tabsetPanel(
+    # 										  	shiny::tabPanel("Raw", 
+    # 										  					shiny::fluidRow(
+    # 										  						htmltools::br(),
+    # 										  						shiny::column(width = 4,
+    # 										  									  # htmltools::h4("Set basic parameters"),
+    # 										  									  # hr(),
+    # 										  									  # shinyDirButton(id = "choseDirectory", label = "Chose directory", title = "Chose directory", class = "action-button bttn bttn-fill bttn-md bttn-default bttn-no-outline shiny-bound-input"),
+    # 										  									  
+    # 										  						), # End column
+    # 										  						shiny::column(width = 8,
+    # 										  									  # htmltools::h4("Select"),
+    # 										  									  # hr()
+    # 										  									  shiny::sliderInput("bins3", 
+    # 										  									  				   label = htmltools::p(i18n$t("Hello Shiny!"), 
+    # 										  									  				   					 shiny::actionButton("titleBtId", 
+    # 										  									  				   					 					label = "", 
+    # 										  									  				   					 					icon = shiny::icon("info"), 
+    # 										  									  				   					 					style = 'padding:4px; font-size:60%')), 
+    # 										  									  				   min = 1, max = 50, value = 30)
+    # 										  						) # End column
+    # 										  					) # End row
+    # 										  	) # End tabPanel
+    # 										  ) # End tabsetPanel
+    # 							) # End column
+    # 						) # End row
+    # ) # End exportTab
   ) # End tabItems
 )
 
