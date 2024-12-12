@@ -323,9 +323,9 @@ Check the unavailable species that were present in selected communities these ar
 ```{r}
 # Necessary species
 unavailableSpecies <- extractResults(resSEL, 
+                                     type = "simUnavailableSpecies",
                                      trait = traits, 
-                                     ava = ava, 
-                                     type = "unavailableSpecies")
+                                     ava = ava)
 ```
 
 ```{r, echo = FALSE}

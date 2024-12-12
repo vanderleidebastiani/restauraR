@@ -15,7 +15,7 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
   groupsMulti <- colnames(resMulti)[-1]
   resMulti <- resMulti[, -1, drop =  FALSE]
   if(!hideref){
-    resMultiRef <- x$reference$multifunctionality
+    resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
     template0 <- makeMatrixTemplate(resMulti, resMultiRef)
     resMulti <- reorganizeMatrix(template = template0, resMulti, fillNA = FALSE)
     resMultiRef <- reorganizeMatrix(template = template0, resMultiRef, fillNA = FALSE)
@@ -32,6 +32,6 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
                            width_ratio = 0.2,
                            height_ratio = 0.8, 
                            ...) + 
-    ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"))
+    ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
   return(p)
 }

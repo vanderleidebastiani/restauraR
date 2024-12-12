@@ -31,27 +31,35 @@ viewResults <- function(x, xvar, yvar, hideref = FALSE){
     resResults <- x$selection$results
     pal <- c("#45a1d4", "#1d4b61", "#BD0026")
   }
-  # Set names in the palette
-  names(pal) <- c("Unavailable", "Available", "References")
-  resResults$Legend <- ifelse(resResults$unavailable == 0, "Available", "Unavailable")
-  resResults$Legend <- factor(resResults$Legend, levels = c("Available", "Unavailable", "References"))
+  if(!is.null(resResults$unavailable)){
+    # Set names in the palette
+    names(pal) <- c("Unavailable", "Available", "References")
+    resResults$Legend <- ifelse(resResults$unavailable == 0, "Available", "Unavailable")
+    resResults$Legend <- factor(resResults$Legend, levels = c("Available", "Unavailable", "References"))
+  } else{
+    # Set names in the palette
+    pal <- pal[2:3]
+    names(pal) <- c("Simulation", "References")
+    resResults$Legend <- "Simulation"
+    resResults$Legend <- factor(resResults$Legend, levels = c("Simulation", "References"))
+  }
   # Get reference results
   ref <- x$reference$results
   if(!hideref && !is.null(ref)){
     ref$Legend <- "References"
-    ref$Legend <- factor(ref$Legend, levels = c("Available", "Unavailable", "References"))
+    ref$Legend <- factor(ref$Legend, levels = levels(resResults$Legend))
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
       ggplot2::geom_point(data = resResults, size = 1.2) +
-      ggplot2::geom_point(data = ref, size = 1.5) +
+      ggplot2::geom_point(data = ref, size = 1.7) +
       ggplot2::scale_color_manual(values = pal) +
-      themeResbiota(baseSize = 12)
+      themeResbiota(baseSize = 15)
   } else{
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
       ggplot2::geom_point(data = resResults, size = 1.2) +
       ggplot2::scale_color_manual(values = pal) +
-      themeResbiota(baseSize = 12)
+      themeResbiota(baseSize = 15)
   }
   return(p)
 }

@@ -5,16 +5,22 @@
 \alias{extractResults}
 \title{extractResults}
 \usage{
-extractResults(x, trait, ava, type = "unavailableSpecies")
+extractResults(
+  x,
+  type = "simResults",
+  dbFormat = FALSE,
+  trait = NULL,
+  ava = NULL
+)
 }
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to visualize results}
 
+\item{type}{unavailableSpecies}
+
 \item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
-
-\item{type}{unavailableSpecies}
 }
 \description{
 Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds 
