@@ -106,11 +106,9 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 )
 
 ### Body ----
-body <- dashboardBody(
-  
+body <- shinydashboard::dashboardBody(
   # Use shiny.i18n functions
   shiny.i18n::usei18n(i18n),
-  
   # Global CSS tags
   tags$head(
     tags$style(shiny::HTML(
@@ -118,7 +116,6 @@ body <- dashboardBody(
       '#boxNH .box-header{ display: none}'
     ))
   ),
-  # tags$head(tags$style('#box .box-header{ display: none}')),
   # Use shinyjs functions
   shinyjs::useShinyjs(),
   shinydashboard::tabItems(
@@ -708,8 +705,8 @@ body <- dashboardBody(
                                                                                                         inline = FALSE
                                                                               ),
                                                                               shiny::uiOutput(outputId = "outputRankList"),
-                                                                              verbatimTextOutput("results_basic"),
-                                                                              verbatimTextOutput("results_basic2"),
+                                                                              # verbatimTextOutput("results_basic"),
+                                                                              # verbatimTextOutput("results_basic2"),
                                                                               shiny::conditionalPanel(condition = "output.showSlidersTestsHieSel == true",
                                                                                                       shiny::uiOutput("slidersTestsHieSel"),
                                                                                                       htmltools::br(),
