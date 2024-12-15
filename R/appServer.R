@@ -1,26 +1,15 @@
 #' @rdname app
 #' @export
 appServer <- shiny::shinyServer(function(input, output, session) {
-  # Input parameters to simulateCommunities
-  # output$showData <- FALSE
-  # output$showData <- reactive({
-  # 	ifelse(
-  # 		!is.null(input$traits), 
-  # 		TRUE,
-  # 		FALSE
-  # 	)
-  # })
-  # outputOptions(output, "showData", suspendWhenHidden = FALSE)
-  
   ## Reactive Values ----
   ### Global variables ----
-  globalRV <- reactiveValues(digitsVal = 5, 
-                             digitsMin = 3,
-                             currentDate = format(Sys.Date(), "%Y%m%d"),
-                             countPlots = 0,
-                             probs = c(0, 0.25, 0.5, 0.75, 1))
+  globalRV <- shiny::reactiveValues(digitsVal = 5, 
+                                    digitsMin = 3,
+                                    currentDate = format(Sys.Date(), "%Y%m%d"),
+                                    countPlots = 0,
+                                    probs = c(0, 0.25, 0.5, 0.75, 1))
   #### Set the minimal decimal places ----
-  numVal <- reactive({
+  numVal <- shiny::reactive({
     if(!is.null(input$decimalPlaces)){
       if(is.na(input$decimalPlaces)){
         return(globalRV$digitsMin)
@@ -33,10 +22,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       return(globalRV$digitsVal)
     }
   })
-  output$decimalPlaces <- renderUI(numericInput(inputId = "decimalPlaces", 
-                                                label = "Decimal places", 
-                                                min = globalRV$digitsMin, 
-                                                value = numVal()))
+  output$decimalPlaces <- shiny::renderUI(numericInput(inputId = "decimalPlaces", 
+                                                       label = "Decimal places", 
+                                                       min = globalRV$digitsMin, 
+                                                       value = numVal()))
   ### inputDataRV ----
   inputDataRV <- shiny::reactiveValues(traits = NULL,
                                        restComp = NULL,
@@ -97,7 +86,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   )
   ## Input file ----
   ### Input file - Traits data ----
-  observeEvent(input$traitsInput, {
+  shiny::observeEvent(input$traitsInput, {
     # Read file
     inFile <- input$traitsInput
     if (is.null(inFile)){
@@ -106,7 +95,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     inputDataRV$traits <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - restComp ----
-  observeEvent(input$restCompInput, {
+  shiny::observeEvent(input$restCompInput, {
     # Read file
     inFile <- input$restCompInput
     if (is.null(inFile)){
@@ -115,7 +104,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     inputDataRV$restComp <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - restGroup ----
-  observeEvent(input$restGroupInput, {
+  shiny::observeEvent(input$restGroupInput, {
     # Read file
     inFile <- input$restGroupInput
     if (is.null(inFile)){
@@ -124,7 +113,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     inputDataRV$restGroup <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - Reference ----
-  observeEvent(input$referenceInput, {
+  shiny::observeEvent(input$referenceInput, {
     # Read file
     inFile <- input$referenceInput
     if (is.null(inFile)){
@@ -133,7 +122,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     inputDataRV$reference <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - Supplementary ----
-  observeEvent(input$supplementaryInput, {
+  shiny::observeEvent(input$supplementaryInput, {
     # Read file
     inFile <- input$supplementaryInput
     if (is.null(inFile)){
@@ -144,7 +133,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   ## doClear buttons ----
   ### doClear CONTINUAR ----
   # remover tambem outros elementos da interface
-  observeEvent(input$doClear, {
+  shiny::observeEvent(input$doClear, {
     inputDataRV$traits <- NULL
     inputDataRV$restComp <- NULL
     inputDataRV$restGroup <- NULL
@@ -159,275 +148,275 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     shinyjs::reset("supplementaryInput")
   })
   ### doClearTraits ----
-  observeEvent(input$doClearTraits, {
+  shiny::observeEvent(input$doClearTraits, {
     inputDataRV$traits <- NULL
     inputDataRV$auxTraitsClass <- NULL
     inputDataRV$auxTraitsVariables <- NULL
     shinyjs::reset("traitsInput")
   })
   ### doClearRestComp ----
-  observeEvent(input$doClearRestComp, {
+  shiny::observeEvent(input$doClearRestComp, {
     inputDataRV$restComp <- NULL
     shinyjs::reset("restCompInput")
   })
   ### doClearRestGroup ----
-  observeEvent(input$doClearRestGroup, {
+  shiny::observeEvent(input$doClearRestGroup, {
     inputDataRV$restGroup <- NULL
     shinyjs::reset("restGroupInput")
   })
   ### doClearReference ----
-  observeEvent(input$doClearReference, {
+  shiny::observeEvent(input$doClearReference, {
     inputDataRV$reference <- NULL
     shinyjs::reset("referenceInput")
   })
   ### doClearSupplementary ----
-  observeEvent(input$doClearSupplementary, {
+  shiny::observeEvent(input$doClearSupplementary, {
     inputDataRV$supplementary <- NULL
     shinyjs::reset("supplementaryInput")
   })
   ## Update pickers - Traits input ----
-  observeEvent(inputDataRV$traits, ignoreNULL = FALSE, {
+  shiny::observeEvent(inputDataRV$traits, ignoreNULL = FALSE, {
     if(!is.null(inputDataRV$traits)){
       # Extract basic data information
       inputDataRV$auxTraitsVariables <- colnames(inputDataRV$traits)
       inputDataRV$auxTraitsClass <- data.frame(t(sapply(inputDataRV$traits, vectorClass)), row.names = "Class")
       # Update slider
-      updateSliderTextInput(session, inputId = "richSliderSimInput",
-                            choices = seq_len(nrow(inputDataRV$traits)),
-                            selected = c(1, nrow(inputDataRV$traits)))
+      shinyWidgets::updateSliderTextInput(session, inputId = "richSliderSimInput",
+                                          choices = seq_len(nrow(inputDataRV$traits)),
+                                          selected = c(1, nrow(inputDataRV$traits)))
     } else{
       inputDataRV$auxTraitsVariables <- character(0)
       inputDataRV$auxTraitsClass <- character(0)
       # Update slider
-      updateSliderTextInput(session, inputId = "richSliderSimInput",
-                            choices = c(1, 1),
-                            selected = c(1, 1))
+      shinyWidgets::updateSliderTextInput(session, inputId = "richSliderSimInput",
+                                          choices = c(1, 1),
+                                          selected = c(1, 1))
     }
     # Update pickers
-    updatePickerInput(session, inputId = "avaSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "undSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "cwmSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "raoSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "probSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "groupSimInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "avaComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "cwmComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "cwvComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "raoComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "costComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "densComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "disComInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    updatePickerInput(session, inputId = "avaExpInput", choices = inputDataRV$auxTraitsVariables,
-                      choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "avaSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "undSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "cwmSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "raoSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "probSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "groupSimInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "avaComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "cwmComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "cwvComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "raoComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "costComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "densComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "disComInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
+    shinyWidgets::updatePickerInput(session, inputId = "avaExpInput", choices = inputDataRV$auxTraitsVariables,
+                                    choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
   })
   ## Selected language ----
-  observeEvent(input$selectedLanguage, {
+  shiny::observeEvent(input$selectedLanguage, {
     shiny.i18n::update_lang(input$selectedLanguage, session)
   })
   ## Update pickers - Scenarios ----
   ### Scenarios pickers ----
   # Observe changes in any scenario
   # Update choices and keep selected
-  obsListAllScenarios <- reactive({
+  obsListAllScenarios <- shiny::reactive({
     list(resultsRV$simulate, resultsRV$select)
   })
-  observeEvent(obsListAllScenarios(), {
+  shiny::observeEvent(obsListAllScenarios(), {
     # Simulate tab
-    updatePickerInput(session, inputId = "mergeSimulateInput", choices = names(resultsRV$simulate),
-                      selected = input$mergeSimulateInput)
-    updatePickerInput(session, inputId = "removeSimulateInput", choices = names(resultsRV$simulate),
-                      selected = input$removeSimulateInput)
-    updatePickerInput(session, inputId = "scenarioSimulateSummaryInput", choices = names(resultsRV$simulate),
-                      selected = input$scenarioSimulateSummaryInput)
+    shinyWidgets::updatePickerInput(session, inputId = "mergeSimulateInput", choices = names(resultsRV$simulate),
+                                    selected = input$mergeSimulateInput)
+    shinyWidgets::updatePickerInput(session, inputId = "removeSimulateInput", choices = names(resultsRV$simulate),
+                                    selected = input$removeSimulateInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioSimulateSummaryInput", choices = names(resultsRV$simulate),
+                                    selected = input$scenarioSimulateSummaryInput)
     # Compute tab
-    updatePickerInput(session, inputId = "scenarioComParInput", choices = names(resultsRV$simulate), 
-                      selected = input$scenarioComParInput)
-    updatePickerInput(session, inputId = "scenarioComStandParInput", choices = names(resultsRV$simulate), 
-                      selected = input$scenarioComStandParInput)
-    updatePickerInput(session, inputId = "scenarioComMultiInput", choices = names(resultsRV$simulate),
-                      selected = input$scenarioComMultiInput)
-    updatePickerInput(session, inputId = "scenarioComputeSummaryInput", choices = names(resultsRV$simulate),
-                      selected = input$scenarioComputeSummaryInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioComParInput", choices = names(resultsRV$simulate), 
+                                    selected = input$scenarioComParInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioComStandParInput", choices = names(resultsRV$simulate), 
+                                    selected = input$scenarioComStandParInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioComMultiInput", choices = names(resultsRV$simulate),
+                                    selected = input$scenarioComMultiInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioComputeSummaryInput", choices = names(resultsRV$simulate),
+                                    selected = input$scenarioComputeSummaryInput)
     # Select tab
-    updatePickerInput(session, inputId = "scenarioSelInput", choices = names(resultsRV$simulate),
-                      selected = input$scenarioSelInput)
-    updatePickerInput(session, inputId = "mergeSelectInput", choices = names(resultsRV$select),
-                      selected = input$mergeSelectInput)
-    updatePickerInput(session, inputId = "removeSelectInput", choices = names(resultsRV$select),
-                      selected = input$removeSelectInput)
-    updatePickerInput(session, inputId = "scenarioSelectSummaryInput", choices = names(resultsRV$select),
-                      selected = input$scenarioSelectSummaryInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioSelInput", choices = names(resultsRV$simulate),
+                                    selected = input$scenarioSelInput)
+    shinyWidgets::updatePickerInput(session, inputId = "mergeSelectInput", choices = names(resultsRV$select),
+                                    selected = input$mergeSelectInput)
+    shinyWidgets::updatePickerInput(session, inputId = "removeSelectInput", choices = names(resultsRV$select),
+                                    selected = input$removeSelectInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioSelectSummaryInput", choices = names(resultsRV$select),
+                                    selected = input$scenarioSelectSummaryInput)
     # View tab
     if(input$scenarioTypeViewParInput == "Raw"){
-      updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
-                        selected = input$scenarioViewParInput)	
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
+                                      selected = input$scenarioViewParInput)	
     } else{
-      updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
-                        selected = input$scenarioViewParInput)
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
+                                      selected = input$scenarioViewParInput)
     }
     if(input$scenarioTypeViewMultiInput == "Raw"){
-      updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
-                        selected = input$scenarioViewMultiInput)	
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
+                                      selected = input$scenarioViewMultiInput)	
     } else{
-      updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
-                        selected = input$scenarioViewMultiInput)
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
+                                      selected = input$scenarioViewMultiInput)
     }
     # Export tab
     if(input$scenarioTypeExportInput == "Raw"){
-      updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
-                        selected = input$scenarioExportInput)	
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
+                                      selected = input$scenarioExportInput)	
     } else{
-      updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
-                        selected = input$scenarioExportInput)
+      shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
+                                      selected = input$scenarioExportInput)
     }
   })
   ### View tab - scenarioTypeViewParInput ----
-  observeEvent(input$scenarioTypeViewParInput, {
+  shiny::observeEvent(input$scenarioTypeViewParInput, {
     if(input$scenarioTypeViewParInput == "Raw"){
       if(!is.null(names(resultsRV$simulate))){
-        updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
+                                        selected = NULL)	
       } else{
-        updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
-                          selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
+                                        selected = NULL)
       }
     } else{
       if(!is.null(names(resultsRV$select))){
-        updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
+                                        selected = NULL)	
       } else{
-        updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
-                          selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
+                                        selected = NULL)
       }
     }
   })
   ### View tab - scenarioTypeViewMultiInput ----
-  observeEvent(input$scenarioTypeViewMultiInput, {
+  shiny::observeEvent(input$scenarioTypeViewMultiInput, {
     if(input$scenarioTypeViewMultiInput == "Raw"){
       if(!is.null(names(resultsRV$simulate))){
-        updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
+                                        selected = NULL)	
       } else{
-        updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
+                                        selected = NULL)	
       }
     } else{
       if(!is.null(names(resultsRV$select))){
-        updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
+                                        selected = NULL)	
       } else{
-        updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
-                          selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
+                                        selected = NULL)
       }
     }
   })
   ### Export tab - scenarioTypeExportInput ----
-  observeEvent(input$scenarioTypeExportInput, {
+  shiny::observeEvent(input$scenarioTypeExportInput, {
     if(input$scenarioTypeExportInput == "Raw"){
       if(!is.null(names(resultsRV$simulate))){
-        updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
-                          selected = NULL)		
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
+                                        selected = NULL)		
       } else{
-        updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
+                                        selected = NULL)	
       }
     } else{
       if(!is.null(names(resultsRV$select))){
-        updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
+                                        selected = NULL)	
       } else{
-        updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
-                          selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
+                                        selected = NULL)
       }
     }
   })
   ## Update pickers - Parameters ----
   ### Select tab - testsDetSelInput, testsHieSelInput and groupSelInput ----
   # Update choices 
-  obsListSelPar <- reactive({
+  obsListSelPar <- shiny::reactive({
     list(input$scenarioSelInput, resultsRV$updatePar)
   })
-  observeEvent(obsListSelPar(), {
+  shiny::observeEvent(obsListSelPar(), {
     if(!is.null(input$scenarioSelInput)){
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
       if(!is.null(colnames(scenario$simulation$results))){
-        updatePickerInput(session, inputId = "testsDetSelInput", choices = colnames(scenario$simulation$results))
-        updatePickerInput(session, inputId = "testsHieSelInput", choices = colnames(scenario$simulation$results))
-        updatePickerInput(session, inputId = "groupSelInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = colnames(scenario$simulation$results))
       } else{
-        updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
-                          selected = NULL)
-        updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
-                          selected = NULL)
-        updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
-                          selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
+                                        selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
+                                        selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
+                                        selected = NULL)
       }
     } else{
-      updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
-                        selected = NULL)
-      updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
-                        selected = NULL)
-      updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
-                        selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
+                                      selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
+                                      selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
+                                      selected = NULL)
     }
   })
   ### Compute tab - testsMultiInput ----
   # Update choices 
-  obsListComMulti <- reactive({
+  obsListComMulti <- shiny::reactive({
     list(input$scenarioComMultiInput, resultsRV$updatePar)
   })
-  observeEvent(obsListComMulti(), {
+  shiny::observeEvent(obsListComMulti(), {
     if(!is.null(input$scenarioComMultiInput)){
       scenario <- resultsRV$simulate[[input$scenarioComMultiInput]]
       if(!is.null(colnames(scenario$simulation$results))){
-        updatePickerInput(session, inputId = "testsMultiInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "testsMultiInput", choices = colnames(scenario$simulation$results))
       } else{
-        updatePickerInput(session, inputId = "testsMultiInput", choices = character(0),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "testsMultiInput", choices = character(0),
+                                        selected = NULL)	
       }
     } else{
-      updatePickerInput(session, inputId = "testsMultiInput", choices = character(0),
-                        selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "testsMultiInput", choices = character(0),
+                                      selected = NULL)
     }
   })
   ### Compute tab - stanComParInput----
   # Update choices 
-  obsListComStandPar <- reactive({
+  obsListComStandPar <- shiny::reactive({
     list(input$scenarioComStandParInput, resultsRV$updatePar)
   })
-  observeEvent(obsListComStandPar(), {
+  shiny::observeEvent(obsListComStandPar(), {
     if(!is.null(input$scenarioComStandParInput)){
       scenario <- resultsRV$simulate[[input$scenarioComStandParInput]]
       if(!is.null(colnames(scenario$simulation$results))){
-        updatePickerInput(session, inputId = "stanComParInput", choices = colnames(scenario$simulation$results))	
+        shinyWidgets::updatePickerInput(session, inputId = "stanComParInput", choices = colnames(scenario$simulation$results))	
       } else{
-        updatePickerInput(session, inputId = "stanComParInput", choices = character(0),
-                          selected = NULL)	
+        shinyWidgets::updatePickerInput(session, inputId = "stanComParInput", choices = character(0),
+                                        selected = NULL)	
       }
     } else{
-      updatePickerInput(session, inputId = "stanComParInput", choices = character(0),
-                        selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "stanComParInput", choices = character(0),
+                                      selected = NULL)
     }
   })
   ### View tab - xvarViewInput and yvarViewInput ----
   # Update choices 
-  obsListViewPar <- reactive({
+  obsListViewPar <- shiny::reactive({
     list(input$scenarioViewParInput, resultsRV$updatePar)
   })
-  observeEvent(obsListViewPar(), {
+  shiny::observeEvent(obsListViewPar(), {
     if(!is.null(input$scenarioViewParInput)){
       if(input$scenarioTypeViewParInput == "Raw"){
         scenario <- resultsRV$simulate[[input$scenarioViewParInput]]
@@ -441,21 +430,21 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         res <- scenario$selection$results
       }
       if(!is.null(res)){
-        updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
-        updatePickerInput(session, inputId = "yvarViewInput", choices = colnames(res))
+        shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
+        shinyWidgets::updatePickerInput(session, inputId = "yvarViewInput", choices = colnames(res))
       } else{
-        updatePickerInput(session, inputId = "xvarViewInput", choices = character(0), selected = NULL)
-        updatePickerInput(session, inputId = "yvarViewInput", choices = character(0), selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = character(0), selected = NULL)
+        shinyWidgets::updatePickerInput(session, inputId = "yvarViewInput", choices = character(0), selected = NULL)
       }
     } else{
-      updatePickerInput(session, inputId = "xvarViewInput", choices = character(0), selected = NULL)
-      updatePickerInput(session, inputId = "yvarViewInput", choices = character(0), selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = character(0), selected = NULL)
+      shinyWidgets::updatePickerInput(session, inputId = "yvarViewInput", choices = character(0), selected = NULL)
     }
   })
   ## Create dynamic slides ----
   ### Group probability sliders ----
-  observeEvent(input$groupSimInput, {
-    output$slidersProbRicSim <- renderUI({
+  shiny::observeEvent(input$groupSimInput, {
+    output$slidersProbRicSim <- shiny::renderUI({
       inVars <- unique(inputDataRV$traits[, input$groupSimInput])
       pvars <- length(inVars)
       if (pvars > 0) {
@@ -468,7 +457,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         })
       }
     })
-    output$slidersProbAbuSim <- renderUI({
+    output$slidersProbAbuSim <- shiny::renderUI({
       inVars <- unique(inputDataRV$traits[, input$groupSimInput])
       pvars <- length(inVars)
       if (pvars > 0) {
@@ -483,8 +472,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     })
   })
   ### Hierarchical selection sliders ----
-  observeEvent(input$testsHieSelInput, {
-    output$slidersTestsHieSel <- renderUI({
+  shiny::observeEvent(input$testsHieSelInput, {
+    output$slidersTestsHieSel <- shiny::renderUI({
       inVars <- input$testsHieSelInput
       pvars <- length(inVars)
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
@@ -492,9 +481,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if (pvars > 0) {
         lapply(seq(pvars), function(i) {
           if(vectorClass(scenario[,inVars[i]]) == "numeric"){
-            observeEvent(input[[paste0("logicalTestHieSelInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
-                quantiles <- quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
+            shiny::observeEvent(input[[paste0("logicalTestHieSelInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
+                quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
                 df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -502,11 +491,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                   ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton("Dismiss"),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton("Dismiss"),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             # If integers
             if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
@@ -528,18 +517,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                           selected = selectedTemp
             )
           } else {
-            observeEvent(input[[paste0("logicalTestHieSelInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
+            shiny::observeEvent(input[[paste0("logicalTestHieSelInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
                   ggplot2::geom_bar(fill = "#1d4b61") +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton("Dismiss"),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton("Dismiss"),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             shinyWidgets::pickerInput(inputId = paste0("logicalTestHieSelInput", inVars[i]),
                                       label = htmltools::p(i18n$t("Parameter:"),
@@ -559,8 +548,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     })
   })
   ### Deterministic selection sliders ----
-  observeEvent(input$testsDetSelInput, {
-    output$slidersTestsDetSel <- renderUI({
+  shiny::observeEvent(input$testsDetSelInput, {
+    output$slidersTestsDetSel <- shiny::renderUI({
       inVars <- input$testsDetSelInput
       pvars <- length(inVars)
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
@@ -568,9 +557,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if (pvars > 0) {
         lapply(seq(pvars), function(i) {
           if(vectorClass(scenario[,inVars[i]]) == "numeric"){
-            observeEvent(input[[paste0("logicalTestDetSelInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
-                quantiles <- quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
+            shiny::observeEvent(input[[paste0("logicalTestDetSelInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
+                quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
                 df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -578,11 +567,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                   ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton(i18n$t("Dismiss")),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton(i18n$t("Dismiss")),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             # If integers
             if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
@@ -604,18 +593,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                           selected = selectedTemp
             )
           } else {
-            observeEvent(input[[paste0("logicalTestDetSelInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
+            shiny::observeEvent(input[[paste0("logicalTestDetSelInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
                   ggplot2::geom_bar(fill = "#1d4b61") +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton(i18n$t("Dismiss")),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton(i18n$t("Dismiss")),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             shinyWidgets::pickerInput(inputId = paste0("logicalTestDetSelInput", inVars[i]),
                                       label = htmltools::p(i18n$t("Parameter:"),
@@ -635,8 +624,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     })
   })
   ### Multifunctionality sliders ----
-  observeEvent(input$testsMultiInput, {
-    output$slidersMulti <- renderUI({
+  shiny::observeEvent(input$testsMultiInput, {
+    output$slidersMulti <- shiny::renderUI({
       inVars <- input$testsMultiInput
       pvars <- length(inVars)
       scenario <- resultsRV$simulate[[input$scenarioComMultiInput]]
@@ -644,9 +633,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if (pvars > 0) {
         lapply(seq(pvars), function(i) {
           if(vectorClass(scenario[,inVars[i]]) == "numeric"){
-            observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
-                quantiles <- quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
+            shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
+                quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
                 df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -654,11 +643,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                   ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton(i18n$t("Dismiss")),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton(i18n$t("Dismiss")),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             # If integers
             if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
@@ -680,18 +669,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                           selected = selectedTemp
             )
           } else {
-            observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
-              output$plotVarModal <- renderPlot({
+            shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
+              output$plotVarModal <- shiny::renderPlot({
                 ggplot2::ggplot(data = scenario) +
                   ggplot2::aes(x = .data[[inVars[i]]]) +
                   ggplot2::geom_bar(fill = "#1d4b61") +
                   themeResbiota(baseSize = 15)
               })
-              showModal(modalDialog(plotOutput("plotVarModal"),
-                                    footer = modalButton(i18n$t("Dismiss")),
-                                    fade = FALSE,
-                                    easyClose = TRUE,
-                                    size = "xl"), session = session)
+              shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  footer = shiny::modalButton(i18n$t("Dismiss")),
+                                                  fade = FALSE,
+                                                  easyClose = TRUE,
+                                                  size = "xl"), session = session)
             })
             shinyWidgets::pickerInput(inputId = paste0("logicalTestMultiInput", inVars[i]),
                                       label = htmltools::p(i18n$t("Parameter:"),
@@ -710,133 +699,172 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       }
     })
   })
+  
+  
+  
+  # AQUI ----
+  ### Update labelMultiOutput  ----
+  shiny::observeEvent(input$scenarioViewMultiInput, ignoreNULL = FALSE, {
+    output$labelMultiOutput <- shiny::renderUI({
+      if(!is.null(input$scenarioViewMultiInput)){
+        if(input$scenarioTypeViewParInput == "Raw"){
+          scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
+        } else{
+          scenario <- resultsRV$select[[input$scenarioViewMultiInput]]
+        }
+        if (inherits(scenario, "simRest")) {
+          resMulti <- scenario$simulation$multifunctionality
+        }
+        else {
+          resMulti <- scenario$selection$multifunctionality
+        }
+        if (!is.null(resMulti)) {
+          inVars <- colnames(resMulti)[-1]
+          pvars <- length(inVars)
+          if (pvars > 0) {
+            lapply(seq(pvars), function(i) {
+              shiny::textInput(inputId = paste0("labMulti", inVars[i]), 
+                               label = "Label", 
+                               value = inVars[i])
+            })
+          }
+        } else {
+          NULL
+        }
+      } else{
+        NULL
+      }
+    })
+  })
+  
+  
   ## Check buttons - OK ----
   ### Check doCompute button ----
-  observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComParInput)){
-      updateActionButton(session, "doCompute", disabled = TRUE)
+      shiny::updateActionButton(session, "doCompute", disabled = TRUE)
     } else(
-      updateActionButton(session, "doCompute", disabled = FALSE)
+      shiny::updateActionButton(session, "doCompute", disabled = FALSE)
     )
   })
   ### Check doStandardize button ----
-  observeEvent(input$scenarioComStandParInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioComStandParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComStandParInput)){
-      updateActionButton(session, "doStandardize", disabled = TRUE)
+      shiny::updateActionButton(session, "doStandardize", disabled = TRUE)
     } else(
-      updateActionButton(session, "doStandardize", disabled = FALSE)
+      shiny::updateActionButton(session, "doStandardize", disabled = FALSE)
     )
   })
   ### Check doMultiCompute button ----
-  observeEvent(input$scenarioComMultiInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioComMultiInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComMultiInput)){
-      updateActionButton(session, "doMultiCompute", disabled = TRUE)
+      shiny::updateActionButton(session, "doMultiCompute", disabled = TRUE)
     } else(
-      updateActionButton(session, "doMultiCompute", disabled = FALSE)
+      shiny::updateActionButton(session, "doMultiCompute", disabled = FALSE)
     )
   })
   ### Check doSelect button ----
-  obsListDoSelect <- reactive({
+  obsListDoSelect <- shiny::reactive({
     list(input$prefixSelInput, input$scenarioSelInput)
   })
-  observeEvent(obsListDoSelect(), ignoreNULL = FALSE, {
+  shiny::observeEvent(obsListDoSelect(), ignoreNULL = FALSE, {
     if(is.null(input$scenarioSelInput) || input$prefixSelInput == ""){
-      updateActionButton(session, "doSelect", disabled = TRUE)
+      shiny::updateActionButton(session, "doSelect", disabled = TRUE)
     } else(
-      updateActionButton(session, "doSelect", disabled = FALSE)
+      shiny::updateActionButton(session, "doSelect", disabled = FALSE)
     )
   })
   ### Check doPlotPar button ----
-  observeEvent(input$scenarioViewParInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioViewParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioViewParInput)){
-      updateActionButton(session, "doPlotPar", disabled = TRUE)
+      shiny::updateActionButton(session, "doPlotPar", disabled = TRUE)
     } else(
-      updateActionButton(session, "doPlotPar", disabled = FALSE)
+      shiny::updateActionButton(session, "doPlotPar", disabled = FALSE)
     )
   })
   ### Check doPlotMulti button ----
-  observeEvent(input$scenarioViewMultiInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioViewMultiInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioViewMultiInput)){
-      updateActionButton(session, "doPlotMulti", disabled = TRUE)
+      shiny::updateActionButton(session, "doPlotMulti", disabled = TRUE)
     } else(
-      updateActionButton(session, "doPlotMulti", disabled = FALSE)
+      shiny::updateActionButton(session, "doPlotMulti", disabled = FALSE)
     )
   })
   ### Check doExport button ----
-  observeEvent(input$scenarioExportInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$scenarioExportInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioExportInput)){
-      updateActionButton(session, "doExport", disabled = TRUE)
+      shiny::updateActionButton(session, "doExport", disabled = TRUE)
     } else(
-      updateActionButton(session, "doExport", disabled = FALSE)
+      shiny::updateActionButton(session, "doExport", disabled = FALSE)
     )
   })
   ### Check doSelectMerge button ----
-  obsListDoSelectMerge <- reactive({
+  obsListDoSelectMerge <- shiny::reactive({
     list(input$mergeSelectNameInput, input$mergeSelectInput)
   })
-  observeEvent(obsListDoSelectMerge(), ignoreNULL = FALSE, {
+  shiny::observeEvent(obsListDoSelectMerge(), ignoreNULL = FALSE, {
     if(is.null(input$mergeSelectInput) || input$mergeSelectNameInput == ""){
-      updateActionButton(session, "doSelectMerge", disabled = TRUE)
+      shiny::updateActionButton(session, "doSelectMerge", disabled = TRUE)
     } else(
-      updateActionButton(session, "doSelectMerge", disabled = FALSE)
+      shiny::updateActionButton(session, "doSelectMerge", disabled = FALSE)
     )
   })
   ### Check doSimulateMerge button ----
-  obsListDoSimulateMerge <- reactive({
+  obsListDoSimulateMerge <- shiny::reactive({
     list(input$mergeSimulateNameInput, input$mergeSimulateInput)
   })
-  observeEvent(obsListDoSimulateMerge(), ignoreNULL = FALSE, {
+  shiny::observeEvent(obsListDoSimulateMerge(), ignoreNULL = FALSE, {
     if(is.null(input$mergeSimulateInput) || input$mergeSimulateNameInput == ""){
-      updateActionButton(session, "doSimulateMerge", disabled = TRUE)
+      shiny::updateActionButton(session, "doSimulateMerge", disabled = TRUE)
     } else(
-      updateActionButton(session, "doSimulateMerge", disabled = FALSE)
+      shiny::updateActionButton(session, "doSimulateMerge", disabled = FALSE)
     )
   })
   ### Check doSelectRemove button ----
-  observeEvent(input$removeSelectInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$removeSelectInput, ignoreNULL = FALSE, {
     if(is.null(input$removeSelectInput)){
-      updateActionButton(session, "doSelectRemove", disabled = TRUE)
+      shiny::updateActionButton(session, "doSelectRemove", disabled = TRUE)
     } else(
-      updateActionButton(session, "doSelectRemove", disabled = FALSE)
+      shiny::updateActionButton(session, "doSelectRemove", disabled = FALSE)
     )
   })
   ### Check doSimulateRemove button ----
-  observeEvent(input$removeSimulateInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$removeSimulateInput, ignoreNULL = FALSE, {
     if(is.null(input$removeSimulateInput)){
-      updateActionButton(session, "doSimulateRemove", disabled = TRUE)
+      shiny::updateActionButton(session, "doSimulateRemove", disabled = TRUE)
     } else(
-      updateActionButton(session, "doSimulateRemove", disabled = FALSE)
+      shiny::updateActionButton(session, "doSimulateRemove", disabled = FALSE)
     )
   })
   ## Input aux ----
   ### Simulate tab - prefixSimInput ----
-  observeEvent(input$prefixSimInput, {
+  shiny::observeEvent(input$prefixSimInput, {
     if(!input$prefixSimInput == ""){
-      updateActionButton(session, "doSimulate", disabled = FALSE)
+      shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
     } else{
-      updateActionButton(session, "doSimulate", disabled = TRUE)
+      shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
     }
   })
   ### Simulate tab - itSimInput ----
   # Check - If itSimInput is NA or < 4 disable the simulate button
-  observeEvent(input$itSimInput, {
+  shiny::observeEvent(input$itSimInput, {
     if(!is.na(input$itSimInput)){
       inputParSimRV$it <- input$itSimInput
       if(input$itSimInput>=4){
-        updateActionButton(session, "doSimulate", disabled = FALSE)	
+        shiny::updateActionButton(session, "doSimulate", disabled = FALSE)	
       } else{
-        updateActionButton(session, "doSimulate", disabled = TRUE)
+        shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
       }
     } else{
-      updateActionButton(session, "doSimulate", disabled = TRUE)
+      shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
       inputParSimRV$it <- NULL
     }
   })
   ### Simulate tab - restComp and restGroup----
-  obsListRest <- reactive({
+  obsListRest <- shiny::reactive({
     list(input$goalsSimInput, inputDataRV$restComp, inputDataRV$restGroup)
   })
-  observeEvent(obsListRest(), {
+  shiny::observeEvent(obsListRest(), {
     if(input$goalsSimInput == "New"){
       inputParSimRV$restComp <- NULL
       inputParSimRV$restGroup <- NULL
@@ -846,26 +874,26 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### Simulate tab - nIndSimInput and cvAbundSimInput ----
-  obsListSimMethod <- reactive({
+  obsListSimMethod <- shiny::reactive({
     list(input$methodSimInput, input$nIndSimInput, input$cvAbundSimInput)
   })
-  observeEvent(obsListSimMethod(), {
+  shiny::observeEvent(obsListSimMethod(), {
     if(tolower(input$methodSimInput) == "individuals"){
       if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
-        updateActionButton(session, "doSimulate", disabled = TRUE)
+        shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
       } else{
-        updateActionButton(session, "doSimulate", disabled = FALSE)
+        shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
       }
       inputParSimRV$nInd <- input$nIndSimInput
       inputParSimRV$cvAbund <- input$cvAbundSimInput
     } else{
-      updateActionButton(session, "doSimulate", disabled = FALSE)
+      shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
       inputParSimRV$nInd <- NULL
       inputParSimRV$cvAbund <- NULL
     }
   })
   ### View tab - dbFormatExpInput ----
-  observeEvent(input$dbFormatExpInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$dbFormatExpInput, ignoreNULL = FALSE, {
     if(!is.null(input$dbFormatExpInput)){
       exportRV$dbFormat <- input$dbFormatExpInput
     } else{
@@ -874,7 +902,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ## Action buttons ----
   ### doSimulate ----
-  observeEvent(input$doSimulate, {
+  shiny::observeEvent(input$doSimulate, {
     # Remove any open modal
     removeModal(session = session)
     # Check if species trait data exist
@@ -886,7 +914,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else {
-      showModal(modalDialog(title = "Running", footer = NULL), session = session)
+      shiny::showModal(shiny::modalDialog(title = "Running", footer = NULL), session = session)
       # Set and update the arguments group, probGroupRich and probGroupAbund
       # Update using dynamic slides
       if(input$speficyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
@@ -952,7 +980,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### doSimulateMerge ----
-  observeEvent(input$doSimulateMerge, {
+  shiny::observeEvent(input$doSimulateMerge, {
     # If the picker input is valid
     if(length(input$mergeSimulateInput)>0){
       tempRV <- vector("list", length = length(input$mergeSimulateInput))
@@ -977,7 +1005,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doSimulateRemove ----
-  observeEvent(input$doSimulateRemove, {
+  shiny::observeEvent(input$doSimulateRemove, {
     # If the picker input is valid
     if(length(input$removeSimulateInput)>0){
       for(i in 1:length(input$removeSimulateInput)){
@@ -999,7 +1027,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doCompute ----
-  observeEvent(input$doCompute, {
+  shiny::observeEvent(input$doCompute, {
     # Remove any open modal
     removeModal(session = session)
     checkCost <- c(is.null(input$costComInput), is.null(input$densComInput))
@@ -1011,7 +1039,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else {
-      showModal(modalDialog(title = "Running", footer = NULL), session = session)
+      shiny::showModal(shiny::modalDialog(title = "Running", footer = NULL), session = session)
       scenario <- computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
                                     trait = inputDataRV$traits,
                                     ava = input$avaComInput, # straight input
@@ -1047,7 +1075,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### doMultiCompute ----
-  observeEvent(input$doMultiCompute, {
+  shiny::observeEvent(input$doMultiCompute, {
     # Set and update the argument tests
     # Update using dynamic slides
     if(!is.null(input$testsMultiInput)){
@@ -1087,7 +1115,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doStandardize ----
-  observeEvent(input$doStandardize, {
+  shiny::observeEvent(input$doStandardize, {
     scenario <- resultsRV$simulate[[input$scenarioComStandParInput]]
     # if (inherits(scenario, "simRest")) {
     res <- scenario$simulation$results
@@ -1129,7 +1157,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   
   ### doSelect ----
-  observeEvent(input$doSelect, {
+  shiny::observeEvent(input$doSelect, {
     # Set and update the arguments group, probGroupRich and probGroupAbund
     # Update using dynamic slides
     scenario <- resultsRV$simulate[[input$scenarioSelInput]]
@@ -1209,7 +1237,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doSelectMerge ----
-  observeEvent(input$doSelectMerge, {
+  shiny::observeEvent(input$doSelectMerge, {
     # If the picker input is valid
     if(length(input$mergeSelectInput)>0){
       tempRV <- vector("list", length = length(input$mergeSelectInput))
@@ -1233,7 +1261,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doSelectRemove ----
-  observeEvent(input$doSelectRemove, {
+  shiny::observeEvent(input$doSelectRemove, {
     # If the picker input is valid
     if(length(input$removeSelectInput)>0){
       for(i in 1:length(input$removeSelectInput)){
@@ -1254,7 +1282,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doPlotPar ----
-  observeEvent(input$doPlotPar, {
+  shiny::observeEvent(input$doPlotPar, {
     if(input$scenarioTypeViewParInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioViewParInput]]
     } else{
@@ -1277,11 +1305,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### doPlotParClear ----
-  observeEvent(input$doPlotParClear, {
+  shiny::observeEvent(input$doPlotParClear, {
     resultsRV$plotPar <- NULL
   })
   ### doPlotMulti ----
-  observeEvent(input$doPlotMulti, {
+  shiny::observeEvent(input$doPlotMulti, {
     if(input$scenarioTypeViewParInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
     } else{
@@ -1294,6 +1322,25 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resMulti <- scenario$selection$multifunctionality
     }
     if (!is.null(resMulti)) {
+      # Update using dynamic text inputs
+      # Force labels change
+      inVars <- colnames(resMulti)[-1]
+      pvars <- length(inVars)
+      if (pvars > 0) {
+        lapply(seq(pvars), function(i) {
+          colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+          if(!is.null(scenario$reference$multifunctionality)){
+            colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+          }
+        })
+      }
+      # Update multifunctionality matrix
+      if (inherits(scenario, "simRest")) {
+        scenario$simulation$multifunctionality <- resMulti
+      }
+      else {
+        scenario$selection$multifunctionality  <- resMulti
+      }
       resultsRV$plotMulti <- viewMultifunctionality(x = scenario,
                                                     hideref = as.logical(input$hideRefViewMultiInput))
     } else {
@@ -1307,11 +1354,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### doPlotMultiClear ----
-  observeEvent(input$doPlotMultiClear, {
+  shiny::observeEvent(input$doPlotMultiClear, {
     resultsRV$plotMulti <- NULL
   })
   ### doExport ----
-  observeEvent(input$doExport, {
+  shiny::observeEvent(input$doExport, {
     if(input$scenarioTypeExportInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioExportInput]]
     } else{
@@ -1346,7 +1393,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### doDownloadParPlot ----
-  output$doDownloadParPlot <- downloadHandler(
+  output$doDownloadParPlot <- shiny::downloadHandler(
     filename <- function() {paste0(input$projectName, "_", input$scenarioViewParInput, "_", input$xvarViewInput, input$yvarViewInput, "_", globalRV$currentDate, ".png")},
     content <- function(file) {
       ggplot2::ggsave(file,
@@ -1358,7 +1405,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   )
   ### doDownloadMultiPlot ----
-  output$doDownloadMultiPlot <- downloadHandler(
+  output$doDownloadMultiPlot <- shiny::downloadHandler(
     filename <- function() {paste0(input$projectName, "_", input$scenarioViewMultiInput, "_Multifunctionality_", globalRV$currentDate, ".png")},
     content <- function(file) {
       ggplot2::ggsave(file,
@@ -1370,7 +1417,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   )
   ### doDownloadExport ----
-  output$doDownloadExport <- downloadHandler(
+  output$doDownloadExport <- shiny::downloadHandler(
     filename <- function() {paste0(input$projectName, "_", input$scenarioExportInput, "_", input$typeExportInput, "_", globalRV$currentDate, ".csv")},
     content <- function(file) {
       write.csv(exportRV$table, file = file)
@@ -1378,7 +1425,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   )
   # IMPLEMENTAR ----
   ## Help buttons ----
-  observeEvent(input$titleBtId, {
+  shiny::observeEvent(input$titleBtId, {
     shinyalert(
       title = "",
       text = i18n$t("Test:"),
@@ -1393,28 +1440,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       session = session
     )
   })
-  # observeEvent(input$info3, {
-  # 	# shinyalert(text = "Info 3", type = "info")
-  # 	shinyalert(
-  # 		title = "",
-  # 		text = "This is a modal",
-  # 		size = "s", 
-  # 		closeOnEsc = TRUE,
-  # 		closeOnClickOutside = TRUE,
-  # 		html = FALSE,
-  # 		type = "",
-  # 		showConfirmButton = FALSE,
-  # 		showCancelButton = FALSE,
-  # 		timer = 0,
-  # 		imageUrl = "",
-  # 		animation = TRUE
-  # 	)
-  # })
   # Output aux - outputRankList ----
-  observeEvent(input$testsHieSelInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$testsHieSelInput, ignoreNULL = FALSE, {
     inputParSelRV$auxRankHeiSel <- input$testsHieSelInput
   })
-  output$outputRankList <- renderUI({
+  output$outputRankList <- shiny::renderUI({
     if(length(inputParSelRV$auxRankHeiSel)>1){
       sortable::rank_list(
         input_id = "rankHeiSelInput",
@@ -1426,24 +1456,24 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### Output aux - showSlidersTestsHieSel ----
-  output$showSlidersTestsHieSel <- reactive({
+  output$showSlidersTestsHieSel <- shiny::reactive({
     !is.null(input$testsHieSelInput)
   })
   outputOptions(output, "showSlidersTestsHieSel", suspendWhenHidden = FALSE)
   ### Output aux - testsDetSelInput ----
-  output$showSlidersTestsDetSel <- reactive({
+  output$showSlidersTestsDetSel <- shiny::reactive({
     !is.null(input$testsDetSelInput)
   })
   outputOptions(output, "showSlidersTestsDetSel", suspendWhenHidden = FALSE)
   ### Output aux - showSlidersMulti ----
-  output$showSlidersMulti <- reactive({
+  output$showSlidersMulti <- shiny::reactive({
     !is.null(input$testsMultiInput)
   })
   outputOptions(output, "showSlidersMulti", suspendWhenHidden = FALSE)
   
   
   ### Update text - xvar - View tab ----
-  observeEvent(input$xvarViewInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$xvarViewInput, ignoreNULL = FALSE, {
     if(!is.null(input$xvarViewInput)){
       shiny::updateTextInput(session = session,
                              inputId = "xvarLab",
@@ -1456,7 +1486,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     
   })
   ### Update text - yvar -View tab ----
-  observeEvent(input$yvarViewInput, ignoreNULL = FALSE, {
+  shiny::observeEvent(input$yvarViewInput, ignoreNULL = FALSE, {
     if(!is.null(input$yvarViewInput)){
       shiny::updateTextInput(session = session,
                              inputId = "yvarLab",
@@ -1468,27 +1498,27 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ### Output aux - showTraitsData ----
-  output$showTraitsData <- reactive({
+  output$showTraitsData <- shiny::reactive({
     !is.null(inputDataRV[["traits"]])
   })
   outputOptions(output, "showTraitsData", suspendWhenHidden = FALSE)
   ### Output aux - showRestComp ----
-  output$showRestComp <- reactive({
+  output$showRestComp <- shiny::reactive({
     !is.null(inputDataRV[["restComp"]])
   })
   outputOptions(output, "showRestComp", suspendWhenHidden = FALSE)
   ### Output aux - showRestGroup ----
-  output$showRestGroup <- reactive({
+  output$showRestGroup <- shiny::reactive({
     !is.null(inputDataRV[["restGroup"]])
   })
   outputOptions(output, "showRestGroup", suspendWhenHidden = FALSE)
   ### Output aux - showReference ----
-  output$showReference <- reactive({
+  output$showReference <- shiny::reactive({
     !is.null(inputDataRV[["reference"]])
   })
   outputOptions(output, "showReference", suspendWhenHidden = FALSE)
   ### Output aux - showSupplementary ----
-  output$showSupplementary <- reactive({
+  output$showSupplementary <- shiny::reactive({
     !is.null(inputDataRV[["supplementary"]])
   })
   outputOptions(output, "showSupplementary", suspendWhenHidden = FALSE)
@@ -1509,8 +1539,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     paste0("Total simulations selected: ",  resultsRV[["nSimSel"]])
   })
   ### Output text - Simulate tab ----
-  observeEvent(input$scenarioSimulateSummaryInput, {
-    output$outputSimulateSummaryText <- renderUI({
+  shiny::observeEvent(input$scenarioSimulateSummaryInput, {
+    output$outputSimulateSummaryText <- shiny::renderUI({
       if(!is.null(input$scenarioSimulateSummaryInput)){
         x <- resultsRV$simulate[[input$scenarioSimulateSummaryInput]]
         str1 <- paste0("Pool size: ", ncol(x$simulation$composition))
@@ -1529,8 +1559,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     })
   })
   ### Output text - Compute tab ----
-  observeEvent(input$scenarioComputeSummaryInput, {
-    output$outputComputeSummaryText <- renderUI({
+  shiny::observeEvent(input$scenarioComputeSummaryInput, {
+    output$outputComputeSummaryText <- shiny::renderUI({
       if(!is.null(input$scenarioComputeSummaryInput)){
         x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
         str1 <- paste0("Pool size: ", ncol(x$simulation$composition))
@@ -1549,8 +1579,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     })
   })
   ### Output text - Select tab ----
-  observeEvent(input$scenarioSelectSummaryInput, {
-    output$outputSelectSummaryText <- renderUI({
+  shiny::observeEvent(input$scenarioSelectSummaryInput, {
+    output$outputSelectSummaryText <- shiny::renderUI({
       if(!is.null(input$scenarioSelectSummaryInput)){
         x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
         str1 <- paste0("Pool size: ", ncol(x$selection$composition))
@@ -1619,11 +1649,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     rhandsontable::rhandsontable(exportRV$summaryTable, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaders = NULL)
   })
   ### Output plot - plotParOutput ----
-  output$plotParOutput <- renderPlot({
+  output$plotParOutput <- shiny::renderPlot({
     resultsRV$plotPar
   })
   ### Output plot - plotMultiOutput ----
-  output$plotMultiOutput <- renderPlot({
+  output$plotMultiOutput <- shiny::renderPlot({
     resultsRV$plotMulti
   })
 })
