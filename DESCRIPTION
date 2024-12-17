@@ -34,16 +34,15 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
 Collate: 
-    'FCWV.R'
     'adjString.R'
     'app.R'
     'appServer.R'
     'appUI.R'
+    'calcCWV.R'
     'cerrado.R'
     'checkReference.R'
     'collectNames.R'
     'computeParameters.R'
-    'computeDissimilarity.R'
     'computeMultifunctionality.R'
     'createReport.R'
     'extractResults.R'

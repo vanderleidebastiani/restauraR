@@ -1,26 +1,25 @@
 #' @title Internal function to calculate Community Weighted Variance (CWV)
-#' @description
+#' @description The Community Weighted Variance (CWV) is based on the function matrix.t from the package SYNCSA.
 #' @encoding UTF-8
 #' @importFrom SYNCSA matrix.t
 #' @param x A matrix with species proportions in the reference sites. NAs not accepted.
 #' @param traitSub Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso
-#' @references
+#' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary
 #' @export
-FCWV <- function(x, traitSub){
+calcCWV <- function(x, traitSub){
   temp <- SYNCSA::matrix.t(x, traitSub, scale = FALSE)
-  MW <- temp$matrix.w
-  MCWM <- temp$matrix.T
-  MCWV <- matrix(NA, nrow(MW), ncol(MCWM))
-  for(i in 1:nrow(MW)){
-    for(j in 1:ncol(MCWM)){
-      MCWV[i, j] <- sum(MW[i,]*(traitSub[,j]-MCWM[i,j])^2)
+  resW <- temp$matrix.w
+  resCWM <- temp$matrix.T
+  resCWM <- matrix(NA, nrow(resW), ncol(resCWM))
+  for(i in 1:nrow(resW)){
+    for(j in 1:ncol(resCWM)){
+      resCWM[i, j] <- sum(resW[i,]*(traitSub[,j]-resCWM[i,j])^2)
     }
   }
-  rownames(MCWV) <- rownames(MCWM)
-  colnames(MCWV) <- colnames(MCWM)
-  return(MCWV)
+  rownames(resCWM) <- rownames(resCWM)
+  colnames(resCWM) <- colnames(resCWM)
+  return(resCWM)
 }

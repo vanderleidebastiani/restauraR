@@ -152,6 +152,19 @@ cost <- "Cost"
 dens <- "Density"
 ```
 
+
+### Calculating functional dissimilarity
+
+If you have reference sites, you can calculate functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than a reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function `discomQE` from the package `adiv` using the default formula "QE". Therefore, it corresponds to the Rao's dissimilarity between communities. For more details and references, please see the `adiv` package R documentation.
+
+Now, you need to provide a trait data with traits that should be used to calculate functional dissimilarity. A distance matrix (`dist` object) is also accepted.
+
+```{r}
+traitDis <- dist(scale(traits[, c("BT", "SLA", "Seed")]))
+```
+
+Some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
+
 ### Calculate functional parameters
 
 For each simulated communities, you can count species unavailable, compute richness, CWM, Rao and estimate the restoration cost. Note that this function return an object of class `simRest` (a list object) now with calculated parameters.
@@ -159,13 +172,14 @@ For each simulated communities, you can count species unavailable, compute richn
 ```{r}
 # Compute all parameters for simulated communities and reference sites
 resSIM <- computeParameters(resSIM,
-                                    trait = traits,
-                                    cwm = traits2cwm,
-                                    rao = traits2rao,
-                                    ava = ava,
-                                    cost = cost,
-                                    dens = dens,
-                                    reference = referenceSites)
+                            trait = traits,
+                            cwm = traits2cwm,
+                            rao = traits2rao,
+                            ava = ava,
+                            cost = cost,
+                            dens = dens,
+                            dissimilarity = traitDis,
+                            reference = referenceSites)
 ```
 
 ```{r}
@@ -179,8 +193,16 @@ resSIM
 First, use the function `viewResults` to compare different parameters and define the thresholds. In the example below view the relationship between bark thickness CWM and Rao a plot similar to Figure 2A in the manuscript will be produced.
 
 ```{r}
-viewResults(resSIM, xvar = "CWM_BT", yvar = "rao")
+viewResults(resSIM, xvar = "CWM_BT", yvar = "rao", hideref = FALSE)
 ```
+
+
+Now you can check the functional dissimilarity between your selected simulated communities and reference sites. This is useful to explore the results and help to define a feasible threshold for functional dissimilarity. You can plot functional dissimilarity against any other parameter with the code below.
+
+```{r}
+viewResults(resSIM, xvar = "dissimilarity", yvar = "rao", hideref = FALSE)
+```
+
 
 ### Select communities
 
@@ -196,7 +218,7 @@ Now, use `selectCommunities` to filter selected communities that satisfies these
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSIM,
-                                 testsDet = thresholds)
+                            testsDet = thresholds)
 ```
 
 ```{r}
@@ -210,31 +232,6 @@ See the number of selected communities.
 resSEL$selection$thresholds
 ```
 
-### Calculating functional dissimilarity
-
-If you have reference sites, you can calculate functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than a reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function `discomQE` from the package `adiv` using the default formula "QE". Therefore, it corresponds to the Rao's dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity). For more details and references, please see the `adiv` package R documentation.
-
-Now, you need to provide a trait data with traits that should be used to calculate functional dissimilarity. A distance matrix (`dist` object) is also accepted.
-
-```{r}
-traitDis <- dist(scale(traits[, c("BT", "SLA", "Seed")]))
-```
-
-Now, use function `computeDissimilarity` to calculate functional dissimilarity depending on your species trait values, some warnings may appear with the following: "In is.euclid(as.dist(dis)) : Zero distance(s)". This only means that at least a pair of species have identical trait values, resulting in zero distances. This is is the case with datasets (as ours) where trait data is missing at species level and replace by genus or family-level averages.
-
-```{r, warning = FALSE}
-resSEL <- computeDissimilarity(resSEL, traitDis)
-```
-
-```{r}
-resSEL
-```
-
-Now you can check the functional dissimilarity between your selected simulated communities and reference sites. This is useful to explore the results and help to define a feasible threshold for functional dissimilarity. You can plot functional dissimilarity against any other parameter with the code below.
-
-```{r}
-viewResults(resSEL, xvar = "dissimilarity", yvar = "rao", hideref = TRUE)
-```
 
 ### Additional selection
 
@@ -250,7 +247,7 @@ Now, use `selectCommunities` to apply the second filter to select communities th
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSEL,
-                                testsDet = thresholds2)
+                            testsDet = thresholds2)
 ```
 
 ```{r}
@@ -303,13 +300,18 @@ viewResults(resSEL, xvar = "richness", yvar = "cost") +
 Community matrix for selected communities
 
 ```{r}
-compositionSEL <- resSEL$selection$composition
+# Species composition (or resSEL$selection$composition)
+compositionSEL <- extractResults(resSEL, 
+                                 type = "simComposition")
 ```
 
 Parameters calculated for selected communities
 
 ```{r}
-parametersSEL <- resSEL$selection$results
+# Parameters (or resSEL$selection$results)
+parametersSEL <- extractResults(resSEL, 
+                                type = "simResults")
+
 ```
 
 ```{r, echo = FALSE}
@@ -329,7 +331,7 @@ unavailableSpecies <- extractResults(resSEL,
 ```
 
 ```{r, echo = FALSE}
-knitr::kable(head(unavailableSpecies$necessarySpp), row.names = FALSE, caption = "Necessary species (first 6 rows only)")
+knitr::kable(head(unavailableSpecies), row.names = FALSE, caption = "Necessary species (first 6 rows only)")
 ```
 
 ## References

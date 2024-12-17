@@ -21,7 +21,6 @@
 #' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
 #' in preparation.
 #' @keywords MainFunction
-#' @examples
 #' @export
 viewResults <- function(x, xvar, yvar, hideref = FALSE){
   if(inherits(x, "simRest")){

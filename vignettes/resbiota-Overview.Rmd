@@ -51,11 +51,11 @@ The framework returns a community matrix indicating the proportion of individual
 
 ## Communities parameters
 
-After the initial step of species composition simulation, several function parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters, computeDissimilarity and computeMultifunctionality can be used in this step.
+After the initial step of species composition simulation, several function parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters as used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions computeParameters and computeMultifunctionality can be used in this step.
 
-The function computeParameters is mandatory and allows compute the basic parameters: richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community.
+The function computeParameters is mandatory and allows compute the basic parameters: richness, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy and functional dissimilarity. The user must define which traits will be used to calculate each metric. Additionally, if are provided the species cost per individual and information about planting density for each species, the restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. Furthermore, it is optional to compute functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. 
 
-The function computeDissimilarity is optional and computes functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. This metric ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
+The function standardizeParameters allows the standardisation of the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance. For example, the "max" method is useful to scale dissimilarity results by scaling the values in ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
 
 The function computeMultifunctionality is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.
 
@@ -212,14 +212,15 @@ For each simulated communities, you can count species unavailable, compute richn
 ```{r}
 # Compute functional parameters
 allScenarios <- computeParameters(x = allScenarios,
-                              trait = traits,
-                    ava = "Available",
-                    cwm = "BT",
-                    rao = c("SLA", "Height", "Seed"),
-                    cost = "Cost",
-                    dens = "Density",
-                    reference = referenceSites,
-                    supplementary = supplementarySites)
+                                  trait = traits,
+                                  ava = "Available",
+                                  cwm = "BT",
+                                  rao = c("SLA", "Height", "Seed"),
+                                  cost = "Cost",
+                                  dens = "Density",
+                                  dissimilarity = c("SLA", "Height", "Seed"),
+                                  reference = referenceSites,
+                                  supplementary = supplementarySites)
 allScenarios
 ```
 
@@ -239,25 +240,18 @@ list2rao
 ```{r}
 # Compute functional parameters
 allScenariosAlternative <- computeParameters(x = allScenarios,
-                              trait = traits,
-                    ava = "Available",
-                    cwm = "BT",
-                    rao = list2rao,
-                    cost = "Cost",
-                    dens = "Density",
-                    reference = referenceSites,
-                    supplementary = supplementarySites)
+                                             trait = traits,
+                                             ava = "Available",
+                                             cwm = "BT",
+                                             rao = list2rao,
+                                             cost = "Cost",
+                                             dens = "Density",
+                                             reference = referenceSites,
+                                             supplementary = supplementarySites)
 allScenariosAlternative
 ```
 
-The dissimilarity and multifunctionality also can be computed after the basic parameter calculation. Note that the dissimilarity and alpha multifunctionality are included in the result data frame.
-
-```{r}
-# Compute dissimilarity
-allScenarios <- computeDissimilarity(x = allScenarios, 
-                                 trait = traits)
-allScenarios
-```
+The multifunctionality also can be computed after the basic parameter calculation. Note that the alpha multifunctionality are included in the result data frame.
 
 ```{r}
 # Compute multifunctionality
@@ -291,7 +285,7 @@ resSelectSim <- selectCommunities(resSelectSim,
 ```
 
 ```{r}
-# Additional selection with dissimilarity and/or multifunctionality
+# Additional selection with multifunctionality
 targetSelect3 <- c("alphamultifunctionality >= 2")
 resSelectSim <- selectCommunities(resSelectSim, 
                                    testsDet = targetSelect3)

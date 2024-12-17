@@ -1,5 +1,9 @@
 #' @title Compute functional parameters in communities
-#' @description Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy, functional dissimilarity and multifunctionality.
+#' @description \code{computeParameters} Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy and functional dissimilarity.
+#' 
+#' \code{standardizeParameters} Standardizes the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
+#' 
+#' \code{computeMultifunctionality} Computes the matrix of multifunctionality and alpha multifunctionality. 
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
 #' @importFrom fundiversity fd_raoq
@@ -63,12 +67,14 @@
 #'                               rao = c("SLA", "Height", "Seed"),
 #'                               cost = "Cost",
 #'                               dens = "Density",
+#'                               dissimilarity = c("SLA", "Height", "Seed"),
 #'                               reference = cerrado.mini$reference,
 #'                               supplementary = cerrado.mini$supplementary)
 #' scenario
-#' # Compute dissimilarity
-#' scenario <- computeDissimilarity(x = scenario, 
-#'                                  trait = cerrado.mini$traits)
+#' # standardize parameters
+#' scenario <- standardizeParameters(x = scenario, 
+#'                                   parameters = "dissimilarity",
+#'                                   method = "max")
 #' scenario
 #' # Compute multifunctionality
 #' scenario <- computeMultifunctionality(x = scenario, 
@@ -149,7 +155,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
       stop("cwv must be a character indicating one or more columns of the trait data frame")
     }
     traitSub <- trait[, cwv, drop = FALSE]
-    CWV <- FCWV(composition, traitSub)
+    CWV <- calcCWV(composition, traitSub)
     colnames(CWV) <- paste0("CWV_", colnames(CWV))
     out <- cbind(out, CWV)
   }

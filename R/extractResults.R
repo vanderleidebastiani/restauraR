@@ -1,12 +1,22 @@
-#' @title extractResults
-#' @description Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds 
-#' when selected communities have at least one species not available on the market.
+#' @title Extract results
+#' @description Help function to easily extract results. Most methods are default R list extractions. However, the option "simUnavailableSpecies" (type argument) checks the unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 #' @encoding UTF-8
-#' @param x A object of class "simRest" or "simRestSelect" to visualize results
+#' @param x A object of class "simRest" or "simRestSelect" to extract the results.
+#' @param type A option to extract results, partial match to "simComposition", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See Value below.
+#' @param dbFormat The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance". 
 #' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
-#' @param type unavailableSpecies
-#' @returns 
+#' @returns A data.frame or matrix according to the chosen method:
+#' \item{simComposition}{A matrix with species composition for simulated communities.}
+#' \item{simResults}{A data frame with calculated parameters in each simulated community.}
+#' \item{simMultifunctionality}{A data frame with binary multifunctionality tests.}
+#' \item{simUnavailableSpecies}{A data frame with the species list to achieve the specified thresholds.}
+#' \item{refComposition}{A matrix with species composition for reference sites.}
+#' \item{refResults}{A data frame with calculated parameters in reference sites.}
+#' \item{refMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
+#' \item{supComposition}{A matrix with species composition for supplementary sites.}
+#' \item{supResults}{A data frame with calculated parameters in supplementary sites.}
+#' \item{supMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 #' \code{\link{viewResults}}
@@ -18,24 +28,22 @@
 #' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
 #' in preparation.
 #' @keywords MainFunction
-#' @examples
 #' @export
 extractResults <- function(x, type = "simResults", dbFormat = FALSE, trait = NULL, ava = NULL){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("x must be of the simRest or simRestSelect class")
   }
-  typeMETHOD <- c("simComposition", # 1
-                  # "simGroups", # 2
-                  "simResults", # 3
-                  "simMultifunctionality", # 4
-                  "simUnavailableSpecies", # 5
-                  "refComposition", # 6
-                  "refResults", # 7
-                  "refMultifunctionality", # 8
-                  "supComposition", # 9
-                  "supResults", # 10
-                  "supMultifunctionality") # 11
+  typeMETHOD <- c("simComposition",
+                  "simResults", 
+                  "simMultifunctionality",
+                  "simUnavailableSpecies", 
+                  "refComposition",
+                  "refResults",
+                  "refMultifunctionality",
+                  "supComposition",
+                  "supResults",
+                  "supMultifunctionality")
   typeTemp <- pmatch(type, typeMETHOD)
   if (length(typeTemp) > 1) {
     stop("Only one argument is accepted in type")

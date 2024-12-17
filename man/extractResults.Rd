@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{extractResults}
 \alias{extractResults}
-\title{extractResults}
+\title{Extract results}
 \usage{
 extractResults(
   x,
@@ -14,17 +14,31 @@ extractResults(
 )
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to visualize results}
+\item{x}{A object of class "simRest" or "simRestSelect" to extract the results.}
 
-\item{type}{unavailableSpecies}
+\item{type}{A option to extract results, partial match to "simComposition", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See Value below.}
+
+\item{dbFormat}{The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
 
 \item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
 }
+\value{
+A data.frame or matrix according to the chosen method:
+\item{simComposition}{A matrix with species composition for simulated communities.}
+\item{simResults}{A data frame with calculated parameters in each simulated community.}
+\item{simMultifunctionality}{A data frame with binary multifunctionality tests.}
+\item{simUnavailableSpecies}{A data frame with the species list to achieve the specified thresholds.}
+\item{refComposition}{A matrix with species composition for reference sites.}
+\item{refResults}{A data frame with calculated parameters in reference sites.}
+\item{refMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
+\item{supComposition}{A matrix with species composition for supplementary sites.}
+\item{supResults}{A data frame with calculated parameters in supplementary sites.}
+\item{supMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
+}
 \description{
-Check the unavailable species that were present in selected communities these are the species necessary to achieve the thresholds 
-when selected communities have at least one species not available on the market.
+Help function to easily extract results. Most methods are default R list extractions. However, the option "simUnavailableSpecies" (type argument) checks the unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
