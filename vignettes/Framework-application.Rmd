@@ -315,7 +315,7 @@ parametersSEL <- extractResults(resSEL,
 ```
 
 ```{r, echo = FALSE}
-knitr::kable(parametersSEL, digits = 3, row.names = FALSE)
+knitr::kable(parametersSEL, digits = 3, row.names = FALSE, caption = "Parameters of selected communities")
 ```
 
 ### Unavailable species

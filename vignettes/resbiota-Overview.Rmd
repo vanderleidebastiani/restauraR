@@ -35,6 +35,63 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 
 The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval.
 
+```{r, message = FALSE, echo = FALSE, fig.cap="Flowchart with the main steps of the framework", fig.width = 6.5}
+require(DiagrammeR)
+DiagrammeR::grViz(
+  "digraph resbiotaFlowchart {
+      # define node aesthetics
+      graph[splines = ortho]
+      node [fontname = Helvetica, shape = box, width = 5, height = 1, fontsize = 16, style = filled, fillcolor = whitesmoke]
+      bgcolor = transparent
+      
+      # Nodes
+      dataSpeciesTraits[label = <Species traits>, fillcolor = Gold]
+      dataRestorationComp[label = <Species compostion to restoration sites>, fillcolor = PaleGoldenrod]
+      dataRefenceComp[label = <Species compostion to reference sites>, fillcolor = PaleGoldenrod]
+      dataSupplementaryComp[label = <Species compostion to supplementary sites>, fillcolor = PaleGoldenrod]
+      simulateCommunities[label = <Set simulation input parameters<br/><i>simulateCommunities</i>>, fillcolor = SeaGreen, fontcolor = snow]
+      computeParameters[label = <Compute basic parameters in each simulated community<br/><i>computeParameters</i>>, fillcolor = SeaGreen, fontcolor = snow]
+      standardizeParameters[label = <Calculated parameters can be standardised<br/><i>standardizeParameters</i>>, fillcolor = MediumSeaGreen]
+      computeMultifunctionality[label = <Calculate multiple restoration targets, called multifunctionality<br/><i>computeMultifunctionality</i>>, fillcolor = MediumSeaGreen]
+      selectCommunities[label = <Selections of simulated communities<br/><i>selectCommunities</i>>, fillcolor = SeaGreen, fontcolor = snow]
+      viewResults[label = <Basic results visualization<br/><i>viewResults</i>>, fillcolor = Goldenrod]
+      viewMultifunctionality[label = <Multifunctionality visualization<br/><i>viewMultifunctionality</i>>, fillcolor = Goldenrod]
+      extractResults[label = <Extract and save the results<br/><i>extractResults</i>>, fillcolor = Goldenrod]
+      mergeSelection[label = <Merge selections scenarios<br/><i>mergeSelection</i>>, fillcolor = Plum]
+      mergeSimulations[label = <Merge simulations scenarios<br/><i>mergeSimulations</i>>, fillcolor = Plum]
+      
+      # Edges
+      dataSpeciesTraits -> simulateCommunities
+      dataSpeciesTraits -> dataRestorationComp
+      dataSpeciesTraits -> dataSupplementaryComp
+      dataSpeciesTraits -> dataRefenceComp
+      dataRestorationComp -> simulateCommunities
+      dataRefenceComp -> computeParameters
+      dataSupplementaryComp -> computeParameters
+      simulateCommunities -> computeParameters
+      simulateCommunities -> mergeSimulations
+      mergeSimulations -> simulateCommunities
+      computeParameters -> standardizeParameters
+      computeParameters -> computeMultifunctionality
+      computeParameters -> selectCommunities
+      standardizeParameters -> selectCommunities
+      computeMultifunctionality -> selectCommunities
+      standardizeParameters -> computeMultifunctionality
+      selectCommunities -> mergeSelection
+      mergeSelection -> selectCommunities
+      selectCommunities -> viewResults
+      selectCommunities -> viewMultifunctionality
+      selectCommunities -> extractResults
+      
+      # Rank
+      {rank = same; computeParameters dataSupplementaryComp}
+      {rank = same; simulateCommunities mergeSimulations dataRefenceComp}
+      {rank = same; selectCommunities mergeSelection}
+      
+     }"
+)
+```
+
 ## Traits and additional species information
 
 Each species in the pool can be described by functional traits that represent the ecological functions of communities, ecosystem services, or desirable characteristics for novel or restored communities. Those species can be classified into species that are available on the market and those that are not. Furthermore, the cost per individual, observed frequencies occurring in reference sites, and any additional information can be used to select species composition.
