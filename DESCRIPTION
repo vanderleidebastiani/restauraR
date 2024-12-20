@@ -2,7 +2,7 @@ Package: resbiota
 Type: Package
 Title: resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
 Version: 0.0.2
-Date: 2024-11-28
+Date: 2024-12-20
 Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
 Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
 Depends: R (>= 3.5)
@@ -22,7 +22,7 @@ Imports:
     stats,
     grDevices,
     shiny, 
-    shinyBS,
+    DiagrammeR,
     shinyalert,
     shiny.i18n,
     sortable,

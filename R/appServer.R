@@ -1,6 +1,31 @@
 #' @rdname app
 #' @export
 appServer <- shiny::shinyServer(function(input, output, session) {
+  ## UNDER DEVELOPMENT ----
+  # Welcome alert 
+  shinyalert::shinyalert(title = NULL,
+                         text = "Welcome to resbiota",
+                         # text = htmltools::HTML('<img src="Caracara.png" />'),
+                         type = "",
+                         html = TRUE,
+                         size = "xs",
+                         showConfirmButton = FALSE,
+                         showCancelButton = FALSE,
+                         animation = FALSE,
+                         timer = 3000,
+                         session = session)
+  # shiny::showModal(shiny::modalDialog(#title = NULL,
+  # 									# shiny::imageOutput(tags$img(src = "Caracara.png", width = "400px", height = "400px")),
+  # 									htmltools::HTML('<img src="Caracara.png" />'),
+  # 									# tags$img(src="Caracara.png"),
+  # 									# tags$img(src = "Caracara.png", width = "400px", height = "400px"),
+  # 									# fade = FALSE,
+  # 									size = "xl",
+  # 									easyClose = TRUE), session = session)
+  # Collapse controlbar when changing the language
+  observeEvent(input$selectedLanguage, {
+    updateControlbar(id = "controlbar", session = session)
+  }, ignoreInit = TRUE)
   ## Reactive Values ----
   ### Global variables ----
   globalRV <- shiny::reactiveValues(digitsVal = 5, 
@@ -23,7 +48,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   output$decimalPlaces <- shiny::renderUI(numericInput(inputId = "decimalPlaces", 
-                                                       label = "Decimal places", 
+                                                       # label = "Decimal places", 
+                                                       label = i18n$t("Decimal places"),
                                                        min = globalRV$digitsMin, 
                                                        value = numVal()))
   ### inputDataRV ----
@@ -83,6 +109,46 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   exportRV <- shiny::reactiveValues(dbFormat = NULL,
                                     table = NULL,
                                     summaryTable = NULL
+  )
+  ### infoRV ----
+  infoRV <- shiny::reactiveValues(
+    # DataInputTab
+    traitsInputInfo = 0,
+    restCompInputInfo = 0,
+    restGroupInputInfo = 0,
+    referenceInputInfo = 0,
+    supplementaryInputInfo = 0,
+    # simulateTab
+    goalsSimInputInfo = 0,
+    methodSimInputInfo = 0,
+    nIndSimInputInfo = 0,
+    richSliderSimInputInfo = 0,
+    itSimInputInfo = 0,
+    avaSimInputInfo = 0,
+    undSimInputInfo = 0,
+    cwmSimInputInfo = 0,
+    raoSimInputInfo = 0,
+    speficyGroupsSimInputInfo = 0,
+    probGroupTypeSimInputInfo = 0,
+    probSimInputInfo = 0,
+    cvAbundSimInputInfo = 0,
+    phiSimInputInfo = 0,
+    # computeTab
+    avaComInputInfo = 0,
+    cwmComInputInfo = 0,
+    cwvComInputInfo = 0,
+    raoComInputInfo = 0,
+    disComInputInfo = 0,
+    costComInputInfo = 0,
+    densComInputInfo = 0,
+    stanComParInputInfo = 0,
+    speficyMethodStanInputInfo = 0,
+    testsMultiInputInfo = 0,
+    # SelectTab
+    testsDetSelInputInfo = 0,
+    testsHieSelInputInfo = 0,
+    speficyGroupsSelInputInfo = 0,
+    singleSelectionInputInfo = 0
   )
   ## Input file ----
   ### Input file - Traits data ----
@@ -260,86 +326,98 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     shinyWidgets::updatePickerInput(session, inputId = "scenarioSelectSummaryInput", choices = names(resultsRV$select),
                                     selected = input$scenarioSelectSummaryInput)
     # View tab
-    if(input$scenarioTypeViewParInput == "Raw"){
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
-                                      selected = input$scenarioViewParInput)	
-    } else{
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
-                                      selected = input$scenarioViewParInput)
+    if(!is.null(input$scenarioTypeViewParInput)){
+      if(input$scenarioTypeViewParInput == "Raw"){
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
+                                        selected = input$scenarioViewParInput)	
+      } else{
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
+                                        selected = input$scenarioViewParInput)
+      }
     }
-    if(input$scenarioTypeViewMultiInput == "Raw"){
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
-                                      selected = input$scenarioViewMultiInput)	
-    } else{
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
-                                      selected = input$scenarioViewMultiInput)
+    if(!is.null(input$scenarioTypeViewMultiInput)){
+      if(input$scenarioTypeViewMultiInput == "Raw"){
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
+                                        selected = input$scenarioViewMultiInput)	
+      } else{
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
+                                        selected = input$scenarioViewMultiInput)
+      }
     }
     # Export tab
-    if(input$scenarioTypeExportInput == "Raw"){
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
-                                      selected = input$scenarioExportInput)	
-    } else{
-      shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
-                                      selected = input$scenarioExportInput)
+    if(!is.null(input$scenarioTypeExportInput)){
+      if(input$scenarioTypeExportInput == "Raw"){
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
+                                        selected = input$scenarioExportInput)	
+      } else{
+        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
+                                        selected = input$scenarioExportInput)
+      }
     }
   })
   ### View tab - scenarioTypeViewParInput ----
   shiny::observeEvent(input$scenarioTypeViewParInput, {
-    if(input$scenarioTypeViewParInput == "Raw"){
-      if(!is.null(names(resultsRV$simulate))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
-                                        selected = NULL)	
+    if(!is.null(input$scenarioTypeViewParInput)){
+      if(input$scenarioTypeViewParInput == "Raw"){
+        if(!is.null(names(resultsRV$simulate))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$simulate),
+                                          selected = NULL)	
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
+                                          selected = NULL)
+        }
       } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
-                                        selected = NULL)
-      }
-    } else{
-      if(!is.null(names(resultsRV$select))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
-                                        selected = NULL)	
-      } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
-                                        selected = NULL)
+        if(!is.null(names(resultsRV$select))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = names(resultsRV$select),
+                                          selected = NULL)	
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewParInput", choices = character(0),
+                                          selected = NULL)
+        }
       }
     }
   })
   ### View tab - scenarioTypeViewMultiInput ----
   shiny::observeEvent(input$scenarioTypeViewMultiInput, {
-    if(input$scenarioTypeViewMultiInput == "Raw"){
-      if(!is.null(names(resultsRV$simulate))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
-                                        selected = NULL)	
+    if(!is.null(input$scenarioTypeViewMultiInput)){
+      if(input$scenarioTypeViewMultiInput == "Raw"){
+        if(!is.null(names(resultsRV$simulate))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$simulate),
+                                          selected = NULL)	
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
+                                          selected = NULL)	
+        }
       } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
-                                        selected = NULL)	
-      }
-    } else{
-      if(!is.null(names(resultsRV$select))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
-                                        selected = NULL)	
-      } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
-                                        selected = NULL)
+        if(!is.null(names(resultsRV$select))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = names(resultsRV$select),
+                                          selected = NULL)	
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioViewMultiInput", choices = character(0),
+                                          selected = NULL)
+        }
       }
     }
   })
   ### Export tab - scenarioTypeExportInput ----
   shiny::observeEvent(input$scenarioTypeExportInput, {
-    if(input$scenarioTypeExportInput == "Raw"){
-      if(!is.null(names(resultsRV$simulate))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
-                                        selected = NULL)		
+    if(!is.null(input$scenarioTypeExportInput)){
+      if(input$scenarioTypeExportInput == "Raw"){
+        if(!is.null(names(resultsRV$simulate))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$simulate),
+                                          selected = NULL)		
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
+                                          selected = NULL)	
+        }
       } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
-                                        selected = NULL)	
-      }
-    } else{
-      if(!is.null(names(resultsRV$select))){
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
-                                        selected = NULL)	
-      } else{
-        shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
-                                        selected = NULL)
+        if(!is.null(names(resultsRV$select))){
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = names(resultsRV$select),
+                                          selected = NULL)	
+        } else{
+          shinyWidgets::updatePickerInput(session, inputId = "scenarioExportInput", choices = character(0),
+                                          selected = NULL)
+        }
       }
     }
   })
@@ -450,7 +528,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if (pvars > 0) {
         lapply(seq(pvars), function(i) {
           shiny::sliderInput(inputId = paste0("probRichSimGrop", inVars[i]), 
-                             label = paste0("Probability to draw richness - Group: ", inVars[i]), 
+                             label = paste0(i18n$t("Probability to draw richness - Group: "), inVars[i]), 
                              value = 1/length(inVars),
                              min = 0,
                              max = 1)
@@ -463,7 +541,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if (pvars > 0) {
         lapply(seq(pvars), function(i) {
           shiny::sliderInput(inputId = paste0("probAbunSimGrop", inVars[i]), 
-                             label = paste0("Probability to draw abundance - Group: ", inVars[i]), 
+                             label = paste0(i18n$t("Probability to draw abundance - Group: "), inVars[i]), 
                              value = 1/length(inVars),
                              min = 0,
                              max = 1)
@@ -492,7 +570,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                   themeResbiota(baseSize = 15)
               })
               shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-                                                  footer = shiny::modalButton("Dismiss"),
+                                                  footer = shiny::modalButton(i18n$t("Dismiss")),
                                                   fade = FALSE,
                                                   easyClose = TRUE,
                                                   size = "xl"), session = session)
@@ -699,10 +777,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       }
     })
   })
-  
-  
-  
-  # AQUI ----
   ### Update labelMultiOutput  ----
   shiny::observeEvent(input$scenarioViewMultiInput, ignoreNULL = FALSE, {
     output$labelMultiOutput <- shiny::renderUI({
@@ -724,19 +798,256 @@ appServer <- shiny::shinyServer(function(input, output, session) {
           if (pvars > 0) {
             lapply(seq(pvars), function(i) {
               shiny::textInput(inputId = paste0("labMulti", inVars[i]), 
-                               label = "Label", 
+                               label = i18n$t("Label"), 
                                value = inVars[i])
             })
           }
-        } else {
-          NULL
         }
-      } else{
-        NULL
-      }
+      } 
     })
   })
+  ## Create dynamic radio buttons and select input ----
+  # Inside server to allow the use of translate functions
+  ### goalsSimInput ----
+  output$radioGoalsSimOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "goalsSimInput",
+                                     # label = "Restoration goals",
+                                     label = htmltools::p(i18n$t("Restoration goals"),
+                                                          shiny::actionButton("goalsSimInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("New", "Ongoing"),
+                                       c(i18n$t("New"), i18n$t("Ongoing")) # Set labels
+                                     ),
+                                     selected = "New",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
   
+  output$radioMethodSimOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "methodSimInput",
+                                     # label = "Method",
+                                     label = htmltools::p(i18n$t("Method"), 
+                                                          shiny::actionButton("methodSimInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("Proportions", "Individuals"),
+                                       c(i18n$t("Proportions"), i18n$t("Individuals")) # Set labels
+                                     ),
+                                     selected = "Proportions",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioSpeficyGroupsSimOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "speficyGroupsSimInput",
+                                     # label = "Specify probabilities for groups of species",
+                                     label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
+                                                          shiny::actionButton("speficyGroupsSimInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("Yes", "No"),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = "No",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioProbGroupTypeSimOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "probGroupTypeSimInput",
+                                     # label = "Probabilities to draw species",
+                                     label = htmltools::p(i18n$t("Probabilities to draw species"), 
+                                                          shiny::actionButton("probGroupTypeSimInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("Abundance", "Richness and abundance"),
+                                       c(i18n$t("Abundance"), i18n$t("Richness and abundance")) # Set labels
+                                     ),
+                                     selected = "Abundance",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioSpeficyMethodStanOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "speficyMethodStanInput",
+                                     # label = "Standardization method",
+                                     label = htmltools::p(i18n$t("Standardization method"), 
+                                                          shiny::actionButton("speficyMethodStanInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("max", "standardize"),
+                                       c(i18n$t("Maximum"), i18n$t("Standardize")) # Set labels
+                                     ),
+                                     selected = "max",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioSpeficyGroupsSelOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "speficyGroupsSelInput",
+                                     # label = "Selection inside sites groups",
+                                     label = htmltools::p(i18n$t("Selection inside sites groups"), 
+                                                          shiny::actionButton("speficyGroupsSelInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c("Yes", "No"),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = "No",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioSingleSelectionSelOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "singleSelectionInput",
+                                     # label = "Selection method",
+                                     label = htmltools::p(i18n$t("Selection method"), 
+                                                          shiny::actionButton("singleSelectionInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = 'padding:3px; font-size:60%')),
+                                     choices = stats::setNames(
+                                       c(TRUE, FALSE),
+                                       c(i18n$t("Single"), i18n$t("Multiple")) # Set labels
+                                     ),
+                                     selected = TRUE,
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioScenarioTypeViewParOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewParInput",
+                                     label = i18n$t("Scenario type"),
+                                     choices = stats::setNames(
+                                       c("Raw", "Selected"),
+                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                     ),
+                                     selected = "Raw",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioHideRefViewParOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
+                                     label = i18n$t("Hide reference sites"),
+                                     choices = stats::setNames(
+                                       c(TRUE, FALSE),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = FALSE,
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioScenarioTypeViewMultiOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewMultiInput",
+                                     label = i18n$t("Scenario type"),
+                                     choices = stats::setNames(
+                                       c("Raw", "Selected"),
+                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                     ),
+                                     selected = "Raw",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  output$radioHideRefViewMultiOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
+                                     label = i18n$t("Hide reference sites"),
+                                     choices = stats::setNames(
+                                       c(TRUE, FALSE),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = FALSE,
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  
+  
+  output$radioScenarioTypeExportOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeExportInput",
+                                     label = i18n$t("Scenario type"),
+                                     choices = stats::setNames(
+                                       c("Raw", "Selected"),
+                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                     ),
+                                     selected = "Raw",
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  
+  
+  output$radiodbFormatExpOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
+                                     label = i18n$t("Data base format"),
+                                     choices = stats::setNames(
+                                       c(TRUE, FALSE),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = FALSE,
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  
+  output$pickerTypeExportOutput <- renderUI({
+    shinyWidgets::pickerInput(inputId = "typeExportInput",
+                              label = i18n$t("Type of result"),
+                              choices = stats::setNames(
+                                c("simComposition",
+                                  "simResults", 
+                                  "simMultifunctionality",
+                                  "simUnavailableSpecies",
+                                  "refComposition",
+                                  "refResults",
+                                  "refMultifunctionality", 
+                                  "supComposition", 
+                                  "supResults",
+                                  "supMultifunctionality"),
+                                c(i18n$t("simComposition"),
+                                  i18n$t("simResults"), 
+                                  i18n$t("simMultifunctionality"),
+                                  i18n$t("simUnavailableSpecies"),
+                                  i18n$t("refComposition"),
+                                  i18n$t("refResults"),
+                                  i18n$t("refMultifunctionality"), 
+                                  i18n$t("supComposition"), 
+                                  i18n$t("supResults"),
+                                  i18n$t("supMultifunctionality")) # Set labels
+                              ),
+                              multiple = TRUE,
+                              options = list("max-options" = 1),
+                              inline = FALSE
+    )
+  })
   
   ## Check buttons - OK ----
   ### Check doCompute button ----
@@ -865,12 +1176,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     list(input$goalsSimInput, inputDataRV$restComp, inputDataRV$restGroup)
   })
   shiny::observeEvent(obsListRest(), {
-    if(input$goalsSimInput == "New"){
-      inputParSimRV$restComp <- NULL
-      inputParSimRV$restGroup <- NULL
-    } else{ # Ongoing
-      inputParSimRV$restComp <- inputDataRV$restComp
-      inputParSimRV$restGroup <- inputDataRV$restGroup
+    if(!is.null(input$goalsSimInput)){
+      if(input$goalsSimInput == "New"){
+        inputParSimRV$restComp <- NULL
+        inputParSimRV$restGroup <- NULL
+      } else{ # Ongoing
+        inputParSimRV$restComp <- inputDataRV$restComp
+        inputParSimRV$restGroup <- inputDataRV$restGroup
+      }
     }
   })
   ### Simulate tab - nIndSimInput and cvAbundSimInput ----
@@ -878,18 +1191,20 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     list(input$methodSimInput, input$nIndSimInput, input$cvAbundSimInput)
   })
   shiny::observeEvent(obsListSimMethod(), {
-    if(tolower(input$methodSimInput) == "individuals"){
-      if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
-        shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+    if(!is.null(input$methodSimInput)){
+      if(tolower(input$methodSimInput) == "individuals"){
+        if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
+          shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+        } else{
+          shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+        }
+        inputParSimRV$nInd <- input$nIndSimInput
+        inputParSimRV$cvAbund <- input$cvAbundSimInput
       } else{
         shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+        inputParSimRV$nInd <- NULL
+        inputParSimRV$cvAbund <- NULL
       }
-      inputParSimRV$nInd <- input$nIndSimInput
-      inputParSimRV$cvAbund <- input$cvAbundSimInput
-    } else{
-      shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-      inputParSimRV$nInd <- NULL
-      inputParSimRV$cvAbund <- NULL
     }
   })
   ### View tab - dbFormatExpInput ----
@@ -909,12 +1224,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(is.null(inputDataRV$traits)){
       sendSweetAlert(
         session = session,
-        title = "Error!",
-        text = "Load the species traits data",
+        title = i18n$t("Error!"),
+        text = i18n$t("Load the species traits data"),
         type = "error"
       )
     } else {
-      shiny::showModal(shiny::modalDialog(title = "Running", footer = NULL), session = session)
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       # Set and update the arguments group, probGroupRich and probGroupAbund
       # Update using dynamic slides
       if(input$speficyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
@@ -973,8 +1288,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       removeModal(session = session)
       sendSweetAlert(
         session = session,
-        title = "Done!",
-        text = paste0("Simulations scenarios: ", resultsRV$nSce),
+        title = i18n$t("Done!"),
+        text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
         type = "success"
       )
     }
@@ -999,8 +1314,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$nSce <- length(resultsRV$simulate)
     sendSweetAlert(
       session = session,
-      title = "Done!",
-      text = paste0("Simulations scenarios: ", resultsRV$nSce),
+      title = i18n$t("Done!"),
+      text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
       type = "success"
     )
   })
@@ -1021,8 +1336,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     sendSweetAlert(
       session = session,
-      title = "Done!",
-      text = paste0("Simulations scenarios: ", resultsRV$nSce),
+      title = i18n$t("Done!"),
+      text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
       type = "success"
     )
   })
@@ -1034,12 +1349,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(!c(all(checkCost == TRUE) || all(checkCost == FALSE))){
       sendSweetAlert(
         session = session,
-        title = "Error!",
-        text = "Specify cost and density. Or none of them",
+        title = i18n$t("Error!"),
+        text = i18n$t("Specify cost and density. Or none of them"),
         type = "error"
       )
     } else {
-      shiny::showModal(shiny::modalDialog(title = "Running", footer = NULL), session = session)
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       scenario <- computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
                                     trait = inputDataRV$traits,
                                     ava = input$avaComInput, # straight input
@@ -1069,7 +1384,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
       sendSweetAlert(
         session = session,
-        title = "Done!",
+        title = i18n$t("Done!"),
         type = "success"
       )
     }
@@ -1110,7 +1425,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
     sendSweetAlert(
       session = session,
-      title = "Done!",
+      title = i18n$t("Done!"),
       type = "success"
     )
   })
@@ -1125,8 +1440,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(is.null(res)){
       sendSweetAlert(
         session = session,
-        title = "Error!",
-        text = "Compute functional parameters in this scenario",
+        title = i18n$t("Error!"),
+        text = i18n$t("Compute functional parameters in this scenario"),
         type = "error"
       )
     } else{
@@ -1150,7 +1465,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
       sendSweetAlert(
         session = session,
-        title = "Done!",
+        title = i18n$t("Done!"),
         type = "success"
       )
     }
@@ -1232,7 +1547,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$nSel <- length(resultsRV$select)
     sendSweetAlert(
       session = session,
-      title = "Done!",
+      title = i18n$t("Done!"),
       type = "success"
     )
   })
@@ -1256,7 +1571,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$nSel <- length(resultsRV$select)
     sendSweetAlert(
       session = session,
-      title = "Done!",
+      title = i18n$t("Done!"),
       type = "success"
     )
   })
@@ -1277,7 +1592,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     sendSweetAlert(
       session = session,
-      title = "Done!",
+      title = i18n$t("Done!"),
       type = "success"
     )
   })
@@ -1298,8 +1613,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resultsRV$plotPar <- NULL
       sendSweetAlert(
         session = session,
-        title = "Error!",
-        text = "Select variables for both axes",
+        title = i18n$t("Error!"),
+        text = i18n$t("Select variables for both axes"),
         type = "error"
       )
     }
@@ -1310,7 +1625,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doPlotMulti ----
   shiny::observeEvent(input$doPlotMulti, {
-    if(input$scenarioTypeViewParInput == "Raw"){
+    if(input$scenarioTypeViewMultiInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
     } else{
       scenario <- resultsRV$select[[input$scenarioViewMultiInput]]
@@ -1347,8 +1662,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resultsRV$plotMulti <- NULL
       sendSweetAlert(
         session = session,
-        title = "Error!",
-        text = "Scenario must include multifunctionality results",
+        title = i18n$t("Error!"),
+        text = i18n$t("Scenario must include multifunctionality results"),
         type = "error"
       )
     }
@@ -1364,32 +1679,43 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else{
       scenario <- resultsRV$select[[input$scenarioExportInput]]
     }
-    exportRV$table <- extractResults(x = scenario,
-                                     type = input$typeExportInput, # straight input
-                                     dbFormat = as.logical(exportRV$dbFormat),
-                                     trait = inputDataRV$traits, 
-                                     ava = input$avaExpInput # straight input
-    )
-    if(!is.null(exportRV$table)){
-      exportRV$summaryTable <- as.data.frame(exportRV$table)
-      exportRV$summaryTable[] <- lapply(exportRV$summaryTable, as.character)
-      nRowTemp <- nrow(exportRV$summaryTable)
-      nColTemp <- ncol(exportRV$summaryTable)
-      if(nRowTemp>10 || nColTemp>10){
-        if(nColTemp>10){
-          exportRV$summaryTable <- exportRV$summaryTable[, c(1:6, (nColTemp-4):nColTemp), drop = FALSE]
-          # Replace the six col
-          exportRV$summaryTable[, 6] <- rep("⋯", nRowTemp)
-          colnames(exportRV$summaryTable)[6] <- "⋯"
-        }
-        if(nRowTemp>10){
-          exportRV$summaryTable <- exportRV$summaryTable[c(1:6, (nRowTemp-4):nRowTemp), , drop = FALSE]
-          # Replace the six line
-          exportRV$summaryTable[6, ] <- rep("⋮", ncol(exportRV$summaryTable))
-        }
-      }
-    } else{
+    if(input$typeExportInput == "simUnavailableSpecies" & is.null(input$avaExpInput)){
+      exportRV$table <- NULL
       exportRV$summaryTable <- NULL
+      sendSweetAlert(
+        session = session,
+        title = i18n$t("Error!"),
+        text = i18n$t("Set species availability"),
+        type = "error"
+      )
+    } else{
+      exportRV$table <- extractResults(x = scenario,
+                                       type = input$typeExportInput, # straight input
+                                       dbFormat = as.logical(exportRV$dbFormat),
+                                       trait = inputDataRV$traits, 
+                                       ava = input$avaExpInput # straight input
+      )
+      if(!is.null(exportRV$table)){
+        exportRV$summaryTable <- as.data.frame(exportRV$table)
+        exportRV$summaryTable[] <- lapply(exportRV$summaryTable, as.character)
+        nRowTemp <- nrow(exportRV$summaryTable)
+        nColTemp <- ncol(exportRV$summaryTable)
+        if(nRowTemp>10 || nColTemp>10){
+          if(nColTemp>10){
+            exportRV$summaryTable <- exportRV$summaryTable[, c(1:6, (nColTemp-4):nColTemp), drop = FALSE]
+            # Replace the six col
+            exportRV$summaryTable[, 6] <- rep("⋯", nRowTemp)
+            colnames(exportRV$summaryTable)[6] <- "⋯"
+          }
+          if(nRowTemp>10){
+            exportRV$summaryTable <- exportRV$summaryTable[c(1:6, (nRowTemp-4):nRowTemp), , drop = FALSE]
+            # Replace the six line
+            exportRV$summaryTable[6, ] <- rep("⋮", ncol(exportRV$summaryTable))
+          }
+        }
+      } else{
+        exportRV$summaryTable <- NULL
+      }
     }
   })
   ### doDownloadParPlot ----
@@ -1423,24 +1749,316 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       write.csv(exportRV$table, file = file)
     }
   )
-  # IMPLEMENTAR ----
   ## Help buttons ----
-  shiny::observeEvent(input$titleBtId, {
-    shinyalert(
-      title = "",
-      text = i18n$t("Test:"),
-      size = "xs", 
-      closeOnEsc = TRUE,
-      closeOnClickOutside = TRUE,
-      html = FALSE,
-      type = "",
-      showConfirmButton = FALSE,
-      showCancelButton = FALSE,
-      animation = FALSE,
-      session = session
+  # Update choices 
+  obsListInfoButtons <- shiny::reactive({
+    list(
+      # DataInputTab
+      input$traitsInputInfo,
+      input$restCompInputInfo,
+      input$restGroupInputInfo,
+      input$referenceInputInfo,
+      input$supplementaryInputInfo,
+      # simulateTab
+      input$goalsSimInputInfo,
+      input$methodSimInputInfo,
+      input$nIndSimInputInfo,
+      input$richSliderSimInputInfo,
+      input$itSimInputInfo,
+      input$avaSimInputInfo,
+      input$undSimInputInfo,
+      input$cwmSimInputInfo,
+      input$raoSimInputInfo,
+      input$speficyGroupsSimInputInfo,
+      input$probGroupTypeSimInputInfo,
+      input$probSimInputInfo,
+      input$cvAbundSimInputInfo,
+      input$phiSimInputInfo,
+      # computeTab
+      input$avaComInputInfo,
+      input$cwmComInputInfo,
+      input$cwvComInputInfo,
+      input$raoComInputInfo,
+      input$disComInputInfo,
+      input$costComInputInfo,
+      input$densComInputInfo,
+      input$stanComParInputInfo,
+      input$speficyMethodStanInputInfo,
+      input$testsMultiInputInfo,
+      # SelectTab
+      input$testsDetSelInputInfo,
+      input$testsHieSelInputInfo,
+      input$speficyGroupsSelInputInfo,
+      input$singleSelectionInputInfo
     )
   })
-  # Output aux - outputRankList ----
+  shiny::observeEvent(obsListInfoButtons(), ignoreInit = TRUE, {
+    # if(sum(unlist(obsListInfoButtons()))>0){
+    # Default values
+    infoText <- NULL
+    # DataInputTab
+    if(!is.null(input$traitsInputInfo)){
+      if(input$traitsInputInfo>infoRV$traitsInputInfo){
+        infoText <- i18n$t("Data table with species traits in a way that arranged species names in the rows and traits in the columns. This table should include any species information that can be used to calculate functional metrics, costs or any information that can be used as parameters to simulate and select simulated communities.")
+        infoRV$traitsInputInfo <- input$traitsInputInfo
+      }
+    }
+    if(!is.null(input$restCompInputInfo)){
+      if(input$restCompInputInfo>infoRV$restCompInputInfo){
+        infoText <- i18n$t("Data table with species composition in the restoration sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+        infoRV$restCompInputInfo <- input$restCompInputInfo
+      }
+    }
+    if(!is.null(input$restGroupInputInfo)){
+      if(input$restGroupInputInfo>infoRV$restGroupInputInfo){
+        infoText <- i18n$t("Data table with complementary information for restoration sites in a way that arranged sites in the rows and variables in the columns. This information will be included in the metrics calculated for each community and can be used as complementary information to select the simulations.")
+        infoRV$restGroupInputInfo <- input$restGroupInputInfo
+      }
+    }
+    if(!is.null(input$referenceInputInfo)){
+      if(input$referenceInputInfo>infoRV$referenceInputInfo){
+        infoText <- i18n$t("Data table with species composition in the reference sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+        infoRV$referenceInputInfo <- input$referenceInputInfo
+      }
+    }
+    if(!is.null(input$supplementaryInputInfo)){
+      if(input$supplementaryInputInfo>infoRV$supplementaryInputInfo){
+        infoText <- i18n$t("Data table with species composition in the supplementary sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+        infoRV$supplementaryInputInfo <- input$supplementaryInputInfo
+      }
+    }
+    # simulateTab
+    if(!is.null(input$goalsSimInputInfo)){
+      if(input$goalsSimInputInfo>infoRV$goalsSimInputInfo){
+        infoText <- i18n$t("Restoration goals. When goals are equal to 'New', no restoration sites are considered, and the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, when goals are equal to 'Ongoing', the species composition in the restoration sites must be informed (in the data input tab). Thus, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species).")
+        infoRV$goalsSimInputInfo <- input$goalsSimInputInfo
+      }
+    }
+    if(!is.null(input$methodSimInputInfo)){
+      if(input$methodSimInputInfo>infoRV$methodSimInputInfo){
+        infoText <- i18n$t("Method to obtain the samples. The 'proportions' method simulates the species composition sampled taken from a log-normal distribution. Species composition is given in proportions of the total number of individuals. The 'individuals' method performs the simulation sampling individuals taken from a distribution. The probabilities to draw individuals can be supplied by the user or taken from a log-normal distribution. However, the number of individuals to sample in each community must be supplied. In this method, the species composition is raw abundance, given by counting individuals.")
+        infoRV$methodSimInputInfo <- input$methodSimInputInfo
+      }
+    }
+    if(!is.null(input$nIndSimInputInfo)){
+      if(input$nIndSimInputInfo>infoRV$nIndSimInputInfo){
+        infoText <- i18n$t("The number of individuals to be sampled in each community.")
+        infoRV$nIndSimInputInfo <- input$nIndSimInputInfo
+      }
+    }
+    if(!is.null(input$richSliderSimInputInfo)){
+      if(input$richSliderSimInputInfo>infoRV$richSliderSimInputInfo){
+        infoText <- i18n$t("The range of richness values in each community.")
+        infoRV$richSliderSimInputInfo <- input$richSliderSimInputInfo
+      }
+    }
+    if(!is.null(input$itSimInputInfo)){
+      if(input$itSimInputInfo>infoRV$itSimInputInfo){
+        infoText <- i18n$t("The number of communities to simulate.")
+        infoRV$itSimInputInfo <- input$itSimInputInfo
+      }
+    }
+    if(!is.null(input$avaSimInputInfo)){
+      if(input$avaSimInputInfo>infoRV$avaSimInputInfo){
+        infoText <- i18n$t("Variable to indicate species availability in the market (1 or 0).")
+        infoRV$avaSimInputInfo <- input$avaSimInputInfo
+      }
+    }
+    if(!is.null(input$undSimInputInfo)){
+      if(input$undSimInputInfo>infoRV$undSimInputInfo){
+        infoText <- i18n$t("Variable to indicate undesired species (1 or 0). Undesired species may already be present in restoration or reference communities but are not appropriate in new restorations.")
+        infoRV$undSimInputInfo <- input$undSimInputInfo
+      }
+    }
+    if(!is.null(input$cwmSimInputInfo)){
+      if(input$cwmSimInputInfo>infoRV$cwmSimInputInfo){
+        infoText <- i18n$t("Traits names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait and allow create a wide range of means of those traits across the simulated communities.")
+        infoRV$cwmSimInputInfo <- input$cwmSimInputInfo
+      }
+    }
+    if(!is.null(input$raoSimInputInfo)){
+      if(input$raoSimInputInfo>infoRV$raoSimInputInfo){
+        infoText <- i18n$t("Traits names to indicate which traits are used to maximize functional diversity (Rao Quadratic Entropy).")
+        infoRV$raoSimInputInfo <- input$raoSimInputInfo
+      }
+    }
+    if(!is.null(input$speficyGroupsSimInputInfo)){
+      if(input$speficyGroupsSimInputInfo>infoRV$speficyGroupsSimInputInfo){
+        infoText <- i18n$t("The sampling process can be constrained inside species groups. That procedure can be conducted to draw abundances with or without constraints in species richness. First, set the variable which indicates the group to which the species belongs and the constraint method. Then, adjust the sliders to set the probabilities in each species group.")
+        infoRV$speficyGroupsSimInputInfo <- input$speficyGroupsSimInputInfo
+      }
+    }
+    if(!is.null(input$probGroupTypeSimInputInfo)){
+      if(input$probGroupTypeSimInputInfo>infoRV$probGroupTypeSimInputInfo){
+        infoText <- i18n$t("Sampling constraint method. The method 'abundance' constrains only the simulation of species abundance. The method 'Richness and abundance' constrains species abundance and species richness in the communities simulation.")
+        infoRV$probGroupTypeSimInputInfo <- input$probGroupTypeSimInputInfo
+      }
+    }
+    if(!is.null(input$probSimInputInfo)){
+      if(input$probSimInputInfo>infoRV$probSimInputInfo){
+        infoText <- i18n$t("Variable to indicate the probabilities of individuals being drawn.")
+        infoRV$probSimInputInfo <- input$probSimInputInfo
+      }
+    }
+    if(!is.null(input$cvAbundSimInputInfo)){
+      if(input$cvAbundSimInputInfo>infoRV$cvAbundSimInputInfo){
+        infoText <- i18n$t("Coefficient of variation (CV) of the relative abundances in the species pool.")
+        infoRV$cvAbundSimInputInfo <- input$cvAbundSimInputInfo
+      }
+    }
+    if(!is.null(input$phiSimInputInfo)){
+      if(input$phiSimInputInfo>infoRV$phiSimInputInfo){
+        infoText <- i18n$t("A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.")
+        infoRV$phiSimInputInfo <- input$phiSimInputInfo
+      }
+    }
+    # computeTab
+    if(!is.null(input$avaComInputInfo)){
+      if(input$avaComInputInfo>infoRV$avaComInputInfo){
+        infoText <- i18n$t("Variable to indicate species availability in the market (1 or 0).")
+        infoRV$avaComInputInfo <- input$avaComInputInfo
+      }
+    }
+    if(!is.null(input$cwmComInputInfo)){
+      if(input$cwmComInputInfo>infoRV$cwmComInputInfo){
+        infoText <- i18n$t("Traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.")
+        infoRV$cwmComInputInfo <- input$cwmComInputInfo
+      }
+    }
+    if(!is.null(input$cwvComInputInfo)){
+      if(input$cwvComInputInfo>infoRV$cwvComInputInfo){
+        infoText <- i18n$t("Traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.")
+        infoRV$cwvComInputInfo <- input$cwvComInputInfo
+      }
+    }
+    if(!is.null(input$raoComInputInfo)){
+      if(input$raoComInputInfo>infoRV$raoComInputInfo){
+        infoText <- i18n$t("Traits names to calculate Rao Quadratic Entropy (rao). Only a single rao measure is calculated with the set input species traits.")
+        infoRV$raoComInputInfo <- input$raoComInputInfo
+      }
+    }
+    if(!is.null(input$disComInputInfo)){
+      if(input$disComInputInfo>infoRV$disComInputInfo){
+        infoText <- i18n$t("Traits names to calculate functional dissimilarity with the reference sites.")
+        infoRV$disComInputInfo <- input$disComInputInfo
+      }
+    }
+    if(!is.null(input$costComInputInfo)){
+      if(input$costComInputInfo>infoRV$costComInputInfo){
+        infoText <- i18n$t("Variable to indicate the species cost per individual.")
+        infoRV$costComInputInfo <- input$costComInputInfo
+      }
+    }
+    if(!is.null(input$densComInputInfo)){
+      if(input$densComInputInfo>infoRV$densComInputInfo){
+        infoText <- i18n$t("Variable to indicate the species planting density.")
+        infoRV$densComInputInfo <- input$densComInputInfo
+      }
+    }
+    if(!is.null(input$stanComParInputInfo)){
+      if(input$stanComParInputInfo>infoRV$stanComParInputInfo){
+        infoText <- i18n$t("Parameters name to standardization.")
+        infoRV$stanComParInputInfo <- input$stanComParInputInfo
+      }
+    }
+    if(!is.null(input$speficyMethodStanInputInfo)){
+      if(input$speficyMethodStanInputInfo>infoRV$speficyMethodStanInputInfo){
+        infoText <- i18n$t("Standardization method. The method 'maximum' divides the values of each variable by its maximum. The method 'standardise' scales the calculated parameters to zero mean and unit variance in each variable.")
+        infoRV$speficyMethodStanInputInfo <- input$speficyMethodStanInputInfo
+      }
+    }
+    if(!is.null(input$testsMultiInputInfo)){
+      if(input$testsMultiInputInfo>infoRV$testsMultiInputInfo){
+        infoText <- i18n$t("Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiples calculated parameters.  The sum of individual tests true to a given threshold is the alpha multifunctionality metric. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+        infoRV$testsMultiInputInfo <- input$testsMultiInputInfo
+      }
+    }
+    # SelectTab
+    if(!is.null(input$testsDetSelInputInfo)){
+      if(input$testsDetSelInputInfo>infoRV$testsDetSelInputInfo){
+        infoText <- i18n$t("Deterministic selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the deterministic selection, only simulations that are true for all tests are returned. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+        infoRV$testsDetSelInputInfo <- input$testsDetSelInputInfo
+      }
+    }
+    if(!is.null(input$testsHieSelInputInfo)){
+      if(input$testsHieSelInputInfo>infoRV$testsHieSelInputInfo){
+        infoText <- i18n$t("Hierarchical selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the hierarchical selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. The hierarchical selection is more flexible, given that it includes additional arguments to the selection.")
+        infoRV$testsHieSelInputInfo <- input$testsHieSelInputInfo
+      }
+    }
+    if(!is.null(input$speficyGroupsSelInputInfo)){
+      if(input$speficyGroupsSelInputInfo>infoRV$speficyGroupsSelInputInfo){
+        infoText <- i18n$t("Hierarchical selection allows set site groups. Thus, selection criteria are applied inside a specific site group. Set a variable which determines the site groups for hierarchical selection.")
+        infoRV$speficyGroupsSelInputInfo <- input$speficyGroupsSelInputInfo
+      }
+    }
+    if(!is.null(input$singleSelectionInputInfo)){
+      if(input$singleSelectionInputInfo>infoRV$singleSelectionInputInfo){
+        infoText <- i18n$t("Selection method in hierarchical selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.")
+        infoRV$singleSelectionInputInfo <- input$singleSelectionInputInfo
+      }
+    }
+    if(!is.null(infoText)){
+      # shiny::showModal(shiny::modalDialog(title = NULL,
+      # 									infoText, 
+      # 									footer = shiny::modalButton(i18n$t("Dismiss")),
+      # 									fade = FALSE,
+      # 									size = "s",
+      # 									easyClose = TRUE), session = session)
+      shinyalert::shinyalert(
+        title = "",
+        text = infoText,
+        size = "xs",
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = FALSE,
+        type = "",
+        showConfirmButton = FALSE,
+        showCancelButton = FALSE,
+        animation = FALSE,
+        session = session
+      )
+    }
+    # }
+  })
+  ## Output ----
+  ### Output diagram - diagramOutput ----
+  output$diagramOutput <- DiagrammeR::renderGrViz({
+    DiagrammeR::grViz(paste0(
+      "digraph resbiotaFlowchart {
+      # define node aesthetics
+      graph[splines = ortho]
+      node [fontname = Helvetica, shape = box, width = 5, height = 1, fontsize = 16, style = filled, fillcolor = whitesmoke]
+      bgcolor = transparent
+      
+      # Nodes
+      ",
+      "loadData[label = <", i18n$t("Load data, at least species trait data<br/><i>Data input tab"), "</i>>]
+      simulateCommunities[label = <", i18n$t("Set simulation input parameters<br/><i>Simulate tab"), "</i>>]
+      computeParameters[label = <", i18n$t("Compute basic parameters in each simulated community<br/><i>Compute tab"), "</i>>]
+      standardizeParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
+      computeMultifunctionality[label = <", i18n$t("Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab"), "</i>>]
+      selectCommunities[label = <", i18n$t("Selections of simulated communities<br/><i>Select tab"), "</i>>]
+      viewResults[label = <", i18n$t("Basic results visualization<br/><i>View tab"), "</i>>]
+      viewMultifunctionality[label = <", i18n$t("Multifunctionality visualization<br/><i>View tab"), "</i>>]
+      extractResults[label = <", i18n$t("Extract and save the results<br/><i>View tab"), "</i>>]",
+      
+      "# Edges
+      loadData -> simulateCommunities
+      simulateCommunities -> computeParameters
+      computeParameters -> standardizeParameters
+      computeParameters -> computeMultifunctionality
+      computeParameters -> selectCommunities
+      standardizeParameters -> selectCommunities
+      computeMultifunctionality -> selectCommunities
+      standardizeParameters -> computeMultifunctionality
+      selectCommunities -> viewResults 
+      selectCommunities -> viewMultifunctionality 
+      selectCommunities -> extractResults
+     }"
+    ))
+  })
+  ### Output aux - outputRankList ----
   shiny::observeEvent(input$testsHieSelInput, ignoreNULL = FALSE, {
     inputParSelRV$auxRankHeiSel <- input$testsHieSelInput
   })
@@ -1448,7 +2066,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(length(inputParSelRV$auxRankHeiSel)>1){
       sortable::rank_list(
         input_id = "rankHeiSelInput",
-        text = "Drag to rank parameters in desired order",
+        text = i18n$t("Drag to rank parameters in desired order"),
         labels = inputParSelRV$auxRankHeiSel
       )
     } else {
@@ -1524,19 +2142,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   outputOptions(output, "showSupplementary", suspendWhenHidden = FALSE)
   ### Output text - countScenariosText ----
   output$countScenariosText <- shiny::renderText({
-    paste0("Simulations scenarios: ",  resultsRV[["nSce"]])
+    paste0(i18n$t("Simulations scenarios: "),  resultsRV[["nSce"]])
   })
   ### Output text - countSimulationText ----
   output$countSimulationText <- shiny::renderText({
-    paste0("Total simulations: ",  resultsRV[["nSim"]])
+    paste0(i18n$t("Total simulations: "),  resultsRV[["nSim"]])
   })
   ### Output text - countSelectText ----
   output$countSelectText <- shiny::renderText({
-    paste0("Selected scenarios: ",  resultsRV[["nSel"]])
+    paste0(i18n$t("Selected scenarios: "),  resultsRV[["nSel"]])
   })
   ### Output text - countSimulationSelText ----
   output$countSimulationSelText <- shiny::renderText({
-    paste0("Total simulations selected: ",  resultsRV[["nSimSel"]])
+    paste0(i18n$t("Total simulations selected: "),  resultsRV[["nSimSel"]])
   })
   ### Output text - Simulate tab ----
   shiny::observeEvent(input$scenarioSimulateSummaryInput, {
@@ -1563,16 +2181,16 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     output$outputComputeSummaryText <- shiny::renderUI({
       if(!is.null(input$scenarioComputeSummaryInput)){
         x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
-        str1 <- paste0("Pool size: ", ncol(x$simulation$composition))
-        str2 <- paste0("Number of simulations: ", nrow(x$simulation$composition))
-        str3 <- paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes"))
-        str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
+        str1 <- paste0(i18n$t("Pool size: "), ncol(x$simulation$composition))
+        str2 <- paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition))
+        str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
+        str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
         if(!is.null(x$simulation$results)) {
-          str5 <- paste0("Parameters: ")
+          str5 <- paste0(i18n$t("Parameters: "))
           str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = '<br/>')
           shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = '<br/>'))
         } else{
-          str5 <- paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes"))
+          str5 <- paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), "No", "Yes"))
           shiny::HTML(paste(str1, str2, str3, str4, str5, sep = '<br/>'))
         }
       }
@@ -1583,12 +2201,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     output$outputSelectSummaryText <- shiny::renderUI({
       if(!is.null(input$scenarioSelectSummaryInput)){
         x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
-        str1 <- paste0("Pool size: ", ncol(x$selection$composition))
-        str2 <- paste0("Number of simulations selected: ", nrow(x$selection$composition))
-        str3 <- paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes"))
-        str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
+        str1 <- paste0(i18n$t("Pool size: "), ncol(x$selection$composition))
+        str2 <- paste0(i18n$t("Number of simulations selected: "), nrow(x$selection$composition))
+        str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
+        str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
         if(!is.null(x$selection$results)) {
-          str5 <- paste0("Parameters: ")
+          str5 <- paste0(i18n$t("Parameters: "))
           str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = '<br/>')
           shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = '<br/>'))
         } else{

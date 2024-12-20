@@ -7,10 +7,10 @@
 #' @import shinyWidgets
 #' @import rhandsontable
 #' @import shinyjs
-#' @import shinyBS
 #' @import shinyalert
 #' @import shiny.i18n
 #' @import sortable
+#' @import DiagrammeR
 NULL
 # @export
 # appServer <- shiny::shinyServer(function(input, output, session) {})
