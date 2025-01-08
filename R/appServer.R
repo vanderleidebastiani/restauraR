@@ -1,11 +1,12 @@
 #' @rdname app
 #' @export
 appServer <- shiny::shinyServer(function(input, output, session) {
-  ## UNDER DEVELOPMENT ----
+  ## Miscellanea ----
   # Welcome alert 
   shinyalert::shinyalert(title = NULL,
-                         text = "Welcome to resbiota",
-                         # text = htmltools::HTML('<img src="Caracara.png" />'),
+                         # text = "Welcome to resbiota",
+                         text = tagList(tags$img(src = "startup.png", width = "300px", height = "200px")),
+                         className = "alertStartup",
                          type = "",
                          html = TRUE,
                          size = "xs",
@@ -14,14 +15,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                          animation = FALSE,
                          timer = 3000,
                          session = session)
-  # shiny::showModal(shiny::modalDialog(#title = NULL,
-  # 									# shiny::imageOutput(tags$img(src = "Caracara.png", width = "400px", height = "400px")),
-  # 									htmltools::HTML('<img src="Caracara.png" />'),
-  # 									# tags$img(src="Caracara.png"),
-  # 									# tags$img(src = "Caracara.png", width = "400px", height = "400px"),
-  # 									# fade = FALSE,
-  # 									size = "xl",
-  # 									easyClose = TRUE), session = session)
   # Collapse controlbar when changing the language
   observeEvent(input$selectedLanguage, {
     updateControlbar(id = "controlbar", session = session)
@@ -590,7 +583,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                                shiny::actionButton(paste0("logicalTestHieSelInput", inVars[i], "chart"), 
                                                                                    label = "",
                                                                                    icon = shiny::icon("chart-simple"),
-                                                                                   style = 'padding:4px; font-size:60%')),
+                                                                                   style = "padding:4px; font-size:60%")),
                                           choices = choicesTemp,
                                           selected = selectedTemp
             )
@@ -614,7 +607,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                            shiny::actionButton(paste0("logicalTestHieSelInput", inVars[i], "chart"), 
                                                                                label = "",
                                                                                icon = shiny::icon("chart-simple"),
-                                                                               style = 'padding:4px; font-size:60%')),
+                                                                               style = "padding:4px; font-size:60%")),
                                       choices = unique(scenario[,inVars[i]]),
                                       multiple = TRUE,
                                       options = list(`actions-box` = TRUE),
@@ -666,7 +659,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                                shiny::actionButton(paste0("logicalTestDetSelInput", inVars[i], "chart"), 
                                                                                    label = "",
                                                                                    icon = shiny::icon("chart-simple"),
-                                                                                   style = 'padding:4px; font-size:60%')),
+                                                                                   style = "padding:4px; font-size:60%")),
                                           choices = choicesTemp,
                                           selected = selectedTemp
             )
@@ -690,7 +683,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                            shiny::actionButton(paste0("logicalTestDetSelInput", inVars[i], "chart"), 
                                                                                label = "",
                                                                                icon = shiny::icon("chart-simple"),
-                                                                               style = 'padding:4px; font-size:60%')),
+                                                                               style = "padding:4px; font-size:60%")),
                                       choices = unique(scenario[,inVars[i]]),
                                       multiple = TRUE,
                                       options = list(`actions-box` = TRUE),
@@ -742,7 +735,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                                shiny::actionButton(paste0("logicalTestMultiInput", inVars[i], "chart"), 
                                                                                    label = "",
                                                                                    icon = shiny::icon("chart-simple"),
-                                                                                   style = 'padding:4px; font-size:60%')),
+                                                                                   style = "padding:4px; font-size:60%")),
                                           choices = choicesTemp,
                                           selected = selectedTemp
             )
@@ -766,7 +759,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                            shiny::actionButton(paste0("logicalTestMultiInput", inVars[i], "chart"),
                                                                                label = "",
                                                                                icon = shiny::icon("chart-simple"),
-                                                                               style = 'padding:4px; font-size:60%')),
+                                                                               style = "padding:4px; font-size:60%")),
                                       choices = unique(scenario[,inVars[i]]),
                                       multiple = TRUE,
                                       options = list(`actions-box` = TRUE),
@@ -816,7 +809,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("goalsSimInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("New", "Ongoing"),
                                        c(i18n$t("New"), i18n$t("Ongoing")) # Set labels
@@ -834,7 +827,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("methodSimInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("Proportions", "Individuals"),
                                        c(i18n$t("Proportions"), i18n$t("Individuals")) # Set labels
@@ -852,7 +845,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("speficyGroupsSimInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("Yes", "No"),
                                        c(i18n$t("Yes"), i18n$t("No")) # Set labels
@@ -870,7 +863,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("probGroupTypeSimInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("Abundance", "Richness and abundance"),
                                        c(i18n$t("Abundance"), i18n$t("Richness and abundance")) # Set labels
@@ -888,7 +881,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("speficyMethodStanInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("max", "standardize"),
                                        c(i18n$t("Maximum"), i18n$t("Standardize")) # Set labels
@@ -906,7 +899,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("speficyGroupsSelInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c("Yes", "No"),
                                        c(i18n$t("Yes"), i18n$t("No")) # Set labels
@@ -924,7 +917,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                           shiny::actionButton("singleSelectionInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
-                                                                              style = 'padding:3px; font-size:60%')),
+                                                                              style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
                                        c(TRUE, FALSE),
                                        c(i18n$t("Single"), i18n$t("Multiple")) # Set labels
@@ -2167,11 +2160,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
         if(!is.null(x$simulation$results)) {
           str5 <- paste0("Parameters: ")
-          str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = '<br/>')
-          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = '<br/>'))
+          str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
+          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
         } else{
           str5 <- paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes"))
-          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = '<br/>'))
+          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
         }
       }
     })
@@ -2187,11 +2180,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
         if(!is.null(x$simulation$results)) {
           str5 <- paste0(i18n$t("Parameters: "))
-          str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = '<br/>')
-          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = '<br/>'))
+          str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
+          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
         } else{
           str5 <- paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), "No", "Yes"))
-          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = '<br/>'))
+          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
         }
       }
     })
@@ -2207,11 +2200,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
         if(!is.null(x$selection$results)) {
           str5 <- paste0(i18n$t("Parameters: "))
-          str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = '<br/>')
-          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = '<br/>'))
+          str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>")
+          shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
         } else{
           str5 <- paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes"))
-          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = '<br/>'))
+          shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
         }
       }
     })
