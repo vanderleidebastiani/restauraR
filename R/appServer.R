@@ -5,7 +5,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   # Welcome alert 
   shinyalert::shinyalert(title = NULL,
                          # text = "Welcome to resbiota",
-                         text = tagList(tags$img(src = "startup.png", width = "300px", height = "200px")),
+                         text = htmltools::tagList(tags$img(src = "startup.png", width = "300px", height = "200px")),
                          className = "alertStartup",
                          type = "",
                          html = TRUE,
@@ -17,7 +17,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                          session = session)
   # Collapse controlbar when changing the language
   observeEvent(input$selectedLanguage, {
-    updateControlbar(id = "controlbar", session = session)
+    shinydashboardPlus::updateControlbar(id = "controlbar", session = session)
   }, ignoreInit = TRUE)
   ## Reactive Values ----
   ### Global variables ----
@@ -151,7 +151,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$traits <- NULL
     }
-    inputDataRV$traits <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - restComp ----
   shiny::observeEvent(input$restCompInput, {
@@ -160,7 +160,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$restComp <- NULL
     }
-    inputDataRV$restComp <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$restComp <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - restGroup ----
   shiny::observeEvent(input$restGroupInput, {
@@ -169,7 +169,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$restGroup <- NULL
     }
-    inputDataRV$restGroup <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$restGroup <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - Reference ----
   shiny::observeEvent(input$referenceInput, {
@@ -178,7 +178,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$reference <- NULL
     }
-    inputDataRV$reference <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$reference <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ### Input file - Supplementary ----
   shiny::observeEvent(input$supplementaryInput, {
@@ -187,7 +187,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$supplementary <- NULL
     }
-    inputDataRV$supplementary <- read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$supplementary <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
   }) # End input file
   ## doClear buttons ----
   ### doClear CONTINUAR ----
@@ -1212,10 +1212,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   ### doSimulate ----
   shiny::observeEvent(input$doSimulate, {
     # Remove any open modal
-    removeModal(session = session)
+    shiny::removeModal(session = session)
     # Check if species trait data exist
     if(is.null(inputDataRV$traits)){
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Load the species traits data"),
@@ -1278,8 +1278,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       # Update basic informations
       resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
       resultsRV$nSce <- length(resultsRV$simulate)
-      removeModal(session = session)
-      sendSweetAlert(
+      shiny::removeModal(session = session)
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Done!"),
         text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
@@ -1305,7 +1305,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     # Update basic informations
     resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
     resultsRV$nSce <- length(resultsRV$simulate)
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
@@ -1327,7 +1327,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else{
       resultsRV$nSim <- 0
     }
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
@@ -1337,10 +1337,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   ### doCompute ----
   shiny::observeEvent(input$doCompute, {
     # Remove any open modal
-    removeModal(session = session)
+    shiny::removeModal(session = session)
     checkCost <- c(is.null(input$costComInput), is.null(input$densComInput))
     if(!c(all(checkCost == TRUE) || all(checkCost == FALSE))){
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Specify cost and density. Or none of them"),
@@ -1372,10 +1372,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
       }
       resultsRV$simulate[[input$scenarioComParInput]] <- scenario
-      removeModal(session = session)
+      shiny::removeModal(session = session)
       # Force update parameters
       resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Done!"),
         type = "success"
@@ -1416,7 +1416,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$simulate[[input$scenarioComMultiInput]] <- scenario
     # Force update parameters
     resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       type = "success"
@@ -1431,7 +1431,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     # 	res <- scenario$selection$results
     # }
     if(is.null(res)){
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Compute functional parameters in this scenario"),
@@ -1456,7 +1456,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resultsRV$simulate[[input$scenarioComStandParInput]] <- scenario
       # Force update parameters
       resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Done!"),
         type = "success"
@@ -1538,7 +1538,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     # Update basic informations
     resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
     resultsRV$nSel <- length(resultsRV$select)
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       type = "success"
@@ -1562,7 +1562,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     # Update basic informations
     resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
     resultsRV$nSel <- length(resultsRV$select)
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       type = "success"
@@ -1583,7 +1583,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else{
       resultsRV$nSimSel <- 0
     }
-    sendSweetAlert(
+    shinyWidgets::sendSweetAlert(
       session = session,
       title = i18n$t("Done!"),
       type = "success"
@@ -1604,7 +1604,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         ggplot2::labs(x = input$xvarLab, y = input$yvarLab)
     } else {
       resultsRV$plotPar <- NULL
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Select variables for both axes"),
@@ -1653,7 +1653,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                     hideref = as.logical(input$hideRefViewMultiInput))
     } else {
       resultsRV$plotMulti <- NULL
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Scenario must include multifunctionality results"),
@@ -1675,7 +1675,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(input$typeExportInput == "simUnavailableSpecies" & is.null(input$avaExpInput)){
       exportRV$table <- NULL
       exportRV$summaryTable <- NULL
-      sendSweetAlert(
+      shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Error!"),
         text = i18n$t("Set species availability"),
@@ -1696,14 +1696,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         if(nRowTemp>10 || nColTemp>10){
           if(nColTemp>10){
             exportRV$summaryTable <- exportRV$summaryTable[, c(1:6, (nColTemp-4):nColTemp), drop = FALSE]
-            # Replace the six col
-            exportRV$summaryTable[, 6] <- rep("⋯", nRowTemp)
-            colnames(exportRV$summaryTable)[6] <- "⋯"
+            # Replace the six col (Centred ellipsis)
+            exportRV$summaryTable[, 6] <- rep("\u22ef", nRowTemp)
+            colnames(exportRV$summaryTable)[6] <- "\u22ef"
           }
           if(nRowTemp>10){
             exportRV$summaryTable <- exportRV$summaryTable[c(1:6, (nRowTemp-4):nRowTemp), , drop = FALSE]
-            # Replace the six line
-            exportRV$summaryTable[6, ] <- rep("⋮", ncol(exportRV$summaryTable))
+            # Replace the six line (Vertical ellipsis)
+            exportRV$summaryTable[6, ] <- rep("\u22ee", ncol(exportRV$summaryTable))
           }
         }
       } else{
@@ -1739,7 +1739,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   output$doDownloadExport <- shiny::downloadHandler(
     filename <- function() {paste0(input$projectName, "_", input$scenarioExportInput, "_", input$typeExportInput, "_", globalRV$currentDate, ".csv")},
     content <- function(file) {
-      write.csv(exportRV$table, file = file)
+      utils::write.csv(exportRV$table, file = file)
     }
   )
   ## Help buttons ----

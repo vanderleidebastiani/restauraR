@@ -3,7 +3,7 @@
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave
 #' @importFrom tableHTML tableHTML add_css_table
-#' @importFrom R2HTML HTMLInitFile HTMLCSS HTML.title HTMLli HTMLhr HTML HTMLInsertGraph HTMLbr
+#' @importFrom R2HTML HTMLInitFile HTMLCSS HTML.title HTMLli HTMLhr HTMLInsertGraph HTMLbr
 #' @importFrom utils browseURL
 #' @importFrom grDevices dev.list dev.off nclass.FD
 #' @param x A data.frame or matrix with the input data.

@@ -70,7 +70,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
       # 					 label = i18n$t("Change language"),
       # 					 choices = stats::setNames(
       # 					 	i18n$get_languages(),
-      # 					 	c("English", "Português") # Set labels for the languages
+      # 					 	c("English", paste0("Portugu", "\u00ea","s")) # Set labels for the languages
       # 					 ),
       # 					 selected = i18n$get_key_translation(),
       # 					 justified = TRUE
@@ -79,7 +79,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
                          label = i18n$t("Change language"),
                          choices = stats::setNames(
                            i18n$get_languages(),
-                           c("English", "Português") # Set labels for the languages
+                           c("English", paste0("Portugu", "\u00ea","s")) # Set labels for the languages
                          ),
                          selected = i18n$get_key_translation()
       )
@@ -180,10 +180,10 @@ body <- shinydashboard::dashboardBody(
                                                                               htmltools::h4(htmltools::strong("resbiota - v0.0.2")),
                                                                               htmltools::br(),
                                                                               htmltools::p(htmltools::strong(i18n$t("Authors"))),
-                                                                              htmltools::p("Vanderlei J. Debastiani, André G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso"),
+                                                                              htmltools::p(paste0("Vanderlei J. Debastiani, Andr", "\u00e9", " G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso")),
                                                                               htmltools::br(), 
                                                                               htmltools::p(htmltools::strong(i18n$t("References"))),
-                                                                              htmltools::p("Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439"),
+                                                                              htmltools::p("Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological restoration at large scales. Journal of Applied Ecology, 60, 1562-1571. https://doi.org/10.1111/1365-2664.14439"),
                                                                               htmltools::p("Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript in preparation.")
                                                                 ) # End column
                                                               ) # End row
@@ -1411,6 +1411,7 @@ body <- shinydashboard::dashboardBody(
 
 
 ## Page UI ----
+#' @rdname app
 #' @export
 appUI <- shinydashboardPlus::dashboardPage(header = header,
                                            sidebar = sidebar,
