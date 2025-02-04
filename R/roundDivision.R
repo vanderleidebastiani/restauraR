@@ -9,18 +9,23 @@
 #' @export
 roundDivision <- function(n, prop){
   prop <- prop/sum(prop)
-  res <- floor(n*prop)
-  remPart <- (n*prop)%%res
-  remPart[is.na(remPart)] <- 0
-  remPart <- sum(remPart)
-  if(sum(res) == 0){
-    remPart <- n
-  }
+  target <- n*prop
+  res <- floor(target)
+  # remPart <- target%%res
+  # remPart[is.na(remPart)] <- 0
+  # remPart <- sum(remPart)
+  remPart <- n - sum(res)
+  # if(sum(res) == 0){
+    # remPart <- n
+  # }
   if(remPart > 0){
-    for(i in 1:remPart){
-      pos <- sample.int(length(prop), 1)
-      res[pos] <- res[pos]+1
-    }
+    # for(i in 1:remPart){
+    #   pos <- sample.int(length(prop), 1)
+    #   res[pos] <- res[pos]+1
+    # }
+    pos <- sample(length(prop), remPart, replace = TRUE)
+    counts <- tabulate(pos, nbins = length(prop))
+    res <- res + counts
   }
   return(res)
 }

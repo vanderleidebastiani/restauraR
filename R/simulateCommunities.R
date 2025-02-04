@@ -91,6 +91,8 @@
 #' @param group A vector with traits name which indicates the group to which species belongs.
 #' @param probGroupRich Vector of probabilities to draw richness in each species group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each species group.
+#' @param minAbun Minimal abundance or proportion to keep in simulated communities. 
+#' @param reallocate Reallocate removed individuals to species with some abundance (Default = reallocate FALSE)
 #' @param ... Objects of class "simRest" to be concatenated. Additional arguments for respective methods.
 #' @param x Objects of class "simRest" to print.
 #' @returns A list (class "simRest") with the elements:

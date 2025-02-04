@@ -1,5 +1,6 @@
 #' @rdname app
 #' @export
+#' @export
 appServer <- shiny::shinyServer(function(input, output, session) {
   ## Miscellanea ----
   # Welcome alert 
@@ -126,6 +127,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     probSimInputInfo = 0,
     cvAbundSimInputInfo = 0,
     phiSimInputInfo = 0,
+    minAbuSliderSimAdjInputInfo = 0,
+    reallocateAdjSimInputInfo = 0,
     # computeTab
     avaComInputInfo = 0,
     cwmComInputInfo = 0,
@@ -281,6 +284,34 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     shinyWidgets::updatePickerInput(session, inputId = "avaExpInput", choices = inputDataRV$auxTraitsVariables,
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
   })
+  
+  ## Update pickers - Min abun input ----
+  # shiny::observeEvent(input$scenarioSimAdjInput, ignoreNULL = TRUE, {
+  # 	# 
+  # 	# minAbuSliderSimAdjInput
+  # 	# 
+  # 	scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]
+  # 	# min(scenario$scenario$simulation$composition)
+  # 	print(max(scenario$simulation$composition))
+  # 	maxVal <- max(scenario$simulation$composition)
+  # 	# 
+  # 	# fi
+  # 	# 
+  # 	if(maxVal>1){
+  # 		seqVal <- seq(from = 0, to = maxVal, by = 1)
+  # 	} else{
+  # 		seqVal <- seq(from = 0, to = 1, length.out = 100)
+  # 	}
+  # 	# Update slider
+  # 	shinyWidgets::updateSliderTextInput(session, inputId = "minAbuSliderSimAdjInput",
+  # 										choices = seqVal,
+  # 										selected = 0)
+  # 	# if(is.null(input$scenarioSimAdjInput)){
+  # 	# 	shiny::updateActionButton(session, "doAdjustSim", disabled = TRUE)
+  # 	# } else(
+  # 	# 	shiny::updateActionButton(session, "doAdjustSim", disabled = FALSE)
+  # 	# )
+  # })
   ## Selected language ----
   shiny::observeEvent(input$selectedLanguage, {
     shiny.i18n::update_lang(input$selectedLanguage, session)
@@ -300,6 +331,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                     selected = input$removeSimulateInput)
     shinyWidgets::updatePickerInput(session, inputId = "scenarioSimulateSummaryInput", choices = names(resultsRV$simulate),
                                     selected = input$scenarioSimulateSummaryInput)
+    shinyWidgets::updatePickerInput(session, inputId = "scenarioSimAdjInput", choices = names(resultsRV$simulate),
+                                    selected = input$scenarioSimAdjInput)
     # Compute tab
     shinyWidgets::updatePickerInput(session, inputId = "scenarioComParInput", choices = names(resultsRV$simulate), 
                                     selected = input$scenarioComParInput)
@@ -498,7 +531,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         res <- scenario$simulation$results
       }
       else {
-        res <- scenario$selection$results
       }
       if(!is.null(res)){
         shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
@@ -874,6 +906,26 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   
+  
+  output$radioScenarioSimAdjOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "reallocateAdjSimInput",
+                                     # label = "Reallocate removed individuals",
+                                     label = htmltools::p(i18n$t("Reallocate removed individuals"),
+                                                          shiny::actionButton("reallocateAdjSimInputInfo",
+                                                                              label = "",
+                                                                              icon = shiny::icon("info"),
+                                                                              style = "padding:3px; font-size:60%")),
+                                     choices = stats::setNames(
+                                       c(TRUE, FALSE),
+                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
+                                     ),
+                                     selected = FALSE,
+                                     inline = TRUE,
+                                     status = "primary"
+    )
+  })
+  
+  
   output$radioSpeficyMethodStanOutput <- renderUI({
     shinyWidgets::prettyRadioButtons(inputId = "speficyMethodStanInput",
                                      # label = "Standardization method",
@@ -1043,6 +1095,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   
   ## Check buttons - OK ----
+  ### Check doAdjustSim button ----
+  shiny::observeEvent(input$scenarioSimAdjInput, ignoreNULL = FALSE, {
+    if(is.null(input$scenarioSimAdjInput)){
+      shiny::updateActionButton(session, "doAdjustSim", disabled = TRUE)
+    } else(
+      shiny::updateActionButton(session, "doAdjustSim", disabled = FALSE)
+    )
+  })
   ### Check doCompute button ----
   shiny::observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComParInput)){
@@ -1255,39 +1315,71 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         inputParSimRV$probGroupRich <- NULL
         inputParSimRV$probGroupAbund <- NULL
       }
-      scenario <- simulateCommunities(trait = inputDataRV$traits,
-                                      restComp = inputParSimRV$restComp, # Ok
-                                      restGroup = inputParSimRV$restGroup, # Ok
-                                      ava = input$avaSimInput, # straight input
-                                      und = input$undSimInput, # straight input
-                                      it = inputParSimRV$it, # Ok
-                                      rich = input$richSliderSimInput, # straight input
-                                      cwm = input$cwmSimInput, # straight input
-                                      rao = input$raoSimInput, # straight input
-                                      prob = input$probSimInput, # straight input
-                                      phi = input$phiSimInput, # straight input
-                                      nInd = inputParSimRV$nInd, # Ok
-                                      cvAbund = inputParSimRV$cvAbund, # Ok
-                                      prefix = input$prefixSimInput, # straigth input
-                                      method = tolower(input$methodSimInput), # straight input
-                                      group = inputParSimRV$group, # Ok
-                                      probGroupRich = inputParSimRV$probGroupRich, # Ok
-                                      probGroupAbund = inputParSimRV$probGroupAbund # Ok
-      )
-      resultsRV$simulate[[input$prefixSimInput]] <- scenario
-      # Update basic informations
-      resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
-      resultsRV$nSce <- length(resultsRV$simulate)
-      shiny::removeModal(session = session)
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = i18n$t("Done!"),
-        text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
-        type = "success"
-      )
+      scenario <- tryCatch(simulateCommunities(trait = inputDataRV$traits,
+                                               restComp = inputParSimRV$restComp, # Ok
+                                               restGroup = inputParSimRV$restGroup, # Ok
+                                               ava = input$avaSimInput, # straight input
+                                               und = input$undSimInput, # straight input
+                                               it = inputParSimRV$it, # Ok
+                                               rich = input$richSliderSimInput, # straight input
+                                               cwm = input$cwmSimInput, # straight input
+                                               rao = input$raoSimInput, # straight input
+                                               prob = input$probSimInput, # straight input
+                                               phi = input$phiSimInput, # straight input
+                                               nInd = inputParSimRV$nInd, # Ok
+                                               cvAbund = inputParSimRV$cvAbund, # Ok
+                                               prefix = input$prefixSimInput, # straigth input
+                                               method = tolower(input$methodSimInput), # straight input
+                                               group = inputParSimRV$group, # Ok
+                                               probGroupRich = inputParSimRV$probGroupRich, # Ok
+                                               probGroupAbund = inputParSimRV$probGroupAbund # Ok
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          type = "error"
+        )
+      } else{
+        resultsRV$simulate[[input$prefixSimInput]] <- scenario
+        # Update basic informations
+        resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
+        resultsRV$nSce <- length(resultsRV$simulate)
+        shiny::removeModal(session = session)
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Done!"),
+          text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+          type = "success"
+        )
+      }
     }
   })
   ### doSimulateMerge ----
+  # shiny::observeEvent(input$doSimulateMerge, {
+  # 	# If the picker input is valid
+  # 	if(length(input$mergeSimulateInput)>0){
+  # 		tempRV <- vector("list", length = length(input$mergeSimulateInput))
+  # 		for(i in 1:length(input$mergeSimulateInput)){
+  # 			# Copy to temp list
+  # 			tempRV[[i]] <- resultsRV$simulate[[input$mergeSimulateInput[i]]]
+  # 			# Then remove
+  # 			resultsRV$simulate[[input$mergeSimulateInput[i]]] <- NULL
+  # 		}
+  # 		# Merge
+  # 		resultsRV$simulate[[input$mergeSimulateNameInput]] <- do.call(mergeSimulations, tempRV)
+  # 		resultsRV$simulate[[input$mergeSimulateNameInput]]$call <- "Call" # Remove long call
+  # 	}
+  # 	# Update basic informations
+  # 	resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
+  # 	resultsRV$nSce <- length(resultsRV$simulate)
+  # 	shinyWidgets::sendSweetAlert(
+  # 		session = session,
+  # 		title = i18n$t("Done!"),
+  # 		text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+  # 		type = "success"
+  # 	)
+  # })
   shiny::observeEvent(input$doSimulateMerge, {
     # If the picker input is valid
     if(length(input$mergeSimulateInput)>0){
@@ -1295,22 +1387,34 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       for(i in 1:length(input$mergeSimulateInput)){
         # Copy to temp list
         tempRV[[i]] <- resultsRV$simulate[[input$mergeSimulateInput[i]]]
-        # Then remove
-        resultsRV$simulate[[input$mergeSimulateInput[i]]] <- NULL
       }
-      # Merge
-      resultsRV$simulate[[input$mergeSimulateNameInput]] <- do.call(mergeSimulations, tempRV)
-      resultsRV$simulate[[input$mergeSimulateNameInput]]$call <- "Call" # Remove long call
+      scenario <- tryCatch(do.call(mergeSimulations, tempRV), 
+                           error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          type = "error"
+        )
+      } else{
+        for(i in 1:length(input$mergeSimulateInput)){
+          # Then remove
+          resultsRV$simulate[[input$mergeSimulateInput[i]]] <- NULL
+        }
+        # Merge
+        resultsRV$simulate[[input$mergeSimulateNameInput]] <- scenario
+        resultsRV$simulate[[input$mergeSimulateNameInput]]$call <- "Call" # Remove long call
+        # Update basic informations
+        resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
+        resultsRV$nSce <- length(resultsRV$simulate)
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Done!"),
+          text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+          type = "success"
+        )
+      }
     }
-    # Update basic informations
-    resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
-    resultsRV$nSce <- length(resultsRV$simulate)
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = i18n$t("Done!"),
-      text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
-      type = "success"
-    )
   })
   ### doSimulateRemove ----
   shiny::observeEvent(input$doSimulateRemove, {
@@ -1334,6 +1438,30 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       type = "success"
     )
   })
+  # AQUI ----
+  ### doAdjustSim ----
+  shiny::observeEvent(input$doAdjustSim, {
+    scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]
+    scenario <- tryCatch(adjustSimulations(x = scenario,
+                                           minAbun = input$minAbuSliderSimAdjInput, # straight input
+                                           reallocate = as.logical(input$reallocateAdjSimInput) # straight input
+    ), error = function(e) e)
+    if(inherits(scenario, what = "error")){
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Something went wrong!"),
+        type = "error"
+      )
+    } else{
+      print(scenario$simulation$composition)
+      resultsRV$simulate[[input$scenarioSimAdjInput]] <- scenario
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Done!"),
+        type = "success"
+      )
+    }
+  })
   ### doCompute ----
   shiny::observeEvent(input$doCompute, {
     # Remove any open modal
@@ -1348,38 +1476,46 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       )
     } else {
       shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-      scenario <- computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
-                                    trait = inputDataRV$traits,
-                                    ava = input$avaComInput, # straight input
-                                    cwm = input$cwmComInput, # straight input
-                                    cwv = input$cwvComInput, # straight input
-                                    rao = input$raoComInput, # straight input
-                                    cost = input$costComInput, # straight input
-                                    dens = input$densComInput, # straight input
-                                    dissimilarity = input$disComInput, # straight input
-                                    reference = inputDataRV$reference,
-                                    supplementary = inputDataRV$supplementary
-      )
-      # Round for facilitate next steps (sliders)
-      nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
-      scenario$simulation$results[,nums] <- round(scenario$simulation$results[,nums], digits = input$decimalPlaces)
-      if(!is.null(scenario$reference$results)){
-        nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
-        scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = input$decimalPlaces)
+      scenario <- tryCatch(computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
+                                             trait = inputDataRV$traits,
+                                             ava = input$avaComInput, # straight input
+                                             cwm = input$cwmComInput, # straight input
+                                             cwv = input$cwvComInput, # straight input
+                                             rao = input$raoComInput, # straight input
+                                             cost = input$costComInput, # straight input
+                                             dens = input$densComInput, # straight input
+                                             dissimilarity = input$disComInput, # straight input
+                                             reference = inputDataRV$reference,
+                                             supplementary = inputDataRV$supplementary
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          type = "error"
+        )
+      } else{
+        # Round for facilitate next steps (sliders)
+        nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
+        scenario$simulation$results[,nums] <- round(scenario$simulation$results[,nums], digits = input$decimalPlaces)
+        if(!is.null(scenario$reference$results)){
+          nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
+          scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = input$decimalPlaces)
+        }
+        if(!is.null(scenario$supplementary$results)){
+          nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
+          scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
+        }
+        resultsRV$simulate[[input$scenarioComParInput]] <- scenario
+        shiny::removeModal(session = session)
+        # Force update parameters
+        resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Done!"),
+          type = "success"
+        )
       }
-      if(!is.null(scenario$supplementary$results)){
-        nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
-        scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
-      }
-      resultsRV$simulate[[input$scenarioComParInput]] <- scenario
-      shiny::removeModal(session = session)
-      # Force update parameters
-      resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = i18n$t("Done!"),
-        type = "success"
-      )
     }
   })
   ### doMultiCompute ----
@@ -1410,17 +1546,25 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else{
       testList <- NULL
     }
-    scenario <- computeMultifunctionality(x = resultsRV$simulate[[input$scenarioComMultiInput]],
-                                          tests = testList)
-    # No need to round the numbers
-    resultsRV$simulate[[input$scenarioComMultiInput]] <- scenario
-    # Force update parameters
-    resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = i18n$t("Done!"),
-      type = "success"
-    )
+    scenario <- tryCatch(computeMultifunctionality(x = resultsRV$simulate[[input$scenarioComMultiInput]],
+                                                   tests = testList), error = function(e) e)
+    if(inherits(scenario, what = "error")){
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Something went wrong!"),
+        type = "error"
+      )
+    } else{
+      # No need to round the numbers
+      resultsRV$simulate[[input$scenarioComMultiInput]] <- scenario
+      # Force update parameters
+      resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Done!"),
+        type = "success"
+      )
+    }
   })
   ### doStandardize ----
   shiny::observeEvent(input$doStandardize, {
@@ -1438,29 +1582,37 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else{
-      scenario <- standardizeParameters(x = scenario,
-                                        parameters = input$stanComParInput, # straight input
-                                        method = input$speficyMethodStanInput # straight input
-      )
-      # Round for facilitate next steps (sliders)
-      nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
-      scenario$simulation$results[,nums] <- round(scenario$simulation$results[, nums], digits = input$decimalPlaces)
-      if(!is.null(scenario$reference$results)){
-        nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
-        scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = input$decimalPlaces)
+      scenario <- tryCatch(standardizeParameters(x = scenario,
+                                                 parameters = input$stanComParInput, # straight input
+                                                 method = input$speficyMethodStanInput # straight input
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          type = "error"
+        )
+      } else{
+        # Round for facilitate next steps (sliders)
+        nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
+        scenario$simulation$results[,nums] <- round(scenario$simulation$results[, nums], digits = input$decimalPlaces)
+        if(!is.null(scenario$reference$results)){
+          nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
+          scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = input$decimalPlaces)
+        }
+        if(!is.null(scenario$supplementary$results)){
+          nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
+          scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
+        }
+        resultsRV$simulate[[input$scenarioComStandParInput]] <- scenario
+        # Force update parameters
+        resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Done!"),
+          type = "success"
+        )
       }
-      if(!is.null(scenario$supplementary$results)){
-        nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
-        scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
-      }
-      resultsRV$simulate[[input$scenarioComStandParInput]] <- scenario
-      # Force update parameters
-      resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = i18n$t("Done!"),
-        type = "success"
-      )
     }
   })
   
@@ -1528,23 +1680,54 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else{
       inputParSelRV$group <- NULL
     }
-    scenario <- selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
-                                  testsDet = inputParSelRV$testsDet,
-                                  testsHie = inputParSelRV$testsHie,
-                                  group = inputParSelRV$group,
-                                  singleselection = as.logical(input$singleSelectionInput) # straight input
-    )
-    resultsRV$select[[input$prefixSelInput]] <- scenario
-    # Update basic informations
-    resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
-    resultsRV$nSel <- length(resultsRV$select)
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = i18n$t("Done!"),
-      type = "success"
-    )
+    scenario <- tryCatch(selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
+                                           testsDet = inputParSelRV$testsDet,
+                                           testsHie = inputParSelRV$testsHie,
+                                           group = inputParSelRV$group,
+                                           singleselection = as.logical(input$singleSelectionInput) # straight input
+    ), error = function(e) e)
+    if(inherits(scenario, what = "error")){
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Something went wrong!"),
+        type = "error"
+      )
+    } else{
+      resultsRV$select[[input$prefixSelInput]] <- scenario
+      # Update basic informations
+      resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
+      resultsRV$nSel <- length(resultsRV$select)
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Done!"),
+        type = "success"
+      )
+    }
   })
   ### doSelectMerge ----
+  # shiny::observeEvent(input$doSelectMerge, {
+  # 	# If the picker input is valid
+  # 	if(length(input$mergeSelectInput)>0){
+  # 		tempRV <- vector("list", length = length(input$mergeSelectInput))
+  # 		for(i in 1:length(input$mergeSelectInput)){
+  # 			# Copy to temp list
+  # 			tempRV[[i]] <- resultsRV$select[[input$mergeSelectInput[i]]]
+  # 			# Then remove
+  # 			resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
+  # 		}
+  # 		# Merge
+  # 		resultsRV$select[[input$mergeSelectNameInput]] <- do.call(mergeSelection, tempRV)
+  # 		resultsRV$select[[input$mergeSelectNameInput]]$call <- "Call" # Remove long call
+  # 	}
+  # 	# Update basic informations
+  # 	resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
+  # 	resultsRV$nSel <- length(resultsRV$select)
+  # 	shinyWidgets::sendSweetAlert(
+  # 		session = session,
+  # 		title = i18n$t("Done!"),
+  # 		type = "success"
+  # 	)
+  # })
   shiny::observeEvent(input$doSelectMerge, {
     # If the picker input is valid
     if(length(input$mergeSelectInput)>0){
@@ -1553,20 +1736,34 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         # Copy to temp list
         tempRV[[i]] <- resultsRV$select[[input$mergeSelectInput[i]]]
         # Then remove
-        resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
+        # resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
       }
-      # Merge
-      resultsRV$select[[input$mergeSelectNameInput]] <- do.call(mergeSelection, tempRV)
-      resultsRV$select[[input$mergeSelectNameInput]]$call <- "Call" # Remove long call
+      scenario <- tryCatch(do.call(mergeSelection, tempRV), 
+                           error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          type = "error"
+        )
+      } else{
+        for(i in 1:length(input$mergeSelectInput)){
+          # Then remove
+          resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
+        }
+        # Merge
+        resultsRV$select[[input$mergeSelectNameInput]] <- scenario
+        resultsRV$select[[input$mergeSelectNameInput]]$call <- "Call" # Remove long call
+        # Update basic informations
+        resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
+        resultsRV$nSel <- length(resultsRV$select)
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Done!"),
+          type = "success"
+        )
+      }
     }
-    # Update basic informations
-    resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
-    resultsRV$nSel <- length(resultsRV$select)
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = i18n$t("Done!"),
-      type = "success"
-    )
   })
   ### doSelectRemove ----
   shiny::observeEvent(input$doSelectRemove, {
@@ -1767,6 +1964,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       input$probSimInputInfo,
       input$cvAbundSimInputInfo,
       input$phiSimInputInfo,
+      input$minAbuSliderSimAdjInputInfo,
+      input$reallocateAdjSimInputInfo,
       # computeTab
       input$avaComInputInfo,
       input$cwmComInputInfo,
@@ -1903,6 +2102,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       if(input$phiSimInputInfo>infoRV$phiSimInputInfo){
         infoText <- i18n$t("A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.")
         infoRV$phiSimInputInfo <- input$phiSimInputInfo
+      }
+    }
+    if(!is.null(input$minAbuSliderSimAdjInputInfo)){
+      if(input$minAbuSliderSimAdjInputInfo>infoRV$minAbuSliderSimAdjInputInfo){
+        infoText <- i18n$t("Minimal abundance or proportion to keep in simulated communities.")
+        infoRV$minAbuSliderSimAdjInputInfo <- input$minAbuSliderSimAdjInputInfo
+      }
+    }
+    
+    if(!is.null(input$reallocateAdjSimInputInfo)){
+      if(input$reallocateAdjSimInputInfo>infoRV$reallocateAdjSimInputInfo){
+        infoText <- i18n$t("Reallocate removed individuals to species with some abundance.")
+        infoRV$reallocateAdjSimInputInfo <- input$reallocateAdjSimInputInfo
       }
     }
     # computeTab

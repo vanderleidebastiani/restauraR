@@ -42,7 +42,7 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd, cvAbund = 1, prob = NUL
 		  exp(mu + sigma^2/2) # mean
 		  sqrt(exp(2*mu+sigma^2)*(exp(sigma^2)-1)) # sd
 		  # Random log normal distribution
-		  pLogNor <- rlnorm(nSppi, meanlog = mu, sdlog = sigma)
+		  pLogNor <- stats::rlnorm(nSppi, meanlog = mu, sdlog = sigma)
 		} else{
 		  # Use input probabilities
 		  pLogNor <- prob[as.logical(ocor)]  
