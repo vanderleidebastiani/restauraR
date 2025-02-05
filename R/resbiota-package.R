@@ -1,6 +1,7 @@
 #' @title resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
 #' @name resbiota-package
 #' @docType package
+#' @aliases resbiota
 #' @encoding UTF-8
 #' @import knitr
 #' @importFrom rprojroot find_rstudio_root_file

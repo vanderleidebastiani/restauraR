@@ -2240,6 +2240,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       ",
       "loadData[label = <", i18n$t("Load data, at least species trait data<br/><i>Data input tab"), "</i>>]
       simulateCommunities[label = <", i18n$t("Set simulation input parameters<br/><i>Simulate tab"), "</i>>]
+      adjustSimulations[label = <", i18n$t("Simulated communities can be adjusted<br/><i>Simulate tab"), "</i>>]
       computeParameters[label = <", i18n$t("Compute basic parameters in each simulated community<br/><i>Compute tab"), "</i>>]
       standardizeParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
       computeMultifunctionality[label = <", i18n$t("Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab"), "</i>>]
@@ -2251,6 +2252,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       "# Edges
       loadData -> simulateCommunities
       simulateCommunities -> computeParameters
+      simulateCommunities -> adjustSimulations
+      adjustSimulations -> computeParameters
       computeParameters -> standardizeParameters
       computeParameters -> computeMultifunctionality
       computeParameters -> selectCommunities

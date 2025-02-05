@@ -22,4 +22,4 @@ system("R CMD check resbiota_0.0.2.tar.gz")
 
 require(resbiota)
 ?resbiota::simulateCommunities
-resbiotaRun()
+runResbiota()

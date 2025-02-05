@@ -3,8 +3,8 @@
 \docType{package}
 \encoding{UTF-8}
 \name{resbiota-package}
-\alias{resbiota}
 \alias{resbiota-package}
+\alias{resbiota}
 \title{resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches}
 \description{
 Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.

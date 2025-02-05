@@ -16,7 +16,7 @@ calcRAO(comm, dis = NULL)
 A matrix with among-community diversities excluding within-community diversity.
 }
 \description{
-Rao's quadratic entropy (RAO) is based on the function discomQE from the package adiv.
+Efficient function to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
 }
 \seealso{
 \code{\link{simulateCommunities}}

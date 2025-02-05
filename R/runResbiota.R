@@ -5,7 +5,7 @@
 #' @param launchBrowser Shiny application launch mode. See runApp function (default launchBrowser = TRUE).
 #' @param ... Arguments used in the runApp function.
 #' @export
-resbiotaRun <- function(launchBrowser = TRUE, ...){
+runResbiota <- function(launchBrowser = TRUE, ...){
   appDir <- system.file("app", package = "resbiota")
   shiny::runApp(appDir = appDir, launch.browser = launchBrowser, ...)  
 }
