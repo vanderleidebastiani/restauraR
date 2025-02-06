@@ -316,7 +316,6 @@ allScenarios <- computeMultifunctionality(x = allScenarios,
                                  tests = c("CWM_BT > 6",
                                            "rao > 2.5"))
 # All parameters calculated
-allScenarios
 ```
 
 ## Select simulated communities
@@ -329,14 +328,14 @@ Multiple selection steps can be performed sequentially, using more restrictive c
 
 ```{r}
 # Global selection (first step)
-targetSelect1 <- c("CWM_BT > 6", "rao > 2.5")
+targetSelect1 <- c("CWM_BT > 6", "rao > 0.25")
 resSelectSim <- selectCommunities(allScenarios, 
                                   testsDet = targetSelect1)
 ```
 
 ```{r}
 # Additional selection (second step)
-targetSelect2 <- c("rao < 3", "cost < 8000")
+targetSelect2 <- c("rao < 0.3", "cost < 8000")
 resSelectSim <- selectCommunities(resSelectSim, 
                                   testsDet = targetSelect2)
 ```
@@ -355,14 +354,14 @@ The selection can also be performed in distinct steps and then concatenated. For
 
 ```{r}
 # Selection Sites with the prefix "New"
-target2New <- c("PREFIX == 'New'", "rao > 3")
+target2New <- c("PREFIX == 'New'", "rao > 0.3")
 resSelectSimPart1 <- selectCommunities(allScenarios, 
                                   testsDet = target2New)
 ```
 
 ```{r}
 # Selection Sites with the prefix "Ongoing"
-target2Ongoing <- c("PREFIX == 'Ongoing'", "rao < 1.5")
+target2Ongoing <- c("PREFIX == 'Ongoing'", "rao < 0.5")
 resSelectSimPart2 <- selectCommunities(allScenarios, 
                                    testsDet = target2Ongoing)
 ```
@@ -379,7 +378,7 @@ The selection can also be performed hierarchically in a way that only one simula
 
 ```{r}
 # Selection Sites with the prefix "New"
-hierarchicalTargets <- c("CWM_BT > 6", "rao > 2.5", "cost == 'MIN'")
+hierarchicalTargets <- c("CWM_BT > 6", "rao > 0.25", "cost == 'MIN'")
 resSelectSimHier <- selectCommunities(allScenarios, 
                                   testsHie = hierarchicalTargets)
 resSelectSimHier

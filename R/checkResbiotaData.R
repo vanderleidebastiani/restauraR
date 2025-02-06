@@ -116,7 +116,11 @@ checkResbiotaData <- function (traits = NULL,
       # warning(c("Species missing on traits data", "\n", paste0(setdiff(sppComp, sppTraits), "\n")), call. = FALSE)
       # List difference species
       diffSpp <- setdiff(sppComp, sppTraits)
-      checkMessage <- c(checkMessage, paste0("Error: Species missing on traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))
+      nDiffSpp <- length(diffSpp)
+      if(nDiffSpp>10){
+        diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
+      }
+      checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing in the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))
     }
   }
   if(!is.null(checkMessage)){

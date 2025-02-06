@@ -10,6 +10,7 @@ LICENSE
 
 ^data/dados.rda
 ^vignettes/Vignette-Title1.Rmd
+^vignettes/Framework-application.Rmd
 ^vignettes/resSEL.rds
 ^vignettes/resSIM.rds
 ^vignettes/resSIM0.rds

@@ -1,5 +1,6 @@
 #' @rdname app
 # UI ----
+
 # ui : call this function once somewhere
 shinyWidgets::useSweetAlert()
 
@@ -177,7 +178,7 @@ body <- shinydashboard::dashboardBody(
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
                                                                 shiny::column(width = 12,
-                                                                              htmltools::h4(htmltools::strong("resbiota - v0.0.2")),
+                                                                              htmltools::h4(htmltools::strong("resbiota - v0.0.3")),
                                                                               htmltools::br(),
                                                                               htmltools::p(htmltools::strong(i18n$t("Authors"))),
                                                                               htmltools::p(paste0("Vanderlei J. Debastiani, Andr", "\u00e9", " G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso")),

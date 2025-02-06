@@ -16,9 +16,9 @@ system("R CMD build resbiota")
 # system("R CMD check resbiota")
 # remove.packages("resbiota")
 
-system("R CMD INSTALL resbiota_0.0.2.tar.gz")
+system("R CMD INSTALL resbiota_0.0.3.tar.gz")
 # system("R CMD check --as-cran resbiota_0.0.2.tar.gz")
-system("R CMD check resbiota_0.0.2.tar.gz")
+system("R CMD check resbiota_0.0.3.tar.gz")
 
 require(resbiota)
 ?resbiota::simulateCommunities

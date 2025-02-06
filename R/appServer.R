@@ -1283,6 +1283,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Something went wrong!"),
+        text = scenario$message,
         type = "error"
       )
     } else{
@@ -1376,10 +1377,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                probGroupRich = inputParSimRV$probGroupRich, # Ok
                                                probGroupAbund = inputParSimRV$probGroupAbund # Ok
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Something went wrong!"),
+          text = scenario$message,
           type = "error"
         )
       } else{
@@ -1387,7 +1390,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         # Update basic informations
         resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
         resultsRV$nSce <- length(resultsRV$simulate)
-        shiny::removeModal(session = session)
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Done!"),
@@ -1436,6 +1438,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Something went wrong!"),
+          text = scenario$message,
           type = "error"
         )
       } else{
@@ -1491,6 +1494,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Something went wrong!"),
+        text = scenario$message,
         type = "error"
       )
     } else{
@@ -1529,10 +1533,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                              reference = inputDataRV$reference,
                                              supplementary = inputDataRV$supplementary
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Something went wrong!"),
+          text = scenario$message,
           type = "error"
         )
       } else{
@@ -1548,7 +1554,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
           scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = input$decimalPlaces)
         }
         resultsRV$simulate[[input$scenarioComParInput]] <- scenario
-        shiny::removeModal(session = session)
         # Force update parameters
         resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
         shinyWidgets::sendSweetAlert(
@@ -1593,6 +1598,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Something went wrong!"),
+        text = scenario$message,
         type = "error"
       )
     } else{
@@ -1631,6 +1637,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Something went wrong!"),
+          text = scenario$message,
           type = "error"
         )
       } else{
@@ -1731,6 +1738,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       shinyWidgets::sendSweetAlert(
         session = session,
         title = i18n$t("Something went wrong!"),
+        text = scenario$message,
         type = "error"
       )
     } else{
@@ -1785,6 +1793,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         shinyWidgets::sendSweetAlert(
           session = session,
           title = i18n$t("Something went wrong!"),
+          text = scenario$message,
           type = "error"
         )
       } else{

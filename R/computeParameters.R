@@ -6,11 +6,9 @@
 #' \code{computeMultifunctionality} Computes the matrix of multifunctionality and alpha multifunctionality. 
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
-#' @importFrom fundiversity fd_raoq
 #' @importFrom SYNCSA matrix.t
-#' @importFrom adiv discomQE
 #' @importFrom stats dist
-#' @aliases computeDissimilarity computeMultifunctionality standardizeParameters
+#' @aliases computeMultifunctionality standardizeParameters
 #' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
 #' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
@@ -139,6 +137,9 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
   # Richness
   S <- apply(composition, 1, FUN = function(a) sum(a > 0))
   out <- cbind(out, richness = S)
+  # Simpson diversity
+  diverSimpson <- SYNCSA::rao.diversity(comm = composition)$Simpson
+  out <- cbind(out, simpson = diverSimpson)
   # CWM
   if(!is.null(cwm)){
     if(!inherits(cwm, 'character') || !all(cwm %in% traitsNames)){
@@ -170,9 +171,12 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
             stop("each value of rao list must be a character indicating one or more columns of the trait data frame, or distance matrix")
           }
           traitSub <- scale(trait[, rao[[i]], drop = FALSE] )
-          RAOtemp <- fundiversity::fd_raoq(traitSub, composition)$Q
+          # RAOtemp <- fundiversity::fd_raoq(traitSub, composition)$Q
+          dis <- stats::dist(traitSub)
+          RAOtemp <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
         } else if(inherits(rao[[i]], 'dist')){
-          RAOtemp <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao[[i]])$Q
+          # RAOtemp <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao[[i]])$Q
+          RAOtemp <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(rao[[i]]))$PhyRao
         }
         RAOlist <- cbind(RAOlist, RAOtemp)
       }
@@ -188,9 +192,12 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
           stop("rao must be a character indicating one or more columns of the trait data frame, or distance matrix, or a list")
         }
         traitSub <- scale(trait[, rao, drop = FALSE] )
-        RAO <- fundiversity::fd_raoq(traitSub, composition)$Q
+        dis <- stats::dist(traitSub)
+        # RAO <- fundiversity::fd_raoq(traitSub, composition)$Q
+        RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
       } else if(inherits(rao, 'dist')){
-        RAO <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao)$Q
+        # RAO <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao)$Q
+        RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(rao))$PhyRao
       }
       out <- cbind(out, rao = RAO)
     }
@@ -211,7 +218,19 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     })
     out <- cbind(out, cost = COST)
   }
-  # Dissimilatity
+  #  Dissimilatity
+  if(!is.null(reference)){
+    nRef <- nrow(reference)
+    resDis <- calcRAO(composition)
+    # Remove matrix diagonal
+    diag(resDis) <- NA
+    # Keep only values related to reference sites
+    resDis <- resDis[, seq.int(nRef), drop = FALSE]
+    # Calculate mean dissimilarities
+    resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
+    out <- cbind(out, dissimilarity = resDis)
+  }
+  # Functional dissimilatity
   if(!is.null(dissimilarity) && !is.null(reference)){
     nRef <- nrow(reference)
     if(inherits(dissimilarity, 'character')){
@@ -220,10 +239,12 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
       }
       traitSub <- scale(trait[, dissimilarity, drop = FALSE])
       dis <- stats::dist(traitSub)
-      resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
+      # resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
+      resDis <- calcRAO(composition, dis = dis)
     } else if(inherits(dissimilarity, 'dist')){
       # Calculate dissimilarities between communities
-      resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
+      # resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
+      resDis <- calcRAO(composition, dis = dissimilarity)
     }
     # Remove matrix diagonal
     diag(resDis) <- NA
@@ -231,7 +252,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     resDis <- resDis[, seq.int(nRef), drop = FALSE]
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
-    out <- cbind(out, dissimilarity = resDis)
+    out <- cbind(out, functionalDissimilarity = resDis)
   }
   # Results organization
   if(!is.null(reference) || !is.null(supplementary)){

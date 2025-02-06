@@ -4,7 +4,6 @@
 \encoding{UTF-8}
 \name{computeParameters}
 \alias{computeParameters}
-\alias{computeDissimilarity}
 \alias{computeMultifunctionality}
 \alias{standardizeParameters}
 \title{Compute functional parameters in communities}
