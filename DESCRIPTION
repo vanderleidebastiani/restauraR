@@ -48,6 +48,7 @@ Collate:
     'calcRAO.R'
     'cerrado.R'
     'checkReference.R'
+    'checkResbiotaData.R'
     'collectNames.R'
     'computeParameters.R'
     'computeMultifunctionality.R'

@@ -1,6 +1,5 @@
 #' @rdname app
 #' @export
-#' @export
 appServer <- shiny::shinyServer(function(input, output, session) {
   ## Miscellanea ----
   # Welcome alert 
@@ -1269,6 +1268,49 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ## Action buttons ----
+  ### doCheck ----
+  shiny::observeEvent(input$doCheck, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
+    scenario <- tryCatch(checkResbiotaData(traits = inputDataRV$traits,
+                                           restComp = inputDataRV$restComp, 
+                                           restGroup = inputDataRV$restGroup,
+                                           reference = inputDataRV$reference,
+                                           supplementary = inputDataRV$supplementary
+                                           
+    ), error = function(e) e)
+    if(inherits(scenario, what = "error")){
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = i18n$t("Something went wrong!"),
+        type = "error"
+      )
+    } else{
+      if(scenario$checkStatus == "success"){
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Success!"),
+          type = scenario$checkStatus
+        )
+      } else{
+        if(scenario$checkStatus == "error"){
+          shinyWidgets::sendSweetAlert(
+            session = session,
+            title = i18n$t("Error!"),
+            text = scenario$checkMessage,
+            type = scenario$checkStatus
+          )
+        } else{
+          shinyWidgets::sendSweetAlert(
+            session = session,
+            title = i18n$t("Warning!"),
+            text = scenario$checkNA,
+            type = scenario$checkStatus
+          )
+        }
+      }
+    }
+  })
   ### doSimulate ----
   shiny::observeEvent(input$doSimulate, {
     # Remove any open modal
@@ -1438,7 +1480,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       type = "success"
     )
   })
-  # AQUI ----
   ### doAdjustSim ----
   shiny::observeEvent(input$doAdjustSim, {
     scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]

@@ -1,6 +1,5 @@
 #' @rdname app
 # UI ----
-
 # ui : call this function once somewhere
 shinyWidgets::useSweetAlert()
 
@@ -308,6 +307,11 @@ body <- shinydashboard::dashboardBody(
                                                                 ), # End column
                                                                 shiny::column(width = 4, 
                                                                               htmltools::br(),
+                                                                              shinyWidgets::actionBttn(inputId = "doCheck",
+                                                                                                       label = i18n$t("Check data"),
+                                                                                                       style = "fill",
+                                                                                                       size = "md",
+                                                                                                       color = "success"),
                                                                               shinyWidgets::actionBttn(inputId = "doClear", 
                                                                                                        label = i18n$t("Clear all"),
                                                                                                        style = "fill",
