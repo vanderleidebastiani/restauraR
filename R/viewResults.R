@@ -23,6 +23,10 @@
 #' @keywords MainFunction
 #' @export
 viewResults <- function(x, xvar, yvar, hideref = FALSE){
+  # Check object class
+  if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
+    stop("x must be of the simRest or simRestSelect class")
+  }
   if(inherits(x, "simRest")){
     resResults <- x$simulation$results
     pal <- c("#b5b5b5","#000000", "#BD0026")
@@ -54,11 +58,18 @@ viewResults <- function(x, xvar, yvar, hideref = FALSE){
       ggplot2::scale_color_manual(values = pal) +
       themeResbiota(baseSize = 15)
   } else{
-    p <- ggplot2::ggplot() +
-      ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-      ggplot2::geom_point(data = resResults, size = 1.2) +
-      ggplot2::scale_color_manual(values = pal) +
-      themeResbiota(baseSize = 15)
+    if(nrow(resResults)>0){
+      p <- ggplot2::ggplot() +
+        ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
+        ggplot2::geom_point(data = resResults, size = 1.2) +
+        ggplot2::scale_color_manual(values = pal) +
+        themeResbiota(baseSize = 15)
+    } else{
+      p <- ggplot2::ggplot() +
+        ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
+        ggplot2::geom_point(data = resResults, size = 1.2) +
+        themeResbiota(baseSize = 15)
+    }
   }
   return(p)
 }

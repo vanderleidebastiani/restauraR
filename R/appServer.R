@@ -530,6 +530,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         res <- scenario$simulation$results
       }
       else {
+        res <- scenario$selection$results
       }
       if(!is.null(res)){
         shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
@@ -1498,7 +1499,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else{
-      print(scenario$simulation$composition)
       resultsRV$simulate[[input$scenarioSimAdjInput]] <- scenario
       shinyWidgets::sendSweetAlert(
         session = session,
@@ -1844,11 +1844,23 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       scenario <- resultsRV$select[[input$scenarioViewParInput]]
     }
     if (!is.null(input$xvarViewInput) && !is.null(input$yvarViewInput)) {
-      resultsRV$plotPar <- viewResults(x = scenario,
+      scenario <- tryCatch(viewResults(x = scenario,
                                        xvar = input$xvarViewInput,
                                        yvar = input$yvarViewInput,
-                                       hideref = as.logical(input$hideRefViewParInput)) +
-        ggplot2::labs(x = input$xvarLab, y = input$yvarLab)
+                                       hideref = as.logical(input$hideRefViewParInput)
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        resultsRV$plotPar <- NULL
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          text = scenario$message,
+          type = "error"
+        )
+      } else {
+        resultsRV$plotPar <- scenario +
+          ggplot2::labs(x = input$xvarLab, y = input$yvarLab)
+      }
     } else {
       resultsRV$plotPar <- NULL
       shinyWidgets::sendSweetAlert(
@@ -1882,12 +1894,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       inVars <- colnames(resMulti)[-1]
       pvars <- length(inVars)
       if (pvars > 0) {
-        lapply(seq(pvars), function(i) {
-          colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+        # lapply(seq(pvars), function(i) {
+        # 	colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+        # 	if(!is.null(scenario$reference$multifunctionality)){
+        # 		colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+        # 	}
+        # })
+        for(i in seq(pvars)){
+          colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
           if(!is.null(scenario$reference$multifunctionality)){
-            colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+            colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
           }
-        })
+        }
       }
       # Update multifunctionality matrix
       if (inherits(scenario, "simRest")) {
@@ -1896,8 +1914,20 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       else {
         scenario$selection$multifunctionality  <- resMulti
       }
-      resultsRV$plotMulti <- viewMultifunctionality(x = scenario,
-                                                    hideref = as.logical(input$hideRefViewMultiInput))
+      scenario <- tryCatch(viewMultifunctionality(x = scenario,
+                                                  hideref = as.logical(input$hideRefViewMultiInput)
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
+        resultsRV$plotMulti <- NULL
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          text = scenario$message,
+          type = "error"
+        )
+      } else{
+        resultsRV$plotMulti <- scenario
+      }
     } else {
       resultsRV$plotMulti <- NULL
       shinyWidgets::sendSweetAlert(
@@ -1929,32 +1959,43 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else{
-      exportRV$table <- extractResults(x = scenario,
-                                       type = input$typeExportInput, # straight input
-                                       dbFormat = as.logical(exportRV$dbFormat),
-                                       trait = inputDataRV$traits, 
-                                       ava = input$avaExpInput # straight input
-      )
-      if(!is.null(exportRV$table)){
-        exportRV$summaryTable <- as.data.frame(exportRV$table)
-        exportRV$summaryTable[] <- lapply(exportRV$summaryTable, as.character)
-        nRowTemp <- nrow(exportRV$summaryTable)
-        nColTemp <- ncol(exportRV$summaryTable)
-        if(nRowTemp>10 || nColTemp>10){
-          if(nColTemp>10){
-            exportRV$summaryTable <- exportRV$summaryTable[, c(1:6, (nColTemp-4):nColTemp), drop = FALSE]
-            # Replace the six col (Centred ellipsis)
-            exportRV$summaryTable[, 6] <- rep("\u22ef", nRowTemp)
-            colnames(exportRV$summaryTable)[6] <- "\u22ef"
-          }
-          if(nRowTemp>10){
-            exportRV$summaryTable <- exportRV$summaryTable[c(1:6, (nRowTemp-4):nRowTemp), , drop = FALSE]
-            # Replace the six line (Vertical ellipsis)
-            exportRV$summaryTable[6, ] <- rep("\u22ee", ncol(exportRV$summaryTable))
-          }
-        }
-      } else{
+      scenario <- tryCatch(extractResults(x = scenario,
+                                          type = input$typeExportInput, # straight input
+                                          dbFormat = as.logical(exportRV$dbFormat),
+                                          trait = inputDataRV$traits, 
+                                          ava = input$avaExpInput # straight input
+      ), error = function(e) e)
+      if(inherits(scenario, what = "error")){
         exportRV$summaryTable <- NULL
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = i18n$t("Something went wrong!"),
+          text = scenario$message,
+          type = "error"
+        )
+      } else{
+        exportRV$table <- scenario	
+        if(!is.null(exportRV$table)){
+          exportRV$summaryTable <- as.data.frame(exportRV$table)
+          exportRV$summaryTable[] <- lapply(exportRV$summaryTable, as.character)
+          nRowTemp <- nrow(exportRV$summaryTable)
+          nColTemp <- ncol(exportRV$summaryTable)
+          if(nRowTemp>10 || nColTemp>10){
+            if(nColTemp>10){
+              exportRV$summaryTable <- exportRV$summaryTable[, c(1:6, (nColTemp-4):nColTemp), drop = FALSE]
+              # Replace the six col (Centred ellipsis)
+              exportRV$summaryTable[, 6] <- rep("\u22ef", nRowTemp)
+              colnames(exportRV$summaryTable)[6] <- "\u22ef"
+            }
+            if(nRowTemp>10){
+              exportRV$summaryTable <- exportRV$summaryTable[c(1:6, (nRowTemp-4):nRowTemp), , drop = FALSE]
+              # Replace the six line (Vertical ellipsis)
+              exportRV$summaryTable[6, ] <- rep("\u22ee", ncol(exportRV$summaryTable))
+            }
+          }
+        } else{
+          exportRV$summaryTable <- NULL
+        }
       }
     }
   })
@@ -2263,17 +2304,17 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       # Remove any open modal
       shiny::removeModal(session = session)
       # shinyalert::shinyalert(
-      #   title = "",
-      #   text = infoText,
-      #   size = "xs",
-      #   closeOnEsc = TRUE,
-      #   closeOnClickOutside = TRUE,
-      #   html = FALSE,
-      #   type = "",
-      #   showConfirmButton = FALSE,
-      #   showCancelButton = FALSE,
-      #   animation = FALSE,
-      #   session = session
+      # 	title = "",
+      # 	text = infoText,
+      # 	size = "xs",
+      # 	closeOnEsc = TRUE,
+      # 	closeOnClickOutside = TRUE,
+      # 	html = FALSE,
+      # 	type = "",
+      # 	showConfirmButton = FALSE,
+      # 	showCancelButton = FALSE,
+      # 	animation = FALSE,
+      # 	session = session
       # )
       shinyWidgets::sendSweetAlert(
         session = session,

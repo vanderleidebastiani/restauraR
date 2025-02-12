@@ -3,6 +3,10 @@
 #' @encoding UTF-8
 #' @export
 viewMultifunctionality <- function(x, hideref = FALSE, ...){
+  # Check object class
+  if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
+    stop("x must be of the simRest or simRestSelect class")
+  }
   if(inherits(x, "simRest")){
     resMulti <- x$simulation$multifunctionality
   } else{
@@ -21,17 +25,22 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
     resMultiRef <- reorganizeMatrix(template = template0, resMultiRef, fillNA = FALSE)
     resMulti <- rbind.data.frame(resMulti, resMultiRef)
   }
-  p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
-                           keep_empty_groups = TRUE,
-                           name = "Groups",
-                           base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = "#1d4b61") +
-                                                     ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"))),
-                           set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = "#1d4b61")) + 
-                             ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold")),
-                           sort_intersections_by = "degree",
-                           width_ratio = 0.2,
-                           height_ratio = 0.8, 
-                           ...) + 
-    ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
+  if(nrow(resMulti)>0){
+    p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
+                             keep_empty_groups = TRUE,
+                             name = "Groups",
+                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = "#1d4b61") +
+                                                       ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"))),
+                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = "#1d4b61")) + 
+                               ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold")),
+                             sort_intersections_by = "degree",
+                             width_ratio = 0.2,
+                             height_ratio = 0.8, 
+                             ...) + 
+      ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
+  } else{
+    p <- ggplot2::ggplot() +
+      themeResbiota(baseSize = 15)
+  }
   return(p)
 }
