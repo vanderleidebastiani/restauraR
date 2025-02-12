@@ -2260,18 +2260,30 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       # 									fade = FALSE,
       # 									size = "s",
       # 									easyClose = TRUE), session = session)
-      shinyalert::shinyalert(
+      # Remove any open modal
+      shiny::removeModal(session = session)
+      # shinyalert::shinyalert(
+      #   title = "",
+      #   text = infoText,
+      #   size = "xs",
+      #   closeOnEsc = TRUE,
+      #   closeOnClickOutside = TRUE,
+      #   html = FALSE,
+      #   type = "",
+      #   showConfirmButton = FALSE,
+      #   showCancelButton = FALSE,
+      #   animation = FALSE,
+      #   session = session
+      # )
+      shinyWidgets::sendSweetAlert(
+        session = session,
         title = "",
         text = infoText,
-        size = "xs",
-        closeOnEsc = TRUE,
-        closeOnClickOutside = TRUE,
+        type = NULL,
+        btn_labels = NA,
         html = FALSE,
-        type = "",
-        showConfirmButton = FALSE,
-        showCancelButton = FALSE,
-        animation = FALSE,
-        session = session
+        closeOnClickOutside = TRUE,
+        showCloseButton = FALSE
       )
     }
     # }

@@ -1,4 +1,8 @@
 shinyApp(
   ui = appUI,
-  server = appServer
+  server = appServer,
+  onStart = function() {
+    shinyjs::useShinyjs()
+    # shinyalert::useShinyalert(force = TRUE)
+    }
 )

@@ -18,6 +18,8 @@ header <- shinydashboardPlus::dashboardHeader(
     # Use shiny.i18n functions
     # stackoverflow.com/questions/73509710
     shiny.i18n::usei18n(i18n),
+    # Use shinyjs functions
+    shinyjs::useShinyjs(),
     tags$span(
       class = "logo-mini", "res"
     ),
