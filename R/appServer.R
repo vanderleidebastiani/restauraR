@@ -985,7 +985,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                      label = i18n$t("Scenario type"),
                                      choices = stats::setNames(
                                        c("Raw", "Selected"),
-                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                       c(i18n$t("All simulations"), i18n$t("Selected")) # Set labels
                                      ),
                                      selected = "Raw",
                                      inline = TRUE,
@@ -1011,7 +1011,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                      label = i18n$t("Scenario type"),
                                      choices = stats::setNames(
                                        c("Raw", "Selected"),
-                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                       c(i18n$t("All simulations"), i18n$t("Selected")) # Set labels
                                      ),
                                      selected = "Raw",
                                      inline = TRUE,
@@ -1039,7 +1039,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                      label = i18n$t("Scenario type"),
                                      choices = stats::setNames(
                                        c("Raw", "Selected"),
-                                       c(i18n$t("Raw"), i18n$t("Selected")) # Set labels
+                                       c(i18n$t("All simulations"), i18n$t("Selected")) # Set labels
                                      ),
                                      selected = "Raw",
                                      inline = TRUE,

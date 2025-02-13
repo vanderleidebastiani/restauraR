@@ -13,13 +13,13 @@ calcCWV <- function(x, traitSub){
   temp <- SYNCSA::matrix.t(x, traitSub, scale = FALSE)
   resW <- temp$matrix.w
   resCWM <- temp$matrix.T
-  resCWM <- matrix(NA, nrow(resW), ncol(resCWM))
+  resCWV <- matrix(NA, nrow(resW), ncol(resCWM))
   for(i in 1:nrow(resW)){
     for(j in 1:ncol(resCWM)){
-      resCWM[i, j] <- sum(resW[i,]*(traitSub[,j]-resCWM[i,j])^2)
+      resCWV[i, j] <- sum(resW[i,]*(traitSub[,j]-resCWM[i,j])^2)
     }
   }
-  rownames(resCWM) <- rownames(resCWM)
-  colnames(resCWM) <- colnames(resCWM)
-  return(resCWM)
+  rownames(resCWV) <- rownames(resCWM)
+  colnames(resCWV) <- colnames(resCWM)
+  return(resCWV)
 }

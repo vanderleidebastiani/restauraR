@@ -314,7 +314,7 @@ The multifunctionality also can be computed after the basic parameter calculatio
 # Compute multifunctionality
 allScenarios <- computeMultifunctionality(x = allScenarios, 
                                  tests = c("CWM_BT > 6",
-                                           "rao > 2.5"))
+                                           "rao > 0.25"))
 # All parameters calculated
 ```
 
@@ -354,14 +354,14 @@ The selection can also be performed in distinct steps and then concatenated. For
 
 ```{r}
 # Selection Sites with the prefix "New"
-target2New <- c("PREFIX == 'New'", "rao > 0.3")
+target2New <- c("Scenario == 'New'", "rao > 0.3")
 resSelectSimPart1 <- selectCommunities(allScenarios, 
                                   testsDet = target2New)
 ```
 
 ```{r}
 # Selection Sites with the prefix "Ongoing"
-target2Ongoing <- c("PREFIX == 'Ongoing'", "rao < 0.5")
+target2Ongoing <- c("Scenario == 'Ongoing'", "rao < 0.5")
 resSelectSimPart2 <- selectCommunities(allScenarios, 
                                    testsDet = target2Ongoing)
 ```

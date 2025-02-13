@@ -194,16 +194,16 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))
     if(!is.null(restGroup)){
       restGroup <- restGroup[rep(seq_len(nrow(restGroup)), each = length(rowNameProMatrix)),, drop = FALSE]
-      restGroup <- data.frame(SIM = paste0(prefix, rownames(propMatrixTab)), NAME = restName, restGroup)
+      restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName, restGroup)
     } else{
-      restGroup <- data.frame(SIM = paste0(prefix, rownames(propMatrixTab)), NAME = restName)
+      restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
     }
   } else { 
-    restGroup <- data.frame(SIM = paste0(prefix, rownames(propMatrix)))
+    restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
     propMatrixTab <- propMatrix
   }
   if(!is.null(prefix)){
-      restGroup <- data.frame(PREFIX = prefix, restGroup)
+      restGroup <- data.frame(Scenario = prefix, restGroup)
   }
   rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   rownames(restGroup) <- NULL

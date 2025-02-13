@@ -23,7 +23,7 @@ computeMultifunctionality <- function(x, tests){
   # Calculate alphamultifunctionality
   resAlpha <- rowSums(testsEval)
   # Organize the multifunctionality matrix/data.frame
-  testsEval <- cbind.data.frame(SIM = xPar$SIM, testsEval)
+  testsEval <- cbind.data.frame(Simulation = xPar$Simulation, testsEval)
   if(inherits(x, "simRest")){
     x$simulation$multifunctionality <- testsEval
     x$simulation$results$alphamultifunctionality <- resAlpha
@@ -43,7 +43,7 @@ computeMultifunctionality <- function(x, tests){
     # Calculate alphamultifunctionality
     resAlpha <- rowSums(testsEval)
     # Organize the multifunctionality matrix/data.frame
-    testsEval <- cbind.data.frame(SITE = rownames(xPar), testsEval)
+    testsEval <- cbind.data.frame(Site = rownames(xPar), testsEval)
     x$reference$multifunctionality <- testsEval
     x$reference$results$alphamultifunctionality <- resAlpha
   }
@@ -59,7 +59,7 @@ computeMultifunctionality <- function(x, tests){
     # Calculate alphamultifunctionality
     resAlpha <- rowSums(testsEval)
     # Organize the multifunctionality matrix/data.frame
-    testsEval <- cbind.data.frame(SITE = rownames(xPar), testsEval)
+    testsEval <- cbind.data.frame(Site = rownames(xPar), testsEval)
     x$supplementary$multifunctionality <- testsEval
     x$supplementary$results$alphamultifunctionality <- resAlpha
   }
