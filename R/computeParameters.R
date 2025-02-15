@@ -221,11 +221,13 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
   #  Dissimilatity
   if(!is.null(reference)){
     nRef <- nrow(reference)
-    resDis <- calcRAO(composition)
+    resDis <- calcRAO(composition, nRef = nRef)
     # Remove matrix diagonal
-    diag(resDis) <- NA
-    # Keep only values related to reference sites
-    resDis <- resDis[, seq.int(nRef), drop = FALSE]
+    # diag(resDis) <- NA
+    diagIndex <- cbind(seq(nRef), seq(nRef))
+    resDis[diagIndex] <- NA
+    # # Keep only values related to reference sites
+    # resDis <- resDis[, seq.int(nRef), drop = FALSE]
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, dissimilarity = resDis)
@@ -240,16 +242,18 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
       traitSub <- scale(trait[, dissimilarity, drop = FALSE])
       dis <- stats::dist(traitSub)
       # resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
-      resDis <- calcRAO(composition, dis = dis)
+      resDis <- calcRAO(composition, dis = dis, nRef = nRef)
     } else if(inherits(dissimilarity, 'dist')){
       # Calculate dissimilarities between communities
       # resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
-      resDis <- calcRAO(composition, dis = dissimilarity)
+      resDis <- calcRAO(composition, dis = dissimilarity, nRef = nRef)
     }
     # Remove matrix diagonal
-    diag(resDis) <- NA
+    diagIndex <- cbind(seq(nRef), seq(nRef))
+    resDis[diagIndex] <- NA
+    # diag(resDis) <- NA
     # Keep only values related to reference sites
-    resDis <- resDis[, seq.int(nRef), drop = FALSE]
+    # resDis <- resDis[, seq.int(nRef), drop = FALSE]
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, functionalDissimilarity = resDis)

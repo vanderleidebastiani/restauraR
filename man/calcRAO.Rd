@@ -5,12 +5,14 @@
 \alias{calcRAO}
 \title{Internal function to calculate Rao's quadratic entropy (RAO)}
 \usage{
-calcRAO(comm, dis = NULL)
+calcRAO(comm, dis = NULL, nRef = NULL)
 }
 \arguments{
 \item{comm}{A matrix with species proportions in the reference sites. NAs not accepted.}
 
 \item{dis}{Distances among species.}
+
+\item{nRef}{Number of reference sites (the first in proportions matrix) to calculate among-community diversities only partially}
 }
 \value{
 A matrix with among-community diversities excluding within-community diversity.
