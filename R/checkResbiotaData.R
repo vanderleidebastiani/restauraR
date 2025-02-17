@@ -86,7 +86,7 @@ checkResbiotaData <- function (traits = NULL,
   if(!is.null(reference)){
     # fCheckBasic(reference, objName = "reference")
     checkMessage <- c(checkMessage, fCheckBasic(reference, objName = "reference"))
-    checkNA <- c(checkNA, fCheckNA(reference, obj1Name = "reference"))
+    checkNA <- c(checkNA, fCheckNA(reference, objName = "reference"))
     # varType <- SYNCSA::var.type(reference)
     varType <- sapply(reference, vectorClass)
     if (any(varType == "character") | any(varType == "factor")) {

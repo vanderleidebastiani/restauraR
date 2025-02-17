@@ -1486,11 +1486,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doAdjustSim ----
   shiny::observeEvent(input$doAdjustSim, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
+    shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
     scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]
     scenario <- tryCatch(adjustSimulations(x = scenario,
                                            minAbun = input$minAbuSliderSimAdjInput, # straight input
                                            reallocate = as.logical(input$reallocateAdjSimInput) # straight input
     ), error = function(e) e)
+    shiny::removeModal(session = session)
     if(inherits(scenario, what = "error")){
       shinyWidgets::sendSweetAlert(
         session = session,
@@ -1566,6 +1570,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doMultiCompute ----
   shiny::observeEvent(input$doMultiCompute, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
+    shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
     # Set and update the argument tests
     # Update using dynamic slides
     if(!is.null(input$testsMultiInput)){
@@ -1593,7 +1600,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       testList <- NULL
     }
     scenario <- tryCatch(computeMultifunctionality(x = resultsRV$simulate[[input$scenarioComMultiInput]],
-                                                   tests = testList), error = function(e) e)
+                                                   tests = testList), 
+                         error = function(e) e)
+    shiny::removeModal(session = session)
     if(inherits(scenario, what = "error")){
       shinyWidgets::sendSweetAlert(
         session = session,
@@ -1615,6 +1624,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doStandardize ----
   shiny::observeEvent(input$doStandardize, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
     scenario <- resultsRV$simulate[[input$scenarioComStandParInput]]
     # if (inherits(scenario, "simRest")) {
     res <- scenario$simulation$results
@@ -1629,10 +1640,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else{
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       scenario <- tryCatch(standardizeParameters(x = scenario,
                                                  parameters = input$stanComParInput, # straight input
                                                  method = input$speficyMethodStanInput # straight input
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         shinyWidgets::sendSweetAlert(
           session = session,
@@ -1666,6 +1679,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   
   ### doSelect ----
   shiny::observeEvent(input$doSelect, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
+    shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
     # Set and update the arguments group, probGroupRich and probGroupAbund
     # Update using dynamic slides
     scenario <- resultsRV$simulate[[input$scenarioSelInput]]
@@ -1734,6 +1750,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                            group = inputParSelRV$group,
                                            singleselection = as.logical(input$singleSelectionInput) # straight input
     ), error = function(e) e)
+    shiny::removeModal(session = session)
     if(inherits(scenario, what = "error")){
       shinyWidgets::sendSweetAlert(
         session = session,
@@ -1838,17 +1855,21 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doPlotPar ----
   shiny::observeEvent(input$doPlotPar, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
     if(input$scenarioTypeViewParInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioViewParInput]]
     } else{
       scenario <- resultsRV$select[[input$scenarioViewParInput]]
     }
     if (!is.null(input$xvarViewInput) && !is.null(input$yvarViewInput)) {
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       scenario <- tryCatch(viewResults(x = scenario,
                                        xvar = input$xvarViewInput,
                                        yvar = input$yvarViewInput,
                                        hideref = as.logical(input$hideRefViewParInput)
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         resultsRV$plotPar <- NULL
         shinyWidgets::sendSweetAlert(
@@ -1876,7 +1897,126 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     resultsRV$plotPar <- NULL
   })
   ### doPlotMulti ----
+  # Update choices 
+  # obsListConfirmPlotMulti <- shiny::reactiveValues(
+  # 	status = 0, 
+  # 	goPlotMulti = FALSE)
+  # shiny::observeEvent(input$doPlotMulti, {
+  # 	# Remove any open modal
+  # 	shiny::removeModal(session = session)
+  # 	# print(obsListConfirmPlotMulti$status)
+  # 	if(input$scenarioTypeViewMultiInput == "Raw"){
+  # 		scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
+  # 	} else{
+  # 		scenario <- resultsRV$select[[input$scenarioViewMultiInput]]
+  # 	}
+  # 	if (inherits(scenario, "simRest")) {
+  # 		resMulti <- scenario$simulation$multifunctionality
+  # 	}
+  # 	else {
+  # 		resMulti <- scenario$selection$multifunctionality
+  # 	}
+  # 	if (!is.null(resMulti)) {
+  # 		if(nrow(resMulti)>1000){
+  # 			shinyWidgets::confirmSweetAlert(
+  # 				session = session,
+  # 				inputId = "plotConfirmationInput",
+  # 				title = i18n$t("This may take a while!"),
+  # 				# text = ,
+  # 				type = "warning",
+  # 				btn_labels = c("Cancel", "Confirm"),
+  # 				btn_colors = NULL,
+  # 				closeOnClickOutside = FALSE,
+  # 				showCloseButton = FALSE,
+  # 				allowEscapeKey = FALSE,
+  # 				cancelOnDismiss = TRUE,
+  # 				html = FALSE
+  # 			)
+  # 		} else {
+  # 			obsListConfirmPlotMulti$status <- ifelse(obsListConfirmPlotMulti$status == 1, 0, 1)	
+  # 			obsListConfirmPlotMulti$goPlotMulti <- TRUE	
+  # 		}
+  # 	} else{
+  # 		obsListConfirmPlotMulti$status <- ifelse(obsListConfirmPlotMulti$status == 1, 0, 1)	
+  # 		obsListConfirmPlotMulti$goPlotMulti <- TRUE
+  # 	}
+  # 	# print(obsListConfirmPlotMulti$goPlotMulti)
+  # })
+  # observeEvent(input$plotConfirmationInput, ignoreInit = FALSE, ignoreNULL = TRUE, {
+  # 	obsListConfirmPlotMulti$goPlotMulti <- input$plotConfirmationInput
+  # 	obsListConfirmPlotMulti$status <- ifelse(obsListConfirmPlotMulti$status == 1, 0, 1)
+  # })
+  # shiny::observeEvent(obsListConfirmPlotMulti$status, ignoreInit = TRUE, {
+  # 	# Remove any open modal
+  # 	shiny::removeModal(session = session)
+  # 	if(obsListConfirmPlotMulti$goPlotMulti){
+  # 		if(input$scenarioTypeViewMultiInput == "Raw"){
+  # 			scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
+  # 		} else{
+  # 			scenario <- resultsRV$select[[input$scenarioViewMultiInput]]
+  # 		}
+  # 		if (inherits(scenario, "simRest")) {
+  # 			resMulti <- scenario$simulation$multifunctionality
+  # 		}
+  # 		else {
+  # 			resMulti <- scenario$selection$multifunctionality
+  # 		}
+  # 		if (!is.null(resMulti)) {
+  # 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
+  # 			# Update using dynamic text inputs
+  # 			# Force labels change
+  # 			inVars <- colnames(resMulti)[-1]
+  # 			pvars <- length(inVars)
+  # 			if (pvars > 0) {
+  # 				# lapply(seq(pvars), function(i) {
+  # 				# 	colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+  # 				# 	if(!is.null(scenario$reference$multifunctionality)){
+  # 				# 		colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
+  # 				# 	}
+  # 				# })
+  # 				for(i in seq(pvars)){
+  # 					colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
+  # 					if(!is.null(scenario$reference$multifunctionality)){
+  # 						colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
+  # 					}
+  # 				}
+  # 			}
+  # 			# Update multifunctionality matrix
+  # 			if (inherits(scenario, "simRest")) {
+  # 				scenario$simulation$multifunctionality <- resMulti
+  # 			}
+  # 			else {
+  # 				scenario$selection$multifunctionality  <- resMulti
+  # 			}
+  # 			scenario <- tryCatch(viewMultifunctionality(x = scenario,
+  # 														hideref = as.logical(input$hideRefViewMultiInput)
+  # 			), error = function(e) e)
+  # 			shiny::removeModal(session = session)
+  # 			if(inherits(scenario, what = "error")){
+  # 				resultsRV$plotMulti <- NULL
+  # 				shinyWidgets::sendSweetAlert(
+  # 					session = session,
+  # 					title = i18n$t("Something went wrong!"),
+  # 					text = scenario$message,
+  # 					type = "error"
+  # 				)
+  # 			} else{
+  # 				resultsRV$plotMulti <- scenario
+  # 			}
+  # 		} else {
+  # 			resultsRV$plotMulti <- NULL
+  # 			shinyWidgets::sendSweetAlert(
+  # 				session = session,
+  # 				title = i18n$t("Error!"),
+  # 				text = i18n$t("Scenario must include multifunctionality results"),
+  # 				type = "error"
+  # 			)
+  # 		}
+  # 	}
+  # })
   shiny::observeEvent(input$doPlotMulti, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
     if(input$scenarioTypeViewMultiInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioViewMultiInput]]
     } else{
@@ -1889,6 +2029,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       resMulti <- scenario$selection$multifunctionality
     }
     if (!is.null(resMulti)) {
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       # Update using dynamic text inputs
       # Force labels change
       inVars <- colnames(resMulti)[-1]
@@ -1917,6 +2058,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       scenario <- tryCatch(viewMultifunctionality(x = scenario,
                                                   hideref = as.logical(input$hideRefViewMultiInput)
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         resultsRV$plotMulti <- NULL
         shinyWidgets::sendSweetAlert(
@@ -1944,6 +2086,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   ### doExport ----
   shiny::observeEvent(input$doExport, {
+    # Remove any open modal
+    shiny::removeModal(session = session)
     if(input$scenarioTypeExportInput == "Raw"){
       scenario <- resultsRV$simulate[[input$scenarioExportInput]]
     } else{
@@ -1959,12 +2103,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         type = "error"
       )
     } else{
+      shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       scenario <- tryCatch(extractResults(x = scenario,
                                           type = input$typeExportInput, # straight input
                                           dbFormat = as.logical(exportRV$dbFormat),
                                           trait = inputDataRV$traits, 
                                           ava = input$avaExpInput # straight input
       ), error = function(e) e)
+      shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
         exportRV$summaryTable <- NULL
         shinyWidgets::sendSweetAlert(

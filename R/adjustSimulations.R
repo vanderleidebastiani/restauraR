@@ -40,9 +40,9 @@ adjustSimulations <- function(x, minAbun = NULL, reallocate = FALSE) {
   # Composicao pode ter linhas e/ou colunas com tudo zero. Remover?
   # se sim ver ver grupos 
   rowRem <- rowSums(comp, na.rm = TRUE)==0
-  comp <- comp[!rowRem,]
+  # comp <- comp[!rowRem,]
   # Put back composition
-  x$simulation$composition <- comp
+  x$simulation$composition <- comp[!rowRem,]
   # Remove information from simulation$group
   x$simulation$group <- x$simulation$group[!rowRem,]
   return(x)
