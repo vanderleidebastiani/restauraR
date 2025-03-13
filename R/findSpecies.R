@@ -17,9 +17,15 @@ findSpecies <- function(trait, cwm, rao, n, phi){
   species <- rownames(trait)
   if(inherits(rao, 'character')){
     t2d <- as.matrix(scale(trait[, rao, drop = FALSE]))
-  } else if(inherits(rao, 'dist')){
-    t2d <- rao
-  }  
+    # } else if(inherits(rao, 'dist')){
+    #   t2d <- rao
+    # }  
+  } else {
+    t2d <- as.matrix(rao)
+    # Organize distance matrix
+    match.names <- match(species, colnames(t2d))
+    t2d <- t2d[match.names, match.names, drop = FALSE]
+  }
   if(!is.null(cwm)){
     t2c <- as.matrix(trait[ , cwm, drop = FALSE])
     constraints <- apply(t2c, 2, function(x){

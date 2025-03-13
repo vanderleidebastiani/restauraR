@@ -186,9 +186,11 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
     # Sum simulated species proportions with species proportions in the restoration sites
     propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrix, MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
     propMatrixTab <- do.call(rbind, propMatrixList)
+    # Baseline composition
+    restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
     # If "proportions" method (re)calculate species proportions
     if(methodTest == 1){
-      propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)  
+      propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
     }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))
@@ -201,14 +203,19 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
   } else { 
     restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
     propMatrixTab <- propMatrix
+    # Baseline composition (all zero)
+    restCompBaseline <- propMatrix
+    restCompBaseline[] <- 0
   }
   if(!is.null(prefix)){
       restGroup <- data.frame(Scenario = prefix, restGroup)
   }
   rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   rownames(restGroup) <- NULL
+  rownames(restCompBaseline) <- rownames(propMatrixTab)
   RES$simulation$composition <- propMatrixTab
   RES$simulation$group <- restGroup
+  RES$simulation$baseline <- restCompBaseline
   class(RES) <- "simRest"
   # Composicao pode ter linhas e/ou colunas com tudo zero. Remover?
   return(RES)

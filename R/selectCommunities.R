@@ -78,11 +78,13 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     xComp <- x$simulation$composition
     xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
+    xBase <- x$simulation$baseline
   } else{
     xPar <- x$selection$results
     xComp <- x$selection$composition
     xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
+    xBase <- x$selection$baseline
   }
   # Deterministic tests
   if(!is.null(testsDet)){
@@ -97,6 +99,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     selPar <- xPar[pos, , drop = FALSE] 
     selCom <- xComp[pos, , drop = FALSE]
     selGroup <- xGroup[pos, , drop = FALSE]
+    selBase <- xBase[pos, , drop = FALSE]
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti[pos, , drop = FALSE]
@@ -106,6 +109,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     selPar <- xPar
     selCom <- xComp
     selGroup <- xGroup
+    selBase <- xBase
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti
@@ -197,6 +201,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     selPar <- selPar[selectedPos, , drop = FALSE] 
     selCom <- selCom[selectedPos, , drop = FALSE]
     selGroup <- selGroup[selectedPos, , drop = FALSE]
+    selBase <- selBase[selectedPos, , drop = FALSE]
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- selMulti[selectedPos, , drop = FALSE]
@@ -207,6 +212,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
   # Set results
   RES$selection$composition <- selCom
   RES$selection$group <- selGroup
+  RES$selection$baseline <- selBase
   RES$selection$results <- selPar
   # Multifunctionality
   if(!is.null(xMulti)){

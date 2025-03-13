@@ -11,26 +11,38 @@ adjustSimulations <- function(x, minAbun = NULL, reallocate = FALSE) {
   comp <- x$simulation$composition
   # Check if all number are integer
   allInteger <- all(comp%%1==0)
+  # Extract baseline
+  baseline <- x$simulation$baseline
+  # Calculate additions
+  compAdditions <- comp - baseline
+  compAdditions
+  # If proportions
+  if(!allInteger){
+    compAdditions <- (comp*2) - baseline
+    compAdditions
+  }
   if(!is.null(minAbun)){
     # Adjust each simulation
-    for(i in 1:nrow(comp)){
+    for(i in 1:nrow(compAdditions)){
       # Test
-      testTemp <- comp[i, ] > 0 & comp[i,] <= minAbun
-      remPart <- sum(comp[i, testTemp])
+      testTemp <- compAdditions[i, ] > 0 & compAdditions[i,] <= minAbun
+      remPart <- sum(compAdditions[i, testTemp])
       # Set zero to rare species
-      comp[i, testTemp] <- 0
+      compAdditions[i, testTemp] <- 0
       # Reallocate individuals
       if(reallocate && allInteger){
         # Species with non zero abundances
-        sppWithAbundance <- names(which(comp[i,] > 0))
+        sppWithAbundance <- names(which(compAdditions[i,] > 0))
         if(remPart > 0 && length(sppWithAbundance) > 0 ){
           for(k in 1:remPart){
             pos <- sample(sppWithAbundance, 1)
-            comp[i, pos] <- comp[i, pos]+1
+            compAdditions[i, pos] <- compAdditions[i, pos]+1
           }
         }
       }
     }
+    # Recalculate composition
+    comp <- baseline + compAdditions
   }
   # If proportions
   if(!allInteger){
@@ -45,5 +57,7 @@ adjustSimulations <- function(x, minAbun = NULL, reallocate = FALSE) {
   x$simulation$composition <- comp[!rowRem,]
   # Remove information from simulation$group
   x$simulation$group <- x$simulation$group[!rowRem,]
+  # Remove information from simulation$baseline
+  x$simulation$baseline <- x$simulation$baseline[!rowRem,]
   return(x)
 }

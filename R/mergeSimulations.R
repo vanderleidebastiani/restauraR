@@ -23,6 +23,15 @@ mergeSimulations <- function(...) {
   rownames(comp) <- resRowNames
   comp[is.na(comp)] <- 0
   RES$simulation$composition <- comp
+  # Baseline
+  baseline <- lapply(ARGS, function(x) x$simulation$baseline)
+  baseline <- lapply(baseline, data.table::as.data.table, keep.rownames = TRUE)
+  baseline <- data.table::rbindlist(baseline, use.names = TRUE, fill = TRUE)
+  baseRowNames <- baseline$rn
+  baseline <- as.matrix(baseline[, -1, drop = FALSE])
+  rownames(baseline) <- baseRowNames
+  baseline[is.na(baseline)] <- 0
+  RES$simulation$baseline <- baseline
   # Results
   results <- lapply(ARGS, function(x) x$simulation$results)
   checkNull <- sapply(results, function(x) is.null(x))
