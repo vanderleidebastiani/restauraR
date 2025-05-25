@@ -80,7 +80,8 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
+
+computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
@@ -120,6 +121,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     x$supplementary$composition <- supplementary
   }
   # Calculate species proportions
+  composition2 <- composition #to calculate CWM2
   composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
   matchNames <- match(colnames(composition), rownames(trait))
@@ -150,6 +152,15 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
     colnames(CWM) <- paste0("CWM_", colnames(CWM))
     out <- cbind(out, CWM)
   }
+  if(!is.null(cwm2)){
+    if(!inherits(cwm2, 'character') || !all(cwm2 %in% traitsNames)){
+      stop("cwm must be a character indicating one or more columns of the trait data frame")
+    }
+    traitSub <- trait[, cwm2, drop = FALSE]
+    CWM2 <- calcCWM2(composition2, traitSub)
+    colnames(CWM2) <- paste0("CWM2_", colnames(CWM2))
+    out <- cbind(out, CWM2)
+  }
   # CWV
   if(!is.null(cwv)){
     if(!inherits(cwv, 'character') || !all(cwv %in% traitsNames)){
@@ -171,11 +182,9 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
             stop("each value of rao list must be a character indicating one or more columns of the trait data frame, or distance matrix")
           }
           traitSub <- scale(trait[, rao[[i]], drop = FALSE] )
-          # RAOtemp <- fundiversity::fd_raoq(traitSub, composition)$Q
           dis <- stats::dist(traitSub)
           RAOtemp <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
         } else if(inherits(rao[[i]], 'dist')){
-          # RAOtemp <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao[[i]])$Q
           RAOtemp <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(rao[[i]]))$PhyRao
         }
         RAOlist <- cbind(RAOlist, RAOtemp)
@@ -193,10 +202,8 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwv = NULL, rao 
         }
         traitSub <- scale(trait[, rao, drop = FALSE] )
         dis <- stats::dist(traitSub)
-        # RAO <- fundiversity::fd_raoq(traitSub, composition)$Q
         RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
       } else if(inherits(rao, 'dist')){
-        # RAO <- fundiversity::fd_raoq(sp_com = composition, dist_matrix = rao)$Q
         RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(rao))$PhyRao
       }
       out <- cbind(out, rao = RAO)
