@@ -2,13 +2,16 @@
 #' @include simulateCommunities.R
 #' @encoding UTF-8
 #' @export
-adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE) 
-{
+adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE) {
+  # Check object class
   if (!c(inherits(x, "simRest"))) {
     stop("x must be of the simRest class")
   }
+  # Extract composition
   comp <- x$simulation$composition
+  # Check if all number are integer
   allInteger <- all(comp%%1 == 0)
+  # Extract baseline
   baseline <- x$simulation$baseline
   # Calculate additions
   # If proportions
@@ -17,14 +20,24 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
   } else{ # If counts
     compAdditions <- comp - baseline
   }
-  if (!is.null(minAbun)) {
-    for (i in 1:nrow(compAdditions)) {
+  if(!is.null(minAbun)){
+    # Adjust each simulation
+    for(i in 1:nrow(compAdditions)){
+      # Test
       testTemp <- compAdditions[i, ] > 0 & compAdditions[i,] <= minAbun
       remPart <- sum(compAdditions[i, testTemp])
+      # Set zero to rare species
       compAdditions[i, testTemp] <- 0
-      if (reallocate && allInteger) {
+      # Reallocate individuals
+      if(reallocate && allInteger){
+        # Species with non zero abundances
         sppWithAbundance <- names(which(compAdditions[i,] > 0))
-        if (remPart > 0 && length(sppWithAbundance) > 0) {
+        if(remPart > 0 && length(sppWithAbundance) > 0 ){
+          # CONFERIR ESSA MUDANCA
+          # for(k in 1:remPart){
+          #   pos <- sample(sppWithAbundance, 1)
+          #   compAdditions[i, pos] <- compAdditions[i, pos]+1
+          # }
           nspp <- sample(1:length(sppWithAbundance), 1)
           if(nspp>remPart){nspp <- remPart}
           newAbun <- generateRandomIntegers(remPart, nspp)
@@ -33,6 +46,7 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
         }
       }
     }
+    # Recalculate composition
     comp <- baseline + compAdditions
   }
   if (!is.null(inv)) {
@@ -54,13 +68,17 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
     }
     comp <- baseline + compAdditions
   }
-  
+  # If proportions
   if (!allInteger) {
+    # (Re)calculate species proportions
     comp <- sweep(comp, MARGIN = 1, rowSums(comp), FUN = "/")
   }
   rowRem <- rowSums(comp, na.rm = TRUE) == 0
-  x$simulation$composition <- comp[!rowRem, ]
-  x$simulation$group <- x$simulation$group[!rowRem, ]
-  x$simulation$baseline <- x$simulation$baseline[!rowRem, ]
+  # Put back composition
+  x$simulation$composition <- comp[!rowRem,]
+  # Remove information from simulation$group
+  x$simulation$group <- x$simulation$group[!rowRem,]
+  # Remove information from simulation$baseline
+  x$simulation$baseline <- x$simulation$baseline[!rowRem,]
   return(x)
 }
