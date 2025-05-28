@@ -3,7 +3,7 @@
 #' @encoding UTF-8
 #' @aliases print.simRestCheck
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted.
-#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
@@ -26,24 +26,24 @@
 #' @examples
 #' data("cerrado.mini")
 #' checkReference(reference = cerrado.mini$reference,
-#'                trait = cerrado.mini$traits,
+#'                traits = cerrado.mini$traits,
 #'                cwm = "BT",
 #'                rao = c("SLA", "Height", "Seed"),
 #'                props = c(0.75, 0.9))
 #' @export
-checkReference <- function(reference, trait, cwm = NULL, cwv = NULL, rao = NULL, supplementary = NULL, props = NULL){
+checkReference <- function(reference, traits, cwm = NULL, cwv = NULL, rao = NULL, supplementary = NULL, props = NULL){
   RES <- list(call = match.call())
   # Create list, simRest class, to use in computeParameters
   x <- list()
   x$simulation$composition <- reference
   x$simulation$group <- data.frame(NAMES = rownames(reference))
   class(x) <- "simRest"
-  maxCom <- matrix(1, nrow = 1, ncol = nrow(trait))
+  maxCom <- matrix(1, nrow = 1, ncol = nrow(traits))
   rownames(maxCom) <- "Pool"
-  colnames(maxCom) <- rownames(trait)
-  resPar <- computeParameters(x, trait = trait, cwm = cwm, cwv = cwv, rao = rao, reference = maxCom, supplementary = supplementary)
+  colnames(maxCom) <- rownames(traits)
+  resPar <- computeParameters(x, traits = traits, cwm = cwm, cwv = cwv, rao = rao, reference = maxCom, supplementary = supplementary)
   RES$pool$results <- resPar$reference$results
-  RES$pool$summary <- resSummary(trait, props = props)
+  RES$pool$summary <- resSummary(traits, props = props)
   RES$reference$results <- resPar$simulation$results[ , -1, drop = FALSE]
   RES$reference$summary <- resSummary(RES$reference$results, props = props)
   if(!is.null(supplementary)){

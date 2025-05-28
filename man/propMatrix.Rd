@@ -6,7 +6,7 @@
 \title{Internal function to generate communities matrix}
 \usage{
 propMatrix(
-  trait,
+  traits,
   ava,
   und,
   it,
@@ -24,11 +24,11 @@ propMatrix(
 )
 }
 \arguments{
-\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
+\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
 
-\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in trait data.}
+\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in traits data.}
 
 \item{it}{Number of iterations (communities).}
 

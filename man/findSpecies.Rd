@@ -5,10 +5,10 @@
 \alias{findSpecies}
 \title{Internal function to select species to generates simulated communities}
 \usage{
-findSpecies(trait, cwm, rao, n, phi)
+findSpecies(traits, cwm, rao, n, phi)
 }
 \arguments{
-\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
 

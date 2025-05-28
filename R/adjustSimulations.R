@@ -10,10 +10,12 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
   comp <- x$simulation$composition
   allInteger <- all(comp%%1 == 0)
   baseline <- x$simulation$baseline
-  compAdditions <- comp - baseline
-  if (!allInteger) {
-    compAdditions <- (comp * 2) - baseline
-    compAdditions
+  # Calculate additions
+  # If proportions
+  if(!allInteger){
+    compAdditions <- (comp*2) - baseline
+  } else{ # If counts
+    compAdditions <- comp - baseline
   }
   if (!is.null(minAbun)) {
     for (i in 1:nrow(compAdditions)) {

@@ -10,7 +10,7 @@
 #' @importFrom stats dist
 #' @aliases computeMultifunctionality standardizeParameters
 #' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
-#' @param trait data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param traits data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
 #' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
@@ -50,7 +50,7 @@
 #' data("cerrado.mini")
 #' head(cerrado.mini$traits)
 #' # Simulation
-#' scenario <- simulateCommunities(trait = cerrado.mini$traits,
+#' scenario <- simulateCommunities(traits = cerrado.mini$traits,
 #'                          ava = "Available",
 #'                          cwm = "BT",
 #'                          rao = c("SLA", "Height", "Seed"),
@@ -59,7 +59,7 @@
 #' scenario
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
-#'                               trait = cerrado.mini$traits,
+#'                               traits = cerrado.mini$traits,
 #'                               ava = "Available",
 #'                               cwm = "BT",
 #'                               rao = c("SLA", "Height", "Seed"),
@@ -80,15 +80,30 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-
 computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
   }
+  # Check data
+  checkResbiotaData(traits = traits, 
+                    restComp = NULL, 
+                    restGroup = NULL,
+                    reference = reference, 
+                    supplementary = supplementary,
+                    traitsDist = rao,
+                    asList = FALSE)
+  # Check dissimilarity if provided
+  checkResbiotaData(traits = traits, 
+                    restComp = NULL, 
+                    restGroup = NULL,
+                    reference = NULL, 
+                    supplementary = NULL,
+                    traitsDist = dissimilarity,
+                    asList = FALSE)
   composition <- x$simulation$composition
   nSim <- nrow(composition)
-  traitsNames <- colnames(trait)
+  traitsNames <- colnames(traits)
   # Merge compositions - simulations, reference and supplementary
   if(!is.null(reference) && is.null(supplementary)){
     nRef <- nrow(reference)
@@ -124,16 +139,16 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
   composition2 <- composition #to calculate CWM2
   composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
-  matchNames <- match(colnames(composition), rownames(trait))
-  trait <- as.data.frame(trait[matchNames, , drop = FALSE])
+  matchNames <- match(colnames(composition), rownames(traits))
+  traits <- as.data.frame(traits[matchNames, , drop = FALSE])
   # Calculate parameters
   out <- NULL
   # Count species unavailable
   if(!is.null(ava)){
     if(!inherits(ava, 'character') || !all(ava %in% traitsNames) || length(ava)>1){
-      stop("ava must be a character indicating a single column of the trait data frame")
+      stop("ava must be a character indicating a single column of the traits data frame")
     }
-    UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(trait[,ava])] > 0) )
+    UNA <- apply(composition, 1, FUN = function(a) sum(a[!as.logical(traits[,ava])] > 0) )
     out <- cbind(out, unavailable = UNA)
   }
   # Richness
@@ -145,10 +160,10 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
   # CWM
   if(!is.null(cwm)){
     if(!inherits(cwm, 'character') || !all(cwm %in% traitsNames)){
-      stop("cwm must be a character indicating one or more columns of the trait data frame")
+      stop("cwm must be a character indicating one or more columns of the traits data frame")
     }
-    traitSub <- trait[, cwm, drop = FALSE]
-    CWM <- SYNCSA::matrix.t(composition, traitSub, scale = FALSE)$matrix.T
+    traitsSub <- traits[, cwm, drop = FALSE]
+    CWM <- SYNCSA::matrix.t(composition, traitsSub, scale = FALSE)$matrix.T
     colnames(CWM) <- paste0("CWM_", colnames(CWM))
     out <- cbind(out, CWM)
   }
@@ -164,10 +179,10 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
   # CWV
   if(!is.null(cwv)){
     if(!inherits(cwv, 'character') || !all(cwv %in% traitsNames)){
-      stop("cwv must be a character indicating one or more columns of the trait data frame")
+      stop("cwv must be a character indicating one or more columns of the traits data frame")
     }
-    traitSub <- trait[, cwv, drop = FALSE]
-    CWV <- calcCWV(composition, traitSub)
+    traitsSub <- traits[, cwv, drop = FALSE]
+    CWV <- calcCWV(composition, traitsSub)
     colnames(CWV) <- paste0("CWV_", colnames(CWV))
     out <- cbind(out, CWV)
   }
@@ -179,7 +194,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
       for(i in 1:length(rao)){
         if(inherits(rao[[i]], 'character')){
           if(!all(rao[[i]] %in% traitsNames)){
-            stop("each value of rao list must be a character indicating one or more columns of the trait data frame, or distance matrix")
+            stop("each value of rao list must be a character indicating one or more columns of the traits data frame, or distance matrix")
           }
           traitSub <- scale(trait[, rao[[i]], drop = FALSE] )
           dis <- stats::dist(traitSub)
@@ -198,10 +213,10 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
     } else{ # If a vector
       if(inherits(rao, 'character')){
         if(!all(rao %in% traitsNames)){
-          stop("rao must be a character indicating one or more columns of the trait data frame, or distance matrix, or a list")
+          stop("rao must be a character indicating one or more columns of the traits data frame, or distance matrix, or a list")
         }
-        traitSub <- scale(trait[, rao, drop = FALSE] )
-        dis <- stats::dist(traitSub)
+        traitsSub <- scale(traits[, rao, drop = FALSE] )
+        dis <- stats::dist(traitsSub)
         RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
       } else if(inherits(rao, 'dist')){
         RAO <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(rao))$PhyRao
@@ -212,13 +227,13 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
   # Cost - It require species cost and planting density
   if(!is.null(cost) || !is.null(dens)){
     if(!inherits(cost, 'character') || !all(cost %in% traitsNames) || length(cost)>1){
-      stop("cost must be a character indicating a single column of the trait data frame")
+      stop("cost must be a character indicating a single column of the traits data frame")
     }
     if(!inherits(dens, 'character') || !all(dens %in% traitsNames) || length(dens)>1){
-      stop("dens must be a character indicating a single column of the trait data frame")
+      stop("dens must be a character indicating a single column of the traits data frame")
     }
-    costVect <- trait[, cost]
-    densVect <- trait[, dens]
+    costVect <- traits[, cost]
+    densVect <- traits[, dens]
     COST <- apply(composition, 1, FUN = function(p){
       COST_i <- sum(p*costVect*densVect, na.rm = TRUE)
       return(COST_i)
@@ -244,10 +259,10 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
     nRef <- nrow(reference)
     if(inherits(dissimilarity, 'character')){
       if(!all(dissimilarity %in% traitsNames)){
-        stop("dissimilarity must be a character indicating one or more columns of the trait data frame, or distance matrix")
+        stop("dissimilarity must be a character indicating one or more columns of the traits data frame, or distance matrix")
       }
-      traitSub <- scale(trait[, dissimilarity, drop = FALSE])
-      dis <- stats::dist(traitSub)
+      traitsSub <- scale(traits[, dissimilarity, drop = FALSE])
+      dis <- stats::dist(traitsSub)
       # resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
       resDis <- calcRAO(composition, dis = dis, nRef = nRef)
     } else if(inherits(dissimilarity, 'dist')){
