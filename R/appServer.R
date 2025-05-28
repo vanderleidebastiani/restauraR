@@ -153,7 +153,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if (is.null(inFile)){
       inputDataRV$traits <- NULL
     }
-    inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
+    inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = TRUE)
   }) # End input file
   ### Input file - restComp ----
   shiny::observeEvent(input$restCompInput, {
@@ -595,6 +595,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                   themeResbiota(baseSize = 15)
               })
               shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
+                                                  # shiny::actionButton("xxx", label = "A"),
                                                   footer = shiny::modalButton(i18n$t("Dismiss")),
                                                   fade = FALSE,
                                                   easyClose = TRUE,
@@ -1277,8 +1278,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                            restComp = inputDataRV$restComp, 
                                            restGroup = inputDataRV$restGroup,
                                            reference = inputDataRV$reference,
-                                           supplementary = inputDataRV$supplementary
-                                           
+                                           supplementary = inputDataRV$supplementary,
+                                           asList = TRUE
     ), error = function(e) e)
     if(inherits(scenario, what = "error")){
       shinyWidgets::sendSweetAlert(
@@ -1306,7 +1307,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
           shinyWidgets::sendSweetAlert(
             session = session,
             title = i18n$t("Warning!"),
-            text = scenario$checkNA,
+            text = scenario$checkWarning,
             type = scenario$checkStatus
           )
         }
@@ -1359,7 +1360,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         inputParSimRV$probGroupRich <- NULL
         inputParSimRV$probGroupAbund <- NULL
       }
-      scenario <- tryCatch(simulateCommunities(trait = inputDataRV$traits,
+      scenario <- tryCatch(simulateCommunities(traits = inputDataRV$traits,
                                                restComp = inputParSimRV$restComp, # Ok
                                                restGroup = inputParSimRV$restGroup, # Ok
                                                ava = input$avaSimInput, # straight input
@@ -1526,7 +1527,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     } else {
       shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
       scenario <- tryCatch(computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
-                                             trait = inputDataRV$traits,
+                                             traits = inputDataRV$traits,
                                              ava = input$avaComInput, # straight input
                                              cwm = input$cwmComInput, # straight input
                                              cwv = input$cwvComInput, # straight input
@@ -2107,7 +2108,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       scenario <- tryCatch(extractResults(x = scenario,
                                           type = input$typeExportInput, # straight input
                                           dbFormat = as.logical(exportRV$dbFormat),
-                                          trait = inputDataRV$traits, 
+                                          traits = inputDataRV$traits, 
                                           ava = input$avaExpInput # straight input
       ), error = function(e) e)
       shiny::removeModal(session = session)

@@ -14,12 +14,11 @@ adjustSimulations <- function(x, minAbun = NULL, reallocate = FALSE) {
   # Extract baseline
   baseline <- x$simulation$baseline
   # Calculate additions
-  compAdditions <- comp - baseline
-  compAdditions
   # If proportions
   if(!allInteger){
     compAdditions <- (comp*2) - baseline
-    compAdditions
+  } else{ # If counts
+    compAdditions <- comp - baseline
   }
   if(!is.null(minAbun)){
     # Adjust each simulation

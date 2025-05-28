@@ -10,7 +10,7 @@
 \title{Generate simulated communities to restoration}
 \usage{
 simulateCommunities(
-  trait,
+  traits,
   restComp = NULL,
   restGroup = NULL,
   ava = NULL,
@@ -37,15 +37,15 @@ mergeSimulations(...)
 \method{print}{simRest}(x, ...)
 }
 \arguments{
-\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{restComp}{A matrix with species proportions in the restoration sites. NAs not accepted.}
 
 \item{restGroup}{Data frame or matrix with complementary information for restoration sites.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
+\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
 
-\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in trait data.}
+\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in traits data.}
 
 \item{it}{Number of iterations (communities).}
 
@@ -171,7 +171,7 @@ The function \code{mergeSelection} concatenates different selection procedures. 
 data("cerrado.mini")
 head(cerrado.mini$traits)
 # Restoration new sites
-scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
+scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
                          cwm = "BT",
                          rao = c("SLA", "Height", "Seed"),
@@ -179,7 +179,7 @@ scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
                          it = 100)
 scenarioA
 # Restoration existing sites
-scenarioB <- simulateCommunities(trait = cerrado.mini$traits, 
+scenarioB <- simulateCommunities(traits = cerrado.mini$traits, 
                                  restComp = cerrado.mini$restoration, 
                                  ava = "Available", 
                                  cwm = "BT", 

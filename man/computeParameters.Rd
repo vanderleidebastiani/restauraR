@@ -10,7 +10,7 @@
 \usage{
 computeParameters(
   x,
-  trait,
+  traits,
   ava = NULL,
   cwm = NULL,
   cwv = NULL,
@@ -29,7 +29,7 @@ standardizeParameters(x, parameters = NULL, method = c("max", "standardize"))
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.}
 
-\item{trait}{data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
 
@@ -80,7 +80,7 @@ A list (class "simRest" or "simRestSelect") with the elements:
 data("cerrado.mini")
 head(cerrado.mini$traits)
 # Simulation
-scenario <- simulateCommunities(trait = cerrado.mini$traits,
+scenario <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
                          cwm = "BT",
                          rao = c("SLA", "Height", "Seed"),
@@ -89,7 +89,7 @@ scenario <- simulateCommunities(trait = cerrado.mini$traits,
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              trait = cerrado.mini$traits,
+                              traits = cerrado.mini$traits,
                               ava = "Available",
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),

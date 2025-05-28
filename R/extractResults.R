@@ -4,8 +4,8 @@
 #' @param x A object of class "simRest" or "simRestSelect" to extract the results.
 #' @param type A option to extract results, partial match to "simComposition", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See Value below.
 #' @param dbFormat The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance". 
-#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
 #' @returns A data.frame or matrix according to the chosen method:
 #' \item{simComposition}{A matrix with species composition for simulated communities.}
 #' \item{simResults}{A data frame with calculated parameters in each simulated community.}
@@ -29,7 +29,7 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @export
-extractResults <- function(x, type = "simResults", dbFormat = FALSE, trait = NULL, ava = NULL){
+extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NULL, ava = NULL){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("x must be of the simRest or simRestSelect class")
@@ -75,8 +75,8 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, trait = NUL
            }
          },
          simUnavailableSpecies = {
-           if(is.null(trait) || is.null(ava)){
-             stop("simUnavailableSpecies method require the trait data and the ava argument")
+           if(is.null(traits) || is.null(ava)){
+             stop("simUnavailableSpecies method require the traits data and the ava argument")
            }
            if(inherits(x, "simRest")){
              sppSelected <- colSums(x$simulation$composition, na.rm = TRUE) 
@@ -84,11 +84,11 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, trait = NUL
              sppSelected <- colSums(x$selection$composition, na.rm = TRUE) 
            }
            sppSelected <- names(sppSelected[sppSelected>0])
-           traitsNames <- colnames(trait)
+           traitsNames <- colnames(traits)
            if(!inherits(ava, 'character') || !all(ava %in% traitsNames) || length(ava)>1){
-             stop("ava must be a character indicating a single column of the trait data frame")
+             stop("ava must be a character indicating a single column of the traits data frame")
            }
-           unaSpp <- rownames(trait)[!as.logical(trait[,ava])]
+           unaSpp <- rownames(traits)[!as.logical(traits[,ava])]
            res <- data.frame(UnavailableSpp = intersect(unaSpp, sppSelected))
          },
          refComposition = {

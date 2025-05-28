@@ -73,11 +73,11 @@
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist as.data.table
 #' @aliases mergeSimulations print.simRest
-#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp A matrix with species proportions in the restoration sites. NAs not accepted.
 #' @param restGroup Data frame or matrix with complementary information for restoration sites.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
-#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in trait data.
+#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
+#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
 #' @param it Number of iterations (communities).
 #' @param rich The range of richness values in each community.
 #' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
@@ -120,7 +120,7 @@
 #' data("cerrado.mini")
 #' head(cerrado.mini$traits)
 #' # Restoration new sites
-#' scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
+#' scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
 #'                          ava = "Available",
 #'                          cwm = "BT",
 #'                          rao = c("SLA", "Height", "Seed"),
@@ -128,7 +128,7 @@
 #'                          it = 100)
 #' scenarioA
 #' # Restoration existing sites
-#' scenarioB <- simulateCommunities(trait = cerrado.mini$traits, 
+#' scenarioB <- simulateCommunities(traits = cerrado.mini$traits, 
 #'                                  restComp = cerrado.mini$restoration, 
 #'                                  ava = "Available", 
 #'                                  cwm = "BT", 
@@ -140,7 +140,7 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
+simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
@@ -157,33 +157,40 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
   if(it<4){
     stop("The argument 'it' must be at minimum 4")
   }
+  # Check data
+  checkResbiotaData(traits = traits, 
+                    restComp = restComp, 
+                    restGroup = restGroup,
+                    reference = NULL, 
+                    supplementary = NULL,
+                    traitsDist = rao,
+                    asList = FALSE)
   # Transform the rich argument in range vector
   if(length(rich) == 1){
     rich <- rep(rich, 2)
   }
-  # Generate species proportions
-  propMatrix <- propMatrix(trait = trait, ava = ava, und = und, it = it, 
+  # Generate species composition
+  propMatrix <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
                            rich = rich, cwm = cwm, rao = rao, phi = phi, 
                            nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
                            group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
-  # Include species proportions in restoration sites
+  # Include species composition in restoration sites
   if(!is.null(restComp)){
+    if(methodTest == 1){
+      if(!all(rowSums(restComp)==1)){
+        stop("The proportions of species at each site in the restComp matrix must sum to 1")
+      }
+    } else{
+      if(!all(restComp%%1==0)){
+        stop("The matrix restComp must contain only integers when the method is 'individuals'")
+      }
+    }
     rowNameProMatrix <- rownames(propMatrix)
     rowNameRest <- rownames(restComp)
     template0 <- makeMatrixTemplate(propMatrix, restComp)
     propMatrix <- reorganizeMatrix(template = template0, propMatrix, fillNA = TRUE)
     restComp <- reorganizeMatrix(template = template0, restComp, fillNA = TRUE)
-    # TRANSFORM PROPORTIONS AND SUM TO REST 
-    # propMatrixAdd <- propMatrix
-    # AQUI ESTA COMENTADO POR HORA
-    # propMatrixAdd <- propMatrix * max_add #transforma matriz
-    # # Set prop = 0 to rare species
-    # if(!is.null(min_p)){
-    #   pos <- propMatrixAdd < min_p
-    #   propMatrixAdd[pos] <- 0
-    #   propMatrixAdd <- (propMatrixAdd/rowSums(propMatrixAdd)) * max_add
-    # }
-    # Sum simulated species proportions with species proportions in the restoration sites
+    # Sum simulated species composition with species composition in the restoration sites
     propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrix, MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
     propMatrixTab <- do.call(rbind, propMatrixList)
     # Baseline composition
@@ -194,6 +201,7 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
     }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))
+    # Organize restGroup informations
     if(!is.null(restGroup)){
       restGroup <- restGroup[rep(seq_len(nrow(restGroup)), each = length(rowNameProMatrix)),, drop = FALSE]
       restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName, restGroup)
@@ -201,22 +209,25 @@ simulateCommunities <- function(trait, restComp = NULL, restGroup = NULL, ava = 
       restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
     }
   } else { 
+    # Organize restGroup informations
     restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
     propMatrixTab <- propMatrix
     # Baseline composition (all zero)
     restCompBaseline <- propMatrix
     restCompBaseline[] <- 0
   }
+  # Organize restGroup informations
   if(!is.null(prefix)){
-      restGroup <- data.frame(Scenario = prefix, restGroup)
+    restGroup <- data.frame(Scenario = prefix, restGroup)
   }
+  # Set row names
   rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   rownames(restGroup) <- NULL
   rownames(restCompBaseline) <- rownames(propMatrixTab)
+  # Organize the results
   RES$simulation$composition <- propMatrixTab
   RES$simulation$group <- restGroup
   RES$simulation$baseline <- restCompBaseline
   class(RES) <- "simRest"
-  # Composicao pode ter linhas e/ou colunas com tudo zero. Remover?
   return(RES)
 }

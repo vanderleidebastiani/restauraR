@@ -8,7 +8,7 @@
 \usage{
 checkReference(
   reference,
-  trait,
+  traits,
   cwm = NULL,
   cwv = NULL,
   rao = NULL,
@@ -21,7 +21,7 @@ checkReference(
 \arguments{
 \item{reference}{A matrix with species proportions in the reference sites. NAs not accepted.}
 
-\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
 
@@ -53,7 +53,7 @@ Calculate basic parameters in reference community: richness, Community Weighted 
 \examples{
 data("cerrado.mini")
 checkReference(reference = cerrado.mini$reference,
-               trait = cerrado.mini$traits,
+               traits = cerrado.mini$traits,
                cwm = "BT",
                rao = c("SLA", "Height", "Seed"),
                props = c(0.75, 0.9))

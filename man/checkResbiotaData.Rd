@@ -3,14 +3,16 @@
 \encoding{UTF-8}
 \name{checkResbiotaData}
 \alias{checkResbiotaData}
-\title{Internal function to check data to resbiota Shiny Application}
+\title{Internal function to check data to resbiota package}
 \usage{
 checkResbiotaData(
   traits = NULL,
   restComp = NULL,
   restGroup = NULL,
   reference = NULL,
-  supplementary = NULL
+  supplementary = NULL,
+  traitsDist = NULL,
+  asList = TRUE
 )
 }
 \arguments{
@@ -23,15 +25,19 @@ checkResbiotaData(
 \item{reference}{A matrix with species proportions in the reference sites.}
 
 \item{supplementary}{A matrix with species proportions in the supplementary sites.}
+
+\item{traitsDist}{A distance matrix between species, based on functional trait values.}
+
+\item{asList}{A logical argument to return the results in as list format.}
 }
 \value{
 A list with the elements:
 \item{checkStatus}{The global status with the type of alert.}
 \item{checkMessage}{A vector with error messages.}
-\item{checkNA}{A vector with warning messages.}
+\item{checkWarning}{A vector with warning messages.}
 }
 \description{
-Internal function to check data to resbiota Shiny Application
+Internal function to check data to resbiota package
 }
 \seealso{
 \code{\link{selectCommunities}}

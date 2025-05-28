@@ -2,7 +2,7 @@
 #' @encoding UTF-8
 #' @importFrom Select selectSpecies
 #' @importFrom utils capture.output
-#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
 #' @param rao A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").
 #' @param n Number of species to select.
@@ -12,11 +12,11 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary
 #' @export
-findSpecies <- function(trait, cwm, rao, n, phi){
-  nSpeciesInt <- nrow(trait)
-  species <- rownames(trait)
+findSpecies <- function(traits, cwm, rao, n, phi){
+  nSpeciesInt <- nrow(traits)
+  species <- rownames(traits)
   if(inherits(rao, 'character')){
-    t2d <- as.matrix(scale(trait[, rao, drop = FALSE]))
+    t2d <- as.matrix(scale(traits[, rao, drop = FALSE]))
     # } else if(inherits(rao, 'dist')){
     #   t2d <- rao
     # }  
@@ -27,7 +27,7 @@ findSpecies <- function(trait, cwm, rao, n, phi){
     t2d <- t2d[match.names, match.names, drop = FALSE]
   }
   if(!is.null(cwm)){
-    t2c <- as.matrix(trait[ , cwm, drop = FALSE])
+    t2c <- as.matrix(traits[ , cwm, drop = FALSE])
     constraints <- apply(t2c, 2, function(x){
       cons <- seq(min(x), max(x), length.out = 8)
       return(cons[c(-1,-8)])

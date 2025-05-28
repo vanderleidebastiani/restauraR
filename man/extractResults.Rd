@@ -9,7 +9,7 @@ extractResults(
   x,
   type = "simResults",
   dbFormat = FALSE,
-  trait = NULL,
+  traits = NULL,
   ava = NULL
 )
 }
@@ -20,9 +20,9 @@ extractResults(
 
 \item{dbFormat}{The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
 
-\item{trait}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
+\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
 }
 \value{
 A data.frame or matrix according to the chosen method:

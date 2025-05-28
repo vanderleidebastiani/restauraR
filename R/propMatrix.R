@@ -1,9 +1,9 @@
 #' @title Internal function to generate communities matrix
 #' @encoding UTF-8
 #' @importFrom stats rlnorm
-#' @param trait Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
-#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in trait data.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
+#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
 #' @param it Number of iterations (communities).
 #' @param rich The range of richness values in each community.
 #' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
@@ -21,21 +21,21 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
-propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, group, probGroupRich, probGroupAbund){
+propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, group, probGroupRich, probGroupAbund){
   # Remove undesired species
   if(!is.null(und)){
-    undLog <- as.logical(trait[,und])
-    trait <- trait[!undLog,] # remove undesired species
+    undLog <- as.logical(traits[,und])
+    traits <- traits[!undLog,] # remove undesired species
   }
   # Basic input parameters
-  nSpecies <- nrow(trait)
-  species <- rownames(trait)
+  nSpecies <- nrow(traits)
+  species <- rownames(traits)
   # Check
   if(rich[1] > nSpecies){
     stop("Minimum richness is higher than number of species")
   }
   if(!is.null(ava)){
-    nAva <- sum(as.logical(trait[,ava]))
+    nAva <- sum(as.logical(traits[,ava]))
     if(rich[1] > nAva){
       stop("Minimum richness is higher than number of available species")
     }
@@ -61,13 +61,13 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   }
   # Probabilities to draw individuals
   if(!is.null(prob)){
-    probVector <- trait[,prob]
+    probVector <- traits[,prob]
   } else{
     probVector <- NULL
   }
   # Simulation in each group of species
   if(!is.null(group)){
-    group <- as.character(trait[, group])
+    group <- as.character(traits[, group])
     uniqueGroups <- unique(group)
     # probGroupRich is optional
     if(!is.null(probGroupRich)){
@@ -82,7 +82,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   }
   # Run simulation with all available species
   if(!is.null(ava)){
-    avaLog <- as.logical(trait[,ava])
+    avaLog <- as.logical(traits[,ava])
     if(sum(avaLog) < rich[2]){
       nsp <- sum(avaLog) 
       vLen <- nsp
@@ -139,7 +139,7 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
   # Maximize diversity
   if(!is.null(rao)){
     # Find distant species 
-    sppMax <- findSpecies(trait, cwm, rao, rich[1], phi)
+    sppMax <- findSpecies(traits, cwm, rao, rich[1], phi)
     # Run simulation with species that maximize rao
     if(length(sppMax) < rich[2]){
       nsp <- length(sppMax)
@@ -173,8 +173,8 @@ propMatrix <- function(trait, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, 
     }
     if(!is.null(ava)){
       # Find distant species that are available
-      avaLog <- as.logical(trait[,ava])
-      sppMaxAva <- findSpecies(trait[avaLog, ], cwm, rao, rich[1], phi)
+      avaLog <- as.logical(traits[,ava])
+      sppMaxAva <- findSpecies(traits[avaLog, ], cwm, rao, rich[1], phi)
       # Run simulation with species that maximize rao and are available
       if(length(sppMaxAva) < rich[2]){
         nsp <- length(sppMaxAva) 
