@@ -38,11 +38,13 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
           #   pos <- sample(sppWithAbundance, 1)
           #   compAdditions[i, pos] <- compAdditions[i, pos]+1
           # }
-          nspp <- sample(1:length(sppWithAbundance), 1)
-          if(nspp>remPart){nspp <- remPart}
-          newAbun <- generateRandomIntegers(remPart, nspp)
-          pos <- sample(sppWithAbundance, nspp)
-          compAdditions[i,pos] <- compAdditions[i,pos] + newAbun
+          
+          # O metodo abaixo exige menos tempo de processamento:
+          nspp <- sample(1:length(sppWithAbundance), 1) #number of sim spp
+          if(nspp>remPart){nspp <- remPart} #nspp cant be higher than rempart
+          newAbun <- generateRandomIntegers(remPart, nspp) #generate one random integer for each nspp, with sum equal to remPart
+          pos <- sample(sppWithAbundance, nspp) #sample which species will receive new individuals
+          compAdditions[i,pos] <- compAdditions[i,pos] + newAbun #add new abundances
         }
       }
     }
