@@ -39,10 +39,17 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
           #   compAdditions[i, pos] <- compAdditions[i, pos]+1
           # }
           
-          # O metodo abaixo exige menos tempo de processamento:
+          # # O metodo abaixo exige menos tempo de processamento:
+          # nspp <- sample(1:length(sppWithAbundance), 1) #number of sim spp
+          # if(nspp>remPart){nspp <- remPart} #nspp cant be higher than rempart
+          # newAbun <- generateRandomIntegers(remPart, nspp) #generate one random integer for each nspp, with sum equal to remPart
+          # pos <- sample(sppWithAbundance, nspp) #sample which species will receive new individuals
+          # compAdditions[i,pos] <- compAdditions[i,pos] + newAbun #add new abundances
+          
+          # O metodo abaixo usa a probabilidade de sorteio da especie:
           nspp <- sample(1:length(sppWithAbundance), 1) #number of sim spp
-          if(nspp>remPart){nspp <- remPart} #nspp cant be higher than rempart
-          newAbun <- generateRandomIntegers(remPart, nspp) #generate one random integer for each nspp, with sum equal to remPart
+          prob <- compAdditions[i,]/sum(compAdditions[i,]) #sampling probability
+          newAbun <- rmultinom(1, size=remPart, prob=prob) #generate one integer for each nspp (including 0), based on prob, with sum equal to remPart
           pos <- sample(sppWithAbundance, nspp) #sample which species will receive new individuals
           compAdditions[i,pos] <- compAdditions[i,pos] + newAbun #add new abundances
         }
@@ -62,7 +69,8 @@ adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE
         if (remPart > 0 && length(sppWithAbundance) > 0) {
           n <- sample(1:length(sppWithAbundance), 1)
           if(n>remPart){n <- remPart}
-          newAbun <- generateRandomIntegers(remPart, n)
+          prob <- compAdditions[i,]/sum(compAdditions[i,])
+          newAbun <- rmultinom(1, size=remPart, prob=prob)
           pos <- sample(sppWithAbundance, n)
           compAdditions[i,pos] <- compAdditions[i,pos] + newAbun
         }
