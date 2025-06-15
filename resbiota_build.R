@@ -9,8 +9,9 @@ devtools::build_vignettes()
 # rmarkdown::render("vignettes/Framework-application.Rmd",
 #                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
 
-setwd("..")
-system("R CMD build resbiota")
+system("R CMD build .")
+#setwd("..")
+#system("R CMD build resbiota")
 # system("R CMD build --no-build-vignettes")
 # system("R CMD INSTALL resbiota")
 # system("R CMD check resbiota")
