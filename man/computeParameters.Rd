@@ -13,6 +13,7 @@ computeParameters(
   traits,
   ava = NULL,
   cwm = NULL,
+  cwm2 = NULL,
   cwv = NULL,
   rao = NULL,
   cost = NULL,
@@ -27,13 +28,13 @@ computeMultifunctionality(x, tests)
 standardizeParameters(x, parameters = NULL, method = c("max", "standardize"))
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.}
+\item{x}{A object of class "simRest" or "simRestSelect" to perform communitie parameters.}
 
 \item{traits}{data frame or matrix with species traits. Traits as columns and species as rows.}
 
 \item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.}
 
-\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{A vector with trait names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
 
 \item{cwv}{A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
