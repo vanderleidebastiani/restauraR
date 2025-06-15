@@ -30,7 +30,7 @@ simulateCommunities(
   probGroupAbund = NULL
 )
 
-adjustSimulations(x, minAbun = NULL, reallocate = FALSE)
+adjustSimulations(x, minAbun = NULL, inv = NULL, reallocate = FALSE)
 
 mergeSimulations(...)
 

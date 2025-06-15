@@ -2,7 +2,7 @@ rm(list = ls())
 require(devtools)
 require(rmarkdown)
 
-setwd("resbiota")
+#setwd("resbiota")
 devtools::document()
 devtools::build_vignettes()
 # devtools::clean_vignettes()

@@ -9,10 +9,10 @@
 #' @importFrom SYNCSA matrix.t
 #' @importFrom stats dist
 #' @aliases computeMultifunctionality standardizeParameters
-#' @param x A object of class "simRest" or "simRestSelect" to perform calculate communities parameters.
+#' @param x A object of class "simRest" or "simRestSelect" to perform communitie parameters.
 #' @param traits data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
-#' @param cwm A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param cwm A vector with trait names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
 #' @param cost A vector with trait name with of species cost per individual.
@@ -80,7 +80,7 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("x must be of the simRest class")
@@ -171,7 +171,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
     if(!inherits(cwm2, 'character') || !all(cwm2 %in% traitsNames)){
       stop("cwm must be a character indicating one or more columns of the trait data frame")
     }
-    traitSub <- trait[, cwm2, drop = FALSE]
+    traitSub <- traits[, cwm2, drop = FALSE]
     CWM2 <- calcCWM2(composition2, traitSub)
     colnames(CWM2) <- paste0("CWM2_", colnames(CWM2))
     out <- cbind(out, CWM2)
@@ -196,7 +196,7 @@ computeParameters <- function(x, trait, ava = NULL, cwm = NULL, cwm2 = NULL, cwv
           if(!all(rao[[i]] %in% traitsNames)){
             stop("each value of rao list must be a character indicating one or more columns of the traits data frame, or distance matrix")
           }
-          traitSub <- scale(trait[, rao[[i]], drop = FALSE] )
+          traitSub <- scale(traits[, rao[[i]], drop = FALSE] )
           dis <- stats::dist(traitSub)
           RAOtemp <- SYNCSA::rao.diversity(comm = composition, phylodist = as.matrix(dis))$PhyRao
         } else if(inherits(rao[[i]], 'dist')){
