@@ -66,6 +66,7 @@ Collate:
     'print.simRestSelect.R'
     'propMatrix.R'
     'randDivision.R'
+    'removeCoex.R'
     'resSummary.R'
     'resbiota-package.R'
     'roundDivision.R'
