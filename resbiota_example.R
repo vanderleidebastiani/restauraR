@@ -69,23 +69,27 @@ resSIM0$simulation$composition %>% head
 resSIM0$simulation$group
 resSIM0$simulation$group %>% head
 resSIM0$simulation$group %>% dim
+resSIM0$simulation$baseline
 
 
 ### Simulate communities starting with existing species ----
-resSIM1 <- simulateCommunities(trait = dados$trait[80:120,],
+resSIM1 <- simulateCommunities(trait = dados$trait,
                                ava = dados$ava,
                                und = dados$und,
                                it = 500, # dados$it,
                                rich = c(10, 12),
                                cwm = dados$cwm,
                                rao = dados$cwm,
-                               rest = dados$rest,
+                               restComp = dados$rest,
                                restGroup = dados$restGroup,
                                # max_add = dados$max_add, 
                                # min_p = dados$min_p,
+                               method = "proportions",
                                phi = 1, 
                                prefix = "Ongoing"
 )
+
+rowSums(dados$rest)
 resSIM1
 class(resSIM1)
 str(resSIM1)

@@ -34,7 +34,7 @@ Description: Create restoration solutions to assemble communities from a regiona
 License: GPL (>= 3)
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Collate: 
     'adjString.R'
     'simulateCommunities.R'

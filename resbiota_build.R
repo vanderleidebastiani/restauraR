@@ -1,6 +1,7 @@
 rm(list = ls())
 require(devtools)
 require(rmarkdown)
+# install_version("Select", version = "1.4", repos = "http://cran.us.r-project.org")
 
 #setwd("resbiota")
 devtools::document()
@@ -10,11 +11,11 @@ devtools::build_vignettes()
 #                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
 
 system("R CMD build .")
-#setwd("..")
-#system("R CMD build resbiota")
-# system("R CMD build --no-build-vignettes")
+setwd("..")
+system("R CMD build resbiota")
+system("R CMD build resbiota --no-build-vignettes")
 # system("R CMD INSTALL resbiota")
-# system("R CMD check resbiota")
+system("R CMD check resbiota")
 # remove.packages("resbiota")
 
 system("R CMD INSTALL resbiota_0.0.4.tar.gz")
