@@ -5,7 +5,7 @@
 viewMultifunctionality <- function(x, hideref = FALSE, ...){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-    stop("x must be of the simRest or simRestSelect class")
+    stop("The x argument must be of class simRest or simRestSelect")
   }
   if(inherits(x, "simRest")){
     resMulti <- x$simulation$multifunctionality
@@ -13,7 +13,7 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
     resMulti <- x$selection$multifunctionality
   }
   if(is.null(resMulti)){
-    stop("x must include multifunctionality results")
+    stop("The x argument must contain multifunctionality results")
   }
   # Remove first name (SIM)
   groupsMulti <- colnames(resMulti)[-1]

@@ -7,7 +7,7 @@ mergeSelection <- function(...) {
   ARGS <- list(...)
   # Check object class
   if(!all(sapply(ARGS, function(x) inherits(x, "simRestSelect")))){
-    stop("all objects must be of the simRestSelect class")
+    stop("All objects must be of class simRestSelect")
   }
   # Group
   group <- lapply(ARGS, function(x) x$selection$group)
@@ -41,7 +41,7 @@ mergeSelection <- function(...) {
   multifun <- lapply(ARGS, function(x) x$selection$multifunctionality)
   checkNullMultifun <- sapply(multifun, function(x) is.null(x))
   if(!c(all(checkNullMultifun == TRUE) || all(checkNullMultifun == FALSE))){
-    stop("all objects must contain (or none of them must contain) the multifunctionality results")
+    stop("Multifunctionality results must be present in either all objects or none")
   }
   if(!all(checkNullMultifun)){
     multifun <- lapply(multifun, data.table::as.data.table, keep.rownames = FALSE)

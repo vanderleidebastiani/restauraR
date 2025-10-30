@@ -15,7 +15,7 @@
 findSpecies <- function(traits, cwm, rao, n, phi){
   nSpeciesInt <- nrow(traits)
   species <- rownames(traits)
-  if(inherits(rao, 'character')){
+  if(inherits(rao, "character")){
     t2d <- as.matrix(scale(traits[, rao, drop = FALSE]))
     # } else if(inherits(rao, 'dist')){
     #   t2d <- rao

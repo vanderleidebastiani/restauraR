@@ -9,7 +9,7 @@ print.simRestCheck <- function(x, ...) {
   cat("\n")
   cat(paste(" ",colnames(x$pool$results)), sep = "\n")
   cat("\n")
-  cat("List of results:\n")
+  cat("Available results:\n")
   # Avoid collecting the names of the following objects
   if(!is.null(x$pool$results)) x$pool$results <- as.matrix(x$pool$results)
   if(!is.null(x$reference$results)) x$reference$results <- as.matrix(x$reference$results)

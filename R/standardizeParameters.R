@@ -5,16 +5,16 @@
 standardizeParameters <- function(x, parameters = NULL, method = c("max", "standardize")){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-    stop("x must be of the simRest or simRestSelect class")
+    stop("The x argument must be of class simRest or simRestSelect")
   }
   # Check method
   stMETHOD <- c("max", "standardize")
   stmethod <- pmatch(method, stMETHOD)
   if (length(stmethod) > 1) {
-    stop("Only one argument is accepted in method")
+    stop("Only one method can be specified")
   }
   if (is.na(stmethod)) {
-    stop("Invalid method")
+    stop("Invalid method. Choose either max or standardize")
   }
   if(inherits(x, "simRest")){
     simulationSlot <- TRUE # save in simulation slot
@@ -25,8 +25,8 @@ standardizeParameters <- function(x, parameters = NULL, method = c("max", "stand
   }
   varNames <- colnames(xPar)
   if(!is.null(parameters)){
-    if(!inherits(parameters, 'character') || !all(parameters %in% varNames)){
-      stop("parameters must be a character indicating one or more columns of the result")
+    if(!inherits(parameters, "character") || !all(parameters %in% varNames)){
+      stop("The parameters argument must be a character vector specifying one or more column names from the results")
     }
     xPar <- xPar[, parameters, drop = FALSE]
     nSim <- nrow(xPar)

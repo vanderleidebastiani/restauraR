@@ -25,7 +25,7 @@
 viewResults <- function(x, xvar, yvar, hideref = FALSE){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-    stop("x must be of the simRest or simRestSelect class")
+    stop("The x argument must be of class simRest or simRestSelect")
   }
   if(inherits(x, "simRest")){
     resResults <- x$simulation$results

@@ -32,7 +32,7 @@
 extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NULL, ava = NULL){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-    stop("x must be of the simRest or simRestSelect class")
+    stop("The x argument must be of class simRest or simRestSelect")
   }
   typeMETHOD <- c("simComposition",
                   "simResults", 
@@ -46,7 +46,7 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
                   "supMultifunctionality")
   typeTemp <- pmatch(type, typeMETHOD)
   if (length(typeTemp) > 1) {
-    stop("Only one argument is accepted in type")
+    stop("Only one type can be specified")
   }
   if (is.na(typeTemp)) {
     stop("Invalid type")
@@ -76,7 +76,7 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
          },
          simUnavailableSpecies = {
            if(is.null(traits) || is.null(ava)){
-             stop("simUnavailableSpecies method require the traits data and the ava argument")
+             stop("The simUnavailableSpecies type requires both traits data and the ava argument")
            }
            if(inherits(x, "simRest")){
              sppSelected <- colSums(x$simulation$composition, na.rm = TRUE) 
@@ -85,8 +85,8 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
            }
            sppSelected <- names(sppSelected[sppSelected>0])
            traitsNames <- colnames(traits)
-           if(!inherits(ava, 'character') || !all(ava %in% traitsNames) || length(ava)>1){
-             stop("ava must be a character indicating a single column of the traits data frame")
+           if(!inherits(ava, "character") || !all(ava %in% traitsNames) || length(ava)>1){
+             stop("The ava argument must be a character vector specifying a single columm from the traits data frame")
            }
            unaSpp <- rownames(traits)[!as.logical(traits[,ava])]
            res <- data.frame(UnavailableSpp = intersect(unaSpp, sppSelected))

@@ -5,8 +5,8 @@
 print.simRest <- function(x, ...) {
   cat("Call:\n")
   cat(deparse(x$call), "\n\n")
-  cat("Informations:\n")
-  cat(" Pool size: ")
+  cat("Overview:\n")
+  cat(" Species pool size: ")
   cat(ncol(x$simulation$composition), "\n")
   cat(" Number of simulations: ")
   cat(nrow(x$simulation$composition), "\n")
@@ -22,7 +22,7 @@ print.simRest <- function(x, ...) {
   } else{
     cat(ifelse(is.null(x$simulation$results), "No", "Yes"), "\n\n")
   }
-  cat("List of results:\n")
+  cat("Available results:\n")
   # Avoid collecting the names of the following objects
   if(!is.null(x$simulation$group)) x$simulation$group <- as.matrix(x$simulation$group)
   if(!is.null(x$simulation$results)) x$simulation$results <- as.matrix(x$simulation$results)

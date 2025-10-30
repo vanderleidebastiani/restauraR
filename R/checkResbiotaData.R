@@ -21,6 +21,7 @@ checkResbiotaData <- function (traits = NULL,
                                reference = NULL, 
                                supplementary = NULL,
                                traitsDist = NULL,
+                               cooccur = NULL,
                                asList = TRUE)
 {
   RES <- list()
@@ -31,23 +32,23 @@ checkResbiotaData <- function (traits = NULL,
     res <- NULL
     if (!inherits(x, c("data.frame", "matrix"))) {
       if(asList){
-        res <- c(res, paste0("Error: ", objName, " must be a matrix or a data.frame"))  
+        res <- c(res, paste0("Error: The ", objName, " must be a matrix or data.frame"))  
       } else{
-        stop(paste0(objName, " must be a matrix or a data.frame"), call. = FALSE)
+        stop(paste0("The ", objName, " must be a matrix or data.frame"), call. = FALSE)
       }
     }
     if (is.null(colnames(x))) {
       if(asList){
-        res <- c(res, paste0("Error: ", objName, " without column names"))
+        res <- c(res, paste0("Error: The ", objName, " must have column names"))
       } else{
-        stop(paste0(objName, " without column names"), call. = FALSE)
+        stop(paste0("The ", objName, " must have column names"), call. = FALSE)
       }
     }
     if (is.null(rownames(x))) {
       if(asList){
-        res <- c(res, paste0("Error: ", objName, " without row names"))
+        res <- c(res, paste0("Error: The ", objName, " must have row names"))
       } else{
-        stop(paste0(objName, " without row names"), call. = FALSE)
+        stop(paste0("The ", objName, " must have row names"), call. = FALSE)
       }
     }
     if(asList){
@@ -65,23 +66,30 @@ checkResbiotaData <- function (traits = NULL,
       nCol <- ncol(x)
       if (nRow!=nCol){
         if(asList){
-          res <- c(res, paste0("Error: ", objName, " is not a distance matrix or a square matrix"))  
+          res <- c(res, paste0("Error: The ", objName, " must be a square matrix or distance matrix"))  
         } else{
-          stop(paste0(objName, " is not a distance matrix or a square matrix"), call. = FALSE)
+          stop(paste0("The ", objName, " must be a square matrix or distance matrix"), call. = FALSE)
         }
       }
       if (is.null(colnames(x))) {
         if(asList){
-          res <- c(res, paste0("Error: ", objName, " without column names"))
+          res <- c(res, paste0("Error: The ", objName, " must have column names"))
         } else{
-          stop(paste0(objName, " without column names"), call. = FALSE)
+          stop(paste0("The ", objName, " must have column names"), call. = FALSE)
         }
       }
       if (is.null(rownames(x))) {
         if(asList){
-          res <- c(res, paste0("Error: ", objName, " without row names"))
+          res <- c(res, paste0("Error: The ", objName, " must have row names"))
         } else{
-          stop(paste0(objName, " without row names"), call. = FALSE)
+          stop(paste0("The ", objName, " must have row names"), call. = FALSE)
+        }
+      }
+      if (!any(rownames(x) == colnames(x))) {
+        if(asList){
+          res <- c(res, paste0("Error: The ", objName, " must be a distance matrix or square matrix with matching row and column names in the same order"))
+        } else{
+          stop(paste0("The ", objName, " must be a distance matrix or square matrix with matching row and column names in the same order"), call. = FALSE)
         }
       }
       if(asList){
@@ -113,17 +121,17 @@ checkResbiotaData <- function (traits = NULL,
     traitsType <- sapply(traits, vectorClass)
     if (any(traitsType == "character")) {
       if(asList){
-        checkMessage <- c(checkMessage, "Error: traits must contain only numeric, binary, factor or ordinal variables")  
+        checkMessage <- c(checkMessage, "Error: The traits data must contain only numeric, binary, factor or ordinal variables")  
       } else{
-        stop("traits must contain only numeric, binary, factor or ordinal variables", call. = FALSE)
+        stop("The traits data must contain only numeric, binary, factor or ordinal variables", call. = FALSE)
       }
     }
     sppTraits <- rownames(traits)
   } else{
     if(asList){
-      checkMessage <- c(checkMessage, "Error: traits data is mandatory")  
+      checkMessage <- c(checkMessage, "Error: The traits data is requerid")  
     } else{
-      stop("traits data is mandatory", call. = FALSE)
+      stop("The traits data is requerid", call. = FALSE)
     }
   }
   sppComp <- c()
@@ -138,9 +146,9 @@ checkResbiotaData <- function (traits = NULL,
     varType <- sapply(restComp, vectorClass)
     if (any(varType == "character") | any(varType == "factor")) {
       if(asList){
-        checkMessage <- c(checkMessage, "Error: restComp data must contain only numeric or binary variables")  
+        checkMessage <- c(checkMessage, "Error: The restComp data must contain only numeric or binary variables")  
       } else{
-        stop("restComp data must contain only numeric or binary variables", call. = FALSE)
+        stop("The restComp data must contain only numeric or binary variables", call. = FALSE)
       }
     }
     sppComp <- c(sppComp, colnames(restComp))
@@ -165,9 +173,9 @@ checkResbiotaData <- function (traits = NULL,
     varType <- sapply(reference, vectorClass)
     if (any(varType == "character") | any(varType == "factor")) {
       if(asList){
-        checkMessage <- c(checkMessage, "Error: reference data must contain only numeric or binary variables")  
+        checkMessage <- c(checkMessage, "Error: The reference data must contain only numeric or binary variables")  
       } else{
-        stop("reference data must contain only numeric or binary variables", call. = FALSE)
+        stop("The reference data must contain only numeric or binary variables", call. = FALSE)
       }
     }
     sppComp <- c(sppComp, colnames(reference))
@@ -183,9 +191,9 @@ checkResbiotaData <- function (traits = NULL,
     varType <- sapply(supplementary, vectorClass)
     if (any(varType == "character") | any(varType == "factor")) {
       if(asList){
-        checkMessage <- c(checkMessage, "Error: supplementary data must contain only numeric or binary variables")  
+        checkMessage <- c(checkMessage, "Error: The supplementary data must contain only numeric or binary variables")  
       } else{
-        stop("supplementary data must contain only numeric or binary variables", call. = FALSE)
+        stop("The supplementary data must contain only numeric or binary variables", call. = FALSE)
       }
     }
     sppComp <- c(sppComp, colnames(supplementary))
@@ -206,6 +214,22 @@ checkResbiotaData <- function (traits = NULL,
       sppDist <- NULL
     }
   }
+  if(!is.null(cooccur)){
+    # Check only if cooccur is a matrix or distance matrix
+    if(asList){
+      checkMessage <- c(checkMessage,  fCheckDist(cooccur, objName = "cooccur"))
+      checkWarning <- c(checkWarning, fCheckNA(cooccur, objName = "cooccur"))  
+    } else{
+      fCheckDist(cooccur, objName = "cooccur", asList = FALSE)
+      fCheckNA(cooccur, objName = "cooccur", asList = FALSE)
+    }
+    if(inherits(cooccur, c("data.frame", "dist", "matrix"))){
+      cooccur <- as.matrix(cooccur)
+      sppCooc <- colnames(cooccur)
+    } else{
+      sppCooc <- NULL
+    }
+  }
   if(!is.null(traits)){
     sppComp <- unique(sppComp)
     matchNames <- match(sppComp, sppTraits)
@@ -218,9 +242,9 @@ checkResbiotaData <- function (traits = NULL,
         diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
       }
       if(asList){
-        checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing in the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
+        checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
       } else{
-        stop(paste0("There are ", nDiffSpp, " species missing in the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+        stop(paste0("There are ", nDiffSpp, " species missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
       }
     }
     if(!is.null(traitsDist) && !is.null(sppDist)){
@@ -234,9 +258,26 @@ checkResbiotaData <- function (traits = NULL,
           diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
         }
         if(asList){
-          checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing in distance matrix between species: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
+          checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing from distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
         } else{
-          stop(paste0("There are ", nDiffSpp, " species missing in the distance matrix between species: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+          stop(paste0("There are ", nDiffSpp, " species missing from the distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+        }
+      }
+    }
+    if(!is.null(sppCooc)){
+      matchNamesCooc <- match(sppTraits, sppCooc)
+      if (sum(is.na(matchNamesCooc)) > 0) {
+        # List difference species
+        diffSppCooc <- setdiff(sppTraits, sppCooc)
+        nDiffSppCooc <- length(diffSppCooc)
+        # Return only 10 species names
+        if(nDiffSppCooc>10){
+          diffSppCooc <- c(diffSppCooc[1:5], "...", diffSppCooc[(nDiffSppCooc-4):nDiffSppCooc])
+        }
+        if(asList){
+          checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSppCooc, " species missing in co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "))
+        } else{
+          stop(paste0("There are ", nDiffSppCooc, " species missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "), call. = FALSE)
         }
       }
     }

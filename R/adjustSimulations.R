@@ -5,7 +5,7 @@
 adjustSimulations <- function (x, minAbun = NULL, inv = NULL, reallocate = FALSE) {
   # Check object class
   if (!c(inherits(x, "simRest"))) {
-    stop("x must be of the simRest class")
+    stop("The x argument must be of class simRest")
   }
   # Extract composition
   comp <- x$simulation$composition

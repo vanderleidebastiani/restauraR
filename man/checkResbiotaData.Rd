@@ -12,6 +12,7 @@ checkResbiotaData(
   reference = NULL,
   supplementary = NULL,
   traitsDist = NULL,
+  cooccur = NULL,
   asList = TRUE
 )
 }

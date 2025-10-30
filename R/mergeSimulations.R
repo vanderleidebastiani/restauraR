@@ -7,7 +7,7 @@ mergeSimulations <- function(...) {
   ARGS <- list(...)
   # Check object class
   if(!all(sapply(ARGS, function(x) inherits(x, "simRest")))){
-    stop("all objects must be of the simRest class")
+    stop("All objects must be of class simRest")
   }
   # Group
   group <- lapply(ARGS, function(x) x$simulation$group)
@@ -36,7 +36,7 @@ mergeSimulations <- function(...) {
   results <- lapply(ARGS, function(x) x$simulation$results)
   checkNull <- sapply(results, function(x) is.null(x))
   if(!c(all(checkNull == TRUE) || all(checkNull == FALSE))){
-    stop("all objects must contain (or none of them must contain) the calculated results")
+    stop("Calculated results must be present in either all objects or none")
   }
   if(!all(checkNull)){
     results <- lapply(results, data.table::as.data.table, keep.rownames = FALSE)
@@ -47,7 +47,7 @@ mergeSimulations <- function(...) {
   multifun <- lapply(ARGS, function(x) x$simulation$multifunctionality)
   checkNullMultifun <- sapply(multifun, function(x) is.null(x))
   if(!c(all(checkNullMultifun == TRUE) || all(checkNullMultifun == FALSE))){
-    stop("all objects must contain (or none of them must contain) the multifunctionality results")
+    stop("Multifunctionality results must be present in either all objects or none")
   }
   if(!all(checkNullMultifun)){
     multifun <- lapply(multifun, data.table::as.data.table, keep.rownames = FALSE)

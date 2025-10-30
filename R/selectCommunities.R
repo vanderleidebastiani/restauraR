@@ -71,7 +71,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-    stop("x must be of the simRest or simRestSelect class")
+    stop("The x argument must be of class simRest or simRestSelect")
   }
   if(inherits(x, "simRest")){
     xPar <- x$simulation$results
