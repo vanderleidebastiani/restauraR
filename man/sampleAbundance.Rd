@@ -10,21 +10,25 @@ sampleAbundance(
   nRich1,
   nRich2,
   sPool,
-  nInd,
+  nInd1,
+  nInd2,
   cvAbund = 1,
   prob = NULL,
   returnProp = FALSE,
-  method = "proportions"
+  method = "proportions",
+  cooccur = NULL
 )
 
 sampleAbundanceGroups(
   nRich1,
   nRich2,
-  nInd,
+  nInd1,
+  nInd2,
   cvAbund = 1,
   prob = NULL,
   returnProp = FALSE,
   method = "proportions",
+  cooccur = NULL,
   group,
   probGroupRich,
   probGroupAbund
@@ -37,7 +41,9 @@ sampleAbundanceGroups(
 
 \item{sPool}{Species pool size.}
 
-\item{nInd}{The number of individuals to draw. Used only in method "individuals".}
+\item{nInd1}{Minimum number of individuals to draw. Used only in method "individuals".}
+
+\item{nInd2}{Maximum number of individuals to draw. Used only in method "individuals".}
 
 \item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
 

@@ -18,6 +18,7 @@ propMatrix(
   cvAbund,
   prob,
   method,
+  cooccur,
   group,
   probGroupRich,
   probGroupAbund
@@ -40,7 +41,7 @@ propMatrix(
 
 \item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
 
-\item{nInd}{The number of individuals to draw. Used only in method "individuals".}
+\item{nInd}{A vector with the number of individuals to draw. Used only in method "individuals".}
 
 \item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
 

@@ -25,6 +25,7 @@ simulateCommunities(
   cvAbund = 1,
   prefix = NULL,
   method = "proportions",
+  cooccur = NULL,
   group = NULL,
   probGroupRich = NULL,
   probGroupAbund = NULL

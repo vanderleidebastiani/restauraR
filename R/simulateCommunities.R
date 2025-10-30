@@ -140,22 +140,22 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
+simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
   methodTest <- pmatch(method, METHOD)
   if (length(methodTest) > 1) {
-    stop("Only one argument is accepted in method")
+    stop("Only one method can be specified")
   }
   if (is.na(methodTest)) {
-    stop("Invalid method")
+    stop("Invalid method. Choose either proportions or individuals")
   }
   if (methodTest == 2 && is.null(nInd)){
-    stop("For the 'individuals' method it is mandatory specify the 'nInd' argument")
+    stop("For the individuals method, the nInd argument is mandatory")
   }
   if(it<4){
-    stop("The argument 'it' must be at minimum 4")
+    stop("The argument it must be at least 4")
   }
   # Check data
   checkResbiotaData(traits = traits, 
@@ -164,34 +164,136 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
                     reference = NULL, 
                     supplementary = NULL,
                     traitsDist = rao,
+                    cooccur = cooccur,
                     asList = FALSE)
-  # Transform the rich argument in range vector
-  if(length(rich) == 1){
-    rich <- rep(rich, 2)
+  if(!is.null(cooccur)){
+    # Organize co-occurrence matrix 
+    matchNames <- match(rownames(traits), rownames(cooccur))
+    cooccur <- cooccur[matchNames, matchNames, drop = FALSE]
+    cooccur <- as.matrix(cooccur)
+    # Set diagonal to zero
+    diag(cooccur) <- 0
+    # Check if any negative value
+    if(min(cooccur)<0){
+      stop("Co-occurrence matrix with negative values")
+    }
   }
-  # Generate species composition
-  propMatrix <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
-                           rich = rich, cwm = cwm, rao = rao, phi = phi, 
-                           nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
-                           group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
-  # Include species composition in restoration sites
-  if(!is.null(restComp)){
+  # Basic parameters without information of restoration sites
+  if(is.null(restComp)){
+    # Transform the rich argument in range vector
+    if(is.numeric(rich)){
+      # rich <- c(min(rich, na.rm = TRUE), max(rich, na.rm = TRUE)) 
+      rich <- range(rich, na.rm = TRUE)
+      if(!all(rich%%1 == 0)){
+        stop("The rich argument must be a vector of integers")
+      }
+    } else{
+      stop("The rich argument must be a vector of integers")
+    }
+    # Transform the nInd argument in range vector
+    if(!is.null(nInd)){
+      if(is.numeric(nInd)){
+        # nInd <- c(min(nInd, na.rm = TRUE), max(nInd, na.rm = TRUE))
+        nInd <- range(nInd, na.rm = TRUE)
+        if(!all(nInd%%1 == 0)){
+          stop("The nInd argument must be a vector of integers")
+        }
+      } else{
+        stop("The nInd argument must be a vector of integers")
+      }
+    }
+    # Generate species composition
+    propMatrix <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
+                             rich = rich, cwm = cwm, rao = rao, phi = phi, 
+                             nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
+                             cooccur = cooccur,
+                             group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
+    # Organize restGroup informations
+    restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
+    propMatrixTab <- propMatrix
+    # Baseline composition (all zero)
+    restCompBaseline <- propMatrix
+    restCompBaseline[] <- 0
+  } else {
+    # Include species composition in restoration sites
+    # if(!is.null(restComp)){
     if(methodTest == 1){
       if(!all(rowSums(restComp)==1)){
-        stop("The proportions of species at each site in the restComp matrix must sum to 1")
+        stop("Species proportions in the restComp matrix must sum to 1 for each site")
       }
     } else{
       if(!all(restComp%%1==0)){
-        stop("The matrix restComp must contain only integers when the method is 'individuals'")
+        stop("The restComp matrix must contain only integers when using the 'individuals' method")
       }
     }
-    rowNameProMatrix <- rownames(propMatrix)
+    # Transform the rich argument in a list with range vector
+    if(is.numeric(rich)){
+      rich <- range(rich, na.rm = TRUE)
+      if(!all(rich%%1 == 0)){
+        stop("The rich argument must be a vector of integers")
+      }
+      parRichList <- lapply(1:nrow(restComp), function(i) rich)
+    } else{
+      if(!is.null(restGroup)){
+        restGroupNames <- colnames(restGroup)
+        if(!inherits(rich, "character") || !all(rich %in% restGroupNames)){
+          stop("The rich argument must specify one or more valid column names from the restGroup data frame")
+        } else{
+          richDF <- restGroup[, rich, drop = FALSE]  
+          if(!all(richDF%%1 == 0) || any(is.na(richDF))){
+            stop("The columns specified by the rich argument in restGroup data frame must contain only integer values")
+          }
+          parRichList <- apply(richDF, MARGIN = 1, range, na.rm = TRUE, simplify = FALSE)
+        }
+      } else{
+        stop("The rich argument must be either a vector of integers or one or more valid column names from restGroup data frame represeting richness values for each restoration site")
+      }
+    }
+    # Transform the nInd argument in a list with range vector
+    if(!is.null(nInd)){
+      if(is.numeric(nInd)){
+        nInd <- c(min(nInd, na.rm = TRUE), max(nInd, na.rm = TRUE))
+        if(!all(nInd%%1 == 0)){
+          stop("The nInd argument must be a vector of integers")
+        }
+        parIndList <- lapply(1:nrow(restComp), function(i) nInd)
+      } else{
+        if(!is.null(restGroup)){
+          restGroupNames <- colnames(restGroup)
+          if(!inherits(nInd, "character") || !all(nInd %in% restGroupNames)){
+            stop("The argument nInd must specify one or more valid column names from the restGroup data frame")
+          } else{
+            nIndDF <- restGroup[, nInd, drop = FALSE]
+            if(!all(nIndDF%%1 == 0) || any(is.na(nIndDF))){
+              stop("The columns specified by the nInd argument in restGroup data frame must contain only integers values")
+            }
+            parIndList <- apply(nIndDF, MARGIN = 1, range, na.rm = TRUE, simplify = FALSE)
+          }
+        } else{
+          stop("The nInd argument must be either a vector of integers or one or more valid column names from restGroup data frame represeting the number of individuals for each restoration site")
+        } 
+      }
+    } else{
+      parIndList <- NULL
+    }
+    propMatrixList <- vector("list", length = nrow(restComp))
+    for(i in 1:nrow(restComp)){
+      propMatrixList[[i]] <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
+                                        rich = parRichList[[i]], cwm = cwm, rao = rao, phi = phi, 
+                                        nInd = parIndList[[i]], cvAbund = cvAbund, prob = prob, method = method, 
+                                        cooccur = cooccur,
+                                        group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
+      
+    }
+    rowNameProMatrix <- rownames(propMatrixList[[1]])
     rowNameRest <- rownames(restComp)
-    template0 <- makeMatrixTemplate(propMatrix, restComp)
-    propMatrix <- reorganizeMatrix(template = template0, propMatrix, fillNA = TRUE)
+    template0 <- makeMatrixTemplate(propMatrixList[[1]], restComp)
+    for(i in 1:nrow(restComp)){
+      propMatrixList[[i]] <- reorganizeMatrix(template = template0, propMatrixList[[i]], fillNA = TRUE)  
+    }
     restComp <- reorganizeMatrix(template = template0, restComp, fillNA = TRUE)
     # Sum simulated species composition with species composition in the restoration sites
-    propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrix, MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
+    propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrixList[[i]], MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
     propMatrixTab <- do.call(rbind, propMatrixList)
     # Baseline composition
     restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
@@ -208,14 +310,37 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     } else{
       restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
     }
-  } else { 
-    # Organize restGroup informations
-    restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
-    propMatrixTab <- propMatrix
-    # Baseline composition (all zero)
-    restCompBaseline <- propMatrix
-    restCompBaseline[] <- 0
-  }
+    # rowNameProMatrix <- rownames(propMatrix)
+    # rowNameRest <- rownames(restComp)
+    # template0 <- makeMatrixTemplate(propMatrix, restComp)
+    # propMatrix <- reorganizeMatrix(template = template0, propMatrix, fillNA = TRUE)
+    # restComp <- reorganizeMatrix(template = template0, restComp, fillNA = TRUE)
+    # # Sum simulated species composition with species composition in the restoration sites
+    # propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrix, MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
+    # propMatrixTab <- do.call(rbind, propMatrixList)
+    # # Baseline composition
+    # restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
+    # # If "proportions" method (re)calculate species proportions
+    # if(methodTest == 1){
+    #   propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
+    # }
+    # rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
+    # restName <- rep(rowNameRest, each = length(rowNameProMatrix))
+    # # Organize restGroup informations
+    # if(!is.null(restGroup)){
+    #   restGroup <- restGroup[rep(seq_len(nrow(restGroup)), each = length(rowNameProMatrix)),, drop = FALSE]
+    #   restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName, restGroup)
+    # } else{
+    #   restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
+    # }
+  } #else { 
+  # # Organize restGroup informations
+  # restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
+  # propMatrixTab <- propMatrix
+  # # Baseline composition (all zero)
+  # restCompBaseline <- propMatrix
+  # restCompBaseline[] <- 0
+  # }
   # Organize restGroup informations
   if(!is.null(prefix)){
     restGroup <- data.frame(Scenario = prefix, restGroup)
