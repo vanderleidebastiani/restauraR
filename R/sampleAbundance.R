@@ -1,15 +1,16 @@
 #' @title Internal function to sample species abundance or proportions
 #' @encoding UTF-8
 #' @importFrom stats rlnorm rmultinom
-#' @param nRich1 Minimum richness for sample.
-#' @param nRich2 Maximum richness for sample.
-#' @param sPool Species pool size.
+#' @param nRich1 Minimum species richness for sample.
+#' @param nRich2 Maximum species richness for sample.
+#' @param sPool Total number of species in species pool.
 #' @param nInd1 Minimum number of individuals to draw. Used only in method "individuals".
 #' @param nInd2 Maximum number of individuals to draw. Used only in method "individuals".
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prob Vector of probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param returnProp Logical argument to specify whether to return proportions of individuals rather than raw abundances.
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
+#' @param cooccur A matrix with co-occurrence probabilities between species.
 #' @param group A vector with the group to which each species belongs.
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
@@ -19,6 +20,19 @@
 #' @keywords Auxiliary
 #' @export
 sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL){
+  
+  # nRich1 = splitRichRand[l]
+  # nRich2 = splitRichRand[l]
+  # sPool = nSppiTEMP
+  # nInd1 = nIndTEMP[l]
+  # nInd2 = nIndTEMP[l]
+  # cvAbund = cvAbund
+  # prob = prob[secFilter]
+  # returnProp = returnProp
+  # method = method
+  # cooccur = cooccur[, secFilter, drop = FALSE]
+  # returnProp = FALSE
+  
   METHOD <- c("proportions", "individuals")
   method <- pmatch(method, METHOD)
 	# Richness vector

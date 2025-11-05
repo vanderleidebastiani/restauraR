@@ -35,11 +35,11 @@ sampleAbundanceGroups(
 )
 }
 \arguments{
-\item{nRich1}{Minimum richness for sample.}
+\item{nRich1}{Minimum species richness for sample.}
 
-\item{nRich2}{Maximum richness for sample.}
+\item{nRich2}{Maximum species richness for sample.}
 
-\item{sPool}{Species pool size.}
+\item{sPool}{Total number of species in species pool.}
 
 \item{nInd1}{Minimum number of individuals to draw. Used only in method "individuals".}
 
@@ -52,6 +52,8 @@ sampleAbundanceGroups(
 \item{returnProp}{Logical argument to specify whether to return proportions of individuals rather than raw abundances.}
 
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
+
+\item{cooccur}{A matrix with co-occurrence probabilities between species.}
 
 \item{group}{A vector with the group to which each species belongs.}
 

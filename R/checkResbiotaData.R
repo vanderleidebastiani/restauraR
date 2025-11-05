@@ -229,6 +229,8 @@ checkResbiotaData <- function (traits = NULL,
     } else{
       sppCooc <- NULL
     }
+  } else{
+    sppCooc <- NULL
   }
   if(!is.null(traits)){
     sppComp <- unique(sppComp)
@@ -242,9 +244,9 @@ checkResbiotaData <- function (traits = NULL,
         diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
       }
       if(asList){
-        checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
+        checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSpp, " species are missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
       } else{
-        stop(paste0("There are ", nDiffSpp, " species missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+        stop(paste0("The following ", nDiffSpp, " species are missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
       }
     }
     if(!is.null(traitsDist) && !is.null(sppDist)){
@@ -258,9 +260,9 @@ checkResbiotaData <- function (traits = NULL,
           diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
         }
         if(asList){
-          checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSpp, " species missing from distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
+          checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSpp, " species are missing from the distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
         } else{
-          stop(paste0("There are ", nDiffSpp, " species missing from the distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+          stop(paste0("The following ", nDiffSpp, " species are missing from the distance matrix: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
         }
       }
     }
@@ -275,9 +277,9 @@ checkResbiotaData <- function (traits = NULL,
           diffSppCooc <- c(diffSppCooc[1:5], "...", diffSppCooc[(nDiffSppCooc-4):nDiffSppCooc])
         }
         if(asList){
-          checkMessage <- c(checkMessage, paste0("Error: There are ", nDiffSppCooc, " species missing in co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "))
+          checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSppCooc, " species are missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "))
         } else{
-          stop(paste0("There are ", nDiffSppCooc, " species missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "), call. = FALSE)
+          stop(paste0("The following ", nDiffSppCooc, " species are missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "), call. = FALSE)
         }
       }
     }

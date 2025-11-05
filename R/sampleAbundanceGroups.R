@@ -3,6 +3,20 @@
 #' @encoding UTF-8
 #' @export
 sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, group, probGroupRich, probGroupAbund){
+  
+  # nRich1 = rich[1]
+  # nRich2 = rich[2]
+  # nInd1 = nInd[1]
+  # nInd2 = nInd[2]
+  # cvAbund = cvAbund
+  # prob = probVector
+  # method = method
+  # cooccur = cooccur
+  # group = group
+  # probGroupRich = probGroupRich
+  # probGroupAbund = probGroupAbund
+  
+  
   METHOD <- c("proportions", "individuals")
   method0 <- pmatch(method, METHOD)
   # The length of group is equal the sPool
@@ -11,7 +25,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, pro
   richTemp <- nRich1:nRich2
   # Sample richness
   nSppi <-  richTemp[sample.int(length(richTemp), 1)]
-  if(method == 2 && !is.null(nInd1) && !is.null(nInd2)){ # Method individuals
+  if(method0 == 2 && !is.null(nInd1) && !is.null(nInd2)){ # Method individuals
     # Individuals vector
     nInd <- nInd1:nInd2
     # Sample total Individuals
@@ -21,7 +35,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, pro
   }
   # Split richness in the groups
   if(!is.null(probGroupRich)){
-    splitRichRand <- roundDivision(nSppi, probGroupRich[uniqueGroups])  
+    splitRichRand <- roundDivision(nSppi, probGroupRich[uniqueGroups])
   } else{
     splitRichRand <- randDivision(nSppi, length(uniqueGroups))
   }
@@ -53,7 +67,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, pro
                                         prob = prob[secFilter], 
                                         returnProp = returnProp,
                                         method = method,
-                                        cooccur = cooccur)
+                                        cooccur = cooccur[, secFilter, drop = FALSE])
       # If proportions recalculate the proportions
       if(method0 == 1){
         res[secFilter] <- res[secFilter]*probGroupAbund[uniqueGroups[l]]

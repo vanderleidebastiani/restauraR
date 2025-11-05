@@ -160,7 +160,7 @@ The function mergeSelection concatenates different selection procedures. For exa
 
 # Main features
 
-The resbiota package contains an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The main functions are shown below using an illustrative example. Set the seed to be able to repeat the same simulation.
+The resbiota package contains an integrative set of tools to create restoration solutions by assemble communities from a regional species pool. The main functions are demonstrated below using an illustrative example. Set the seed to reproduce the same simulation.
 
 ```{r, message = FALSE}
 # Set seed
@@ -171,11 +171,11 @@ require(resbiota)
 
 ### The dataset
 
-The `cerrado.mini` is a toy dataset containing only 50 sampled species of the `cerrado` dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset was arranged to illustrate the main features of resbiota packages, including scenarios with reference sites, restoration sites and supplementary sites.
+The `cerrado.mini` is a toy dataset containing only 50 sampled species of the full `cerrado` dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset is designed to illustrate the main features of the resbiota package, including scenarios with reference sites, restoration sites and supplementary sites.
 
-The dataset is arranged as a list: `traits` object with traits data, `reference` object the composition of 2 reference sites, `restoration` composition of 2 restoration sites and `supplementary` composition of 2 supplementary sites. The supplementary sites are similar to the reference sites but arranged in the framework only to illustrative propose, thus, the parameters can be calculated and plotted to help the interpretation of the results.
+The dataset is arranged as a list: the `traits` object contains traits data, the `reference` object contains the composition of 2 reference sites, the `restoration` contains composition of 2 restoration sites and the `supplementary` contains composition of 2 supplementary sites. The supplementary sites are similar to reference sites but included for illustrative propose, allowing parameters to be calculated and plotted to aid interpretation.
 
-The data frame `traits` contain four traits: `BT` (bark thickness), `SLA` (specific leaf area), `Height` (maximum height) and `Seed` (seed mass). Furthermore, the column `Available` indicates if species available on the market, column `Cost` the cost per individual and the column `Density` planting density for each species. The species names are arranged as the row names of data frame.
+The `traits` data frame includes four traits: `BT` (bark thickness), `SLA` (specific leaf area), `Height` (maximum height) and `Seed` (seed mass). Additionally, the `Available` column indicates species availability on the market, the `Cost` column provides the cost per individual and the  `Density` column provides the planting density for each species. The species names are arranged as the row names of data frame.
 
 The composition data are matrix and contain modified relative abundances. The species names are arranged as the column names of the matrix and site names as row names.
 
@@ -201,7 +201,7 @@ knitr::kable(head(supplementarySites, n = c(6, 3)), digits = 3, row.names = TRUE
 
 ## Check species pool and reference sites
 
-The function `checkReference` allows check species pool and functional parameters in reference sites calculating basic functional parameters and returning the summary statistic those parameters. The function return an object of class `simRestCheck` (a list object) with the descriptive statistics.
+The `checkReference` function checks the species pool and functional parameters in reference sites calculating basic functional parameters and returning summary statistic. The function return an object of class `simRestCheck` (a list object) with the descriptive statistics.
 
 ```{r}
 # Initial check of the reference community
@@ -217,12 +217,12 @@ resCheck
 
 ## Generate simulated communities
 
-The simulation are performed using `simulateCommunities` function, specifying input parameters. The function return an object of class `simRest` (a list object) with basic information of input parameters and a list of results.
+The simulation are performed using the `simulateCommunities` function by specifying input parameters. The function return an object of class `simRest` (a list object) with basic information on input parameters and a list of results.
 
 ### Simulate communities starting with empty communities
 
 ```{r}
-# First scenario
+# First scenario: starting with empty communities
 scenarioA <- simulateCommunities(trait = traits, 
                                  ava = "Available", 
                                  it = 100, 
@@ -238,7 +238,7 @@ scenarioA
 ### Simulate communities starting with existing species
 
 ```{r}
-# Second scenario
+# Second scenario: starting with existing species
 scenarioB <- simulateCommunities(trait = traits, 
                                  restComp = restorationSites,
                                  ava = "Available", 
@@ -264,7 +264,7 @@ allScenarios
 
 ## Calculate functional parameters
 
-For each simulated communities, you can count species unavailable, compute richness, CWM, Rao and estimate the restoration cost.
+For each simulated community, you can count species unavailable, compute richness, CWM, Rao and estimate restoration cost.
 
 ```{r}
 # Compute functional parameters
@@ -284,8 +284,8 @@ allScenarios
 A list can be provided for the Rao parameter to calculate diversity for multiple trait sets.
 
 ```{r}
-# Compute functional parameters using list in Rao
-# Make list
+# Compute functional parameters using list for Rao
+# Creat a list
 list2rao <- list(c("BT", "SLA", "Height", "Seed"), 
                  c("SLA", "Height", "Seed"))
 # The list can be named
@@ -320,11 +320,11 @@ allScenarios <- computeMultifunctionality(x = allScenarios,
 
 ## Select simulated communities
 
-The selections are performed using the `selectCommunities` function. The filters selected communities that satisfy all input thresholds. The thresholds can be set of one or more parameters, but the names must match the parameters names in `resSIM` object.
+The selections are performed using the `selectCommunities` function. The filters select communities that satisfy all input thresholds. Thresholds can be set of one or more parameters, but the names must match the parameters names in the `resSIM` object.
 
 ### Sequential approach
 
-Multiple selection steps can be performed sequentially, using more restrictive criteria in each step.
+Multiple selection steps can be performed sequentially, using increasingly restrictive criteria in each step.
 
 ```{r}
 # Global selection (first step)
@@ -350,7 +350,7 @@ resSelectSim
 
 ### Distinct steps approach
 
-The selection can also be performed in distinct steps and then concatenated. For example, if restoration sites have diverse desired restoration targets.
+Selection can also be performed in distinct steps and then concatenated. For example, if restoration sites have diverse restoration targets.
 
 ```{r}
 # Selection Sites with the prefix "New"
@@ -374,19 +374,20 @@ resSelectSimMerged
 
 ### Hierarchical approach
 
-The selection can also be performed hierarchically in a way that only one simulation is selected.
+Selection can also be performed hierarchically in a way that only one simulation is selected.
 
 ```{r}
 # Selection Sites with the prefix "New"
 hierarchicalTargets <- c("CWM_BT > 6", "rao > 0.25", "cost == 'MIN'")
 resSelectSimHier <- selectCommunities(allScenarios, 
-                                  testsHie = hierarchicalTargets)
+                                  testsHie = hierarchicalTargets,
+                                  singleselection = TRUE)
 resSelectSimHier
 ```
 
 ## Visualize and explore the results
 
-The function `viewResults` return a `ggplot` object, thus additional function of package `ggplot2` can be used to customize the plots such titles, labels and plot themes.
+The `viewResults` function return a `ggplot` object, so additional function from the `ggplot2` package can be used to customize the plots, such as titles, labels and plot themes.
 
 ```{r}
 # Customized plot
@@ -402,14 +403,14 @@ viewResults(resSelectSimMerged, xvar = "richness", yvar = "cost") +
   ggplot2::labs(title = "Selected simulations")
 ```
 
-The multifunctionality results can be plotted for all simulations or selected simulations, allowing the visualisation of the global pattern of restoration goals.
+Multifunctionality results can be plotted for all simulations or selected simulations, allowing visualisation of the global pattern of restoration goals.
 
 ```{r}
 # View multifunctionality results
-viewMultifunctionality(allScenarios)
+# viewMultifunctionality(allScenarios)
 ```
 
 ```{r}
 # View multifunctionality results
-viewMultifunctionality(resSelectSimMerged)
+# viewMultifunctionality(resSelectSimMerged)
 ```

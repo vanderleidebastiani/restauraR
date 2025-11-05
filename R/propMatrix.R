@@ -22,6 +22,24 @@
 #' @keywords Auxiliary
 #' @export
 propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, cooccur, group, probGroupRich, probGroupAbund){
+  
+  # traits = traits
+  # ava = ava
+  # und = und
+  # it = it
+  # rich = parRichList[[i]]
+  # cwm = cwm
+  # rao = rao
+  # phi = phi
+  # nInd = parIndList[[i]]
+  # cvAbund = cvAbund
+  # prob = prob
+  # method = method
+  # cooccur = cooccur
+  # group = group
+  # probGroupRich = probGroupRich
+  # probGroupAbund = probGroupAbund
+  
   # Remove undesired species
   if(!is.null(und)){
     undLog <- as.logical(traits[,und])
