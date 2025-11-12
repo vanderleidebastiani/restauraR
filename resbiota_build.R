@@ -1,9 +1,9 @@
 rm(list = ls())
-require(devtools)
 require(rmarkdown)
+require(devtools)
 # install_version("Select", version = "1.4", repos = "http://cran.us.r-project.org")
 
-#setwd("resbiota")
+setwd("resbiota")
 devtools::document()
 devtools::build_vignettes()
 # devtools::clean_vignettes()
@@ -25,6 +25,3 @@ system("R CMD check resbiota_0.0.4.tar.gz")
 require(resbiota)
 ?resbiota::simulateCommunities
 runResbiota()
-
-
-
