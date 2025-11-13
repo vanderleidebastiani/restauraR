@@ -11,6 +11,7 @@
 #' @param returnProp Logical argument to specify whether to return proportions of individuals rather than raw abundances.
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
 #' @param cooccur A matrix with co-occurrence probabilities between species.
+#' @param minAbund Minimal abundance or proportion to keep in simulated communities. 
 #' @param group A vector with the group to which each species belongs.
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
@@ -19,7 +20,7 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary
 #' @export
-sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL){
+sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL){
   
   # nRich1 = splitRichRand[l]
   # nRich2 = splitRichRand[l]
@@ -87,6 +88,9 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, pr
 	if(method == 1){ # Method proportions
 		abund0 <- stats::rlnorm(nSppi)
 		abund0 <- abund0/sum(abund0)
+		if(!is.null(minAbund)){
+		  abund0 <- readjustAbundance(abund0, minAbund = minAbund, method = "proportions") 
+		}
 	} 
 	if(method == 2){ # Method individuals
 		if(is.null(prob)){
@@ -105,6 +109,9 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, pr
 		}
 		# Sampled abundance
 		abund0 <- stats::rmultinom(1, nInd, pLogNor)[,1]
+		if(!is.null(minAbund)){
+		  abund0 <- readjustAbundance(abund0, minAbund = minAbund, method = "individuals")
+		}
 	}
 	# Distribute abundance in species occurrence
 	abund[ocor==1] <- abund0

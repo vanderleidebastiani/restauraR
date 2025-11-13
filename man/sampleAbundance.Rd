@@ -16,7 +16,8 @@ sampleAbundance(
   prob = NULL,
   returnProp = FALSE,
   method = "proportions",
-  cooccur = NULL
+  cooccur = NULL,
+  minAbund = NULL
 )
 
 sampleAbundanceGroups(
@@ -29,6 +30,7 @@ sampleAbundanceGroups(
   returnProp = FALSE,
   method = "proportions",
   cooccur = NULL,
+  minAbund = NULL,
   group,
   probGroupRich,
   probGroupAbund
@@ -54,6 +56,8 @@ sampleAbundanceGroups(
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
 
 \item{cooccur}{A matrix with co-occurrence probabilities between species.}
+
+\item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
 
 \item{group}{A vector with the group to which each species belongs.}
 

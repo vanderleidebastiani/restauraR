@@ -2,7 +2,7 @@
 #' @include sampleAbundance.R
 #' @encoding UTF-8
 #' @export
-sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, group, probGroupRich, probGroupAbund){
+sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL, group, probGroupRich, probGroupAbund){
   
   # nRich1 = rich[1]
   # nRich2 = rich[2]
@@ -67,7 +67,8 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, pro
                                         prob = prob[secFilter], 
                                         returnProp = returnProp,
                                         method = method,
-                                        cooccur = cooccur[, secFilter, drop = FALSE])
+                                        cooccur = cooccur[, secFilter, drop = FALSE],
+                                        minAbund = minAbund)
       # If proportions recalculate the proportions
       if(method0 == 1){
         res[secFilter] <- res[secFilter]*probGroupAbund[uniqueGroups[l]]

@@ -19,6 +19,7 @@ propMatrix(
   prob,
   method,
   cooccur,
+  minAbund,
   group,
   probGroupRich,
   probGroupAbund

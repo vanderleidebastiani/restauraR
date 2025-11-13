@@ -140,7 +140,7 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
+simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, cwm = NULL, rao = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, minAbund = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
@@ -156,6 +156,14 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
   }
   if(it<4){
     stop("The argument it must be at least 4")
+  }
+  if(!is.null(minAbund)){
+    if(methodTest == 1 && ((min(minAbund)<0) || max(minAbund)>1)){ # Method individuals
+      stop("For the proportions method, the minAbund argument must be NULL or a proportion value")
+    }
+    if(methodTest == 2 && !(minAbund%%1 == 0)){ # Method individuals
+      stop("For the individuals method, the minAbund argument must be NULL or a positive integer")
+    }  
   }
   # Check data
   checkResbiotaData(traits = traits, 
@@ -206,7 +214,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     propMatrix <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
                              rich = rich, cwm = cwm, rao = rao, phi = phi, 
                              nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
-                             cooccur = cooccur,
+                             cooccur = cooccur, minAbund = minAbund,
                              group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
     # Organize restGroup informations
     restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
@@ -281,7 +289,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
       propMatrixList[[i]] <- propMatrix(traits = traits, ava = ava, und = und, it = it, 
                                         rich = parRichList[[i]], cwm = cwm, rao = rao, phi = phi, 
                                         nInd = parIndList[[i]], cvAbund = cvAbund, prob = prob, method = method, 
-                                        cooccur = cooccur,
+                                        cooccur = cooccur, minAbund = minAbund,
                                         group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
       
     }

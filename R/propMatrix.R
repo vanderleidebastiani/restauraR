@@ -21,7 +21,7 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
-propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, cooccur, group, probGroupRich, probGroupAbund){
+propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
   
   # traits = traits
   # ava = ava
@@ -123,6 +123,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                           prob = probVector[avaLog], 
                                                           method = method,
                                                           cooccur = cooccurTemp,
+                                                          minAbund = minAbund,
                                                           group = group[avaLog], 
                                                           probGroupRich = probGroupRich, 
                                                           probGroupAbund = probGroupAbund)
@@ -135,7 +136,8 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                     cvAbund = cvAbund, 
                                                     prob = probVector[avaLog], 
                                                     method = method,
-                                                    cooccur = cooccurTemp)  
+                                                    cooccur = cooccurTemp,
+                                                    minAbund = minAbund)  
       }
     }
   }
@@ -151,6 +153,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                    prob = probVector, 
                                                    method = method,
                                                    cooccur = cooccur,
+                                                   minAbund = minAbund,
                                                    group = group, 
                                                    probGroupRich = probGroupRich, 
                                                    probGroupAbund = probGroupAbund)
@@ -163,7 +166,8 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                             cvAbund = cvAbund, 
                                             prob = probVector, 
                                             method = method,
-                                            cooccur = cooccur)
+                                            cooccur = cooccur,
+                                            minAbund = minAbund)
     }
   }
   # Maximize diversity
@@ -191,6 +195,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                                 prob = probVector[sppMaxPos], 
                                                                 method = method,
                                                                 cooccur = cooccurTemp,
+                                                                minAbund = minAbund,
                                                                 group = group[sppMaxPos], 
                                                                 probGroupRich = probGroupRich, 
                                                                 probGroupAbund = probGroupAbund)
@@ -203,7 +208,8 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                           cvAbund = cvAbund, 
                                                           prob = probVector[sppMaxPos], 
                                                           method = method,
-                                                          cooccur = cooccurTemp)
+                                                          cooccur = cooccurTemp,
+                                                          minAbund = minAbund)
       }
     }
     if(!is.null(ava)){
@@ -231,6 +237,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                                         prob = probVector[sppMaxAvaPos], 
                                                                         method = method,
                                                                         cooccur = cooccurTemp,
+                                                                        minAbund = minAbund,
                                                                         group = group[sppMaxAvaPos], 
                                                                         probGroupRich = probGroupRich, 
                                                                         probGroupAbund = probGroupAbund)
@@ -243,7 +250,8 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
                                                                   cvAbund = cvAbund, 
                                                                   prob = probVector[sppMaxAvaPos], 
                                                                   method = method,
-                                                                  cooccur = cooccurTemp)
+                                                                  cooccur = cooccurTemp,
+                                                                  minAbund = minAbund)
         }
       }
     }
