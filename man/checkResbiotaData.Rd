@@ -29,6 +29,8 @@ checkResbiotaData(
 
 \item{traitsDist}{A distance matrix between species, based on functional trait values.}
 
+\item{cooccur}{A matrix with co-occurrence probabilities between species.}
+
 \item{asList}{A logical argument to return the results in as list format.}
 }
 \value{

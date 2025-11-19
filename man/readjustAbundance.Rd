@@ -8,7 +8,7 @@
 readjustAbundance(abund0, minAbund, method)
 }
 \arguments{
-\item{abund0}{A vector with species abundance or proportions to ajust.}
+\item{abund0}{A vector with species abundance or proportions to adjust.}
 
 \item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
 

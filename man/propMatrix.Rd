@@ -50,6 +50,10 @@ propMatrix(
 
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
 
+\item{cooccur}{A matrix with co-occurrence probabilities between species.}
+
+\item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
+
 \item{group}{A vector with traits name which indicates the group to which species belongs.}
 
 \item{probGroupRich}{Vector of probabilities to draw species richness in each group.}

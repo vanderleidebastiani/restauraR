@@ -1,7 +1,7 @@
 #' @title Internal function to randomly ajust species abundance or proportions
 #' @encoding UTF-8
 #' @importFrom stats rmultinom
-#' @param abund0 A vector with species abundance or proportions to ajust.
+#' @param abund0 A vector with species abundance or proportions to adjust.
 #' @param minAbund Minimal abundance or proportion to keep in simulated communities. 
 #' @param method The method used to obtain the samples, "proportions" or "individuals".
 #' @returns A vector with species abundance or proportions adjusted.

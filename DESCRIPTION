@@ -1,8 +1,8 @@
 Package: resbiota
 Type: Package
-Title: Resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
+Title: Resbiota - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches
 Version: 0.0.4
-Date: 2025-02-06
+Date: 2025-11-18
 Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
 Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
 Depends: R (>= 3.5)
@@ -37,7 +37,6 @@ VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 Collate: 
     'adjString.R'
-    'simulateCommunities.R'
     'adjustSimulations.R'
     'app.R'
     'appServer.R'
@@ -60,6 +59,7 @@ Collate:
     'makeMatrixTemplate.R'
     'selectCommunities.R'
     'mergeSelection.R'
+    'simulateCommunities.R'
     'mergeSimulations.R'
     'print.simRest.R'
     'print.simRestCheck.R'

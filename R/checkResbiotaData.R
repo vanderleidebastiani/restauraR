@@ -6,6 +6,7 @@
 #' @param reference A matrix with species proportions in the reference sites.
 #' @param supplementary A matrix with species proportions in the supplementary sites.
 #' @param traitsDist A distance matrix between species, based on functional trait values.
+#' @param cooccur A matrix with co-occurrence probabilities between species.
 #' @param asList A logical argument to return the results in as list format.
 #' @returns A list with the elements:
 #' \item{checkStatus}{The global status with the type of alert.}

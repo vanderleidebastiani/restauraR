@@ -13,6 +13,8 @@
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prob A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
+#' @param cooccur A matrix with co-occurrence probabilities between species.
+#' @param minAbund Minimal abundance or proportion to keep in simulated communities. 
 #' @param group A vector with traits name which indicates the group to which species belongs.
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
