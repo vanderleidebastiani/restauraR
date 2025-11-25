@@ -269,7 +269,7 @@ For each simulated community, you can count species unavailable, compute richnes
 ```{r}
 # Compute functional parameters
 allScenarios <- computeParameters(x = allScenarios,
-                                  trait = traits,
+                                  traits = traits,
                                   ava = "Available",
                                   cwm = "BT",
                                   rao = c("SLA", "Height", "Seed"),
@@ -297,7 +297,7 @@ list2rao
 ```{r}
 # Compute functional parameters
 allScenariosAlternative <- computeParameters(x = allScenarios,
-                                             trait = traits,
+                                             traits = traits,
                                              ava = "Available",
                                              cwm = "BT",
                                              rao = list2rao,
@@ -335,7 +335,7 @@ resSelectSim <- selectCommunities(allScenarios,
 
 ```{r}
 # Additional selection (second step)
-targetSelect2 <- c("rao < 0.3", "cost < 8000")
+targetSelect2 <- c("rao < 0.3", "Cost < 8000")
 resSelectSim <- selectCommunities(resSelectSim, 
                                   testsDet = targetSelect2)
 ```
@@ -378,7 +378,7 @@ Selection can also be performed hierarchically in a way that only one simulation
 
 ```{r}
 # Selection Sites with the prefix "New"
-hierarchicalTargets <- c("CWM_BT > 6", "rao > 0.25", "cost == 'MIN'")
+hierarchicalTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'")
 resSelectSimHier <- selectCommunities(allScenarios, 
                                   testsHie = hierarchicalTargets,
                                   singleselection = TRUE)
@@ -391,14 +391,14 @@ The `viewResults` function return a `ggplot` object, so additional function from
 
 ```{r}
 # Customized plot
-viewResults(allScenarios, xvar = "richness", yvar = "cost") +
+viewResults(allScenarios, xvar = "richness", yvar = "Cost") +
   ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)") +
   ggplot2::labs(title = "All simulations")
 ```
 
 ```{r}
 # Customized plot
-viewResults(resSelectSimMerged, xvar = "richness", yvar = "cost") +
+viewResults(resSelectSimMerged, xvar = "richness", yvar = "Cost") +
   ggplot2::labs(x = "Species richness", y = "Cost (USD/ha)") +
   ggplot2::labs(title = "Selected simulations")
 ```

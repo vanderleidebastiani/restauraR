@@ -33,12 +33,23 @@
 #' @export
 checkReference <- function(reference, traits, cwm = NULL, cwv = NULL, rao = NULL, supplementary = NULL, props = NULL){
   RES <- list(call = match.call())
+  # Check if all number are integer
+  anyPositive <- length(reference[reference>0])>0
+  allInteger <- all(reference%%1 == 0)
+  rowCheck <- isTRUE(all.equal(rowSums(reference), rep(1, nrow(reference)), check.attributes = FALSE, check.class = FALSE))
+  if(anyPositive && !allInteger && !rowCheck){
+    stop("Reference with species proportions must sum to 1 for each site")
+  }
   # Create list, simRest class, to use in computeParameters
   x <- list()
   x$simulation$composition <- reference
   x$simulation$group <- data.frame(NAMES = rownames(reference))
   class(x) <- "simRest"
-  maxCom <- matrix(1, nrow = 1, ncol = nrow(traits))
+  if(!allInteger){
+    maxCom <- matrix(1/nrow(traits), nrow = 1, ncol = nrow(traits)) 
+  } else{
+    maxCom <- matrix(1, nrow = 1, ncol = nrow(traits))  
+  }
   rownames(maxCom) <- "Pool"
   colnames(maxCom) <- rownames(traits)
   resPar <- computeParameters(x, traits = traits, cwm = cwm, cwv = cwv, rao = rao, reference = maxCom, supplementary = supplementary)
