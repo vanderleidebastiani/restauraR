@@ -13,14 +13,16 @@ computeParameters(
   traits,
   ava = NULL,
   cwm = NULL,
-  cwm2 = NULL,
   cwv = NULL,
   rao = NULL,
   cost = NULL,
   dens = NULL,
+  traitsFUN = NULL,
+  FUN = NULL,
   dissimilarity = NULL,
   reference = NULL,
-  supplementary = NULL
+  supplementary = NULL,
+  ...
 )
 
 computeMultifunctionality(x, tests)
@@ -44,11 +46,17 @@ standardizeParameters(x, parameters = NULL, method = c("max", "standardize"))
 
 \item{dens}{A vector with trait name with species planting density.}
 
+\item{traitsFUN}{A vector with trait names to be used in the custom analysis (FUN argument).}
+
+\item{FUN}{An object of class function to perform the custom analysis.}
+
 \item{dissimilarity}{A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).}
 
 \item{reference}{A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)}
 
 \item{supplementary}{A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
+
+\item{...}{Other arguments passed to the custom analysis (FUN argument).}
 
 \item{tests}{A vector with multifunctionality criteria to be performed.}
 

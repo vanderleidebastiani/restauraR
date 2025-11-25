@@ -16,6 +16,9 @@
 #' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
 #' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
 #' @param cost A vector with trait name with of species cost per individual.
+#' @param traitsFUN A vector with trait names to be used in the custom analysis (FUN argument).
+#' @param FUN An object of class function to perform the custom analysis.
+#' @param ... Other arguments passed to the custom analysis (FUN argument).
 #' @param dens A vector with trait name with species planting density.
 #' @param dissimilarity A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
 #' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
@@ -80,7 +83,7 @@
 #'                                            "rao > 2.5"))
 #' scenario
 #' @export
-computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL){
+computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, traitsFUN = NULL, FUN = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL, ...){
   # Check object class
   if(!inherits(x, "simRest")){
     stop("The x argument must be of class simRest")
@@ -104,9 +107,39 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
   composition <- x$simulation$composition
   nSim <- nrow(composition)
   traitsNames <- colnames(traits)
+  # Check if all number are integer
+  anyPositive <- length(composition[composition>0])>0
+  allInteger <- all(composition%%1 == 0)
+  rowCheck <- isTRUE(all.equal(rowSums(composition), rep(1, nrow(composition)), check.attributes = FALSE, check.class = FALSE))
+  if(anyPositive && !allInteger && !rowCheck){
+    stop("Simulation using species proportions must sum to 1 for each site")
+  }
+  
+  
+  
+  
+  # # Extract baseline
+  # baseline <- x$simulation$baseline
+  # # Calculate additions
+  # # If proportions
+  # if(!allInteger){
+  #   compAdditions <- (composition*2) - baseline
+  # } else{ # If counts
+  #   compAdditions <- composition - baseline
+  # }
   # Merge compositions - simulations, reference and supplementary
   if(!is.null(reference) && is.null(supplementary)){
     nRef <- nrow(reference)
+    reference/sum(reference)
+    anyPositiveReference <- length(reference[reference>0])>0
+    allIntegerReference <- all(reference%%1 == 0)
+    rowCheckReference <- isTRUE(all.equal(rowSums(reference), rep(1, nrow(reference)), check.attributes = FALSE, check.class = FALSE))
+    if(anyPositiveReference && (allIntegerReference != allInteger)){
+      stop("Reference matrix must contain only species proportions or raw abundances, consistent with the simulation method parameter")
+    }
+    if(anyPositiveReference && !allIntegerReference && !rowCheckReference){
+      stop("Reference matrix using species proportions must sum to 1 for each site")
+    }
     template0 <- makeMatrixTemplate(composition, reference)
     composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
     reference <- reorganizeMatrix(template = template0, reference, fillNA = TRUE)
@@ -116,6 +149,15 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
   }
   if(!is.null(supplementary) && is.null(reference)){
     nSupple <- nrow(supplementary)
+    anyPositiveSupplementary <- length(supplementary[supplementary>0])>0
+    allIntegerSupplementary <- all(supplementary%%1 == 0)
+    rowCheckSupplementary <- isTRUE(all.equal(rowSums(supplementary), rep(1, nrow(supplementary)), check.attributes = FALSE, check.class = FALSE))
+    if(anyPositiveSupplementary && (allIntegerSupplementary != allInteger)){
+      stop("Supplementary matrix must contain only species proportions or raw abundances, consistent with the simulation method parameter")
+    }
+    if(anyPositiveSupplementary && !allIntegerSupplementary && !rowCheckSupplementary){
+      stop("Supplementary matrix using species proportions must sum to 1 for each site")
+    }
     template0 <- makeMatrixTemplate(composition, supplementary)
     composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
     supplementary <- reorganizeMatrix(template = template0, supplementary, fillNA = TRUE)
@@ -126,6 +168,24 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
   if(!is.null(reference) && !is.null(supplementary)){
     nRef <- nrow(reference)
     nSupple <- nrow(supplementary)
+    anyPositiveReference <- length(reference[reference>0])>0
+    allIntegerReference <- all(reference%%1 == 0)
+    rowCheckReference <- isTRUE(all.equal(rowSums(reference), rep(1, nrow(reference)), check.attributes = FALSE, check.class = FALSE))
+    if(anyPositiveReference && (allIntegerReference != allInteger)){
+      stop("Reference matrix must contain only species proportions or raw abundances, consistent with the simulation method parameter")
+    }
+    if(anyPositiveReference && !allIntegerReference && !rowCheckReference){
+      stop("Reference matrix using species proportions must sum to 1 for each site")
+    }
+    anyPositiveSupplementary <- length(supplementary[supplementary>0])>0
+    allIntegerSupplementary <- all(supplementary%%1 == 0)
+    rowCheckSupplementary <- isTRUE(all.equal(rowSums(supplementary), rep(1, nrow(supplementary)), check.attributes = FALSE, check.class = FALSE))
+    if(anyPositiveSupplementary && (allIntegerSupplementary != allInteger)){
+      stop("Supplementary matrix must contain only species proportions or raw abundances, consistent with the simulation method parameter")
+    }
+    if(anyPositiveSupplementary && !allIntegerSupplementary && !rowCheckSupplementary){
+      stop("Supplementary matrix using species proportions must sum to 1 for each site")
+    }
     template0 <- makeMatrixTemplate(composition, reference, supplementary)
     composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
     reference <- reorganizeMatrix(template = template0, reference, fillNA = TRUE)
@@ -135,9 +195,9 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
     x$reference$composition <- reference
     x$supplementary$composition <- supplementary
   }
-  # Calculate species proportions
-  composition2 <- composition #to calculate CWM2
-  composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
+  # # Calculate species proportions
+  # composition2 <- composition #to calculate CWM2
+  # composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
   matchNames <- match(colnames(composition), rownames(traits))
   traits <- as.data.frame(traits[matchNames, , drop = FALSE])
@@ -167,15 +227,15 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
     colnames(CWM) <- paste0("CWM_", colnames(CWM))
     out <- cbind(out, CWM)
   }
-  if(!is.null(cwm2)){
-    if(!inherits(cwm2, "character") || !all(cwm2 %in% traitsNames)){
-      stop("The cwm2 argument must be a character vector specifying one or more columns from the trait data frame")
-    }
-    traitSub <- traits[, cwm2, drop = FALSE]
-    CWM2 <- calcCWM2(composition2, traitSub)
-    colnames(CWM2) <- paste0("CWM2_", colnames(CWM2))
-    out <- cbind(out, CWM2)
-  }
+  # if(!is.null(cwm2)){
+  #   if(!inherits(cwm2, "character") || !all(cwm2 %in% traitsNames)){
+  #     stop("The cwm2 argument must be a character vector specifying one or more columns from the trait data frame")
+  #   }
+  #   traitSub <- traits[, cwm2, drop = FALSE]
+  #   CWM2 <- calcCWM2(composition, traitSub)
+  #   colnames(CWM2) <- paste0("CWM2_", colnames(CWM2))
+  #   out <- cbind(out, CWM2)
+  # }
   # CWV
   if(!is.null(cwv)){
     if(!inherits(cwv, "character") || !all(cwv %in% traitsNames)){
@@ -224,21 +284,41 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
       out <- cbind(out, rao = RAO)
     }
   }
-  # Cost - It require species cost and planting density
-  if(!is.null(cost) || !is.null(dens)){
+  # Cost - It require species cost and planting density 
+  # if(!is.null(cost) || !is.null(dens)){
+  if(!is.null(cost)){
     if(!inherits(cost, "character") || !all(cost %in% traitsNames) || length(cost)>1){
       stop("The cost argument must be a character vector specifying a single columm from the traits data frame")
     }
-    if(!inherits(dens, "character") || !all(dens %in% traitsNames) || length(dens)>1){
-      stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
+    # costVect <- traits[, cost]
+    costMat <- as.matrix(traits[, cost, drop = FALSE])
+    # If not all integer (proportions method)
+    # allInteger <- FALSE
+    if(!allInteger){
+      if(!is.null(dens)){
+        if(!inherits(dens, "character") || !all(dens %in% traitsNames) || length(dens)>1){
+          stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
+        }
+        # densVect <- traits[, dens]
+        densMat <- as.matrix(traits[, dens, drop = FALSE])
+        costMat <- costMat*densMat
+        # COST <- apply(composition, 1, FUN = function(p){
+        #   COST_i <- sum(p*costVect*densVect, na.rm = TRUE)
+        #   return(COST_i)
+        # })
+        COST <- composition%*%costMat
+        out <- cbind(out, cost = COST)
+      } #else{
+        # stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
+      # }
+    } else{ # # If all integer (individuals method)
+      # COST <- apply(composition, 1, FUN = function(p){
+      #   COST_i <- sum(p*costVect, na.rm = TRUE)
+      #   return(COST_i)
+      # })
+      COST <- composition%*%costMat
+      out <- cbind(out, cost = COST)
     }
-    costVect <- traits[, cost]
-    densVect <- traits[, dens]
-    COST <- apply(composition, 1, FUN = function(p){
-      COST_i <- sum(p*costVect*densVect, na.rm = TRUE)
-      return(COST_i)
-    })
-    out <- cbind(out, cost = COST)
   }
   #  Dissimilatity
   if(!is.null(reference)){
@@ -279,6 +359,15 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwm2 = NULL, cw
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, functionalDissimilarity = resDis)
+  }
+  # Custom function
+  if(!is.null(traitsFUN) && !is.null(FUN)){
+    if(!inherits(traitsFUN, "character") || !all(traitsFUN %in% traitsNames)){
+      stop("The traitsFUN argument must be a character vector specifying one or more columns from the traits data frame")
+    }
+    traitsSub <- traits[, traitsFUN, drop = FALSE]
+    resFUN <- lapply(1, FUN = FUN, comm = composition, traits = traitsSub, ...)[[1]]
+    out <- cbind(out, resFUN)
   }
   # Results organization
   if(!is.null(reference) || !is.null(supplementary)){
