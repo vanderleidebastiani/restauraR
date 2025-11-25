@@ -79,7 +79,7 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, pr
 	  ocor
 	} else{
 	  # Sample species occurrence 
-	  ocor <- sample( c(rep(1, nSppi), rep(0, sPool - nSppi)))  
+	  ocor <- sample(c(rep(1, nSppi), rep(0, sPool - nSppi)))  
 	}
 	# Abundance vector
 	abund <- ocor

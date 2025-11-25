@@ -277,6 +277,6 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
   rownames(propMatrix) <- sprintf("sim%d", seq_len(nrow(propMatrix)))
   # rownames(propMatrix) <- seq_len(nrow(propMatrix))
   colnames(propMatrix) <- species
-  propMatrix
+  # propMatrix
   return(propMatrix)
 }

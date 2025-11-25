@@ -17,7 +17,7 @@
 #' 
 #' To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
 #' 
-#' The framework returns a community matrix indicating the proportion of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
+#' The framework returns a community matrix indicating the composition of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 #' 
 #' \strong{Communities parameters}
 #' 
@@ -74,7 +74,7 @@
 #' @importFrom data.table rbindlist as.data.table
 #' @aliases mergeSimulations print.simRest
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param restComp A matrix with species proportions in the restoration sites. NAs not accepted.
+#' @param restComp A matrix with species composition in the restoration sites. NAs not accepted.
 #' @param restGroup Data frame or matrix with complementary information for restoration sites.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
 #' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
@@ -226,7 +226,8 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     # Include species composition in restoration sites
     # if(!is.null(restComp)){
     if(methodTest == 1){
-      if(!all(rowSums(restComp)==1)){
+      rowCheck <- isTRUE(all.equal(rowSums(restComp), rep(1, nrow(restComp)), check.attributes = FALSE, check.class = FALSE))
+      if(!rowCheck){
         stop("Species proportions in the restComp matrix must sum to 1 for each site")
       }
     } else{
@@ -307,7 +308,8 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
     # If "proportions" method (re)calculate species proportions
     if(methodTest == 1){
-      propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
+      # propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
+      propMatrixTab <- sweep(propMatrixTab, MARGIN = 1, rowSums(propMatrixTab), FUN = "/")
     }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
     restName <- rep(rowNameRest, each = length(rowNameProMatrix))

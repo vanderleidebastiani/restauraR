@@ -38,7 +38,7 @@ mergeSimulations(...)
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{restComp}{A matrix with species proportions in the restoration sites. NAs not accepted.}
+\item{restComp}{A matrix with species composition in the restoration sites. NAs not accepted.}
 
 \item{restGroup}{Data frame or matrix with complementary information for restoration sites.}
 
@@ -112,7 +112,7 @@ The sampling of species can be performed completely at random or selected specie
 
 To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
 
-The framework returns a community matrix indicating the proportion of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
+The framework returns a community matrix indicating the composition of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 
 \strong{Communities parameters}
 

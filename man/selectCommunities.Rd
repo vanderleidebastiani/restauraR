@@ -55,7 +55,7 @@ Select simulated communities based on tests provided
 data("cerrado.mini")
 head(cerrado.mini$traits)
 # Simulation
-scenario <- simulateCommunities(trait = cerrado.mini$traits,
+scenario <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
                          cwm = "BT",
                          rao = c("SLA", "Height", "Seed"),
@@ -64,7 +64,7 @@ scenario <- simulateCommunities(trait = cerrado.mini$traits,
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              trait = cerrado.mini$traits,
+                              traits = cerrado.mini$traits,
                     ava = "Available",
                     cwm = "BT",
                     rao = c("SLA", "Height", "Seed"),
@@ -82,7 +82,7 @@ scenarioSelected
 scenarioSelected <- selectCommunities(x = scenario,
                                       testsHie = c("CWM_BT > 6",
                                                 "rao > 2.5",
-                                                "cost == 'MIN'"))
+                                                "Cost == 'MIN'"))
 scenarioSelected
 }
 \references{
