@@ -1,0 +1,412 @@
+---
+title: "Application - realistic ecological succession"
+author: "Vanderlei J. Debastiani, André G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso"
+date: "`r Sys.Date()`"
+output:
+ rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Application - Realistic ecological succession}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: none
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  results = 'hold',
+  fig.height = 5, 
+  fig.width = 6, 
+  fig.align = 'center',
+  comment = "#>"
+)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_chunk$set(tidy = "styler")
+```
+
+This vignette illustrates a simplified implementation of the trait-based framework for ecological restoration species selection.
+
+# The dataset
+
+The `FOM` dataset contains species functional traits for 124 species of the Araucaria moist forests, officially classified as mixed ombrophilous forest (Portuguese: "Floresta Ombrófila Mista - FOM") in the southern portion of the Atlantic Forest Biome in Brazil. Thus forest type is characterised by the critically endangered conifer *Araucaria angustifolia*, an iconic species which forms an emergent canopy layer. 
+
+Species composition of reference and restoration sites comes from The Forest and Floristic Inventory of Santa Catarina (IFFSC), a permanent program of the Government of the State of Santa Catarina. Field data are obtained by means of a systematic and continuous inventory of tree and shrub components with a plot size of 0.4 hectares.
+
+We filter only the sample plots of the drainage basin of the Pelotas River. The species occurrence in 17 sampling plots was used to define the species pool and to calculate species relative abundance in the regional pool. The species relative abundance was included as a species trait to weight species sampling. Two sampling plots were chosen as reference sites, based on the successional phase reported in the IFFSC, with characteristics of primary forest or an advanced stage of regeneration. The restoration sites were defined as one sampling plot with characteristics of mid-stage regeneration and one hypothetical site with no species. The pairwise co-occurrence probabilities were calculated with the package `cooccur` using a probabilistic model over the species composition of all 17 sampling plots. Co-occurrence probabilities smaller than 0.05 were set to zero.
+
+Restoration targets were established based on reference sites: 291-300 individuals and 20-35 species by site.
+
+The dataset is arranged as a list:
+
+* The data frame `traits` contains two traits: `Zoochory` and `WoodDensity`. Furthermore, the column `EcologicalSuccession` indicates the successional groups of species and the column `relativeAbundance` indicates the species abundances in the regional pool. The species names are arranged as the row names of the data frame. The traits data must contain only numeric, binary, factor or ordinal variables.
+
+* The matrix `referenceSites` contains raw abundances for 60 species in the 2 reference sites. The species names are arranged as the column names of the matrix and site names as row names. 
+
+* The matrix `restorationSitesComp` contains raw abundances for 19 species in the 2 restoration sites. The species names are arranged as the column names of the matrix and site names as row names. 
+
+* The data frame `restorationSitesInfo` contains additional information for each restoration site. The columns `nSppMin`, `nSppMax` and `nIndividuals` represent site-specific restoration targets.
+
+* The matrix `cooccurrenceProb` contains co-occurrence probabilities for all 124 species. The species names are arranged as column names and as row names. The co-occurrence must be a positive symmetric square matrix with the diagonal zero.
+
+```{r message=FALSE, results= "markup"}
+# Load the package
+require(resbiota)
+# Load FOM data
+data(FOM)
+# Traits data
+traits <- FOM$traits
+# Structure of traits data. The character type is not allowed, and all character 
+# variables must be converted to factors before analysis
+str(traits)
+# Species composition in reference sites
+referenceSites <- FOM$referenceSites
+# Species composition in restoration sites
+restorationSites <- FOM$restorationSitesComp
+# Additional information for restoration site
+restorationInfo <- FOM$restorationSitesInfo
+# Pairwise co-occurrence probabilities
+cooccurrenceProb <- FOM$cooccurrenceProb
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(traits), digits = 3, row.names = TRUE, caption = "Species functional traits (first 6 rows displayed).")
+knitr::kable(head(referenceSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Reference sites species composition (first 3 columns displayed).")
+knitr::kable(head(restorationSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Restoration sites species composition (first 3 columns displayed).")
+knitr::kable(head(restorationInfo, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Additional information of restoration sites.")
+knitr::kable(head(cooccurrenceProb, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Species co-occurrence probabilities (first 6 rows and 3 columns displayed).")
+```
+
+
+```{r, echo = FALSE}
+ggplot2::ggplot(data = traits) +
+  ggplot2::aes(x = .data[["EcologicalSuccession"]]) +
+  ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
+  ggplot2::labs(y = "Number of species") +
+  ggplot2::expand_limits(y = 100) +
+  themeResbiota(baseSize = 12)
+
+ggplot2::ggplot(data = traits) +
+  ggplot2::aes(x = .data[["Zoochory"]]) +
+  ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
+  ggplot2::scale_x_continuous(breaks = c(0, 1), 
+                              labels = c("No", "Yes")) +
+  ggplot2::labs(y = "Number of species") +
+  ggplot2::expand_limits(y = 100) +
+  themeResbiota(baseSize = 12)
+
+ggplot2::ggplot(data = traits) +
+  ggplot2::aes(x = .data[["WoodDensity"]]) +
+  ggplot2::geom_histogram(bins = grDevices::nclass.FD(traits[,"WoodDensity"]), fill = "#1d4b61", col = "#ffffff") +
+  ggplot2::labs(y = "Number of species") +
+  ggplot2::labs(x = "Wood density") +
+  themeResbiota(baseSize = 12)
+
+ggplot2::ggplot(data = data.frame(spp = factor(rownames(traits), levels = rownames(traits)[order(traits$relativeAbundance, decreasing = TRUE)]), traits)) +
+  ggplot2::aes(x = .data[["spp"]], y = .data[["relativeAbundance"]]) +
+  ggplot2::geom_col(fill = "#1d4b61", col = "#ffffff") +
+  ggplot2::labs(y = "Relative abundance") +
+  ggplot2::labs(x = "Species rank") +
+  themeResbiota(baseSize = 12) +
+  ggplot2::theme(axis.text.x = ggplot2::element_blank())
+```
+
+# Generate simulated communities
+
+The simulation is performed using the `simulateCommunities` function, specifying input parameters. The function returns an object of class `simRest` (a list object) with basic information of input parameters and a list of results. In our example, we can create multiple scenarios with different input parameters, allowing for following a custom and appropriate restoration strategy that takes into account the dynamics of succession.
+
+## The starting point
+
+Simulations are conducted using functional trait data from a species pool suitable for restoring a particular ecosystem. Note that complete trait datasets are required, as missing values are not permitted in these analyses. 
+
+Simulated communities can be set as empty communities when sites to restore start with no species, and all species must be planted for restoration. In our example, one site begins with established species and the new species and individuals are introduced into those communities. This approach supports adaptive management by enhancing ecosystem functions in ongoing restoration sites.
+
+We used the individuals method to simulate communities, where species compositions in restoration sites are individual counts rather than proportions. Each simulation draws 250 individuals per site with richness ranging between 15 and 20 species. For each site, 1000 unique species compositions are created. In the posterior steps, we can select the communities to put into practice the recovery of the areas.
+
+```{r}
+# Set seed to be able to repeat the same simulation in the future
+set.seed(2025)
+```
+
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits, # Species trait data
+                                  restComp = restorationSites, # Current species composition in restoration sites
+                                  it = 1000, # Number of simulations
+                                  rich = c(15, 20), # Species richness constraints, min = 15, max = 20 species
+                                  nInd = 250, # Number total of individuals 
+                                  method = "individuals") # Sampling method
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+## Functional constraints
+
+The package implements two complementary approaches to constrain species sampling based on functional traits. The primary method maximizes functional diversity using Rao Quadratic Entropy (Rao). However, focusing solely on diversity maximisation may underrepresent the full range of Community Weighted Mean (CWM) of some traits. Therefore, the package also enables constraining the CWM values while simultaneously optimizing functional diversity, ensuring traits representation across both diversity and mean traits values. 
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits,
+                                  restComp = restorationSites,
+                                  it = 1000,
+                                  rich = c(15, 20),
+                                  cwm = "Zoochory", # Constrain communities by zoochory dispersal trait
+                                  rao = "WoodDensity", # Maximize functional diversity of wood density
+                                  nInd = 250,
+                                  method = "individuals")
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+## Accounting for regional species relative abundance
+
+Unconstrained sampling may result in ecologically unrealistic communities where rare species are overrepresented and common species underrepresented. To account for natural species distributions, the `prob` parameter can weight sampling probabilities according to regional species abundances. 
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits,
+                                  restComp = restorationSites,
+                                  it = 1000,
+                                  rich = c(15, 20),
+                                  cwm = "Zoochory",
+                                  rao = "WoodDensity",
+                                  nInd = 250,
+                                  method = "individuals",
+                                  prob = "relativeAbundance") # Weight sampling by species relative abundance in regional pool
+
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+## Site-specific restoration targets
+
+While previous steps applied uniform richness ranges and abundance targets across all sites, actual restoration scenarios often require site-specific parameters. Those specific requirements may reflect pre-existing species composition or distinct restoration objectives. We can include a data frame with this additional information to define these parameters for each site. 
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits,
+                                  restComp = restorationSites,
+                                  restGroup = restorationInfo, # Data frame with site-specific restoration targets
+                                  it = 1000,
+                                  rich = c("nSppMin", "nSppMax"), # Site-varying richness ranges. Use min/max richness columns from restGroup
+                                  cwm = "Zoochory",
+                                  rao = "WoodDensity",
+                                  nInd = "nIndividuals", # Site-varying abundance targets. Use individual counts column from restGroup
+                                  method = "individuals",
+                                  prob = "relativeAbundance")
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+## Co-occurrence patterns
+
+Some species can not coexist in one site in a way that two species are either positively, negatively, or randomly associated with one another. The package incorporates these ecological relationships through a co-occurrence probability matrix to constrain species sampling.
+
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits,
+                                  restComp = restorationSites,
+                                  restGroup = restorationInfo, 
+                                  it = 1000,
+                                  rich = c("nSppMin", "nSppMax"),
+                                  cwm = "Zoochory",
+                                  rao = "WoodDensity",
+                                  nInd = "nIndividuals",
+                                  method = "individuals",
+                                  prob = "relativeAbundance",
+                                  cooccur = cooccurrenceProb) # Co-occurrence probabilities matrix to constrain species sampling
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+## Realistic succession pathways
+
+Some restoration projects try to create a succession plan to maximise long-term restoration success. One approach combines pioneer and later successional species to initiate ecological succession, where pioneer species create favourable conditions for the start of the succession and when they create conditions for the establishment and growth of later-successional species. The package enables this ecological strategy by allowing independent control of richness and abundance targets for each successional group. In our example, we prioritise later-successional species in both richness and abundance parameters to accelerate ecosystem development.
+
+```{r}
+resultsSim <- simulateCommunities(trait = traits,
+                              restComp = restorationSites,
+                              restGroup = restorationInfo, 
+                              it = 1000,
+                              rich = c("nSppMin", "nSppMax"),
+                              cwm = "Zoochory",
+                              rao = "WoodDensity",
+                              nInd = "nIndividuals",
+                              method = "individuals",
+                              prob = "relativeAbundance",
+                              cooccur = cooccurrenceProb,
+                              group = "EcologicalSuccession", # Column in traits defining successional groups
+                              probGroupRich = c("Pioneer" = 0.2, "LaterSuccessional" = 0.8), # Richness targets across groups: 20% pioneer, 80% late successional species 
+                              probGroupAbund = c("Pioneer" = 0.3, "LaterSuccessional" = 0.7)) # Abundance targets across groups: 30% pioneer, 70% late successional individuals
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+
+## Balancing ecological constraints and composition diversity
+
+The inclusion of multiple parameters in the simulation function ultimately limits the possibilities for creating species compositions but opens possibilities to create ecologically realistic communities. The package provides these flexible constraints as optional tools rather than mandatory requirements. In practice, restoration planning could balance new species composition with compositions that resemble reference sites, as well as constraint simulation to match specific project goals.
+
+
+# Calculate functional metrics
+
+The `computeParameters` function calculates key ecological metrics as species richness, CWM, Rao's quadratic entropy, and functional dissimilarity with reference sites. Note that the function returns an object of class `simRest` (a list) that now includes all calculated metric and all additional input information for restoration sites.
+
+```{r}
+# Compute all functional metric for simulated communities and reference sites
+resultsSim <- computeParameters(resultsSim,
+                                traits = traits,
+                                cwm = c("Zoochory", "WoodDensity"), # Traits for CWM calculation
+                                rao = "WoodDensity", # Traits for Rao calculation
+                                dissimilarity =  "WoodDensity", # Traits for functional dissimilarity with reference sites
+                                reference = referenceSites) # Reference site for ecological metric comparison
+```
+
+```{r, echo = FALSE}
+resultsSim$call <- "simulateCommunities(...)"
+```
+
+```{r}
+resultsSim
+```
+
+# Select simulated communities using restoration targets
+
+## Explore the results
+
+The `viewResults` function can be used to plot the calculated metrics and help to define the filter thresholds. It returns a `ggplot` object, thus additional functions of the package `ggplot2` can be used to customise the plots, such as titles, labels and plot themes. All calculated metrics can be pairwise plotted against any other metrics.
+
+
+```{r}
+head(resultsSim$simulation$results)
+```
+
+```{r}
+viewResults(resultsSim, 
+            xvar = "simpson", 
+            yvar = "CWM_Zoochory", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "simpson", 
+            yvar = "CWM_WoodDensity", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "CWM_Zoochory", 
+            yvar = "rao", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "CWM_WoodDensity", 
+            yvar = "rao", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "functionalDissimilarity", 
+            yvar = "CWM_Zoochory", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "functionalDissimilarity", 
+            yvar = "CWM_WoodDensity", 
+            hideref = FALSE)
+viewResults(resultsSim, 
+            xvar = "functionalDissimilarity", 
+            yvar = "rao", 
+            hideref = FALSE)
+```
+
+
+## Select communities
+
+Simulated communities are selected through logical tests on calculated metrics. We used the hierarchical selection, where criteria are evaluated sequentially until one simulation per site is chosen. If initial tests fail, subsequent tests are applied, with final selection samples only one simulation among those which passed all tests. The group-based option enables site-specific selections. The thresholds can be set of one or more metric, but the names must match the metric names in `resultsSim` object.
+
+```{r}
+# Set ecological thresholds for community selection
+thresholds <- c("CWM_Zoochory > 0.8", # Minimum 80% zoochorous species (CWM over binary trait)
+                "rao > 0.3", # Functional diversity minimum
+                "functionalDissimilarity < 0.5") # Maximum 0.5 functional dissimilarity from reference sites
+```
+
+```{r}
+# Select communities for each restoration site
+resultsSelection <- selectCommunities(resultsSim,
+                                      testsHie = thresholds, # Apply zoochory, diversity, and similarity criteria
+                                      group = "Site", # Grouping variable for site-independent selection
+                                      singleselection = TRUE) # Single community selection per group
+```
+
+```{r, echo = FALSE}
+resultsSelection$call <- "resultsSelection(...)"
+```
+
+```{r}
+resultsSelection
+```
+
+
+```{r}
+# Calculated metric of the selected communities
+resultsSelection$selection$results
+```
+
+# Export the results
+
+Community matrix for selected communities
+
+```{r}
+# Species composition (or resultsSelection$selection$composition)
+compositionSelection <- extractResults(resultsSelection, 
+                                 type = "simComposition",
+                                 dbFormat = TRUE)
+```
+
+```{r}
+compositionSelection
+```
+
+Metrics calculated for selected communities
+
+```{r}
+# Functional metrics (or resultsSelection$selection$results)
+parametersSelection <- extractResults(resultsSelection, 
+                                type = "simResults")
+```
+
+```{r, echo = FALSE}
+knitr::kable(parametersSelection[, c(1, 6:12)], digits = 3, row.names = FALSE, caption = "Parameters of selected communities")
+```
+
