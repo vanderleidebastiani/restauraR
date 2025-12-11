@@ -9,15 +9,15 @@
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary
 #' @export
-calcRAO <- function(comm, dis = NULL, nRef = NULL) {
+calcRAO <- function(comm, dis = NULL, nRef = NULL, averages = FALSE) {
   comm <- as.matrix(comm)
   comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
   # nRow <- nrow(comm)
   nCol <- ncol(comm)
   if (!is.null(dis)) {
     dis <- as.matrix(dis)
-    match.names <- match(colnames(comm), colnames(dis))
-    dis <- dis[match.names, match.names, drop = FALSE]
+    matchNames <- match(colnames(comm), colnames(dis))
+    dis <- dis[matchNames, matchNames, drop = FALSE]
   } else{
     dis <- matrix(1, nCol, nCol)
     diag(dis) <- 0
@@ -26,17 +26,30 @@ calcRAO <- function(comm, dis = NULL, nRef = NULL) {
   commDis <- comm %*% dis
   # Within-community diversity
   withinCommDiversity <- rowSums(sweep(comm, 1, commDis, "*", check.margin = FALSE))
-  # When nRef is provided calculate amongCommDiversity matrix only partially to performance improvement
-  if(!is.null(nRef)) {
-    amongCommDiversity <- tcrossprod(commDis, comm[seq.int(nRef),, drop = FALSE]) 
-    # Adjustment matrix
-    adjustment <- 0.5 * outer(withinCommDiversity, withinCommDiversity[seq.int(nRef)], "+")
+  # If averages is equal to FALSE return standard rao
+  if(!averages){
+    # When nRef is provided calculate amongCommDiversity matrix only partially to performance improvement
+    if(!is.null(nRef)) {
+      amongCommDiversity <- tcrossprod(commDis, comm[seq.int(nRef),, drop = FALSE]) 
+      # Adjustment matrix
+      adjustment <- 0.5 * outer(withinCommDiversity, withinCommDiversity[seq.int(nRef)], "+")
+    } else{
+      amongCommDiversity <- tcrossprod(commDis, comm)  # Equivalent to commDis %*% t(comm)
+      # Adjustment matrix
+      adjustment <- 0.5 * outer(withinCommDiversity, withinCommDiversity, "+")
+    }
+    # Among-community diversities excluding within-community diversity
+    res <- amongCommDiversity - adjustment
   } else{
-    amongCommDiversity <- tcrossprod(commDis, comm)  # Equivalent to commDis %*% t(comm)
-    # Adjustment matrix
-    adjustment <- 0.5 * outer(withinCommDiversity, withinCommDiversity, "+")
+    # Else return only average alpha and beta diversities and the total
+    total <- apply(comm, 1, sum)
+    sampRelAbund <- total/sum(comm)
+    xCombined <- apply(comm, 2, sum)/sum(comm)
+    res <- list()
+    res$total <- sum(dis * outer(xCombined, xCombined))
+    res$alpha <- sum(withinCommDiversity * sampRelAbund)
+    res$beta <- res$total - res$alpha
+    res$Fst <- res$beta/res$total
   }
-  # Among-community diversities excluding within-community diversity
-  res <- amongCommDiversity - adjustment
   return(res)
 }

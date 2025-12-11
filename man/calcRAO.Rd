@@ -5,7 +5,7 @@
 \alias{calcRAO}
 \title{Internal function to calculate Rao's quadratic entropy (RAO)}
 \usage{
-calcRAO(comm, dis = NULL, nRef = NULL)
+calcRAO(comm, dis = NULL, nRef = NULL, averages = FALSE)
 }
 \arguments{
 \item{comm}{A matrix with species composition in the reference sites. NAs not accepted.}
