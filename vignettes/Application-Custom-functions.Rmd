@@ -65,8 +65,8 @@ resultsSim <- simulateCommunities(trait = traits, # Species trait data
                                   restComp = restorationSites, # Current species composition in restoration sites
                                   it = 1000, # Number of simulations
                                   rich = c(10, 15), # Species richness constraints, min = 10, max = 15 species
-                                  cwm = "BT", # Constrain communities by bark thickness trait
-                                  rao = c("BT", "SLA", "Height", "Seed"),  # Maximize functional diversity of all traits
+                                  maxDiver = c("BT", "SLA", "Height", "Seed"),  # Maximize functional diversity of all traits
+                                  constCWM = "BT", # Constrain communities by bark thickness trait
                                   method = "proportions" # Sampling method
 )
 resultsSim
@@ -80,8 +80,8 @@ Again as explained in overview vignette, the `computeParameters` function calcul
 # Compute all functional metric for simulated communities and reference sites
 resultsSim <- computeParameters(resultsSim,
                                 traits = traits,
-                                cwm = c("BT", "SLA", "Height", "Seed"), # Traits for CWM calculation
                                 rao = c("BT", "SLA", "Height", "Seed"), # Traits for Rao calculation
+                                cwm = c("BT", "SLA", "Height", "Seed"), # Traits for CWM calculation
                                 reference = referenceSites) # Reference site for ecological metric comparison
 ```
 

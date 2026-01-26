@@ -159,8 +159,8 @@ resultsSim <- simulateCommunities(trait = traits,
                                   restComp = restorationSites,
                                   it = 1000,
                                   rich = c(15, 20),
-                                  cwm = "Zoochory", # Constrain communities by zoochory dispersal trait
-                                  rao = "WoodDensity", # Maximize functional diversity of wood density
+                                  maxDiver = "WoodDensity", # Maximize functional diversity of wood density
+                                  constCWM = "Zoochory", # Constrain communities by zoochory dispersal trait
                                   nInd = 250,
                                   method = "individuals")
 ```
@@ -182,8 +182,8 @@ resultsSim <- simulateCommunities(trait = traits,
                                   restComp = restorationSites,
                                   it = 1000,
                                   rich = c(15, 20),
-                                  cwm = "Zoochory",
-                                  rao = "WoodDensity",
+                                  maxDiver = "WoodDensity",
+                                  constCWM = "Zoochory",
                                   nInd = 250,
                                   method = "individuals",
                                   prob = "relativeAbundance") # Weight sampling by species relative abundance in regional pool
@@ -208,8 +208,8 @@ resultsSim <- simulateCommunities(trait = traits,
                                   restGroup = restorationInfo, # Data frame with site-specific restoration targets
                                   it = 1000,
                                   rich = c("nSppMin", "nSppMax"), # Site-varying richness ranges. Use min/max richness columns from restGroup
-                                  cwm = "Zoochory",
-                                  rao = "WoodDensity",
+                                  maxDiver = "WoodDensity",
+                                  constCWM = "Zoochory",
                                   nInd = "nIndividuals", # Site-varying abundance targets. Use individual counts column from restGroup
                                   method = "individuals",
                                   prob = "relativeAbundance")
@@ -234,8 +234,8 @@ resultsSim <- simulateCommunities(trait = traits,
                                   restGroup = restorationInfo, 
                                   it = 1000,
                                   rich = c("nSppMin", "nSppMax"),
-                                  cwm = "Zoochory",
-                                  rao = "WoodDensity",
+                                  maxDiver = "WoodDensity",
+                                  constCWM = "Zoochory",
                                   nInd = "nIndividuals",
                                   method = "individuals",
                                   prob = "relativeAbundance",
@@ -260,8 +260,8 @@ resultsSim <- simulateCommunities(trait = traits,
                               restGroup = restorationInfo, 
                               it = 1000,
                               rich = c("nSppMin", "nSppMax"),
-                              cwm = "Zoochory",
-                              rao = "WoodDensity",
+                              maxDiver = "WoodDensity",
+                              constCWM = "Zoochory",
                               nInd = "nIndividuals",
                               method = "individuals",
                               prob = "relativeAbundance",
@@ -293,8 +293,8 @@ The `computeParameters` function calculates key ecological metrics as species ri
 # Compute all functional metric for simulated communities and reference sites
 resultsSim <- computeParameters(resultsSim,
                                 traits = traits,
-                                cwm = c("Zoochory", "WoodDensity"), # Traits for CWM calculation
                                 rao = "WoodDensity", # Traits for Rao calculation
+                                cwm = c("Zoochory", "WoodDensity"), # Traits for CWM calculation
                                 dissimilarity =  "WoodDensity", # Traits for functional dissimilarity with reference sites
                                 reference = referenceSites) # Reference site for ecological metric comparison
 ```
@@ -352,7 +352,7 @@ viewResults(resultsSim,
 
 ## Select communities
 
-Simulated communities are selected through logical tests on calculated metrics. We used the hierarchical selection, where criteria are evaluated sequentially until one simulation per site is chosen. If initial tests fail, subsequent tests are applied, with final selection samples only one simulation among those which passed all tests. The group-based option enables site-specific selections. The thresholds can be set of one or more metric, but the names must match the metric names in `resultsSim` object.
+Simulated communities are selected through logical tests on calculated metrics. We used the priority selection, where criteria are evaluated sequentially until one simulation per site is chosen. If initial tests fail, subsequent tests are applied, with final selection samples only one simulation among those which passed all tests. The group-based option enables site-specific selections. The thresholds can be set of one or more metric, but the names must match the metric names in `resultsSim` object.
 
 ```{r}
 # Set ecological thresholds for community selection
@@ -364,7 +364,7 @@ thresholds <- c("CWM_Zoochory > 0.8", # Minimum 80% zoochorous species (CWM over
 ```{r}
 # Select communities for each restoration site
 resultsSelection <- selectCommunities(resultsSim,
-                                      testsHie = thresholds, # Apply zoochory, diversity, and similarity criteria
+                                      testsPriority = thresholds, # Apply zoochory, diversity, and similarity criteria
                                       group = "Site", # Grouping variable for site-independent selection
                                       singleselection = TRUE) # Single community selection per group
 ```

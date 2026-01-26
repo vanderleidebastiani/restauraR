@@ -114,7 +114,7 @@ The function computeParameters is mandatory and allows compute the basic paramet
 
 The function standardizeParameters allows the standardisation of the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance. For example, the "max" method is useful to scale dissimilarity results by scaling the values in ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
 
-The function computeMultifunctionality is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.
+The function computeMultifunctionality is optional and computes the matrix of multifunctionality and alpha multifunctionality index. See the multifunctionality topic below.
 
 ## Select communities
 
@@ -122,7 +122,7 @@ The selections of simulated communities are performed using the function selectC
 
 The logical tests are specified using a vector of character class. Each test uses the parameter name, a logical operator and the value threshold. All basic logical tests can be used, setting the default operators: \<, \<=, \>, \>=, == and !=. Each test must be in double or single quote signs. The selection of character type can be performed using different quotation marks than those used to define the entire test (e.g., single quote inside the double quote).
 
-Two selection options can be used, individually or alternatively, based on deterministic and hierarchical selection. In the deterministic selection, all simulations that are true in the input test are returned. In this case, all parameters evaluated must be true to a community to be selected. Multiple selection steps can be performed sequentially, using more restrictive criteria (although the practical results will be the same when applied in a single step with the most restrictive criterion). In the hierarchical selection, the tests are evaluated hierarchically and only one simulation is selected. When all simulations fail in the first test, the function tries the next test. In the end, the function samples only one simulation among those which passed the all tests. In this case, an additional argument defines if the selection is performed inside a specific group. This allows, for example, the selection of one simulation for each site that will be restored. Furthermore, the hierarchical selection allows the use of two special arguments to select, the word MIN to select the minimal value and the word MAX to select the maximum value in a specific parameter.
+Two selection options can be used, individually or interchangeably: filter selection and priority selection. In the filter selection, all simulations that satisfy all the provided test conditions are returned. In this case, all parameters evaluated must be true to a community to be selected. Multiple selection steps can be performed sequentially, using more restrictive criteria (although the practical results will be the same when applied in a single step with the most restrictive criterion). In the priority selection, the tests are evaluated hierarchically following an order until a single simulation is selected. When all simulations fail in the first test, the function tries the next test. In the end, the function samples only one simulation among those which passed the all tests. In this case, an additional argument defines if the selection is performed inside a specific group. This allows, for example, the selection of one simulation for each site that will be restored. Furthermore, the priority selection supports two special arguments: word MIN to select the minimal value for a specified parameter, and the word MAX to select the maximum value.
 
 ## The reference sites
 
@@ -136,11 +136,11 @@ The main outputs are a community matrix with species relative abundances and a d
 
 ## Multifunctionality
 
-The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.
+The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality index.
 
-The selection of simulated species composition can be performed in alpha multifunctionality metric to maximize multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
+The selection of simulated species composition can be performed in alpha multifunctionality index to maximize multifunctionality between restored sites. The alpha multifunctionality index also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
 
-High values of alpha multifunctionality can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered.
+High values of alpha multifunctionality index can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered.
 
 ## Visualization
 
@@ -227,8 +227,8 @@ scenarioA <- simulateCommunities(trait = traits,
                                  ava = "Available", 
                                  it = 100, 
                                  rich = c(10, 15), 
-                                 cwm = "BT", 
-                                 rao = c("BT", "SLA", "Height", "Seed"),
+                                 maxDiver = c("BT", "SLA", "Height", "Seed"),
+                                 constCWM = "BT", 
                                  phi = 1,
                                  prefix = "New"
 )
@@ -244,8 +244,8 @@ scenarioB <- simulateCommunities(trait = traits,
                                  ava = "Available", 
                                  it = 100, 
                                  rich = c(10, 15), 
-                                 cwm = "BT", 
-                                 rao = c("BT", "SLA", "Height", "Seed"),
+                                 maxDiver = c("BT", "SLA", "Height", "Seed"),
+                                 constCWM = "BT", 
                                  phi = 1,
                                  prefix = "Ongoing"
 )
@@ -308,7 +308,7 @@ allScenariosAlternative <- computeParameters(x = allScenarios,
 allScenariosAlternative
 ```
 
-The multifunctionality also can be computed after the basic parameter calculation. Note that the alpha multifunctionality are included in the result data frame.
+The multifunctionality also can be computed after the basic parameter calculation. Note that the alpha multifunctionality index are included in the result data frame.
 
 ```{r}
 # Compute multifunctionality
@@ -330,21 +330,21 @@ Multiple selection steps can be performed sequentially, using increasingly restr
 # Global selection (first step)
 targetSelect1 <- c("CWM_BT > 6", "rao > 0.25")
 resSelectSim <- selectCommunities(allScenarios, 
-                                  testsDet = targetSelect1)
+                                  testsFilter = targetSelect1)
 ```
 
 ```{r}
 # Additional selection (second step)
 targetSelect2 <- c("rao < 0.3", "Cost < 8000")
 resSelectSim <- selectCommunities(resSelectSim, 
-                                  testsDet = targetSelect2)
+                                  testsFilter = targetSelect2)
 ```
 
 ```{r}
 # Additional selection with multifunctionality
 targetSelect3 <- c("alphamultifunctionality >= 2")
 resSelectSim <- selectCommunities(resSelectSim, 
-                                   testsDet = targetSelect3)
+                                   testsFilter = targetSelect3)
 resSelectSim
 ```
 
@@ -356,14 +356,14 @@ Selection can also be performed in distinct steps and then concatenated. For exa
 # Selection Sites with the prefix "New"
 target2New <- c("Scenario == 'New'", "rao > 0.3")
 resSelectSimPart1 <- selectCommunities(allScenarios, 
-                                  testsDet = target2New)
+                                  testsFilter = target2New)
 ```
 
 ```{r}
 # Selection Sites with the prefix "Ongoing"
 target2Ongoing <- c("Scenario == 'Ongoing'", "rao < 0.5")
 resSelectSimPart2 <- selectCommunities(allScenarios, 
-                                   testsDet = target2Ongoing)
+                                   testsFilter = target2Ongoing)
 ```
 
 ```{r}
@@ -372,17 +372,17 @@ resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2)
 resSelectSimMerged
 ```
 
-### Hierarchical approach
+### Priority approach
 
-Selection can also be performed hierarchically in a way that only one simulation is selected.
+Selection can also be performed hierarchically following a priority order in a way that only one simulation is selected.
 
 ```{r}
 # Selection Sites with the prefix "New"
-hierarchicalTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'")
-resSelectSimHier <- selectCommunities(allScenarios, 
-                                  testsHie = hierarchicalTargets,
+priorityTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'")
+resSelectSimPriority <- selectCommunities(allScenarios, 
+                                  testsPriority = priorityTargets,
                                   singleselection = TRUE)
-resSelectSimHier
+resSelectSimPriority
 ```
 
 ## Visualize and explore the results

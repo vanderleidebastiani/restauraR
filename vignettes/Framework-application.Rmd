@@ -129,8 +129,8 @@ resSIM <- simulateCommunities(trait = traits,
                               ava = ava,
                               it = N,
                               rich = SR,
-                              cwm = traits2cwm,
-                              rao = traits2rao)
+                              maxDiver = traits2rao,
+                              constCWM = traits2cwm)
 ```
 
 ```{r}
@@ -218,7 +218,7 @@ Now, use `selectCommunities` to filter selected communities that satisfies these
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSIM,
-                            testsDet = thresholds)
+                            testsFilter = thresholds)
 ```
 
 ```{r}
@@ -247,7 +247,7 @@ Now, use `selectCommunities` to apply the second filter to select communities th
 ```{r}
 # Select communities
 resSEL <- selectCommunities(resSEL,
-                            testsDet = thresholds2)
+                            testsFilter = thresholds2)
 ```
 
 ```{r}
