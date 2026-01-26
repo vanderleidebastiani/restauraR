@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{extractResults}
 \alias{extractResults}
-\title{Extract results}
+\title{Extract results from simulation objects}
 \usage{
 extractResults(
   x,
@@ -16,7 +16,7 @@ extractResults(
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to extract the results.}
 
-\item{type}{A option to extract results, partial match to "simComposition", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See Value below.}
+\item{type}{A option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.}
 
 \item{dbFormat}{The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
 
@@ -26,19 +26,22 @@ extractResults(
 }
 \value{
 A data.frame or matrix according to the chosen method:
-\item{simComposition}{A matrix with species composition for simulated communities.}
-\item{simResults}{A data frame with calculated parameters in each simulated community.}
-\item{simMultifunctionality}{A data frame with binary multifunctionality tests.}
-\item{simUnavailableSpecies}{A data frame with the species list to achieve the specified thresholds.}
-\item{refComposition}{A matrix with species composition for reference sites.}
-\item{refResults}{A data frame with calculated parameters in reference sites.}
-\item{refMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
-\item{supComposition}{A matrix with species composition for supplementary sites.}
-\item{supResults}{A data frame with calculated parameters in supplementary sites.}
-\item{supMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
+\item{simComposition}{Matrix with species composition for simulated communities.}
+\item{simGroup}{Data frame with complementary information for simulated sites.}
+\item{simBaseline}{Matrix with baseline species composition for simulated communities.}
+\item{simAdditions}{Matrix with species additions for simulated communities.}
+\item{simResults}{Data frame with calculated parameters in each simulated community.}
+\item{simMultifunctionality}{Data frame with binary multifunctionality tests.}
+\item{simUnavailableSpecies}{Data frame with the species list to achieve the specified thresholds.}
+\item{refComposition}{Matrix with species composition for reference sites.}
+\item{refResults}{Data frame with calculated parameters in reference sites.}
+\item{refMultifunctionality}{Data frame with binary multifunctionality tests for reference sites.}
+\item{supComposition}{Matrix with species composition for supplementary sites.}
+\item{supResults}{Data frame with calculated parameters in supplementary sites.}
+\item{supMultifunctionality}{Data frame with binary multifunctionality tests for supplementary sites.}
 }
 \description{
-Help function to easily extract results. Most methods are default R list extractions. However, the option "simUnavailableSpecies" (type argument) checks the unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+Help function to easily extract specific components from simulation results. Most extraction methods are standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

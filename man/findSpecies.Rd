@@ -3,26 +3,26 @@
 \encoding{UTF-8}
 \name{findSpecies}
 \alias{findSpecies}
-\title{Internal function to select species to generates simulated communities}
+\title{Internal function to select species to generate simulated communities}
 \usage{
-findSpecies(traits, cwm, rao, n, phi)
+findSpecies(traits, maxDiver, constCWM, n, phi)
 }
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
+\item{maxDiver}{A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
+\item{constCWM}{A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{n}{Number of species to select.}
 
-\item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
+\item{phi}{Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.}
 }
 \value{
-A vector with selected species names based on their traits and a desired trait profile.
+A vector with names of selected species, chosen based on their traits and desired trait profile.
 }
 \description{
-Internal function to select species to generates simulated communities
+Internal function to select species to generate simulated communities
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}

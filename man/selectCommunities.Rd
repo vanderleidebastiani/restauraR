@@ -10,8 +10,8 @@
 \usage{
 selectCommunities(
   x,
-  testsDet = NULL,
-  testsHie = NULL,
+  testsFilter = NULL,
+  testsPriority = NULL,
   group = NULL,
   singleselection = TRUE
 )
@@ -23,13 +23,13 @@ mergeSelection(...)
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.}
 
-\item{testsDet}{A vector with the deterministic selection criteria to be executed.}
+\item{testsFilter}{A vector with the filter selection criteria to be executed.}
 
-\item{testsHie}{A vector with the hierarchical selection criteria to be executed.}
+\item{testsPriority}{A vector with the priority selection criteria to be executed.}
 
-\item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.}
+\item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the priority selection.}
 
-\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the hierarchical selection.}
+\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the priority selection.}
 
 \item{...}{Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.}
 }
@@ -38,6 +38,7 @@ A list (class "simRestSelect") with the elements:
 \item{call}{The arguments used.}
 \item{selection$composition}{A matrix with species composition for selected communities.}
 \item{selection$group}{A data frame with complementary information for selected sites.}
+\item{selection$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 \item{selection$results}{A data frame with calculated parameters in each selected community.}
 \item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
@@ -57,8 +58,8 @@ head(cerrado.mini$traits)
 # Simulation
 scenario <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
-                         cwm = "BT",
-                         rao = c("SLA", "Height", "Seed"),
+                         maxDiver = c("SLA", "Height", "Seed"),
+                         constCWM = "BT",
                          rich = c(10, 15),
                          it = 100)
 scenario
@@ -73,14 +74,14 @@ scenario <- computeParameters(x = scenario,
                     reference = cerrado.mini$reference,
                     supplementary = cerrado.mini$supplementary)
 scenario
-# Select communities - Deterministic selection
+# Select communities - Filter selection
 scenarioSelected <- selectCommunities(x = scenario,
-                                      testsDet = c("CWM_BT > 6",
+                                      testsFilter = c("CWM_BT > 6",
                                                 "rao > 2.5"))
 scenarioSelected
-# Select communities - Hierarchical selection
+# Select communities - Priority selection
 scenarioSelected <- selectCommunities(x = scenario,
-                                      testsHie = c("CWM_BT > 6",
+                                      testsPriority = c("CWM_BT > 6",
                                                 "rao > 2.5",
                                                 "Cost == 'MIN'"))
 scenarioSelected

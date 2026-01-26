@@ -82,8 +82,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   # 									   dens = NULL,
   # 									   stan = NULL)
   ### inputParSelRV ----
-  inputParSelRV <- shiny::reactiveValues(testsDet = NULL,
-                                         testsHie = NULL,
+  inputParSelRV <- shiny::reactiveValues(testsFilter = NULL,
+                                         testsPriority = NULL,
                                          group = NULL,
                                          # singleselection = NULL,
                                          auxRankHeiSel = NULL)
@@ -119,8 +119,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     itSimInputInfo = 0,
     avaSimInputInfo = 0,
     undSimInputInfo = 0,
-    cwmSimInputInfo = 0,
-    raoSimInputInfo = 0,
+    constCWMSimInputInfo = 0,
+    maxDiverSimInputInfo = 0,
     speficyGroupsSimInputInfo = 0,
     probGroupTypeSimInputInfo = 0,
     probSimInputInfo = 0,
@@ -140,8 +140,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     speficyMethodStanInputInfo = 0,
     testsMultiInputInfo = 0,
     # SelectTab
-    testsDetSelInputInfo = 0,
-    testsHieSelInputInfo = 0,
+    testsFilterSelInputInfo = 0,
+    testsPrioritySelInputInfo = 0,
     speficyGroupsSelInputInfo = 0,
     singleSelectionInputInfo = 0
   )
@@ -258,9 +258,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
     shinyWidgets::updatePickerInput(session, inputId = "undSimInput", choices = inputDataRV$auxTraitsVariables,
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    shinyWidgets::updatePickerInput(session, inputId = "cwmSimInput", choices = inputDataRV$auxTraitsVariables,
+    shinyWidgets::updatePickerInput(session, inputId = "constCWMSimInput", choices = inputDataRV$auxTraitsVariables,
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
-    shinyWidgets::updatePickerInput(session, inputId = "raoSimInput", choices = inputDataRV$auxTraitsVariables,
+    shinyWidgets::updatePickerInput(session, inputId = "maxDiverSimInput", choices = inputDataRV$auxTraitsVariables,
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
     shinyWidgets::updatePickerInput(session, inputId = "probSimInput", choices = inputDataRV$auxTraitsVariables,
                                     choicesOpt = list(subtext = inputDataRV$auxTraitsClass))
@@ -447,7 +447,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
   })
   ## Update pickers - Parameters ----
-  ### Select tab - testsDetSelInput, testsHieSelInput and groupSelInput ----
+  ### Select tab - testsFilterSelInput, testsPrioritySelInput and groupSelInput ----
   # Update choices 
   obsListSelPar <- shiny::reactive({
     list(input$scenarioSelInput, resultsRV$updatePar)
@@ -456,21 +456,21 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     if(!is.null(input$scenarioSelInput)){
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
       if(!is.null(colnames(scenario$simulation$results))){
-        shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = colnames(scenario$simulation$results))
-        shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "testsFilterSelInput", choices = colnames(scenario$simulation$results))
+        shinyWidgets::updatePickerInput(session, inputId = "testsPrioritySelInput", choices = colnames(scenario$simulation$results))
         shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = colnames(scenario$simulation$results))
       } else{
-        shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
+        shinyWidgets::updatePickerInput(session, inputId = "testsFilterSelInput", choices = character(0),
                                         selected = NULL)
-        shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
+        shinyWidgets::updatePickerInput(session, inputId = "testsPrioritySelInput", choices = character(0),
                                         selected = NULL)
         shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
                                         selected = NULL)
       }
     } else{
-      shinyWidgets::updatePickerInput(session, inputId = "testsDetSelInput", choices = character(0),
+      shinyWidgets::updatePickerInput(session, inputId = "testsFilterSelInput", choices = character(0),
                                       selected = NULL)
-      shinyWidgets::updatePickerInput(session, inputId = "testsHieSelInput", choices = character(0),
+      shinyWidgets::updatePickerInput(session, inputId = "testsPrioritySelInput", choices = character(0),
                                       selected = NULL)
       shinyWidgets::updatePickerInput(session, inputId = "groupSelInput", choices = character(0),
                                       selected = NULL)
@@ -574,10 +574,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       }
     })
   })
-  ### Hierarchical selection sliders ----
-  shiny::observeEvent(input$testsHieSelInput, {
-    output$slidersTestsHieSel <- shiny::renderUI({
-      inVars <- input$testsHieSelInput
+  ### Priority selection sliders ----
+  shiny::observeEvent(input$testsPrioritySelInput, {
+    output$sliderstestsPrioritySel <- shiny::renderUI({
+      inVars <- input$testsPrioritySelInput
       pvars <- length(inVars)
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
       scenario <- scenario$simulation$results
@@ -651,10 +651,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       }
     })
   })
-  ### Deterministic selection sliders ----
-  shiny::observeEvent(input$testsDetSelInput, {
-    output$slidersTestsDetSel <- shiny::renderUI({
-      inVars <- input$testsDetSelInput
+  ### Filter selection sliders ----
+  shiny::observeEvent(input$testsFilterSelInput, {
+    output$sliderstestsFilterSel <- shiny::renderUI({
+      inVars <- input$testsFilterSelInput
       pvars <- length(inVars)
       scenario <- resultsRV$simulate[[input$scenarioSelInput]]
       scenario <- scenario$simulation$results
@@ -1069,6 +1069,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                               label = i18n$t("Type of result"),
                               choices = stats::setNames(
                                 c("simComposition",
+                                  "simGroup", 
+                                  "simBaseline", 
+                                  "simAdditions",
                                   "simResults", 
                                   "simMultifunctionality",
                                   "simUnavailableSpecies",
@@ -1079,6 +1082,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                   "supResults",
                                   "supMultifunctionality"),
                                 c(i18n$t("simComposition"),
+                                  i18n$t("simGroup"), 
+                                  i18n$t("simBaseline"), 
+                                  i18n$t("simAdditions"), 
                                   i18n$t("simResults"), 
                                   i18n$t("simMultifunctionality"),
                                   i18n$t("simUnavailableSpecies"),
@@ -1097,13 +1103,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   
   ## Check buttons - OK ----
   ### Check doAdjustSim button ----
-  shiny::observeEvent(input$scenarioSimAdjInput, ignoreNULL = FALSE, {
-    if(is.null(input$scenarioSimAdjInput)){
-      shiny::updateActionButton(session, "doAdjustSim", disabled = TRUE)
-    } else(
-      shiny::updateActionButton(session, "doAdjustSim", disabled = FALSE)
-    )
-  })
+  # shiny::observeEvent(input$scenarioSimAdjInput, ignoreNULL = FALSE, {
+  #   if(is.null(input$scenarioSimAdjInput)){
+  #     shiny::updateActionButton(session, "doAdjustSim", disabled = TRUE)
+  #   } else(
+  #     shiny::updateActionButton(session, "doAdjustSim", disabled = FALSE)
+  #   )
+  # })
   ### Check doCompute button ----
   shiny::observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComParInput)){
@@ -1367,8 +1373,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                                und = input$undSimInput, # straight input
                                                it = inputParSimRV$it, # Ok
                                                rich = input$richSliderSimInput, # straight input
-                                               cwm = input$cwmSimInput, # straight input
-                                               rao = input$raoSimInput, # straight input
+                                               maxDiver = input$maxDiverSimInput, # straight input
+                                               constCWM = input$constCWMSimInput, # straight input
                                                prob = input$probSimInput, # straight input
                                                phi = input$phiSimInput, # straight input
                                                nInd = inputParSimRV$nInd, # Ok
@@ -1486,32 +1492,33 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   ### doAdjustSim ----
-  shiny::observeEvent(input$doAdjustSim, {
-    # Remove any open modal
-    shiny::removeModal(session = session)
-    shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-    scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]
-    scenario <- tryCatch(adjustSimulations(x = scenario,
-                                           minAbun = input$minAbuSliderSimAdjInput, # straight input
-                                           reallocate = as.logical(input$reallocateAdjSimInput) # straight input
-    ), error = function(e) e)
-    shiny::removeModal(session = session)
-    if(inherits(scenario, what = "error")){
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = i18n$t("Something went wrong!"),
-        text = scenario$message,
-        type = "error"
-      )
-    } else{
-      resultsRV$simulate[[input$scenarioSimAdjInput]] <- scenario
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = i18n$t("Done!"),
-        type = "success"
-      )
-    }
-  })
+  # REMOVER ----
+  # shiny::observeEvent(input$doAdjustSim, {
+  #   # Remove any open modal
+  #   shiny::removeModal(session = session)
+  #   shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
+  #   scenario <- resultsRV$simulate[[input$scenarioSimAdjInput]]
+  #   scenario <- tryCatch(adjustSimulations(x = scenario,
+  #                                          minAbun = input$minAbuSliderSimAdjInput, # straight input
+  #                                          reallocate = as.logical(input$reallocateAdjSimInput) # straight input
+  #   ), error = function(e) e)
+  #   shiny::removeModal(session = session)
+  #   if(inherits(scenario, what = "error")){
+  #     shinyWidgets::sendSweetAlert(
+  #       session = session,
+  #       title = i18n$t("Something went wrong!"),
+  #       text = scenario$message,
+  #       type = "error"
+  #     )
+  #   } else{
+  #     resultsRV$simulate[[input$scenarioSimAdjInput]] <- scenario
+  #     shinyWidgets::sendSweetAlert(
+  #       session = session,
+  #       title = i18n$t("Done!"),
+  #       type = "success"
+  #     )
+  #   }
+  # })
   ### doCompute ----
   shiny::observeEvent(input$doCompute, {
     # Remove any open modal
@@ -1687,10 +1694,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     # Update using dynamic slides
     scenario <- resultsRV$simulate[[input$scenarioSelInput]]
     scenario <- scenario$simulation$results
-    if(!is.null(input$testsHieSelInput)){
+    if(!is.null(input$testsPrioritySelInput)){
       # Parameters order
       parOrd <- input$rankHeiSelInput
-      inVars <- input$testsHieSelInput
+      inVars <- input$testsPrioritySelInput
       names(inVars) <- inVars
       pvars <- length(inVars)
       # Order inVars
@@ -1713,12 +1720,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
           testList <- c(testList, testTemp)
         }
       }
-      inputParSelRV$testsHie <- testList
+      inputParSelRV$testsPriority <- testList
     } else{
-      inputParSelRV$testsHie <- NULL
+      inputParSelRV$testsPriority <- NULL
     }
-    if(!is.null(input$testsDetSelInput)){
-      inVars <- input$testsDetSelInput
+    if(!is.null(input$testsFilterSelInput)){
+      inVars <- input$testsFilterSelInput
       names(inVars) <- inVars
       pvars <- length(inVars)
       testList <- c()
@@ -1736,9 +1743,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
           testList <- c(testList, testTemp)
         }
       }
-      inputParSelRV$testsDet <- testList
+      inputParSelRV$testsFilter <- testList
     } else{
-      inputParSelRV$testsDet <- NULL
+      inputParSelRV$testsFilter <- NULL
     }
     if(input$speficyGroupsSelInput == "Yes" && !is.null(input$groupSelInput)){
       inputParSelRV$group <- input$groupSelInput
@@ -1746,8 +1753,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       inputParSelRV$group <- NULL
     }
     scenario <- tryCatch(selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
-                                           testsDet = inputParSelRV$testsDet,
-                                           testsHie = inputParSelRV$testsHie,
+                                           testsFilter = inputParSelRV$testsFilter,
+                                           testsPriority = inputParSelRV$testsPriority,
                                            group = inputParSelRV$group,
                                            singleselection = as.logical(input$singleSelectionInput) # straight input
     ), error = function(e) e)
@@ -2195,8 +2202,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       input$itSimInputInfo,
       input$avaSimInputInfo,
       input$undSimInputInfo,
-      input$cwmSimInputInfo,
-      input$raoSimInputInfo,
+      input$constCWMSimInputInfo,
+      input$maxDiverSimInputInfo,
       input$speficyGroupsSimInputInfo,
       input$probGroupTypeSimInputInfo,
       input$probSimInputInfo,
@@ -2216,8 +2223,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       input$speficyMethodStanInputInfo,
       input$testsMultiInputInfo,
       # SelectTab
-      input$testsDetSelInputInfo,
-      input$testsHieSelInputInfo,
+      input$testsFilterSelInputInfo,
+      input$testsPrioritySelInputInfo,
       input$speficyGroupsSelInputInfo,
       input$singleSelectionInputInfo
     )
@@ -2300,16 +2307,16 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         infoRV$undSimInputInfo <- input$undSimInputInfo
       }
     }
-    if(!is.null(input$cwmSimInputInfo)){
-      if(input$cwmSimInputInfo>infoRV$cwmSimInputInfo){
+    if(!is.null(input$constCWMSimInputInfo)){
+      if(input$constCWMSimInputInfo>infoRV$constCWMSimInputInfo){
         infoText <- i18n$t("Traits names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait and allow create a wide range of means of those traits across the simulated communities.")
-        infoRV$cwmSimInputInfo <- input$cwmSimInputInfo
+        infoRV$constCWMSimInputInfo <- input$constCWMSimInputInfo
       }
     }
-    if(!is.null(input$raoSimInputInfo)){
-      if(input$raoSimInputInfo>infoRV$raoSimInputInfo){
+    if(!is.null(input$maxDiverSimInputInfo)){
+      if(input$maxDiverSimInputInfo>infoRV$maxDiverSimInputInfo){
         infoText <- i18n$t("Traits names to indicate which traits are used to maximize functional diversity (Rao Quadratic Entropy).")
-        infoRV$raoSimInputInfo <- input$raoSimInputInfo
+        infoRV$maxDiverSimInputInfo <- input$maxDiverSimInputInfo
       }
     }
     if(!is.null(input$speficyGroupsSimInputInfo)){
@@ -2412,32 +2419,32 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     if(!is.null(input$testsMultiInputInfo)){
       if(input$testsMultiInputInfo>infoRV$testsMultiInputInfo){
-        infoText <- i18n$t("Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiples calculated parameters.  The sum of individual tests true to a given threshold is the alpha multifunctionality metric. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+        infoText <- i18n$t("Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiples calculated parameters.  The sum of individual tests true to a given threshold is the alpha multifunctionality index. First, select the parameters which will be used to test, then set the sliders as logical tests.")
         infoRV$testsMultiInputInfo <- input$testsMultiInputInfo
       }
     }
     # SelectTab
-    if(!is.null(input$testsDetSelInputInfo)){
-      if(input$testsDetSelInputInfo>infoRV$testsDetSelInputInfo){
-        infoText <- i18n$t("Deterministic selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the deterministic selection, only simulations that are true for all tests are returned. First, select the parameters which will be used to test, then set the sliders as logical tests.")
-        infoRV$testsDetSelInputInfo <- input$testsDetSelInputInfo
+    if(!is.null(input$testsFilterSelInputInfo)){
+      if(input$testsFilterSelInputInfo>infoRV$testsFilterSelInputInfo){
+        infoText <- i18n$t("Filter selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the filter selection, only simulations that are true for all tests are returned. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+        infoRV$testsFilterSelInputInfo <- input$testsFilterSelInputInfo
       }
     }
-    if(!is.null(input$testsHieSelInputInfo)){
-      if(input$testsHieSelInputInfo>infoRV$testsHieSelInputInfo){
-        infoText <- i18n$t("Hierarchical selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the hierarchical selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. The hierarchical selection is more flexible, given that it includes additional arguments to the selection.")
-        infoRV$testsHieSelInputInfo <- input$testsHieSelInputInfo
+    if(!is.null(input$testsPrioritySelInputInfo)){
+      if(input$testsPrioritySelInputInfo>infoRV$testsPrioritySelInputInfo){
+        infoText <- i18n$t("Priority selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the priority selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. The Priority selection is more flexible, given that it includes additional arguments to the selection.")
+        infoRV$testsPrioritySelInputInfo <- input$testsPrioritySelInputInfo
       }
     }
     if(!is.null(input$speficyGroupsSelInputInfo)){
       if(input$speficyGroupsSelInputInfo>infoRV$speficyGroupsSelInputInfo){
-        infoText <- i18n$t("Hierarchical selection allows set site groups. Thus, selection criteria are applied inside a specific site group. Set a variable which determines the site groups for hierarchical selection.")
+        infoText <- i18n$t("Priority selection allows set site groups. Thus, selection criteria are applied inside a specific site group. Set a variable which determines the site groups for priority selection.")
         infoRV$speficyGroupsSelInputInfo <- input$speficyGroupsSelInputInfo
       }
     }
     if(!is.null(input$singleSelectionInputInfo)){
       if(input$singleSelectionInputInfo>infoRV$singleSelectionInputInfo){
-        infoText <- i18n$t("Selection method in hierarchical selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.")
+        infoText <- i18n$t("Selection method in priority selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.")
         infoRV$singleSelectionInputInfo <- input$singleSelectionInputInfo
       }
     }
@@ -2490,7 +2497,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       ",
       "loadData[label = <", i18n$t("Load data, at least species trait data<br/><i>Data input tab"), "</i>>]
       simulateCommunities[label = <", i18n$t("Set simulation input parameters<br/><i>Simulate tab"), "</i>>]
-      adjustSimulations[label = <", i18n$t("Simulated communities can be adjusted<br/><i>Simulate tab"), "</i>>]
+      # adjustSimulations[label = <", i18n$t("Simulated communities can be adjusted<br/><i>Simulate tab"), "</i>>]
       computeParameters[label = <", i18n$t("Compute basic parameters in each simulated community<br/><i>Compute tab"), "</i>>]
       standardizeParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
       computeMultifunctionality[label = <", i18n$t("Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab"), "</i>>]
@@ -2502,8 +2509,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       "# Edges
       loadData -> simulateCommunities
       simulateCommunities -> computeParameters
-      simulateCommunities -> adjustSimulations
-      adjustSimulations -> computeParameters
+      # simulateCommunities -> adjustSimulations
+      # adjustSimulations -> computeParameters
       computeParameters -> standardizeParameters
       computeParameters -> computeMultifunctionality
       computeParameters -> selectCommunities
@@ -2517,8 +2524,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     ))
   })
   ### Output aux - outputRankList ----
-  shiny::observeEvent(input$testsHieSelInput, ignoreNULL = FALSE, {
-    inputParSelRV$auxRankHeiSel <- input$testsHieSelInput
+  shiny::observeEvent(input$testsPrioritySelInput, ignoreNULL = FALSE, {
+    inputParSelRV$auxRankHeiSel <- input$testsPrioritySelInput
   })
   output$outputRankList <- shiny::renderUI({
     if(length(inputParSelRV$auxRankHeiSel)>1){
@@ -2531,16 +2538,16 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       NULL
     }
   })
-  ### Output aux - showSlidersTestsHieSel ----
-  output$showSlidersTestsHieSel <- shiny::reactive({
-    !is.null(input$testsHieSelInput)
+  ### Output aux - showSlidersTestsPrioritySel ----
+  output$showSlidersTestsPrioritySel <- shiny::reactive({
+    !is.null(input$testsPrioritySelInput)
   })
-  outputOptions(output, "showSlidersTestsHieSel", suspendWhenHidden = FALSE)
-  ### Output aux - testsDetSelInput ----
-  output$showSlidersTestsDetSel <- shiny::reactive({
-    !is.null(input$testsDetSelInput)
+  outputOptions(output, "showSlidersTestsPrioritySel", suspendWhenHidden = FALSE)
+  ### Output aux - testsFilterSelInput ----
+  output$showSlidersTestsFilterSel <- shiny::reactive({
+    !is.null(input$testsFilterSelInput)
   })
-  outputOptions(output, "showSlidersTestsDetSel", suspendWhenHidden = FALSE)
+  outputOptions(output, "showSlidersTestsFilterSel", suspendWhenHidden = FALSE)
   ### Output aux - showSlidersMulti ----
   output$showSlidersMulti <- shiny::reactive({
     !is.null(input$testsMultiInput)

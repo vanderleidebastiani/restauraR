@@ -1,40 +1,40 @@
-#' @title Internal function to select species to generates simulated communities
+#' @title Internal function to select species to generate simulated communities
 #' @encoding UTF-8
 #' @importFrom Select selectSpecies
 #' @importFrom utils capture.output
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
-#' @param rao A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").
+#' @param maxDiver A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param constCWM A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
 #' @param n Number of species to select.
-#' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
-#' @returns A vector with selected species names based on their traits and a desired trait profile.
+#' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
+#' @returns A vector with names of selected species, chosen based on their traits and desired trait profile.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary
 #' @export
-findSpecies <- function(traits, cwm, rao, n, phi){
+findSpecies <- function(traits, maxDiver, constCWM, n, phi){
   nSpeciesInt <- nrow(traits)
   species <- rownames(traits)
-  if(inherits(rao, "character")){
-    t2d <- as.matrix(scale(traits[, rao, drop = FALSE]))
-    # } else if(inherits(rao, 'dist')){
-    #   t2d <- rao
+  if(inherits(maxDiver, "character")){
+    t2d <- as.matrix(scale(traits[, maxDiver, drop = FALSE]))
+    # } else if(inherits(maxDiver, 'dist')){
+    #   t2d <- maxDiver
     # }  
   } else {
-    t2d <- as.matrix(rao)
+    t2d <- as.matrix(maxDiver)
     # Organize distance matrix
     match.names <- match(species, colnames(t2d))
     t2d <- t2d[match.names, match.names, drop = FALSE]
   }
-  if(!is.null(cwm)){
-    t2c <- as.matrix(traits[ , cwm, drop = FALSE])
+  if(!is.null(constCWM)){
+    t2c <- as.matrix(traits[ , constCWM, drop = FALSE])
     constraints <- apply(t2c, 2, function(x){
       cons <- seq(min(x), max(x), length.out = 8)
       return(cons[c(-1,-8)])
     })
-    selSpp <- vector(mode = "list", length = length(cwm))
-    names(selSpp) <- cwm
-    for(i in cwm){
+    selSpp <- vector(mode = "list", length = length(constCWM))
+    names(selSpp) <- constCWM
+    for(i in constCWM){
       cons_i <- constraints[ , i]
       t2c_i <- t2c[ , i, drop = FALSE]
       selSpp_i <- matrix(NA, nrow = nSpeciesInt, ncol = 6)

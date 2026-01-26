@@ -11,8 +11,8 @@ propMatrix(
   und,
   it,
   rich,
-  cwm,
-  rao,
+  maxDiver,
+  constCWM,
   phi,
   nInd,
   cvAbund,
@@ -36,11 +36,11 @@ propMatrix(
 
 \item{rich}{The range of richness values in each community.}
 
-\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
+\item{maxDiver}{A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
+\item{constCWM}{A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
-\item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.}
+\item{phi}{Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.}
 
 \item{nInd}{A vector with the number of individuals to draw. Used only in method "individuals".}
 

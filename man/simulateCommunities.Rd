@@ -16,8 +16,8 @@ simulateCommunities(
   und = NULL,
   it = 1000,
   rich,
-  cwm = NULL,
-  rao = NULL,
+  maxDiver = NULL,
+  constCWM = NULL,
   prob = NULL,
   phi = 1,
   nInd = NULL,
@@ -38,37 +38,37 @@ mergeSimulations(...)
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{restComp}{A matrix with species composition in the restoration sites. NAs not accepted.}
+\item{restComp}{Matrix with species composition in the restoration sites. NAs not accepted.}
 
-\item{restGroup}{Data frame or matrix with complementary information for restoration sites.}
+\item{restGroup}{Data frame or matrix with complementary site-specific information for restoration sites.}
 
 \item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
 
 \item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in traits data.}
 
-\item{it}{Number of iterations (communities).}
+\item{it}{Number of iterations (communities) to generate.}
 
-\item{rich}{The range of richness values in each community.}
+\item{rich}{The range of richness values in each community. Numeric vector specifying the species richness range in each community.}
 
-\item{cwm}{A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.}
+\item{maxDiver}{A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{rao}{A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").}
+\item{constCWM}{A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{prob}{A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
 
-\item{phi}{A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy (default phi = 1).}
+\item{phi}{Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy (default phi = 1).}
 
 \item{nInd}{The number of individuals to draw in each site. Used only in method "individuals".}
 
-\item{cvAbund}{Coefficient of variation (CV) of the relative abundances in the species pool. Used only in method "individuals".}
+\item{cvAbund}{Coefficient of variation (CV) of the relative abundances in the species pool. Used only with method "individuals".}
 
 \item{prefix}{A prefix to use in current simulation.}
 
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
 
-\item{cooccur}{A matrix with co-occurrence probabilities between species.}
+\item{cooccur}{Matrix with co-occurrence probabilities between species.}
 
-\item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
+\item{minAbund}{Minimum abundance or proportion threshold to maintain for each species in simulated communities.}
 
 \item{group}{A vector with traits name which indicates the group to which species belongs.}
 
@@ -85,6 +85,7 @@ A list (class "simRest") with the elements:
 \item{call}{The arguments used.}
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
+\item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
 \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{reference$composition}{A matrix with species composition for reference sites}
@@ -108,9 +109,9 @@ Each species in the pool can be described by functional traits that represent th
 
 The species assemblages are generated in the \code{simulateCommunities} function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets. 
 
-The sampling of species can be performed completely at random or selected species based on functional traits or a desired trait profile. If the cwm argument is set the species selections are constrained to specific community-weighted mean trait values, using the entire range of each trait. If the rao argument is set, the species selections are performed in order to optimize the functional diversity of a specific set of traits.
+The sampling of species can be performed completely at random or selected species based on functional traits or a desired trait profile. If the `maxDiver` argument is specified, species selections optimize the functional diversity of a specific set of traits. Simultaneously, the `constCWM` argument can constrain the community-weighted mean trait values across the full range of each trait enabling local maximization of functional diversity within the specified community-weighted mean constraints.
 
-To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with cwm and/or rao arguments. Furthermore, if the species available is informed in the ava argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
+To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with `maxDiver` and `constCWM` arguments. Furthermore, if the species available is informed in the `ava` argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
 
 The framework returns a community matrix indicating the composition of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 
@@ -130,7 +131,7 @@ The selections of simulated communities are performed using the function \code{s
 
 The logical tests are specified using a vector of character class. Each test uses the parameter name, a logical operator and the value threshold. All basic logical tests can be used, setting the default operators: <, <=, >, >=, == and !=.  Each test must be in double or single quote signs. The selection of character type can be performed using different quotation marks than those used to define the entire test (e.g., single quote inside the double quote).
 
-Two selection options can be used, individually or alternatively, based on deterministic and hierarchical selection. In the deterministic selection, all simulations that are true in the input test are returned. In this case, all parameters evaluated must be true to a community to be selected. Multiple selection steps can be performed sequentially, using more restrictive criteria (although the practical results will be the same when applied in a single step with the most restrictive criterion). In the hierarchical selection, the tests are evaluated hierarchically and only one simulation is selected. When all simulations fail in the first test, the function tries the next test. In the end, the function samples only one simulation among those which passed the all tests. In this case, an additional argument defines if the selection is performed inside a specific group. This allows, for example, the selection of one simulation for each site that will be restored. Furthermore, the hierarchical selection allows the use of two special arguments to select, the word MIN to select the minimal value and the word MAX to select the maximum value in a specific parameter.
+Two selection options can be used, individually or interchangeably: filter selection and priority selection. In the filter selection, all simulations that satisfy all the provided test conditions are returned. In this case, all parameters evaluated must be true to a community to be selected. Multiple selection steps can be performed sequentially, using more restrictive criteria (although the practical results will be the same when applied in a single step with the most restrictive criterion). In the priority selection, the tests are evaluated hierarchically following an order until a single simulation is selected. When all simulations fail in the first test, the function tries the next test. In the end, the function samples only one simulation among those which passed the all tests. In this case, an additional argument defines if the selection is performed inside a specific group. This allows, for example, the selection of one simulation for each site that will be restored. Furthermore, the priority selection supports two special arguments: word MIN to select the minimal value for a specified parameter, and the word MAX to select the maximum value.
 
 \strong{The reference sites}
 
@@ -144,11 +145,11 @@ The main outputs are a community matrix with species relative abundances and a d
 
 \strong{Multifunctionality}
 
-The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.
+The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality index.
 
-The selection of simulated species composition can be performed in alpha multifunctionality metric to maximize multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
+The selection of simulated species composition can be performed in alpha multifunctionality index to maximize multifunctionality between restored sites. The alpha multifunctionality index also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, the users can use a less restricted solution.
 
-High values of alpha multifunctionality can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered. 
+High values of alpha multifunctionality index can be a preferable criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered. 
 
 \strong{Visualization}
 
@@ -172,8 +173,8 @@ head(cerrado.mini$traits)
 # Restoration new sites
 scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
-                         cwm = "BT",
-                         rao = c("SLA", "Height", "Seed"),
+                         maxDiver = c("SLA", "Height", "Seed"),
+                         constCWM = "BT",
                          rich = c(10, 15),
                          it = 100)
 scenarioA
@@ -181,8 +182,8 @@ scenarioA
 scenarioB <- simulateCommunities(traits = cerrado.mini$traits, 
                                  restComp = cerrado.mini$restoration, 
                                  ava = "Available", 
-                                 cwm = "BT", 
-                                 rao = c("SLA", "Height", "Seed"), 
+                                 maxDiver = c("SLA", "Height", "Seed"), 
+                                 constCWM = "BT",
                                  rich = c(10, 15), 
                                  it = 100)
 scenarioB

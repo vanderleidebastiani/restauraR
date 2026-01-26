@@ -6,9 +6,9 @@
 #' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
 #' @param it Number of iterations (communities).
 #' @param rich The range of richness values in each community.
-#' @param cwm A vector with trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait.
-#' @param rao A vector with traits names to be considered in maximize functional diversity (Rao Quadratic Entropy), or distance matrix (class "dist").
-#' @param phi A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.
+#' @param maxDiver A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param constCWM A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
+#' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
 #' @param nInd A vector with the number of individuals to draw. Used only in method "individuals".
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
 #' @param prob A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
@@ -23,15 +23,15 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
-propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
+propMatrix <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
   
   # traits = traits
   # ava = ava
   # und = und
   # it = it
   # rich = parRichList[[i]]
-  # cwm = cwm
-  # rao = rao
+  # constCWM = constCWM
+  # maxDiver = maxDiver
   # phi = phi
   # nInd = parIndList[[i]]
   # cvAbund = cvAbund
@@ -64,7 +64,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
     }
   }
   # Set number of iterations for simulations
-  if(!is.null(rao)){
+  if(!is.null(maxDiver)){
     if(!is.null(ava)){
       itMax <- round(0.25*it)
       itMaxAva <- round(0.25*it)
@@ -173,9 +173,9 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
     }
   }
   # Maximize diversity
-  if(!is.null(rao)){
+  if(!is.null(maxDiver)){
     # Find distant species 
-    sppMax <- findSpecies(traits, cwm, rao, rich[1], phi)
+    sppMax <- findSpecies(traits, maxDiver, constCWM, rich[1], phi)
     # Run simulation with species that maximize rao
     if(length(sppMax) < rich[2]){
       nsp <- length(sppMax)
@@ -217,7 +217,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
     if(!is.null(ava)){
       # Find distant species that are available
       avaLog <- as.logical(traits[,ava])
-      sppMaxAva <- findSpecies(traits[avaLog, ], cwm, rao, rich[1], phi)
+      sppMaxAva <- findSpecies(traits[avaLog, ], maxDiver, constCWM, rich[1], phi)
       # Run simulation with species that maximize rao and are available
       if(length(sppMaxAva) < rich[2]){
         nsp <- length(sppMaxAva) 
@@ -259,7 +259,7 @@ propMatrix <- function(traits, ava, und, it, rich, cwm, rao, phi, nInd, cvAbund,
     }
   }
   # Bind all matrices
-  if(!is.null(rao)){
+  if(!is.null(maxDiver)){
     if(!is.null(ava)){
       propMatrix <- rbind(propMatrixSelSpp, propMatrixSelSppAva,
                           propMatrixAva, propMatrixPool)

@@ -4,15 +4,16 @@
 #' @importFrom data.table rbindlist
 #' @aliases mergeSelection print.simRestSelect
 #' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.
-#' @param testsDet A vector with the deterministic selection criteria to be executed.
-#' @param testsHie A vector with the hierarchical selection criteria to be executed.
-#' @param group A vector with a parameter name to specify the simulation groups. This is only used for the hierarchical selection.
-#' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the hierarchical selection.
+#' @param testsFilter A vector with the filter selection criteria to be executed.
+#' @param testsPriority A vector with the priority selection criteria to be executed.
+#' @param group A vector with a parameter name to specify the simulation groups. This is only used for the priority selection.
+#' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the priority selection.
 #' @param ... Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
 #' \item{selection$group}{A data frame with complementary information for selected sites.}
+#' \item{selection$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{selection$results}{A data frame with calculated parameters in each selected community.}
 #' \item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
@@ -39,8 +40,8 @@
 #' # Simulation
 #' scenario <- simulateCommunities(traits = cerrado.mini$traits,
 #'                          ava = "Available",
-#'                          cwm = "BT",
-#'                          rao = c("SLA", "Height", "Seed"),
+#'                          maxDiver = c("SLA", "Height", "Seed"),
+#'                          constCWM = "BT",
 #'                          rich = c(10, 15),
 #'                          it = 100)
 #' scenario
@@ -55,19 +56,19 @@
 #'                     reference = cerrado.mini$reference,
 #'                     supplementary = cerrado.mini$supplementary)
 #' scenario
-#' # Select communities - Deterministic selection
+#' # Select communities - Filter selection
 #' scenarioSelected <- selectCommunities(x = scenario,
-#'                                       testsDet = c("CWM_BT > 6",
+#'                                       testsFilter = c("CWM_BT > 6",
 #'                                                 "rao > 2.5"))
 #' scenarioSelected
-#' # Select communities - Hierarchical selection
+#' # Select communities - Priority selection
 #' scenarioSelected <- selectCommunities(x = scenario,
-#'                                       testsHie = c("CWM_BT > 6",
+#'                                       testsPriority = c("CWM_BT > 6",
 #'                                                 "rao > 2.5",
 #'                                                 "Cost == 'MIN'"))
 #' scenarioSelected
 #' @export
-selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL, singleselection = TRUE){
+selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group = NULL, singleselection = TRUE){
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
@@ -86,10 +87,10 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
     xMulti <- x$selection$multifunctionality
     xBase <- x$selection$baseline
   }
-  # Deterministic tests
-  if(!is.null(testsDet)){
+  # Filter tests
+  if(!is.null(testsFilter)){
     # Adjust string to test
-    completeString <- adjString("xPar", testsDet)
+    completeString <- adjString("xPar", testsFilter)
     # Evaluate test
     testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
     pos <- apply(testsEval, 1, all)
@@ -115,8 +116,8 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
       selMulti <- xMulti
     }
   }
-  # Hierarchical tests
-  if(!is.null(testsHie)){
+  # Priority tests
+  if(!is.null(testsPriority)){
     # Set groups
     if(!is.null(group)){
       uniqueGroups <- unique(selPar[,group])
@@ -136,14 +137,14 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
       }
       # Filter parameters
       selParTemp <- selPar[selPosTemp, , drop = FALSE]
-      # For all hierarchical tests
-      for(j in 1:length(testsHie)){
+      # For all priority tests
+      for(j in 1:length(testsPriority)){
         if(nrow(selParTemp)==1){
           break
         }
-        multipleTests <- strsplit(testsHie[j], "&|\\|")[[1]]
+        multipleTests <- strsplit(testsPriority[j], "&|\\|")[[1]]
         # Split test
-        splitTestTemp <- strsplit(testsHie[j], "<|>|==|<=|>=|!=")[[1]]
+        splitTestTemp <- strsplit(testsPriority[j], "<|>|==|<=|>=|!=")[[1]]
         # Value part
         testValueTemp <- splitTestTemp[2]
         # If MIN or MAX
@@ -164,7 +165,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           }
         } else{
           # String to select the variable
-          completeStringTemp <- adjString("selParTemp", testsHie[j])
+          completeStringTemp <- adjString("selParTemp", testsPriority[j])
           # Evaluation
           testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
         }
@@ -176,7 +177,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           selParTemp <- selParTemp[testsEvalTemp, , drop = FALSE]  
         } else{
           # Try next test
-          if(j < length(testsHie)){
+          if(j < length(testsPriority)){
             next
           }
           # # tipo dois, para por ai
@@ -188,7 +189,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
           # break
         }
         # If last test, sample 1
-        if(j == length(testsHie) && nrow(selParTemp)>1 && singleselection){
+        if(j == length(testsPriority) && nrow(selParTemp)>1 && singleselection){
           sampleTemp <- sample(nrow(selParTemp), size = 1)
           selPosTemp <- selPosTemp[sampleTemp]
           selParTemp <- selParTemp[sampleTemp, , drop = FALSE]
@@ -197,7 +198,7 @@ selectCommunities <- function(x, testsDet = NULL, testsHie = NULL, group = NULL,
       # Concatenate the selected positions
       selectedPos <- c(selectedPos, selPosTemp)
     }
-    # Hierarchical selection
+    # Priority selection
     selPar <- selPar[selectedPos, , drop = FALSE] 
     selCom <- selCom[selectedPos, , drop = FALSE]
     selGroup <- selGroup[selectedPos, , drop = FALSE]

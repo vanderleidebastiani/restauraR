@@ -30,7 +30,7 @@ computeMultifunctionality(x, tests)
 standardizeParameters(x, parameters = NULL, method = c("max", "standardize"))
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to perform communitie parameters.}
+\item{x}{A object of class "simRest" or "simRestSelect" to perform communities parameters.}
 
 \item{traits}{data frame or matrix with species traits. Traits as columns and species as rows.}
 
@@ -69,6 +69,7 @@ A list (class "simRest" or "simRestSelect") with the elements:
 \item{call}{The arguments used.}
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
+\item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
 \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{reference$composition}{A matrix with species composition for reference sites}
@@ -79,11 +80,11 @@ A list (class "simRest" or "simRestSelect") with the elements:
 \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 }
 \description{
-\code{computeParameters} Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao Quadratic Entropy and functional dissimilarity.
+\code{computeParameters} Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao's quadratic entropy and functional dissimilarity.
 
 \code{standardizeParameters} Standardizes the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
 
-\code{computeMultifunctionality} Computes the matrix of multifunctionality and alpha multifunctionality.
+\code{computeMultifunctionality} Computes the matrix of multifunctionality and alpha multifunctionality index.
 }
 \examples{
 data("cerrado.mini")
@@ -91,8 +92,8 @@ head(cerrado.mini$traits)
 # Simulation
 scenario <- simulateCommunities(traits = cerrado.mini$traits,
                          ava = "Available",
-                         cwm = "BT",
-                         rao = c("SLA", "Height", "Seed"),
+                         maxDiver = c("SLA", "Height", "Seed"),
+                         constCWM = "BT",
                          rich = c(10, 15),
                          it = 100)
 scenario
