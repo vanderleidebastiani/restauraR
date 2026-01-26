@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{checkResbiotaData}
 \alias{checkResbiotaData}
-\title{Internal function to check data to resbiota package}
+\title{Internal function to data validation for resbiota package inputs}
 \usage{
 checkResbiotaData(
   traits = NULL,
@@ -31,16 +31,16 @@ checkResbiotaData(
 
 \item{cooccur}{A matrix with co-occurrence probabilities between species.}
 
-\item{asList}{A logical argument to return the results in as list format.}
+\item{asList}{A logical argument to specify if return the results in as list format or trigger errors/warnings directly.}
 }
 \value{
-A list with the elements:
-\item{checkStatus}{The global status with the type of alert.}
-\item{checkMessage}{A vector with error messages.}
-\item{checkWarning}{A vector with warning messages.}
+A list with the elements when `asList = TRUE`:
+\item{checkStatus}{The global validation status.}
+\item{checkMessage}{A character vector with error messages.}
+\item{checkWarning}{A character vector with warning messages.}
 }
 \description{
-Internal function to check data to resbiota package
+Internal function to data validation for resbiota package inputs
 }
 \seealso{
 \code{\link{selectCommunities}}

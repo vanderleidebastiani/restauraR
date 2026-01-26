@@ -1,7 +1,7 @@
-#' @title Internal function to randomly divide a total number into groups
+#' @title Internal function to randomly divide an integer into groups
 #' @encoding UTF-8
 #' @importFrom stats runif
-#' @param n A integer to divide.
+#' @param n An integer to be divided.
 #' @param k Number of groups.
 #' @returns A numeric vector with the random division.
 #' @author See \code{\link{resbiota-package}}.

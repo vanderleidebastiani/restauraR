@@ -1,4 +1,4 @@
-#' @title resbiota - Restore Ecosystem Services and Biodiversity through Trait-based Approaches
+#' @title resbiota - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches
 #' @name resbiota-package
 #' @docType package
 #' @aliases resbiota
@@ -6,9 +6,10 @@
 #' @import knitr
 #' @importFrom rprojroot find_rstudio_root_file
 #' @description Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
-#' @details The function in the resbiota package contains an integrative set of tools to create restoration solutions to assemble communities from a regional 
-#' species pool. The framework allows achieving functional targets following multiple approaches from empty communities and/or adding species to ongoing 
-#' restoration sites. Details are presented in the main function \code{\link{simulateCommunities}} and the vignettes can be browsed with \code{browseVignettes("resbiota")}.
+#' @details The resbiota package provides an integrative set of tools to create restoration solutions to assemble communities from a regional 
+#' species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing 
+#' restoration sites. Detailed methodology is documented in the main function \code{\link{simulateCommunities}} with comprehensive examples available in the package 
+#' vignettes accessible via \code{browseVignettes("resbiota")}.
 #' @author Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
 #' @references 
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
@@ -17,4 +18,4 @@
 #' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
 #' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
 #' in preparation.
-NULL
+"_PACKAGE"

@@ -1,8 +1,8 @@
-#' @title Internal function to adjust a vector of logical tests to be evaluate on a data.frame
+#' @title Internal function to format a vector of logical expressions for evaluation within a data frame context
 #' @encoding UTF-8
-#' @param prefix The name of data.frame object.
-#' @param logicTest The vector of logical tests.
-#' @returns The vector of logical tests adjusted.
+#' @param prefix Character string specifying the name of the data frame object.
+#' @param logicTest The vector containing logical expressions to be evaluated.
+#' @returns The vector of formatted logical tests.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{selectCommunities}}
 #' @keywords Auxiliary

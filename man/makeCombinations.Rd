@@ -5,22 +5,30 @@
 \alias{makeCombinations}
 \title{Internal function to make groups combinations}
 \usage{
-makeCombinations(x, groups = NULL, minSubset = 1, maxSubset = 1)
+makeCombinations(
+  x,
+  groups = NULL,
+  minSubset = 1,
+  maxSubset = 1,
+  maxComb = 1000
+)
 }
 \arguments{
-\item{x}{A vector with elements to make the combinations.}
+\item{x}{A vector with elements from which to generate the combinations.}
 
 \item{groups}{A vector with the groups which the element belongs.}
 
-\item{minSubset}{Minimum elements in each subset.}
+\item{minSubset}{Minimum number of elements to include in each combination.}
 
-\item{maxSubset}{Maximum elements in each subset.}
+\item{maxSubset}{Maximum number of elements to include in each combination.}
+
+\item{maxComb}{Maximum number of combinations to generate.}
 }
 \value{
 A binary matrix with all elements combinations.
 }
 \description{
-Make groups combinations with groups restriction.
+Create element combinations with group-based constraints.
 }
 \seealso{
 \code{\link{simulateCommunities}}

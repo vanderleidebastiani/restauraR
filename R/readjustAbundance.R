@@ -1,10 +1,10 @@
-#' @title Internal function to randomly ajust species abundance or proportions
+#' @title Internal function to randomly adjust species abundance or proportions vectors
 #' @encoding UTF-8
 #' @importFrom stats rmultinom
-#' @param abund0 A vector with species abundance or proportions to adjust.
-#' @param minAbund Minimal abundance or proportion to keep in simulated communities. 
+#' @param abund0 Numeric vector of species abundance or proportions to be adjusted.
+#' @param minAbund Minimum abundance or proportion threshold to maintain for each species in simulated communities.
 #' @param method The method used to obtain the samples, "proportions" or "individuals".
-#' @returns A vector with species abundance or proportions adjusted.
+#' @returns A vector of adjusted species abundance or proportions.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary

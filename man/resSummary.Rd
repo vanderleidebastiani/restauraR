@@ -8,12 +8,12 @@
 resSummary(x, props = NULL)
 }
 \arguments{
-\item{x}{A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated in the columns in data frame or matrix.}
+\item{x}{A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated column-wise in data frame or matrix.}
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
 \value{
-A data frame with descriptive statistics: minimum, mean, median, maximum and quantiles.
+A data frame containing the following descriptive statistics: minimum, mean, median, maximum, and requested quantiles.
 }
 \description{
 Internal function to calculate descriptive statistics

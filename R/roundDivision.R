@@ -1,8 +1,8 @@
-#' @title Internal function to divide integers into groups
+#' @title Internal function to divide an integer into proportional groups
 #' @encoding UTF-8
-#' @param n A integer to divide.
-#' @param prop A numeric vector with proportions to divide in each group.
-#' @returns An integer vector with division. The remainder parts are randomly distributed in each group.
+#' @param n An integer to be divided.
+#' @param prop A numeric vector with proportions to divide for each group.
+#' @returns An integer vector with distribution across groups. Any remaining part is randomly distributed among groups.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
 #' @keywords Auxiliary

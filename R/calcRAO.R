@@ -1,9 +1,10 @@
 #' @title Internal function to calculate Rao's quadratic entropy (RAO)
-#' @description Efficient function to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
+#' @description Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
 #' @encoding UTF-8
 #' @param comm A matrix with species composition in the reference sites. NAs not accepted.
 #' @param dis Distances among species.
 #' @param nRef Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially
+#' @param averages Return only average for alpha and beta diversities (default averages = FALSE)
 #' @returns A matrix with among-community diversities excluding within-community diversity.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}

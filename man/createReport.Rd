@@ -16,7 +16,7 @@ createReport(x, props = NULL)
 The report in html format.
 }
 \description{
-Creates a data profiling report with descriptive statistics and univariate graphs.
+Generate a data profiling report with descriptive statistics and univariate graphs.
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},

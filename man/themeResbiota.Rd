@@ -3,20 +3,20 @@
 \encoding{UTF-8}
 \name{themeResbiota}
 \alias{themeResbiota}
-\title{Internal function. A customized theme to use in ggplot2 objects}
+\title{Internal function. A custom theme to use in ggplot2 objects}
 \usage{
 themeResbiota(baseSize = 10, legendPosition = "right")
 }
 \arguments{
-\item{baseSize}{Baseline text size (default baseSize = 10).}
+\item{baseSize}{Base font size for text elements (default baseSize = 10).}
 
-\item{legendPosition}{The position of legends (default legendPosition = "left").}
+\item{legendPosition}{Position of the legends (default legendPosition = "left").}
 }
 \value{
-Theme to ggplot objects.
+A ggplot theme object.
 }
 \description{
-Internal function. A customized theme to use in ggplot2 objects
+Internal function. A custom theme to use in ggplot2 objects
 }
 \seealso{
 \code{\link{simulateCommunities}}

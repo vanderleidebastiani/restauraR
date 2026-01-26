@@ -13,12 +13,14 @@ calcRAO(comm, dis = NULL, nRef = NULL, averages = FALSE)
 \item{dis}{Distances among species.}
 
 \item{nRef}{Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially}
+
+\item{averages}{Return only average for alpha and beta diversities (default averages = FALSE)}
 }
 \value{
 A matrix with among-community diversities excluding within-community diversity.
 }
 \description{
-Efficient function to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
+Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
 }
 \seealso{
 \code{\link{simulateCommunities}}

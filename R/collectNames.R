@@ -1,6 +1,6 @@
 #' @title Internal function to collect the names of lists
 #' @encoding UTF-8
-#' @param x A list object.
+#' @param x A list object from which to extract element names.
 #' @param prefix A prefix to include in collected names (default prefix = NULL).
 #' @returns A character vector with collected names.
 #' @author See \code{\link{resbiota-package}}.

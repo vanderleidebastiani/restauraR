@@ -3,20 +3,20 @@
 \encoding{UTF-8}
 \name{roundDivision}
 \alias{roundDivision}
-\title{Internal function to divide integers into groups}
+\title{Internal function to divide an integer into proportional groups}
 \usage{
 roundDivision(n, prop)
 }
 \arguments{
-\item{n}{A integer to divide.}
+\item{n}{An integer to be divided.}
 
-\item{prop}{A numeric vector with proportions to divide in each group.}
+\item{prop}{A numeric vector with proportions to divide for each group.}
 }
 \value{
-An integer vector with division. The remainder parts are randomly distributed in each group.
+An integer vector with distribution across groups. Any remaining part is randomly distributed among groups.
 }
 \description{
-Internal function to divide integers into groups
+Internal function to divide an integer into proportional groups
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}

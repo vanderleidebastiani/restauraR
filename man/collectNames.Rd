@@ -8,7 +8,7 @@
 collectNames(x, prefix = NULL)
 }
 \arguments{
-\item{x}{A list object.}
+\item{x}{A list object from which to extract element names.}
 
 \item{prefix}{A prefix to include in collected names (default prefix = NULL).}
 }

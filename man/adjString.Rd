@@ -3,20 +3,20 @@
 \encoding{UTF-8}
 \name{adjString}
 \alias{adjString}
-\title{Internal function to adjust a vector of logical tests to be evaluate on a data.frame}
+\title{Internal function to format a vector of logical expressions for evaluation within a data frame context}
 \usage{
 adjString(prefix, logicTest)
 }
 \arguments{
-\item{prefix}{The name of data.frame object.}
+\item{prefix}{Character string specifying the name of the data frame object.}
 
-\item{logicTest}{The vector of logical tests.}
+\item{logicTest}{The vector containing logical expressions to be evaluated.}
 }
 \value{
-The vector of logical tests adjusted.
+The vector of formatted logical tests.
 }
 \description{
-Internal function to adjust a vector of logical tests to be evaluate on a data.frame
+Internal function to format a vector of logical expressions for evaluation within a data frame context
 }
 \seealso{
 \code{\link{selectCommunities}}

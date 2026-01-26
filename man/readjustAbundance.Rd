@@ -3,22 +3,22 @@
 \encoding{UTF-8}
 \name{readjustAbundance}
 \alias{readjustAbundance}
-\title{Internal function to randomly ajust species abundance or proportions}
+\title{Internal function to randomly adjust species abundance or proportions vectors}
 \usage{
 readjustAbundance(abund0, minAbund, method)
 }
 \arguments{
-\item{abund0}{A vector with species abundance or proportions to adjust.}
+\item{abund0}{Numeric vector of species abundance or proportions to be adjusted.}
 
-\item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
+\item{minAbund}{Minimum abundance or proportion threshold to maintain for each species in simulated communities.}
 
 \item{method}{The method used to obtain the samples, "proportions" or "individuals".}
 }
 \value{
-A vector with species abundance or proportions adjusted.
+A vector of adjusted species abundance or proportions.
 }
 \description{
-Internal function to randomly ajust species abundance or proportions
+Internal function to randomly adjust species abundance or proportions vectors
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{propMatrix}}

@@ -6,9 +6,9 @@
 #' @encoding UTF-8
 #' @aliases makeMatrixTemplate
 #' @importFrom data.table as.data.table rbindlist
-#' @param template A template matrix returned by the \code{makeMatrixTemplate} function.
+#' @param template A template matrix returned by \code{makeMatrixTemplate} function to guide reorganization.
 #' @param x A data.frame or matrix to be reorganized.
-#' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells with NAs are replaced with zero (0).
+#' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zero (0).
 #' @param ... Objects of class data.frame (or matrix) to be concatenated.
 #' @returns The \code{makeMatrixTemplate} function returns a empty data.table object, \code{reorganizeMatrix} returns the reorganized matrix.
 #' @author See \code{\link{resbiota-package}}.

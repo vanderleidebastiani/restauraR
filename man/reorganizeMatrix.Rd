@@ -11,11 +11,11 @@ reorganizeMatrix(template, x, fillNA = FALSE)
 makeMatrixTemplate(...)
 }
 \arguments{
-\item{template}{A template matrix returned by the \code{makeMatrixTemplate} function.}
+\item{template}{A template matrix returned by \code{makeMatrixTemplate} function to guide reorganization.}
 
 \item{x}{A data.frame or matrix to be reorganized.}
 
-\item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells with NAs are replaced with zero (0).}
+\item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zero (0).}
 
 \item{...}{Objects of class data.frame (or matrix) to be concatenated.}
 }

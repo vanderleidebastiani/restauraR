@@ -1,22 +1,25 @@
-#' @title Extract results
-#' @description Help function to easily extract results. Most methods are default R list extractions. However, the option "simUnavailableSpecies" (type argument) checks the unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+#' @title Extract results from simulation objects
+#' @description Help function to easily extract specific components from simulation results. Most extraction methods are standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 #' @encoding UTF-8
 #' @param x A object of class "simRest" or "simRestSelect" to extract the results.
-#' @param type A option to extract results, partial match to "simComposition", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See Value below.
+#' @param type A option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.
 #' @param dbFormat The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance". 
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
 #' @returns A data.frame or matrix according to the chosen method:
-#' \item{simComposition}{A matrix with species composition for simulated communities.}
-#' \item{simResults}{A data frame with calculated parameters in each simulated community.}
-#' \item{simMultifunctionality}{A data frame with binary multifunctionality tests.}
-#' \item{simUnavailableSpecies}{A data frame with the species list to achieve the specified thresholds.}
-#' \item{refComposition}{A matrix with species composition for reference sites.}
-#' \item{refResults}{A data frame with calculated parameters in reference sites.}
-#' \item{refMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
-#' \item{supComposition}{A matrix with species composition for supplementary sites.}
-#' \item{supResults}{A data frame with calculated parameters in supplementary sites.}
-#' \item{supMultifunctionality}{A data frame with binary multifunctionality tests for reference sites.}
+#' \item{simComposition}{Matrix with species composition for simulated communities.}
+#' \item{simGroup}{Data frame with complementary information for simulated sites.}
+#' \item{simBaseline}{Matrix with baseline species composition for simulated communities.}
+#' \item{simAdditions}{Matrix with species additions for simulated communities.}
+#' \item{simResults}{Data frame with calculated parameters in each simulated community.}
+#' \item{simMultifunctionality}{Data frame with binary multifunctionality tests.}
+#' \item{simUnavailableSpecies}{Data frame with the species list to achieve the specified thresholds.}
+#' \item{refComposition}{Matrix with species composition for reference sites.}
+#' \item{refResults}{Data frame with calculated parameters in reference sites.}
+#' \item{refMultifunctionality}{Data frame with binary multifunctionality tests for reference sites.}
+#' \item{supComposition}{Matrix with species composition for supplementary sites.}
+#' \item{supResults}{Data frame with calculated parameters in supplementary sites.}
+#' \item{supMultifunctionality}{Data frame with binary multifunctionality tests for supplementary sites.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 #' \code{\link{viewResults}}
@@ -35,6 +38,9 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
     stop("The x argument must be of class simRest or simRestSelect")
   }
   typeMETHOD <- c("simComposition",
+                  "simGroup", 
+                  "simBaseline", 
+                  "simAdditions",
                   "simResults", 
                   "simMultifunctionality",
                   "simUnavailableSpecies", 
@@ -58,6 +64,51 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
              res <- x$simulation$composition
            } else{
              res <- x$selection$composition
+           }
+         },
+         simGroup = {
+           if(inherits(x, "simRest")){
+             res <- x$simulation$group
+           } else{
+             res <- x$selection$group
+           }
+         },
+         simBaseline = {
+           if(inherits(x, "simRest")){
+             res <- x$simulation$baseline
+           } else{
+             res <- x$selection$baseline
+           }
+         },
+         simAdditions = {
+           if(inherits(x, "simRest")){
+             # Extract composition
+             comp <- x$simulation$composition
+             # Check if all number are integer
+             allInteger <- all(comp%%1 == 0)
+             # Extract baseline
+             baseline <- x$simulation$baseline
+             # Calculate additions
+             # If proportions
+             if(!allInteger){
+               res <- (comp*2) - baseline
+             } else{ # If counts
+               res <- comp - baseline
+             }
+           } else{
+             # Extract composition
+             comp <- x$selection$composition
+             # Check if all number are integer
+             allInteger <- all(comp%%1 == 0)
+             # Extract baseline
+             baseline <- x$selection$baseline
+             # Calculate additions
+             # If proportions
+             if(!allInteger){
+               res <- (comp*2) - baseline
+             } else{ # If counts
+               res <- comp - baseline
+             }
            }
          },
          simResults = {
@@ -110,7 +161,7 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
            res <- x$supplementary$multifunctionality
          }
   )
-  if(type %in% c("simComposition", "refComposition", "supComposition") && dbFormat && !is.null(res)){
+  if(type %in% c("simComposition", "simBaseline", "simAdditions", "refComposition", "supComposition") && dbFormat && !is.null(res)){
     res <- data.frame(expand.grid(rownames(res), colnames(res)), as.vector(res))
     res <- res[(res[, 3] > 0) & !is.na(res[, 3]), , drop = FALSE]
     res <- res[sort.list(res[, 1]), , drop = FALSE]

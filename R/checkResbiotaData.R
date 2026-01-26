@@ -1,4 +1,4 @@
-#' @title Internal function to check data to resbiota package
+#' @title Internal function to data validation for resbiota package inputs
 #' @encoding UTF-8
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp A matrix with species proportions in the restoration sites. NAs not accepted.
@@ -7,11 +7,11 @@
 #' @param supplementary A matrix with species proportions in the supplementary sites.
 #' @param traitsDist A distance matrix between species, based on functional trait values.
 #' @param cooccur A matrix with co-occurrence probabilities between species.
-#' @param asList A logical argument to return the results in as list format.
-#' @returns A list with the elements:
-#' \item{checkStatus}{The global status with the type of alert.}
-#' \item{checkMessage}{A vector with error messages.}
-#' \item{checkWarning}{A vector with warning messages.}
+#' @param asList A logical argument to specify if return the results in as list format or trigger errors/warnings directly.
+#' @returns A list with the elements when `asList = TRUE`:
+#' \item{checkStatus}{The global validation status.}
+#' \item{checkMessage}{A character vector with error messages.}
+#' \item{checkWarning}{A character vector with warning messages.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{selectCommunities}}
 #' @keywords Auxiliary

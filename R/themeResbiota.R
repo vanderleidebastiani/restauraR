@@ -1,9 +1,9 @@
-#' @title Internal function. A customized theme to use in ggplot2 objects
+#' @title Internal function. A custom theme to use in ggplot2 objects
 #' @encoding UTF-8
 #' @importFrom ggplot2 theme element_text element_line element_blank element_rect
-#' @param baseSize Baseline text size (default baseSize = 10).
-#' @param legendPosition The position of legends (default legendPosition = "left").
-#' @returns Theme to ggplot objects.
+#' @param baseSize Base font size for text elements (default baseSize = 10).
+#' @param legendPosition Position of the legends (default legendPosition = "left").
+#' @returns A ggplot theme object.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary
