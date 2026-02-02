@@ -7,7 +7,8 @@
 #' @param testsFilter A vector with the filter selection criteria to be executed.
 #' @param testsPriority A vector with the priority selection criteria to be executed.
 #' @param group A vector with a parameter name to specify the simulation groups. This is only used for the priority selection.
-#' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the priority selection.
+#' @param singleselection A logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.
+#' @param testsMultisite A vector with the multi-site selection criteria to be executed.
 #' @param ... Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
@@ -68,7 +69,7 @@
 #'                                                 "Cost == 'MIN'"))
 #' scenarioSelected
 #' @export
-selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group = NULL, singleselection = TRUE){
+selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group = NULL, singleselection = FALSE, testsMultisite = NULL){
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
@@ -80,12 +81,24 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
     xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
     xBase <- x$simulation$baseline
+    # Multisite
+    xParMultisite <- NULL
+    xCombMultisite <- NULL
+    # xParMultisite <- x$simulation$multisite$results
+    # xCombMultisite <- x$simulation$multisite$combinations
   } else{
     xPar <- x$selection$results
     xComp <- x$selection$composition
     xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
     xBase <- x$selection$baseline
+    # Multi-site
+    xParMultisite <- x$selection$multisite$results
+    xCombMultisite <- x$selection$multisite$combinations
+  }
+  # Check testsMultisite
+  if((!is.null(testsFilter) || !is.null(testsPriority)) && !is.null(testsMultisite)){
+    stop("The testsMultisite argument cannot be specified together with the testsFilter or testsPriority arguments")
   }
   # Filter tests
   if(!is.null(testsFilter)){
@@ -114,6 +127,12 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti
+    }
+    if(!is.null(xParMultisite)){
+      selParMultisite <- xParMultisite
+    }
+    if(!is.null(xCombMultisite)){
+      selCombMultisite <- xCombMultisite
     }
   }
   # Priority tests
@@ -208,6 +227,93 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
       selMulti <- selMulti[selectedPos, , drop = FALSE]
     }
   }
+  # Multisite tests
+  if(!is.null(testsMultisite)){
+    if(is.null(xParMultisite) || is.null(xCombMultisite)){
+      stop("Multisite results were not calculated")
+    }
+    # Selected positions
+    # selectedPosMultisite <- c()
+    # Sequence for all rows
+    selPosMultisiteTemp <- seq_len(nrow(selParMultisite))
+    # Filter multi-site parameters
+    selParMultisiteTemp <- selParMultisite[selPosMultisiteTemp, , drop = FALSE]
+    # For all multi-site tests
+    for(k in 1:length(testsMultisite)){
+      if(nrow(selParMultisiteTemp)==1){
+        break
+      }
+      multipleTests <- strsplit(testsMultisite[k], "&|\\|")[[1]]
+      # Split test
+      splitTestTemp <- strsplit(testsMultisite[k], "<|>|==|<=|>=|!=")[[1]]
+      # Value part
+      testValueTemp <- splitTestTemp[2]
+      # If MIN or MAX
+      if(length(multipleTests)==1 && (grepl("MAX", testValueTemp) || grepl("MIN", testValueTemp))){
+        # Variable part
+        testVarTemp <- splitTestTemp[1]
+        # String to select the variable
+        completeStringTemp <- paste0('selParMultisiteTemp', '$', testVarTemp)
+        # Evaluation
+        testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+        # If MAX
+        if(grepl("MAX", testValueTemp)){
+          testsEvalTemp <- testsEvalTemp == max(testsEvalTemp, na.rm = TRUE)
+        }
+        # If MIN
+        if(grepl("MIN", testValueTemp)){
+          testsEvalTemp <- testsEvalTemp == min(testsEvalTemp, na.rm = TRUE)
+        }
+      } else{
+        # String to select the variable
+        completeStringTemp <- adjString("selParMultisiteTemp", testsMultisite[k])
+        # Evaluation
+        testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+      }
+      # Remove NA (set to FALSE)
+      testsEvalTemp[is.na(testsEvalTemp)] <- FALSE
+      # Filter if any TRUE in the evaluation, else try next test
+      if(sum(testsEvalTemp)>0){
+        selPosMultisiteTemp <- selPosMultisiteTemp[testsEvalTemp]
+        selParMultisiteTemp <- selParMultisiteTemp[testsEvalTemp, , drop = FALSE]  
+      } else{
+        # Try next test
+        if(k < length(testsMultisite)){
+          next
+        }
+      }
+      # If last test, sample 1
+      if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1){
+        # if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1 && singleselection){
+        sampleTemp <- sample(nrow(selParMultisiteTemp), size = 1)
+        selPosMultisiteTemp <- selPosMultisiteTemp[sampleTemp]
+        selParMultisiteTemp <- selParMultisiteTemp[sampleTemp, , drop = FALSE]
+      }
+    }
+    # Concatenate the selected positions
+    # selectedPosMultisite <- c(selectedPosMultisite, selPosMultisiteTemp)
+    # }
+    # selectedPosMultisite
+    # Filter the multi-site results and combinations
+    selParMultisite <- selParMultisite[selPosMultisiteTemp, , drop = FALSE] 
+    selCombMultisite <- selCombMultisite[selPosMultisiteTemp, , drop = FALSE]
+    selParMultisite
+    selCombMultisite
+    # Filter only 1 combination
+    selCombNames <-  colnames(selCombMultisite)[as.logical(selCombMultisite[1,, drop = TRUE])]
+    selCombNames
+    selCombsMultisite <- which(selPar$Simulation  %in% selCombNames)
+    selCombsMultisite
+    # Multisite selection
+    selPar <- selPar[selCombsMultisite, , drop = FALSE] 
+    selCom <- selCom[selCombsMultisite, , drop = FALSE]
+    selGroup <- selGroup[selCombsMultisite, , drop = FALSE]
+    selBase <- selBase[selCombsMultisite, , drop = FALSE]
+    # Multifunctionality
+    if(!is.null(xMulti)){
+      selMulti <- selMulti[selCombsMultisite, , drop = FALSE]
+    }
+  }
   # Number of selected communities
   nSel <- c(all = nrow(selCom))
   # Set results
@@ -237,6 +343,13 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
   }
   if(!is.null(x$supplementary$multifunctionality)){
     RES$supplementary$multifunctionality <- x$supplementary$multifunctionality
+  }
+  # Multi-site
+  if(!is.null(x$selection$multisite$results)){
+    RES$selection$multisite$results<- selParMultisite
+  }
+  if(!is.null(x$selection$multisite$combinations)){
+    RES$selection$multisite$combinations<- selCombMultisite
   }
   class(RES) <- "simRestSelect"
   return(RES)

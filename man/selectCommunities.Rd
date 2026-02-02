@@ -13,7 +13,8 @@ selectCommunities(
   testsFilter = NULL,
   testsPriority = NULL,
   group = NULL,
-  singleselection = TRUE
+  singleselection = FALSE,
+  testsMultisite = NULL
 )
 
 mergeSelection(...)
@@ -29,7 +30,9 @@ mergeSelection(...)
 
 \item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the priority selection.}
 
-\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = TRUE). This is only used for the priority selection.}
+\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.}
+
+\item{testsMultisite}{A vector with the multi-site selection criteria to be executed.}
 
 \item{...}{Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.}
 }

@@ -1,5 +1,5 @@
 ---
-title: "Application - realistic ecological succession"
+title: "Application - Realistic ecological succession"
 author: "Vanderlei J. Debastiani, André G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso"
 date: "`r Sys.Date()`"
 output:
