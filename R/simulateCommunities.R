@@ -227,9 +227,17 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     # Include species composition in restoration sites
     # if(!is.null(restComp)){
     if(methodTest == 1){
-      rowCheck <- isTRUE(all.equal(rowSums(restComp), rep(1, nrow(restComp)), check.attributes = FALSE, check.class = FALSE))
+      # Check if the sum of the rows is all 0 or 1
+      rowSumsTemp <- rowSums(restComp)
+      # rowCheckAllZero <- isTRUE(all.equal(rowSumsTemp, !rep(0, nrow(restComp)), check.attributes = FALSE, check.class = FALSE))
+      rowCheckAllZero <- rowSumsTemp == 0
+      if(!all(rowCheckAllZero)){
+        rowCheck <- isTRUE(all.equal(rowSumsTemp[rowSumsTemp!=0], rep(1, length(rowSumsTemp[rowSumsTemp!=0])), check.attributes = FALSE, check.class = FALSE))  
+      } else{
+        rowCheck <- TRUE
+      }
       if(!rowCheck){
-        stop("Species proportions in the restComp matrix must sum to 1 for each site")
+        stop("Species proportions in the restComp matrix must sum to 1 or 0 for each site")
       }
     } else{
       if(!all(restComp%%1==0)){
