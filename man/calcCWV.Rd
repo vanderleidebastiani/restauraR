@@ -5,18 +5,18 @@
 \alias{calcCWV}
 \title{Internal function to calculate Community Weighted Variance (CWV)}
 \usage{
-calcCWV(x, traitSub)
+calcCWV(comm, traits)
 }
 \arguments{
-\item{x}{A matrix with species proportions in the reference sites. NAs not accepted.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{traitSub}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{x}{A community matrix with species composition in the reference sites. NAs not accepted.}
 }
 \value{
 A matrix with Community Weighted Variance.
 }
 \description{
-The Community Weighted Variance (CWV) is based on the function matrix.t from the package SYNCSA.
+Implementation is based on the matrix.t function from the SYNCSA package.
 }
 \seealso{
 \code{\link{simulateCommunities}}

@@ -3,20 +3,6 @@
 #' @encoding UTF-8
 #' @export
 sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL, group, probGroupRich, probGroupAbund){
-  
-  # nRich1 = rich[1]
-  # nRich2 = rich[2]
-  # nInd1 = nInd[1]
-  # nInd2 = nInd[2]
-  # cvAbund = cvAbund
-  # prob = probVector
-  # method = method
-  # cooccur = cooccur
-  # group = group
-  # probGroupRich = probGroupRich
-  # probGroupAbund = probGroupAbund
-  
-  
   METHOD <- c("proportions", "individuals")
   method0 <- pmatch(method, METHOD)
   # The length of group is equal the sPool

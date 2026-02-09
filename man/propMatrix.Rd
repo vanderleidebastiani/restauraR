@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{propMatrix}
 \alias{propMatrix}
-\title{Internal function to generate communities matrix}
+\title{Internal function to generate community matrices}
 \usage{
 propMatrix(
   traits,
@@ -28,43 +28,43 @@ propMatrix(
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
+\item{ava}{Character vector specifying trait name which indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable)..}
 
-\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in traits data.}
+\item{und}{Character vector specifying trait name which indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).}
 
 \item{it}{Number of iterations (communities).}
 
-\item{rich}{The range of richness values in each community.}
+\item{rich}{Numeric vector specifying the richness range in each community.}
 
-\item{maxDiver}{A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
+\item{maxDiver}{A vector of traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
 \item{constCWM}{A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{phi}{Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.}
 
-\item{nInd}{A vector with the number of individuals to draw. Used only in method "individuals".}
+\item{nInd}{Numeric vector with the number of individuals to draw. Used only in method "individuals".}
 
-\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
+\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only with method "individuals".}
 
-\item{prob}{A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
+\item{prob}{Character vector specifying trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".}
 
 \item{method}{Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").}
 
-\item{cooccur}{A matrix with co-occurrence probabilities between species.}
+\item{cooccur}{Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns.}
 
-\item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
+\item{minAbund}{Minimal abundance or proportion threshold to maintain for each species in simulated communities.}
 
-\item{group}{A vector with traits name which indicates the group to which species belongs.}
+\item{group}{Character vector specifying the trait name which indicates the group to which the species belongs.}
 
-\item{probGroupRich}{Vector of probabilities to draw species richness in each group.}
+\item{probGroupRich}{Numeric vector of probabilities to draw species richness in each group.}
 
-\item{probGroupAbund}{Vector of probabilities to draw individuals or relative abundances in each group.}
+\item{probGroupAbund}{Numeric vector of probabilities to draw individuals or relative abundances in each group.}
 }
 \value{
-A community matrix with relative or raw species abundances.
+A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
 }
 \description{
-Internal function to generate communities matrix
+Internal function to generate community matrices
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{findSpecies}}

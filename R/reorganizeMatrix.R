@@ -1,5 +1,5 @@
-#' @title Internal function to reorganize matrix
-#' @description \code{makeMatrixTemplate} creates a template matrix. This function concatenates two or more data.frame (or matrix) 
+#' @title Internal function to standardize matrix structures
+#' @description \code{makeMatrixTemplate} Creates an empty template matrix. This function concatenates two or more data.frame (or matrix) 
 #' and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
 #' 
 #' \code{reorganizeMatrix} rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.
@@ -8,9 +8,9 @@
 #' @importFrom data.table as.data.table rbindlist
 #' @param template A template matrix returned by \code{makeMatrixTemplate} function to guide reorganization.
 #' @param x A data.frame or matrix to be reorganized.
-#' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zero (0).
+#' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zeros (default fillNA = FALSE).
 #' @param ... Objects of class data.frame (or matrix) to be concatenated.
-#' @returns The \code{makeMatrixTemplate} function returns a empty data.table object, \code{reorganizeMatrix} returns the reorganized matrix.
+#' @returns The \code{makeMatrixTemplate} function returns an empty data.table object with a reference structure, while \code{reorganizeMatrix} aligns existing data to that structure and returns the reorganised matrix.
 #' @author See \code{\link{resbiota-package}}.
 #' @keywords Auxiliary
 #' @export

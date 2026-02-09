@@ -76,8 +76,8 @@
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp Matrix with species composition in the restoration sites. NAs not accepted.
 #' @param restGroup Data frame or matrix with complementary site-specific information for restoration sites.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
-#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
+#' @param ava Character vector specifying trait name which indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable)..
+#' @param und Character vector specifying trait name which indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
 #' @param it Number of iterations (communities) to generate.
 #' @param rich The range of richness values in each community. Numeric vector specifying the species richness range in each community.
 #' @param maxDiver A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").

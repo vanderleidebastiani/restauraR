@@ -4,7 +4,7 @@
 \name{reorganizeMatrix}
 \alias{reorganizeMatrix}
 \alias{makeMatrixTemplate}
-\title{Internal function to reorganize matrix}
+\title{Internal function to standardize matrix structures}
 \usage{
 reorganizeMatrix(template, x, fillNA = FALSE)
 
@@ -15,15 +15,15 @@ makeMatrixTemplate(...)
 
 \item{x}{A data.frame or matrix to be reorganized.}
 
-\item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zero (0).}
+\item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zeros (default fillNA = FALSE).}
 
 \item{...}{Objects of class data.frame (or matrix) to be concatenated.}
 }
 \value{
-The \code{makeMatrixTemplate} function returns a empty data.table object, \code{reorganizeMatrix} returns the reorganized matrix.
+The \code{makeMatrixTemplate} function returns an empty data.table object with a reference structure, while \code{reorganizeMatrix} aligns existing data to that structure and returns the reorganised matrix.
 }
 \description{
-\code{makeMatrixTemplate} creates a template matrix. This function concatenates two or more data.frame (or matrix) 
+\code{makeMatrixTemplate} Creates an empty template matrix. This function concatenates two or more data.frame (or matrix) 
 and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
 
 \code{reorganizeMatrix} rearranges one matrix following a template layout. The names of the columns are required to reorganise the matrices.

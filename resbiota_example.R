@@ -1,4 +1,4 @@
-# resbiota Example ----
+# resbiota - Example ----
 
 ## Packages ----
 require(resbiota)
@@ -54,8 +54,8 @@ resSIM0 <- simulateCommunities(dados$trait[70:110,],
                                ava = dados$ava, 
                                it = 500, #dados$it, 
                                rich = dados$rich, 
-                               cwm = dados$cwm, 
-                               rao = dados$cwm,
+                               maxDiver = dados$cwm,
+                               constCWM = dados$cwm,
                                phi = 1,
                                prefix = "New"
 )
@@ -78,12 +78,10 @@ resSIM1 <- simulateCommunities(trait = dados$trait,
                                und = dados$und,
                                it = 500, # dados$it,
                                rich = c(10, 12),
-                               cwm = dados$cwm,
-                               rao = dados$cwm,
+                               maxDiver = dados$cwm,
+                               constCWM = dados$cwm,
                                restComp = dados$rest,
                                restGroup = dados$restGroup,
-                               # max_add = dados$max_add, 
-                               # min_p = dados$min_p,
                                method = "proportions",
                                phi = 1, 
                                prefix = "Ongoing"
@@ -115,7 +113,7 @@ allSIM$simulation$group %>% dim
 
 #### Merged simulation ----
 resParAllSIM <- computeParameters(allSIM, 
-                                    trait = dados$trait, 
+                                    traits = dados$trait, 
                                     cwm = dados$cwm,
                                     rao = dados$cwm,
                                     # cwv = dados$cwm,
@@ -129,7 +127,7 @@ str(resParAllSIM, 2)
 
 #### Non merged simulation ----
 resParSIM0 <- computeParameters(resSIM0, 
-                   trait = dados$trait, 
+                   traits = dados$trait, 
                    cwm = dados$cwm,
                    rao = dados$cwm,
                    cwv = dados$cwm,
@@ -161,7 +159,6 @@ target <- c("richness>10", "unavailable<10", "CWM_LMA > 0.9", "CWM_Dur_flowering
 
 # TAREFA ----
 # conferir se colunas foram encontradas
-# calcular multi das referencia tambem
 resParAllSIM <- computeMultifunctionality(resParAllSIM,
                             tests = target)
 resParAllSIM
@@ -172,9 +169,9 @@ dim(resParAllSIM$simulation$multifunctionality)
 resParAllSIM$simulation$results
 
 ### Dissimilarity ----
-resParAllSIM <- computeDissimilarity(resParAllSIM, 
-                                       dados$trait[,1:2])
-resParAllSIM$simulation$results
+# resParAllSIM <- computeDissimilarity(resParAllSIM, 
+#                                        dados$trait[,1:2])
+# resParAllSIM$simulation$results
 
 # TAREFAS ----
 # incluir dissimilaridade entre comunidades selecionadas
@@ -182,56 +179,42 @@ resParAllSIM$simulation$results
 # Select communities ----
 
 ### Global selection (first step) ----
-targetSelect1 <- c("CWM_LMA > 0.08", "rao > 2.9", "CWM_Resprouter > 0.5")
+targetSelect1 <- c("CWM_LMA > 0.08", "rao > 0.5", "CWM_Resprouter > 0.5")
 resSelectSim <- selectCommunities(resParAllSIM, 
-                                  testsDet = targetSelect1)
+                                  testsFilter = targetSelect1)
 resSelectSim
 class(resSelectSim)
 resSelectSim$selection$results %>% dim
 resSelectSim$selection$results
-resSelectSim$selection$N
 resSelectSim$selection$thresholds
 
 ### Additional selection (second step) ----
-targetSelect2 <- c("CWM_LMA > 0.08", "rao < 3", "CWM_Resprouter > 0.5")
+targetSelect2 <- c("CWM_LMA > 0.08", "rao < 0.55", "CWM_Resprouter > 0.5")
 resSelectSim <- selectCommunities(resSelectSim, 
-                                  testsDet = targetSelect2)
+                                  testsFilter = targetSelect2)
 resSelectSim
 str(resSelectSim,1)
 resSelectSim$selection$group %>% dim
 resSelectSim$selection$composition
 resSelectSim$selection$results
-resSelectSim$selection$N
 resSelectSim$selection$thresholds
-
-### Global selection with dissimilarity and/or multifunctionality ----
-# targetSelect3 <- c("multifunctionality >= 2", "dissimilarity < 0.1")
-targetSelect3 <- c("alphamultifunctionality >= 2")
-resSelectSim3 <- selectCommunities(resParAllSIM, 
-                                   testsDet = targetSelect3)
-resSelectSim3
-resSelectSim3$selection$results
-resSelectSim3$selection$N
-resSelectSim3$selection$thresholds
 
 ## Merge selections ----
 ### Selections ----
-resParAllSIM$simulation$results
-targetSelect4 <- c("PREFIX == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 3.6")
+resParAllSIM$simulation$results 
+head(resParAllSIM$simulation$results)
+targetSelect4 <- c("Scenario == 'Ongoing'", "restGroup == 'nonEdge'", "rao > 0.55")
 resSelectSimPart1 <- selectCommunities(resParAllSIM, 
-                                       testsDet = targetSelect4)
+                                       testsFilter = targetSelect4)
 resSelectSimPart1
 resSelectSimPart1$selection$results
-resSelectSimPart1$selection$N
 
 resParAllSIM$simulation$group
-targetSelect5 <- c("PREFIX == 'Ongoing'", "restGroup == 'edge'", "rao > 3.6")
+targetSelect5 <- c("Scenario == 'Ongoing'", "restGroup == 'edge'", "rao > 0.5")
 resSelectSimPart2 <- selectCommunities(resParAllSIM, 
-                                       testsDet = targetSelect5)
+                                       testsFilter = targetSelect5)
 resSelectSimPart2
 resSelectSimPart2$selection$results
-resSelectSimPart2$selection$results
-resSelectSimPart2$selection$N
 
 ### Merge ----
 resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2)
@@ -245,15 +228,9 @@ resSelectSimMerged$selection$results %>% dim
 ### Selection then compute dissimilarity and multifunctionality ----
 
 #### First selection ----
-targetSelect6 <- c("rao > 5")
+targetSelect6 <- c("rao > 0.5")
 resParSelectExtra <- selectCommunities(resParSIM0, 
-                                       testsDet = targetSelect6)
-resParSelectExtra
-resParSelectExtra$selection$N
-resParSelectExtra$selection$results
-
-#### Dissimilarity ----
-resParSelectExtra <- computeDissimilarity(resParSelectExtra, dados$trait[,1:2])
+                                       testsFilter = targetSelect6)
 resParSelectExtra
 resParSelectExtra$selection$results
 
@@ -267,7 +244,7 @@ resParSelectExtra$selection$results
 #### Additional selection (second step) ----
 targetSelect7 <- c("alphamultifunctionality >= 2")
 resParSelectExtra <- selectCommunities(resParSelectExtra, 
-                                       testsDet = targetSelect7)
+                                       testsFilter = targetSelect7)
 resParSelectExtra
 resParSelectExtra$selection$results
 resParSelectExtra$reference$results
@@ -286,13 +263,11 @@ resParAllSIM
 
 # Ver de mudar as cores das barras mo grafico
 head(resParAllSIM$simulation$multifunctionality)
-
-colSums(resParAllSIM$simulation$multifunctionality)
+require(ggplot2)
+require(patchwork)
 viewMultifunctionality(resParAllSIM)
 viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "exclusive_intersection")
 viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inclusive_intersection")
-
-# Ver se tem como tirar a linha ----
 
 # CONFERIR ----
 # viewMultifunctionality(resParSelectExtra)

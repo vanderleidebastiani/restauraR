@@ -1,11 +1,11 @@
-#' @title Internal function to calculate indices on multifunctionality matrix
-#' @description Calculate the landscape and beta multifunctionality indices and average number of functions per site.
+#' @title Internal function to calculate multifunctionality indices
+#' @description Compute multifunctionality indices including landscape-level multifunctionality, beta multifunctionality (based on Rao's quadratic entropy), and the average number of functions per site.
 #' @encoding UTF-8
-#' @param x A data frame with binary multifunctionality tests.
+#' @param x A data frame with binary multifunctionality results.
 #' @returns A list with the elements:
-#' \item{landscape}{Landscape multifunctionality.}
-#' \item{beta}{Rao's quadratic entropy calculated on multifunctionality matrix.}
-#' \item{average}{Average number of functions per site.}
+#' \item{landscape}{Landscape multifunctionality index, representing the overall restoration success across the entire landscape.}
+#' \item{beta}{Beta multifunctionality index, calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites.}
+#' \item{average}{Average number of restored functions per site.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary

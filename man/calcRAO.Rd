@@ -8,13 +8,13 @@
 calcRAO(comm, dis = NULL, nRef = NULL, averages = FALSE)
 }
 \arguments{
-\item{comm}{A matrix with species composition in the reference sites. NAs not accepted.}
+\item{comm}{A community matrix with species composition in the reference sites. NAs not accepted.}
 
-\item{dis}{Distances among species.}
+\item{dis}{Pairwise functional or phylogenetic distances between species.}
 
-\item{nRef}{Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially}
+\item{nRef}{Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially.}
 
-\item{averages}{Return only average for alpha and beta diversities (default averages = FALSE)}
+\item{averages}{Logical argument to specify if return only average for alpha and beta diversities (default averages = FALSE)}
 }
 \value{
 A matrix with among-community diversities excluding within-community diversity.

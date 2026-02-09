@@ -5,19 +5,19 @@
 \name{cerrado}
 \alias{cerrado}
 \alias{cerrado.mini}
-\title{Cerrado dataset}
+\title{Cerrado biome species trait and community composition datasets}
 \format{
-The dataset arranged as a list:
+Both datasets arranged as lists:
 \describe{
-  \item{traits}{A data frame object with traits data. The data frame contains four traits: BT (bark thickness), SLA (specific leaf area), Height (maximum height) and Seed (seed mass). The column Available indicates if species are available on the market, the column Cost the cost per individual and the column Density planting density for each species.}
-  \item{reference}{A matrix contains relative abundances for 118 species in six reference sites. The species are arranged as columns and sites in rows.}
+  \item{traits}{A data frame object with traits data. The data frame contains four traits: BT (bark thickness), SLA (specific leaf area), Height (maximum height) and Seed (seed mass). The column Available indicates if species are available on the market, the column Cost is the cost per individual, and the column Density is the planting density for each species.}
+  \item{reference}{A community matrix contains relative abundances for 118 species in 6 reference sites. The species are arranged as columns and sites in rows.}
 }
 }
 \usage{
 data(cerrado)
 }
 \description{
-The \code{cerrado} dataset contains traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The \code{cerrado.mini} dataset contains a random subset of species (50 species) for running the examples.
+The \code{cerrado} dataset includes functional traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The \code{cerrado.mini} dataset provides a random set of 50 species for testing and demonstration purposes.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

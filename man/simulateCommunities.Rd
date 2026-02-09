@@ -42,9 +42,9 @@ mergeSimulations(...)
 
 \item{restGroup}{Data frame or matrix with complementary site-specific information for restoration sites.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
+\item{ava}{Character vector specifying trait name which indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable)..}
 
-\item{und}{A vector indicating trait name which indicates undesired species (1 or 0) in traits data.}
+\item{und}{Character vector specifying trait name which indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).}
 
 \item{it}{Number of iterations (communities) to generate.}
 

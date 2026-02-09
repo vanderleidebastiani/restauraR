@@ -20,6 +20,7 @@ system("R CMD check resbiota")
 
 system("R CMD INSTALL resbiota_0.0.4.tar.gz")
 system("R CMD check --as-cran resbiota_0.0.4.tar.gz")
+
 system("R CMD check resbiota_0.0.4.tar.gz")
 
 require(resbiota)

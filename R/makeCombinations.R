@@ -18,8 +18,6 @@ makeCombinations <- function(x, groups = NULL, minSubset = 1, maxSubset = 1, max
     maxK <- min(maxSubset, n)
     minK <- max(minSubset, 1)
     ks <- c(minK:maxK)
-    # k <- ifelse(minK == maxK, maxK, ks)
-    # res <- choose(n = n, k = k)
     res <- sum(unlist(lapply(ks, function(x) choose(n = n, k = x))))
     return(res)
   }

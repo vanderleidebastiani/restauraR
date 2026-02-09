@@ -1,47 +1,29 @@
-#' @title Internal function to generate communities matrix
+#' @title Internal function to generate community matrices
 #' @encoding UTF-8
 #' @importFrom stats rlnorm
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.
-#' @param und A vector indicating trait name which indicates undesired species (1 or 0) in traits data.
+#' @param ava Character vector specifying trait name which indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable)..
+#' @param und Character vector specifying trait name which indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
 #' @param it Number of iterations (communities).
-#' @param rich The range of richness values in each community.
-#' @param maxDiver A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param rich Numeric vector specifying the richness range in each community.
+#' @param maxDiver A vector of traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
 #' @param constCWM A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
 #' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
-#' @param nInd A vector with the number of individuals to draw. Used only in method "individuals".
-#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".
-#' @param prob A vector indicating trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
+#' @param nInd Numeric vector with the number of individuals to draw. Used only in method "individuals".
+#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only with method "individuals".
+#' @param prob Character vector specifying trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
-#' @param cooccur A matrix with co-occurrence probabilities between species.
-#' @param minAbund Minimal abundance or proportion to keep in simulated communities. 
-#' @param group A vector with traits name which indicates the group to which species belongs.
-#' @param probGroupRich Vector of probabilities to draw species richness in each group.
-#' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
-#' @returns A community matrix with relative or raw species abundances.
+#' @param cooccur Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns.
+#' @param minAbund Minimal abundance or proportion threshold to maintain for each species in simulated communities. 
+#' @param group Character vector specifying the trait name which indicates the group to which the species belongs.
+#' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
+#' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
+#' @returns A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
 propMatrix <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
-  
-  # traits = traits
-  # ava = ava
-  # und = und
-  # it = it
-  # rich = parRichList[[i]]
-  # constCWM = constCWM
-  # maxDiver = maxDiver
-  # phi = phi
-  # nInd = parIndList[[i]]
-  # cvAbund = cvAbund
-  # prob = prob
-  # method = method
-  # cooccur = cooccur
-  # group = group
-  # probGroupRich = probGroupRich
-  # probGroupAbund = probGroupAbund
-  
   # Remove undesired species
   if(!is.null(und)){
     undLog <- as.logical(traits[,und])
