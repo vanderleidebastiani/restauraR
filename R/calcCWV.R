@@ -2,7 +2,7 @@
 #' @description Implementation is based on the matrix.t function from the SYNCSA package.
 #' @encoding UTF-8
 #' @importFrom SYNCSA matrix.t
-#' @param x  A community matrix with species composition in the reference sites. NAs not accepted.
+#' @param comm A community matrix with species composition in the reference sites. NAs not accepted.
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
 #' @author See \code{\link{resbiota-package}}.

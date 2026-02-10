@@ -37,19 +37,19 @@ sampleAbundanceGroups(
 )
 }
 \arguments{
-\item{nRich1}{Minimum species richness for sample.}
+\item{nRich1}{Minimum species richness to sample.}
 
-\item{nRich2}{Maximum species richness for sample.}
+\item{nRich2}{Maximum species richness to sample.}
 
 \item{sPool}{Total number of species in species pool.}
 
-\item{nInd1}{Minimum number of individuals to draw. Used only in method "individuals".}
+\item{nInd1}{Minimum number of individuals to draw. Used only in the method "individuals".}
 
-\item{nInd2}{Maximum number of individuals to draw. Used only in method "individuals".}
+\item{nInd2}{Maximum number of individuals to draw. Used only in the method "individuals".}
 
-\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in method "individuals".}
+\item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in the method "individuals".}
 
-\item{prob}{Vector of probabilities to draw individuals in each species. Used only in method "individuals".}
+\item{prob}{Vector of probabilities to draw individuals in each species. Used only in the method "individuals".}
 
 \item{returnProp}{Logical argument to specify whether to return proportions of individuals rather than raw abundances.}
 
@@ -59,7 +59,7 @@ sampleAbundanceGroups(
 
 \item{minAbund}{Minimal abundance or proportion to keep in simulated communities.}
 
-\item{group}{A vector with the group to which each species belongs.}
+\item{group}{Character vector to specify group membership for each species.}
 
 \item{probGroupRich}{Vector of probabilities to draw species richness in each group.}
 

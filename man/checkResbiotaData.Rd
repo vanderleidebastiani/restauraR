@@ -19,15 +19,15 @@ checkResbiotaData(
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{restComp}{A matrix with species proportions in the restoration sites. NAs not accepted.}
+\item{restComp}{Community matrix with species composition in the restoration sites. NAs not accepted.}
 
 \item{restGroup}{Data frame or matrix with complementary information for restoration sites.}
 
-\item{reference}{A matrix with species proportions in the reference sites.}
+\item{reference}{Community matrix with species composition in the reference sites.}
 
-\item{supplementary}{A matrix with species proportions in the supplementary sites.}
+\item{supplementary}{Community matrix with species composition in the supplementary sites.}
 
-\item{traitsDist}{A distance matrix between species, based on functional trait values.}
+\item{traitsDist}{Distance matrix between species, based on functional trait values.}
 
 \item{cooccur}{A matrix with co-occurrence probabilities between species.}
 
@@ -35,9 +35,9 @@ checkResbiotaData(
 }
 \value{
 A list with the elements when `asList = TRUE`:
-\item{checkStatus}{The global validation status.}
-\item{checkMessage}{A character vector with error messages.}
-\item{checkWarning}{A character vector with warning messages.}
+\item{checkStatus}{The global validation status: "success", "warning", or "error".}
+\item{checkMessage}{Character vector containing error messages.}
+\item{checkWarning}{Character vector containing warning messages.}
 }
 \description{
 Internal function to data validation for resbiota package inputs

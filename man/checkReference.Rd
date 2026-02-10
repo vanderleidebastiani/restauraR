@@ -19,36 +19,36 @@ checkReference(
 \method{print}{simRestCheck}(x, ...)
 }
 \arguments{
-\item{reference}{A matrix with species proportions in the reference sites. NAs not accepted.}
+\item{reference}{Community matrix with species composition in the reference sites. NAs not accepted.}
 
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{cwm}{A vector with traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{Character vector of traits names for calculating Community Weighted Mean (CWM). One CWM is calculated for each trait.}
 
-\item{cwv}{A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
+\item{cwv}{Character vector of traits names for calculating Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
-\item{rao}{A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.}
+\item{rao}{Character vector of traits names for calculating Rao's Quadratic Entropy, a distance matrix (class dist), or a list for calculate multiples Rao.}
 
-\item{supplementary}{A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
+\item{supplementary}{Optional community matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
 
 \item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
 
-\item{x}{Objects of class "simRestCheck" to print.}
+\item{x}{An object of class "simRestCheck" to print.}
 
 \item{...}{Additional arguments for respective methods.}
 }
 \value{
 A list (class "simRestCheck") with the elements:
 \item{call}{The arguments used.}
-\item{pool$results}{A data frame with calculated parameters in species pool.}
-\item{pool$summary}{A data frame with the descriptive statistics of the species pool.}
-\item{reference$results}{A data frame with calculated parameters in reference sites.}
-\item{reference$summary}{A data frame with the descriptive statistics of calculated parameters in reference sites.}
-\item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
-\item{supplementary$summary}{A data frame with the descriptive statistics of calculated parameters in supplementary sites.}
+\item{pool$results}{Data frame with calculated parameters for species pool.}
+\item{pool$summary}{Data frame with the descriptive statistics of the species pool.}
+\item{reference$results}{Data frame with calculated parameters for reference sites.}
+\item{reference$summary}{Data frame with the descriptive statistics of calculated parameters for reference sites.}
+\item{supplementary$results}{Data frame with calculated parameters for supplementary sites.}
+\item{supplementary$summary}{Data frame with the descriptive statistics of calculated parameters for supplementary sites.}
 }
 \description{
-Calculate basic parameters in reference community: richness, Community Weighted Mean, Community Weighted Variance and Rao Quadratic Entropy.
+Calculate ecological parameters in reference community: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy.
 }
 \examples{
 data("cerrado.mini")

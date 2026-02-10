@@ -8,9 +8,9 @@
 calcCWV(comm, traits)
 }
 \arguments{
-\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
+\item{comm}{A community matrix with species composition in the reference sites. NAs not accepted.}
 
-\item{x}{A community matrix with species composition in the reference sites. NAs not accepted.}
+\item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 }
 \value{
 A matrix with Community Weighted Variance.

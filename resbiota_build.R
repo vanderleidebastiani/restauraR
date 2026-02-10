@@ -2,6 +2,8 @@ rm(list = ls())
 require(rmarkdown)
 require(devtools)
 # install_version("Select", version = "1.4", repos = "http://cran.us.r-project.org")
+# remove.packages("ggplot2")
+# install_version("ggplot2", version = "3.5.2", repos = "http://cran.us.r-project.org")
 
 setwd("resbiota")
 devtools::document()
