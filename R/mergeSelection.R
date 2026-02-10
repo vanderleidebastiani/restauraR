@@ -48,6 +48,28 @@ mergeSelection <- function(...) {
     multifun <- data.table::rbindlist(multifun, use.names = TRUE, fill = TRUE)
     RES$selection$multifunctionality <- as.data.frame(multifun)
   }
+  # Multisite results
+  multisiteRes <- lapply(ARGS, function(x) x$selection$multisite$results)
+  checkNullMultisitesRes <- sapply(multisiteRes, function(x) is.null(x))
+  if(!c(all(checkNullMultisitesRes == TRUE) || all(checkNullMultisitesRes == FALSE))){
+    stop("Multisite results must be present in either all objects or none")
+  }
+  if(!all(checkNullMultisitesRes)){
+    multisiteRes <- lapply(multisiteRes, data.table::as.data.table, keep.rownames = FALSE)
+    multisiteRes <- data.table::rbindlist(multisiteRes, use.names = TRUE, fill = TRUE)
+    RES$selection$multisite$results <- as.data.frame(multisiteRes)
+  }
+  # Multisite combinations
+  multisiteComb <- lapply(ARGS, function(x) x$selection$multisite$combinations)
+  checkNullMultisitesComb <- sapply(multisiteComb, function(x) is.null(x))
+  if(!c(all(checkNullMultisitesComb == TRUE) || all(checkNullMultisitesComb == FALSE))){
+    stop("Multisite results must be present in either all objects or none")
+  }
+  if(!all(checkNullMultisitesComb)){
+    multisiteComb <- lapply(multisiteComb, data.table::as.data.table, keep.rownames = FALSE)
+    multisiteComb <- data.table::rbindlist(multisiteComb, use.names = TRUE, fill = TRUE)
+    RES$selection$multisite$combinations <- as.data.frame(multisiteComb)
+  }
   # The thresholds are not merged/shown
   # Extract reference and supplementary information only for the first object
   x <- ARGS[[1]] 
