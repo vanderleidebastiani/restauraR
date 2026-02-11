@@ -10,9 +10,9 @@ findSpecies(traits, maxDiver, constCWM, n, phi)
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{maxDiver}{A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
+\item{maxDiver}{Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{constCWM}{A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
+\item{constCWM}{Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{n}{Number of species to select.}
 
@@ -25,7 +25,7 @@ A vector with names of selected species, chosen based on their traits and desire
 Internal function to select species to generate simulated communities
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+\code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
 See \code{\link{resbiota-package}}.

@@ -5,7 +5,7 @@
 #' @param k Number of groups.
 #' @returns A numeric vector with the random division.
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords Auxiliary
 #' @export
 randDivision <- function(n, k){

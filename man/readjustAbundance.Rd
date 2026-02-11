@@ -21,7 +21,7 @@ A vector of adjusted species abundance or proportions.
 Internal function to randomly adjust species abundance or proportions vectors
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+\code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
 See \code{\link{resbiota-package}}.

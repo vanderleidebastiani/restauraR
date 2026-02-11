@@ -17,7 +17,7 @@ Both datasets arranged as lists:
 data(cerrado)
 }
 \description{
-The \code{cerrado} dataset includes functional traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The \code{cerrado.mini} dataset provides a random set of 50 species for testing and demonstration purposes.
+The \code{cerrado} dataset includes functional traits for 483 species used in restoration projects in the savannas of the Cerrado biome. The \code{cerrado.mini} dataset provides a random set of 50 species for testing and demonstration purposes.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

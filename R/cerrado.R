@@ -3,7 +3,7 @@
 #' @docType data
 #' @encoding UTF-8
 #' @aliases cerrado.mini
-#' @description The \code{cerrado} dataset includes functional traits to 483 species used in restoration projects in the savannas in the Cerrado biome. The \code{cerrado.mini} dataset provides a random set of 50 species for testing and demonstration purposes.
+#' @description The \code{cerrado} dataset includes functional traits for 483 species used in restoration projects in the savannas of the Cerrado biome. The \code{cerrado.mini} dataset provides a random set of 50 species for testing and demonstration purposes.
 #' @format Both datasets arranged as lists:
 #' \describe{
 #'   \item{traits}{A data frame object with traits data. The data frame contains four traits: BT (bark thickness), SLA (specific leaf area), Height (maximum height) and Seed (seed mass). The column Available indicates if species are available on the market, the column Cost is the cost per individual, and the column Density is the planting density for each species.}

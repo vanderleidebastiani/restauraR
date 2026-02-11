@@ -929,15 +929,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   
   output$radioSpeficyMethodStanOutput <- renderUI({
     shinyWidgets::prettyRadioButtons(inputId = "speficyMethodStanInput",
-                                     # label = "Standardization method",
-                                     label = htmltools::p(i18n$t("Standardization method"), 
+                                     # label = "Standardisation method",
+                                     label = htmltools::p(i18n$t("Standardisation method"), 
                                                           shiny::actionButton("speficyMethodStanInputInfo",
                                                                               label = "",
                                                                               icon = shiny::icon("info"),
                                                                               style = "padding:3px; font-size:60%")),
                                      choices = stats::setNames(
-                                       c("max", "standardize"),
-                                       c(i18n$t("Maximum"), i18n$t("Standardize")) # Set labels
+                                       c("max", "standardise"),
+                                       c(i18n$t("Maximum"), i18n$t("Standardise")) # Set labels
                                      ),
                                      selected = "max",
                                      inline = TRUE,
@@ -1118,12 +1118,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       shiny::updateActionButton(session, "doCompute", disabled = FALSE)
     )
   })
-  ### Check doStandardize button ----
+  ### Check doStandardise button ----
   shiny::observeEvent(input$scenarioComStandParInput, ignoreNULL = FALSE, {
     if(is.null(input$scenarioComStandParInput)){
-      shiny::updateActionButton(session, "doStandardize", disabled = TRUE)
+      shiny::updateActionButton(session, "doStandardise", disabled = TRUE)
     } else(
-      shiny::updateActionButton(session, "doStandardize", disabled = FALSE)
+      shiny::updateActionButton(session, "doStandardise", disabled = FALSE)
     )
   })
   ### Check doMultiCompute button ----
@@ -1630,8 +1630,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       )
     }
   })
-  ### doStandardize ----
-  shiny::observeEvent(input$doStandardize, {
+  ### doStandardise ----
+  shiny::observeEvent(input$doStandardise, {
     # Remove any open modal
     shiny::removeModal(session = session)
     scenario <- resultsRV$simulate[[input$scenarioComStandParInput]]
@@ -1649,7 +1649,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       )
     } else{
       shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-      scenario <- tryCatch(standardizeParameters(x = scenario,
+      scenario <- tryCatch(standardiseParameters(x = scenario,
                                                  parameters = input$stanComParInput, # straight input
                                                  method = input$speficyMethodStanInput # straight input
       ), error = function(e) e)
@@ -2407,13 +2407,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     if(!is.null(input$stanComParInputInfo)){
       if(input$stanComParInputInfo>infoRV$stanComParInputInfo){
-        infoText <- i18n$t("Parameters name to standardization.")
+        infoText <- i18n$t("Parameters name to standardisation.")
         infoRV$stanComParInputInfo <- input$stanComParInputInfo
       }
     }
     if(!is.null(input$speficyMethodStanInputInfo)){
       if(input$speficyMethodStanInputInfo>infoRV$speficyMethodStanInputInfo){
-        infoText <- i18n$t("Standardization method. The method 'maximum' divides the values of each variable by its maximum. The method 'standardise' scales the calculated parameters to zero mean and unit variance in each variable.")
+        infoText <- i18n$t("Standardisation method. The method 'maximum' divides the values of each variable by its maximum. The method 'standardise' scales the calculated parameters to zero mean and unit variance in each variable.")
         infoRV$speficyMethodStanInputInfo <- input$speficyMethodStanInputInfo
       }
     }
@@ -2444,7 +2444,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     if(!is.null(input$singleSelectionInputInfo)){
       if(input$singleSelectionInputInfo>infoRV$singleSelectionInputInfo){
-        infoText <- i18n$t("Selection method in priority selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.")
+        infoText <- i18n$t("Selection method in priority selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation from among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.")
         infoRV$singleSelectionInputInfo <- input$singleSelectionInputInfo
       }
     }
@@ -2499,11 +2499,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       simulateCommunities[label = <", i18n$t("Set simulation input parameters<br/><i>Simulate tab"), "</i>>]
       # adjustSimulations[label = <", i18n$t("Simulated communities can be adjusted<br/><i>Simulate tab"), "</i>>]
       computeParameters[label = <", i18n$t("Compute basic parameters in each simulated community<br/><i>Compute tab"), "</i>>]
-      standardizeParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
+      standardiseParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
       computeMultifunctionality[label = <", i18n$t("Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab"), "</i>>]
       selectCommunities[label = <", i18n$t("Selections of simulated communities<br/><i>Select tab"), "</i>>]
-      viewResults[label = <", i18n$t("Basic results visualization<br/><i>View tab"), "</i>>]
-      viewMultifunctionality[label = <", i18n$t("Multifunctionality visualization<br/><i>View tab"), "</i>>]
+      viewResults[label = <", i18n$t("Basic results visualisation<br/><i>View tab"), "</i>>]
+      viewMultifunctionality[label = <", i18n$t("Multifunctionality visualisation<br/><i>View tab"), "</i>>]
       extractResults[label = <", i18n$t("Extract and save the results<br/><i>View tab"), "</i>>]",
       
       "# Edges
@@ -2511,12 +2511,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       simulateCommunities -> computeParameters
       # simulateCommunities -> adjustSimulations
       # adjustSimulations -> computeParameters
-      computeParameters -> standardizeParameters
+      computeParameters -> standardiseParameters
       computeParameters -> computeMultifunctionality
       computeParameters -> selectCommunities
-      standardizeParameters -> selectCommunities
+      standardiseParameters -> selectCommunities
       computeMultifunctionality -> selectCommunities
-      standardizeParameters -> computeMultifunctionality
+      standardiseParameters -> computeMultifunctionality
       selectCommunities -> viewResults 
       selectCommunities -> viewMultifunctionality 
       selectCommunities -> extractResults

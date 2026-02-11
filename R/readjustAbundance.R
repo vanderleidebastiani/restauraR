@@ -6,7 +6,7 @@
 #' @param method The method used to obtain the samples, "proportions" or "individuals".
 #' @returns A vector of adjusted species abundance or proportions.
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords Auxiliary
 #' @export
 readjustAbundance <- function(abund0, minAbund, method) {

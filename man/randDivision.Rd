@@ -19,7 +19,7 @@ A numeric vector with the random division.
 Internal function to randomly divide an integer into groups
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+\code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
 See \code{\link{resbiota-package}}.

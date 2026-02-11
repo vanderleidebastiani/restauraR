@@ -19,7 +19,7 @@ An integer vector with distribution across groups. Any remaining part is randoml
 Internal function to divide an integer into proportional groups
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+\code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
 See \code{\link{resbiota-package}}.

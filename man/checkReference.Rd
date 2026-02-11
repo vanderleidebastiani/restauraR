@@ -48,7 +48,7 @@ A list (class "simRestCheck") with the elements:
 \item{supplementary$summary}{Data frame with the descriptive statistics of calculated parameters for supplementary sites.}
 }
 \description{
-Calculate ecological parameters in reference community: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy.
+Calculate ecological parameters in reference communities: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy.
 }
 \examples{
 data("cerrado.mini")

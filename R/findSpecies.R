@@ -3,13 +3,13 @@
 #' @importFrom Select selectSpecies
 #' @importFrom utils capture.output
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param maxDiver A vector of traits names to maximize functional diversity (Rao Quadratic Entropy), or distance matrix (object of class "dist").
-#' @param constCWM A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
+#' @param maxDiver Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param constCWM Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
 #' @param n Number of species to select.
 #' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
 #' @returns A vector with names of selected species, chosen based on their traits and desired trait profile.
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords Auxiliary
 #' @export
 findSpecies <- function(traits, maxDiver, constCWM, n, phi){

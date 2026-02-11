@@ -4,7 +4,7 @@
 #' @param prop A numeric vector with proportions to divide for each group.
 #' @returns An integer vector with distribution across groups. Any remaining part is randomly distributed among groups.
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso \code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords Auxiliary
 #' @export
 roundDivision <- function(n, prop){

@@ -1,5 +1,5 @@
 #' @title Check species pool and functional parameters in reference sites
-#' @description Calculate ecological parameters in reference community: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy. 
+#' @description Calculate ecological parameters in reference communities: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy. 
 #' @encoding UTF-8
 #' @aliases print.simRestCheck
 #' @param reference Community matrix with species composition in the reference sites. NAs not accepted.
