@@ -1,21 +1,22 @@
 #' @title Internal function to generate community matrices
+#' @description Create simulated community matrices through constrained species assembly from a regional pool. Supports multiple ecological constraints, including functional diversity optimisation, community-weighted mean constraints, co-occurrence patterns, and group-based sampling.
 #' @encoding UTF-8
 #' @importFrom stats rlnorm
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param ava Character vector specifying trait name which indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable)..
-#' @param und Character vector specifying trait name which indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
-#' @param it Number of iterations (communities).
+#' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
+#' @param und Character vector specifying the trait name that indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
+#' @param it Number of iterations (communities) to generate.
 #' @param rich Numeric vector specifying the richness range in each community.
-#' @param maxDiver A vector of traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
-#' @param constCWM A vector of trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
+#' @param maxDiver Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param constCWM Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
 #' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
-#' @param nInd Numeric vector with the number of individuals to draw. Used only in method "individuals".
-#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only with method "individuals".
-#' @param prob Character vector specifying trait name which indicates the probabilities to draw individuals in each species. Used only in method "individuals".
+#' @param nInd Numeric vector with the number of individuals to draw. Used only in the method "individuals".
+#' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in the method "individuals".
+#' @param prob Character vector specifying the trait name that indicates the probabilities to draw individuals in each species. Used only in the method "individuals".
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
 #' @param cooccur Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns.
 #' @param minAbund Minimal abundance or proportion threshold to maintain for each species in simulated communities. 
-#' @param group Character vector specifying the trait name which indicates the group to which the species belongs.
+#' @param group Character vector specifying the trait name that indicates the group to which the species belongs.
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
 #' @returns A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
@@ -23,7 +24,7 @@
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords Auxiliary
 #' @export
-propMatrix <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
+generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
   # Remove undesired species
   if(!is.null(und)){
     undLog <- as.logical(traits[,und])

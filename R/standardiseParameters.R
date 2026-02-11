@@ -2,19 +2,19 @@
 #' @include computeParameters.R
 #' @encoding UTF-8
 #' @export
-standardizeParameters <- function(x, parameters = NULL, method = c("max", "standardize")){
+standardiseParameters <- function(x, parameters = NULL, method = c("max", "standardise")){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
   }
   # Check method
-  stMETHOD <- c("max", "standardize")
+  stMETHOD <- c("max", "standardise")
   stmethod <- pmatch(method, stMETHOD)
   if (length(stmethod) > 1) {
     stop("Only one method can be specified")
   }
   if (is.na(stmethod)) {
-    stop("Invalid method. Choose either max or standardize")
+    stop("Invalid method. Choose either max or standardise")
   }
   if(inherits(x, "simRest")){
     simulationSlot <- TRUE # save in simulation slot

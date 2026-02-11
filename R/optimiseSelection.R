@@ -1,13 +1,13 @@
-#' @title Optimize the selection of simulated communities
-#' @description Calculate the functional parameters of selected simulated community sets to optimize multi-site simulation selections. This function generate all unique combination of one simulated community by restoration site and calculate multi-site indexes.
+#' @title Optimise community selection based on a multi-site approach
+#' @description Calculate the functional parameters of selected simulated community sets to optimise multi-site simulation selections. This function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination.
 #' @encoding UTF-8
-#' @param x A object of class "simRestSelect" to perform the optimization.
-#' @param group A vector with a parameter name to specify the simulation groups. 
-#' @param includeReference A logical argument to specify if include the reference sites on index calculations (default includeReference = TRUE).
-#' @param maxComb The maximum number of simulation combinations to generate (default maxComb = 1000). All unique combinations can be generated, but if the unique combination surpasses the maximum, the function makes a sampled combination.
-#' @param calcSimpsonBeta  A logical argument to specify if calculates Rao's quadratic entropy without functional distances (default calcSimpsonBeta = TRUE).
-#' @param traits data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
+#' @param x A object of class "simRestSelect" to perform the optimisation.
+#' @param group Character vector specifying a parameter name to define simulation groups.
+#' @param includeReference Logical argument to specify if include the reference sites on index calculations (default includeReference = TRUE).
+#' @param maxComb Maximum number of simulation combinations to generate (default maxComb = 1000). If the total unique combinations exceed this limit, a random sample of combinations is generated.
+#' @param calcSimpsonBeta  Logical argument to specify if calculates Simpson's beta diversity (Rao's quadratic entropy without functional distances) (default calcSimpsonBeta = TRUE).
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param rao Character vector specifying traits names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
@@ -65,8 +65,8 @@
 #'                                       group = "Site",
 #'                                       singleselection = FALSE)
 #' scenarioSelected
-#' # Optimize selection
-#' scenarioSelectedMultisite <- optimizeSelection(scenarioSelected,
+#' # Optimise selection
+#' scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
 #'                                           group = "Site",
 #'                                           traits = cerrado.mini$traits,
 #'                                           rao = c("SLA", "Height", "Seed"),
@@ -74,7 +74,7 @@
 #' scenarioSelectedMultisite
 #' head(scenarioSelectedMultisite$selection$multisite$results)
 #' @export
-optimizeSelection <- function(x, group = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
+optimiseSelection <- function(x, group = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
   # Check object class
   if(!inherits(x, "simRestSelect")){
     stop("The x argument must be of class simRestSelect")
@@ -120,8 +120,8 @@ optimizeSelection <- function(x, group = NULL, includeReference = TRUE, maxComb 
     referenceComp  <- x$reference$composition
     # nRef <- nrow(reference)
     template0 <- makeMatrixTemplate(xComp, referenceComp )
-    xComp <- reorganizeMatrix(template = template0, xComp, fillNA = TRUE)
-    referenceComp  <- reorganizeMatrix(template = template0, referenceComp , fillNA = TRUE)
+    xComp <- rearrangementMatrix(template = template0, xComp, fillNA = TRUE)
+    referenceComp  <- rearrangementMatrix(template = template0, referenceComp , fillNA = TRUE)
     # This sequence is important for split the results
     xComp <- rbind(referenceComp , xComp)
     # Multifunctionality
@@ -129,8 +129,8 @@ optimizeSelection <- function(x, group = NULL, includeReference = TRUE, maxComb 
       namesMultiRef <- x$reference$multifunctionality[, 1]
       xMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
       template0 <- makeMatrixTemplate(xMulti, xMultiRef)
-      xMulti <- reorganizeMatrix(template = template0, xMulti, fillNA = FALSE)
-      xMultiRef <- reorganizeMatrix(template = template0, xMultiRef, fillNA = FALSE)
+      xMulti <- rearrangementMatrix(template = template0, xMulti, fillNA = FALSE)
+      xMultiRef <- rearrangementMatrix(template = template0, xMultiRef, fillNA = FALSE)
       # This sequence is important
       xMulti <- rbind.data.frame(xMultiRef, xMulti)
       rownames(xMulti) <- c(namesMultiRef, namesMulti)
