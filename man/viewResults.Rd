@@ -4,28 +4,28 @@
 \name{viewResults}
 \alias{viewResults}
 \alias{viewMultifunctionality}
-\title{Visualize results}
+\title{Visualise simulation results}
 \usage{
-viewResults(x, xvar, yvar, hideref = FALSE)
+viewResults(x, xvar, yvar = NULL, hideref = FALSE)
 
 viewMultifunctionality(x, hideref = FALSE, ...)
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to visualize results.}
+\item{x}{An object of class "simRest" or "simRestSelect" to visualise results.}
 
-\item{xvar}{Name of the variable (parameter) in x axis.}
+\item{xvar}{Character vector specifying the variable name for the x-axis in scatter plots.}
 
-\item{yvar}{Name of the variable (parameter) in y axis.}
+\item{yvar}{Character vector specifying the variable name for the y-axis in scatter plots (default yvar = NULL).}
 
-\item{hideref}{Logical argument (TRUE or FALSE) to specify if hide reference sites.}
+\item{hideref}{Logical indicating whether to exclude reference sites from visualisation (default hideref = FALSE).}
 
 \item{...}{Arguments passed to upset function.}
 }
 \value{
-A ggplot plot object.
+A ggplot plot object that can be further customised using standard ggplot2 syntax.
 }
 \description{
-Visualize parameters of simulated and selected communities and reference sites.
+Generate graphical representations of simulated, selected communities and reference sites, including parameter distributions, trade-off analyses, and multifunctionality assessments.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

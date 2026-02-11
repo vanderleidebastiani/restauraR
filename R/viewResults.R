@@ -1,15 +1,16 @@
-#' @title Visualize results
-#' @description Visualize parameters of simulated and selected communities and reference sites.
+#' @title Visualise simulation results
+#' @description Generate graphical representations of simulated, selected communities and reference sites, including parameter distributions, trade-off analyses, and multifunctionality assessments. 
 #' @encoding UTF-8
-#' @importFrom ggplot2 ggplot aes geom_point scale_color_manual theme element_text geom_bar
+#' @importFrom ggplot2 ggplot aes geom_point scale_color_manual theme element_text geom_bar geom_histogram
 #' @importFrom ComplexUpset upset intersection_size
+#' @importFrom grDevices nclass.FD
 #' @aliases viewMultifunctionality
-#' @param x A object of class "simRest" or "simRestSelect" to visualize results.
-#' @param xvar Name of the variable (parameter) in x axis.
-#' @param yvar Name of the variable (parameter) in y axis.
-#' @param hideref Logical argument (TRUE or FALSE) to specify if hide reference sites.
+#' @param x An object of class "simRest" or "simRestSelect" to visualise results.
+#' @param xvar Character vector specifying the variable name for the x-axis in scatter plots.
+#' @param yvar Character vector specifying the variable name for the y-axis in scatter plots (default yvar = NULL).
+#' @param hideref Logical indicating whether to exclude reference sites from visualisation (default hideref = FALSE).
 #' @param ... Arguments passed to upset function.
-#' @returns A ggplot plot object.
+#' @returns A ggplot plot object that can be further customised using standard ggplot2 syntax.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}},\code{\link{computeParameters}}, \code{\link{selectCommunities}}
 #' \code{\link{extractResults}}
@@ -22,7 +23,7 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @export
-viewResults <- function(x, xvar, yvar, hideref = FALSE){
+viewResults <- function(x, xvar, yvar = NULL, hideref = FALSE){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
@@ -47,28 +48,45 @@ viewResults <- function(x, xvar, yvar, hideref = FALSE){
     resResults$Legend <- factor(resResults$Legend, levels = c("Simulation", "References"))
   }
   # Get reference results
-  ref <- x$reference$results
-  if(!hideref && !is.null(ref)){
-    ref$Legend <- "References"
-    ref$Legend <- factor(ref$Legend, levels = levels(resResults$Legend))
-    p <- ggplot2::ggplot() +
-      ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-      ggplot2::geom_point(data = resResults, size = 1.2) +
-      ggplot2::geom_point(data = ref, size = 1.7) +
-      ggplot2::scale_color_manual(values = pal) +
-      themeResbiota(baseSize = 15)
-  } else{
-    if(nrow(resResults)>0){
+  ref <- x$reference$results 
+  # If yvar null plot bar chart or histogram
+  if(is.null(yvar)){
+    if(inherits(resResults[,xvar], "factor") || inherits(resResults[,xvar], "character")){
+      p <- ggplot2::ggplot() +
+        ggplot2::aes(x = .data[[xvar]]) +
+        ggplot2::geom_bar(data = resResults, fill = "#1d4b61", col = "#ffffff") +
+        themeResbiota(baseSize = 15)
+    } else{
+      # Freedman-Diaconis method
+      p <- ggplot2::ggplot() +
+        ggplot2::aes(x = .data[[xvar]]) +
+        ggplot2::geom_histogram(data = resResults, bins = grDevices::nclass.FD(resResults[,xvar]), fill = "#1d4b61", col = "#ffffff") +
+        themeResbiota(baseSize = 15)
+    }
+  } else {
+    # Else plot scatter plot
+    if(!hideref && !is.null(ref)){
+      ref$Legend <- "References"
+      ref$Legend <- factor(ref$Legend, levels = levels(resResults$Legend))
       p <- ggplot2::ggplot() +
         ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
         ggplot2::geom_point(data = resResults, size = 1.2) +
+        ggplot2::geom_point(data = ref, size = 1.7) +
         ggplot2::scale_color_manual(values = pal) +
         themeResbiota(baseSize = 15)
     } else{
-      p <- ggplot2::ggplot() +
-        ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-        ggplot2::geom_point(data = resResults, size = 1.2) +
-        themeResbiota(baseSize = 15)
+      if(nrow(resResults)>0){
+        p <- ggplot2::ggplot() +
+          ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
+          ggplot2::geom_point(data = resResults, size = 1.2) +
+          ggplot2::scale_color_manual(values = pal) +
+          themeResbiota(baseSize = 15)
+      } else{
+        p <- ggplot2::ggplot() +
+          ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
+          ggplot2::geom_point(data = resResults, size = 1.2) +
+          themeResbiota(baseSize = 15)
+      }
     }
   }
   return(p)

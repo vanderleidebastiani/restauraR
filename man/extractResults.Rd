@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{extractResults}
 \alias{extractResults}
-\title{Extract results from simulation objects}
+\title{Extract components of simulation results}
 \usage{
 extractResults(
   x,
@@ -14,15 +14,15 @@ extractResults(
 )
 }
 \arguments{
-\item{x}{A object of class "simRest" or "simRestSelect" to extract the results.}
+\item{x}{An object of class "simRest" or "simRestSelect" to extract the results.}
 
-\item{type}{A option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.}
+\item{type}{An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.}
 
-\item{dbFormat}{The logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
+\item{dbFormat}{Logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
 
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{ava}{A vector indicating trait name which indicates the availability of species (1 or 0) in traits data.}
+\item{ava}{Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).}
 }
 \value{
 A data.frame or matrix according to the chosen method:
@@ -32,6 +32,8 @@ A data.frame or matrix according to the chosen method:
 \item{simAdditions}{Matrix with species additions for simulated communities.}
 \item{simResults}{Data frame with calculated parameters in each simulated community.}
 \item{simMultifunctionality}{Data frame with binary multifunctionality tests.}
+\item{simMultisiteResults}{Data frame with calculated parameters in each communities combinations.}
+\item{simMultisiteCombinations}{Matrix with binary communities combinations.}
 \item{simUnavailableSpecies}{Data frame with the species list to achieve the specified thresholds.}
 \item{refComposition}{Matrix with species composition for reference sites.}
 \item{refResults}{Data frame with calculated parameters in reference sites.}
@@ -41,7 +43,7 @@ A data.frame or matrix according to the chosen method:
 \item{supMultifunctionality}{Data frame with binary multifunctionality tests for supplementary sites.}
 }
 \description{
-Help function to easily extract specific components from simulation results. Most extraction methods are standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+Helper function to easily extract specific components from simulation results. Most extractions methods use standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
