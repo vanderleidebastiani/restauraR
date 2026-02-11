@@ -1,5 +1,5 @@
-#' @rdname reorganizeMatrix
-#' @include reorganizeMatrix.R
+#' @rdname rearrangementMatrix
+#' @include rearrangementMatrix.R
 #' @encoding UTF-8
 #' @export
 makeMatrixTemplate <- function(...){

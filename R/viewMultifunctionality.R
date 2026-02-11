@@ -21,8 +21,8 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
   if(!hideref){
     resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
     template0 <- makeMatrixTemplate(resMulti, resMultiRef)
-    resMulti <- reorganizeMatrix(template = template0, resMulti, fillNA = FALSE)
-    resMultiRef <- reorganizeMatrix(template = template0, resMultiRef, fillNA = FALSE)
+    resMulti <- rearrangementMatrix(template = template0, resMulti, fillNA = FALSE)
+    resMultiRef <- rearrangementMatrix(template = template0, resMultiRef, fillNA = FALSE)
     resMulti <- rbind.data.frame(resMulti, resMultiRef)
   }
   if(nrow(resMulti)>0){

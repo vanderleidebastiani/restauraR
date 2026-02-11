@@ -72,7 +72,7 @@ A vector with species abundance or proportions.
 Internal function to sample species abundance or proportions
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{propMatrix}}
+\code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
 See \code{\link{resbiota-package}}.

@@ -25,7 +25,7 @@ sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, pro
   } else{
     splitRichRand <- randDivision(nSppi, length(uniqueGroups))
   }
-  # Standardize group probabilities
+  # Standardise group probabilities
   probGroupAbund <- probGroupAbund/sum(probGroupAbund)
   # Split abundances in groups
   if(!is.null(nInd)){

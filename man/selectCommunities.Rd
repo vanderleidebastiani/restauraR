@@ -24,15 +24,15 @@ mergeSelection(...)
 \arguments{
 \item{x}{A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.}
 
-\item{testsFilter}{A vector with the filter selection criteria to be executed.}
+\item{testsFilter}{Character vector of logical tests for filter selection. Communities must satisfy all specified conditions to be selected.}
 
-\item{testsPriority}{A vector with the priority selection criteria to be executed.}
+\item{testsPriority}{Character vector of logical tests for hierarchical priority selection. Tests are evaluated in order until at least one community is selected.}
 
-\item{group}{A vector with a parameter name to specify the simulation groups. This is only used for the priority selection.}
+\item{group}{Character vector specifying a parameter name to define groups for priority selection. This is only used for the priority selection.}
 
-\item{singleselection}{A logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.}
+\item{singleselection}{Logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.}
 
-\item{testsMultisite}{A vector with the multi-site selection criteria to be executed.}
+\item{testsMultisite}{Character vector of logical tests for multi-site selection.}
 
 \item{...}{Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.}
 }
@@ -45,6 +45,8 @@ A list (class "simRestSelect") with the elements:
 \item{selection$results}{A data frame with calculated parameters in each selected community.}
 \item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
+\item{selection$multisite$combinations}{A binary matrix with communities combinations.}
+\item{selection$multisite$results}{A data frame with calculated parameters in each communities combinations.}
 \item{reference$composition}{A matrix with species composition for reference sites}
 \item{reference$results}{A data frame with calculated parameters in reference sites.}
 \item{reference$multifunctionality}{A data frame with binary multifunctionality tests to reference sites.}
@@ -53,7 +55,7 @@ A list (class "simRestSelect") with the elements:
 \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 }
 \description{
-Select simulated communities based on tests provided
+Select simulated communities using filter-based, priority-based, or multi-site selection methods to identify optimal restoration solutions.
 }
 \examples{
 data("cerrado.mini")

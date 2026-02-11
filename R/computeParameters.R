@@ -1,31 +1,31 @@
-#' @title Compute functional parameters in communities
-#' @description \code{computeParameters} Calculate basic parameters in each community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao's quadratic entropy and functional dissimilarity.
+#' @title Compute and standardise functional parameters in communities
+#' @description \code{computeParameters} Calculate basic parameters in each simulated community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao's quadratic entropy and functional dissimilarity.
 #' 
-#' \code{standardizeParameters} Standardizes the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
+#' \code{standardiseParameters} Standardises the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
 #' 
-#' \code{computeMultifunctionality} Computes the matrix of multifunctionality and alpha multifunctionality index. 
+#' \code{computeMultifunctionality} Computes binary multifunctionality matrix and alpha multifunctionality index based on specific test criteria. 
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist
 #' @importFrom SYNCSA matrix.t
 #' @importFrom stats dist
-#' @aliases computeMultifunctionality standardizeParameters
+#' @aliases computeMultifunctionality standardiseParameters
 #' @param x A object of class "simRest" or "simRestSelect" to perform communities parameters.
-#' @param traits data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param ava A vector indicating trait name which indicates the availability of species (1 or 0) in trait data.
-#' @param cwm A vector with trait names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
-#' @param cwv A vector with traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
-#' @param rao A vector with traits names to calculate Rao Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
-#' @param cost A vector with trait name with of species cost per individual.
+#' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
+#' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
+#' @param cwm Character vector specifying traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param cwv Character vector specifying traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
+#' @param rao Character vector specifying traits names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
+#' @param cost Character vector specifying traits names containing cost per individual for restoration cost estimation.
+#' @param dens Character vector specifying traits names containing species planting density information for cost calculations. Used only in the method "proportions".
 #' @param traitsFUN A vector with trait names to be used in the custom analysis (FUN argument).
 #' @param FUN An object of class function to perform the custom analysis.
 #' @param ... Other arguments passed to the custom analysis (FUN argument).
-#' @param dens A vector with trait name with species planting density.
-#' @param dissimilarity A vector with traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
-#' @param reference A matrix with species proportions in the reference sites. NAs not accepted. (default reference = NULL)
-#' @param supplementary A matrix with species proportions in the supplementary sites. NAs not accepted. (default supplementary = NULL).
-#' @param tests A vector with multifunctionality criteria to be performed. 
-#' @param parameters A vector with parameters names to standardized.
-#' @param method Standardization method, "max" or "standardize". 
+#' @param dissimilarity Character vector specifying traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
+#' @param reference Matrix with species composition in the reference sites. NAs not accepted. (default reference = NULL)
+#' @param supplementary Matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).
+#' @param tests Character vector of logical tests for multifunctionality assessment. 
+#' @param parameters Character vector of parameters names to standardised.
+#' @param method Standardisation method, "max" or "standardise". 
 #' @returns A list (class "simRest" or "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
@@ -73,8 +73,8 @@
 #'                               reference = cerrado.mini$reference,
 #'                               supplementary = cerrado.mini$supplementary)
 #' scenario
-#' # standardize parameters
-#' scenario <- standardizeParameters(x = scenario, 
+#' # Standardise parameters
+#' scenario <- standardiseParameters(x = scenario, 
 #'                                   parameters = "dissimilarity",
 #'                                   method = "max")
 #' scenario
@@ -142,8 +142,8 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       stop("Reference matrix using species proportions must sum to 1 for each site")
     }
     template0 <- makeMatrixTemplate(composition, reference)
-    composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
-    reference <- reorganizeMatrix(template = template0, reference, fillNA = TRUE)
+    composition <- rearrangementMatrix(template = template0, composition, fillNA = TRUE)
+    reference <- rearrangementMatrix(template = template0, reference, fillNA = TRUE)
     # This sequence is important for split the results
     composition <- rbind(reference, composition)
     x$reference$composition <- reference
@@ -160,8 +160,8 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       stop("Supplementary matrix using species proportions must sum to 1 for each site")
     }
     template0 <- makeMatrixTemplate(composition, supplementary)
-    composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
-    supplementary <- reorganizeMatrix(template = template0, supplementary, fillNA = TRUE)
+    composition <- rearrangementMatrix(template = template0, composition, fillNA = TRUE)
+    supplementary <- rearrangementMatrix(template = template0, supplementary, fillNA = TRUE)
     # This sequence is important for split the results
     composition <- rbind(composition, supplementary)
     x$supplementary$composition <- supplementary
@@ -188,9 +188,9 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       stop("Supplementary matrix using species proportions must sum to 1 for each site")
     }
     template0 <- makeMatrixTemplate(composition, reference, supplementary)
-    composition <- reorganizeMatrix(template = template0, composition, fillNA = TRUE)
-    reference <- reorganizeMatrix(template = template0, reference, fillNA = TRUE)
-    supplementary <- reorganizeMatrix(template = template0, supplementary, fillNA = TRUE)
+    composition <- rearrangementMatrix(template = template0, composition, fillNA = TRUE)
+    reference <- rearrangementMatrix(template = template0, reference, fillNA = TRUE)
+    supplementary <- rearrangementMatrix(template = template0, supplementary, fillNA = TRUE)
     # This sequence is important for split the results
     composition <- rbind(reference, composition, supplementary)
     x$reference$composition <- reference
