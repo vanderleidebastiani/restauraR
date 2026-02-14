@@ -1,8 +1,8 @@
 #' @title Internal function to calculate Rao's quadratic entropy (RAO)
-#' @description Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
+#' @description Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on the raoD function of the picante package.
 #' @encoding UTF-8
 #' @param comm A community matrix with species composition in the reference sites. NAs not accepted.
-#' @param dis Pairwise functional or phylogenetic distances between species.
+#' @param sppDist Pairwise distance matrix between species (e.g., functional or phylogenetic distances).
 #' @param nRef Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially. 
 #' @param averages Logical argument to specify if return only average for alpha and beta diversities (default averages = FALSE)
 #' @returns A matrix with among-community diversities excluding within-community diversity.
@@ -10,21 +10,21 @@
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords Auxiliary
 #' @export
-calcRAO <- function(comm, dis = NULL, nRef = NULL, averages = FALSE) {
+calcRAO <- function(comm, sppDist = NULL, nRef = NULL, averages = FALSE) {
   comm <- as.matrix(comm)
   comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
   # nRow <- nrow(comm)
   nCol <- ncol(comm)
-  if (!is.null(dis)) {
-    dis <- as.matrix(dis)
-    matchNames <- match(colnames(comm), colnames(dis))
-    dis <- dis[matchNames, matchNames, drop = FALSE]
+  if (!is.null(sppDist)) {
+    sppDist <- as.matrix(sppDist)
+    matchNames <- match(colnames(comm), colnames(sppDist))
+    sppDist <- sppDist[matchNames, matchNames, drop = FALSE]
   } else{
-    dis <- matrix(1, nCol, nCol)
-    diag(dis) <- 0
+    sppDist <- matrix(1, nCol, nCol)
+    diag(sppDist) <- 0
   }
   # Among-community diversity
-  commDis <- comm %*% dis
+  commDis <- comm %*% sppDist
   # Within-community diversity
   withinCommDiversity <- rowSums(sweep(comm, 1, commDis, "*", check.margin = FALSE))
   # If averages is equal to FALSE return standard rao
@@ -47,7 +47,7 @@ calcRAO <- function(comm, dis = NULL, nRef = NULL, averages = FALSE) {
     sampRelAbund <- total/sum(comm)
     xCombined <- apply(comm, 2, sum)/sum(comm)
     res <- list()
-    res$total <- sum(dis * outer(xCombined, xCombined))
+    res$total <- sum(sppDist * outer(xCombined, xCombined))
     res$alpha <- sum(withinCommDiversity * sampRelAbund)
     res$beta <- res$total - res$alpha
     res$Fst <- res$beta/res$total

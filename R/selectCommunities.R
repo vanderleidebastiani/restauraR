@@ -6,8 +6,8 @@
 #' @param x A object of class "simRest" or "simRestSelect" to perform communities selection (or additional selection). Or an object of class "simRestSelect" to print.
 #' @param testsFilter Character vector of logical tests for filter selection. Communities must satisfy all specified conditions to be selected.
 #' @param testsPriority Character vector of logical tests for hierarchical priority selection. Tests are evaluated in order until at least one community is selected.
-#' @param group Character vector specifying a parameter name to define groups for priority selection. This is only used for the priority selection.
-#' @param singleselection Logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.
+#' @param siteGroup Character vector specifying a parameter name to define site groups for priority selection. This is only used for the priority selection.
+#' @param singleSelection Logical argument to specify if only one simulation is selected by site group (default singleSelection = FALSE). This is only used for the priority selection.
 #' @param testsMultisite Character vector of logical tests for multi-site selection.
 #' @param ... Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.
 #' @returns A list (class "simRestSelect") with the elements:
@@ -71,7 +71,7 @@
 #'                                                 "Cost == 'MIN'"))
 #' scenarioSelected
 #' @export
-selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group = NULL, singleselection = FALSE, testsMultisite = NULL){
+selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteGroup = NULL, singleSelection = FALSE, testsMultisite = NULL){
   RES <- list(call = match.call())
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
@@ -140,21 +140,21 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
   # Priority tests
   if(!is.null(testsPriority)){
     # Set groups
-    if(!is.null(group)){
-      uniqueGroups <- unique(selPar[,group])
+    if(!is.null(siteGroup)){
+      uniqueGroups <- unique(selPar[,siteGroup])
       nGroups <- length(uniqueGroups)
     } else{
       nGroups <- 1
     }
     # Selected positions
     selectedPos <- c()
-    # For all groups
+    # For all siteGroups
     for(i in 1:nGroups){
       # Sequence for all rows
       selPosTemp <- seq_len(nrow(selPar))
-      if(!is.null(group)){
-        # Filter in each group
-        selPosTemp <- selPosTemp[selPar[,group] == uniqueGroups[i]]
+      if(!is.null(siteGroup)){
+        # Filter in each siteGroup
+        selPosTemp <- selPosTemp[selPar[,siteGroup] == uniqueGroups[i]]
       }
       # Filter parameters
       selParTemp <- selPar[selPosTemp, , drop = FALSE]
@@ -210,7 +210,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
           # break
         }
         # If last test, sample 1
-        if(j == length(testsPriority) && nrow(selParTemp)>1 && singleselection){
+        if(j == length(testsPriority) && nrow(selParTemp)>1 && singleSelection){
           sampleTemp <- sample(nrow(selParTemp), size = 1)
           selPosTemp <- selPosTemp[sampleTemp]
           selParTemp <- selParTemp[sampleTemp, , drop = FALSE]
@@ -286,7 +286,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, group
       }
       # If last test, sample 1
       if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1){
-        # if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1 && singleselection){
+        # if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1 && singleSelection){
         sampleTemp <- sample(nrow(selParMultisiteTemp), size = 1)
         selPosMultisiteTemp <- selPosMultisiteTemp[sampleTemp]
         selParMultisiteTemp <- selParMultisiteTemp[sampleTemp, , drop = FALSE]

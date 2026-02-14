@@ -5,12 +5,12 @@
 \alias{calcRAO}
 \title{Internal function to calculate Rao's quadratic entropy (RAO)}
 \usage{
-calcRAO(comm, dis = NULL, nRef = NULL, averages = FALSE)
+calcRAO(comm, sppDist = NULL, nRef = NULL, averages = FALSE)
 }
 \arguments{
 \item{comm}{A community matrix with species composition in the reference sites. NAs not accepted.}
 
-\item{dis}{Pairwise functional or phylogenetic distances between species.}
+\item{sppDist}{Pairwise distance matrix between species (e.g., functional or phylogenetic distances).}
 
 \item{nRef}{Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially.}
 
@@ -20,7 +20,7 @@ calcRAO(comm, dis = NULL, nRef = NULL, averages = FALSE)
 A matrix with among-community diversities excluding within-community diversity.
 }
 \description{
-Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on raoD function of the picante package.
+Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on the raoD function of the picante package.
 }
 \seealso{
 \code{\link{simulateCommunities}}

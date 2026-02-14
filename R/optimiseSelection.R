@@ -2,12 +2,12 @@
 #' @description Calculate the functional parameters of selected simulated community sets to optimise multi-site simulation selections. This function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination.
 #' @encoding UTF-8
 #' @param x A object of class "simRestSelect" to perform the optimisation.
-#' @param group Character vector specifying a parameter name to define simulation groups.
-#' @param includeReference Logical argument to specify if include the reference sites on index calculations (default includeReference = TRUE).
+#' @param siteGroup Character vector specifying a parameter name to define simulation site groups.
+#' @param includeReference Logical argument specifying whether to include reference sites in index calculations (default includeReference = TRUE).
 #' @param maxComb Maximum number of simulation combinations to generate (default maxComb = 1000). If the total unique combinations exceed this limit, a random sample of combinations is generated.
 #' @param calcSimpsonBeta  Logical argument to specify if calculates Simpson's beta diversity (Rao's quadratic entropy without functional distances) (default calcSimpsonBeta = TRUE).
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param rao Character vector specifying traits names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
+#' @param rao Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
@@ -25,7 +25,7 @@
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 #' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 #' @author See \code{\link{resbiota-package}}.
-#' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, ,
+#' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
@@ -62,19 +62,19 @@
 #' scenarioSelected <- selectCommunities(x = scenario,
 #'                                       testsPriority = c("simpson > 0.92",
 #'                                                         "CWM_BT > 6"),
-#'                                       group = "Site",
-#'                                       singleselection = FALSE)
+#'                                       siteGroup = "Site",
+#'                                       singleSelection = FALSE)
 #' scenarioSelected
 #' # Optimise selection
 #' scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
-#'                                           group = "Site",
+#'                                           siteGroup = "Site",
 #'                                           traits = cerrado.mini$traits,
 #'                                           rao = c("SLA", "Height", "Seed"),
 #'                                           calcSimpsonBeta = TRUE)
 #' scenarioSelectedMultisite
 #' head(scenarioSelectedMultisite$selection$multisite$results)
 #' @export
-optimiseSelection <- function(x, group = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
+optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
   # Check object class
   if(!inherits(x, "simRestSelect")){
     stop("The x argument must be of class simRestSelect")
@@ -109,9 +109,9 @@ optimiseSelection <- function(x, group = NULL, includeReference = TRUE, maxComb 
     nColRes <- nColRes + 4
     colnamesRes <- c(colnamesRes,  "totalDiversity", "alphaDiversity", "betaDiversity", "Fst")
   }
-  # Set groups
-  if(!is.null(group)){
-    groupNames <- xGroup[, group]
+  # Set siteGroups
+  if(!is.null(siteGroup)){
+    groupNames <- xGroup[, siteGroup]
   } else{
     groupNames <- rep("sim", nrow(xComp))
   }
@@ -201,10 +201,10 @@ optimiseSelection <- function(x, group = NULL, includeReference = TRUE, maxComb 
     if(!is.null(traits) && !is.null(rao)){
       if(inherits(DIST, "list")){
         for(j in 1:length(DIST)){
-          resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], dis = DIST[[j]], averages = TRUE)))
+          resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], sppDist = DIST[[j]], averages = TRUE)))
         }
       } else{
-        resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], dis = DIST, averages = TRUE)))
+        resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], sppDist = DIST, averages = TRUE)))
       }
     }
     resCombinations[i,] <- resultsTemp

@@ -38,17 +38,17 @@ standardiseParameters(x, parameters = NULL, method = c("max", "standardise"))
 
 \item{cwm}{Character vector specifying traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
 
-\item{cwv}{Character vector specifying traits names to to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
+\item{cwv}{Character vector specifying traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
-\item{rao}{Character vector specifying traits names to to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.}
+\item{rao}{Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.}
 
 \item{cost}{Character vector specifying traits names containing cost per individual for restoration cost estimation.}
 
 \item{dens}{Character vector specifying traits names containing species planting density information for cost calculations. Used only in the method "proportions".}
 
-\item{traitsFUN}{A vector with trait names to be used in the custom analysis (FUN argument).}
+\item{traitsFUN}{A character vector of trait names to be used in the custom analysis (FUN argument).}
 
-\item{FUN}{An object of class function to perform the custom analysis.}
+\item{FUN}{A function object to perform the custom analysis.}
 
 \item{dissimilarity}{Character vector specifying traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).}
 
@@ -69,7 +69,7 @@ A list (class "simRest" or "simRestSelect") with the elements:
 \item{call}{The arguments used.}
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
-\item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+\item{simulation$baseline}{A matrix with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
 \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{reference$composition}{A matrix with species composition for reference sites}

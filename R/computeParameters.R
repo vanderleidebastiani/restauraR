@@ -14,11 +14,11 @@
 #' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
 #' @param cwm Character vector specifying traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
 #' @param cwv Character vector specifying traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
-#' @param rao Character vector specifying traits names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.
+#' @param rao Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.
 #' @param cost Character vector specifying traits names containing cost per individual for restoration cost estimation.
 #' @param dens Character vector specifying traits names containing species planting density information for cost calculations. Used only in the method "proportions".
-#' @param traitsFUN A vector with trait names to be used in the custom analysis (FUN argument).
-#' @param FUN An object of class function to perform the custom analysis.
+#' @param traitsFUN A character vector of trait names to be used in the custom analysis (FUN argument).
+#' @param FUN A function object to perform the custom analysis.
 #' @param ... Other arguments passed to the custom analysis (FUN argument).
 #' @param dissimilarity Character vector specifying traits names to calculate dissimilarity with reference sites, or distance matrix (class dist).
 #' @param reference Matrix with species composition in the reference sites. NAs not accepted. (default reference = NULL)
@@ -30,7 +30,7 @@
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
 #' \item{simulation$group}{A data frame with complementary information for restoration sites.}
-#' \item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+#' \item{simulation$baseline}{A matrix with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
 #' \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
@@ -95,7 +95,7 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
                     restGroup = NULL,
                     reference = reference, 
                     supplementary = supplementary,
-                    traitsDist = rao,
+                    sppDist = rao,
                     asList = FALSE)
   # Check dissimilarity if provided
   checkResbiotaData(traits = traits, 
@@ -103,7 +103,7 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
                     restGroup = NULL,
                     reference = NULL, 
                     supplementary = NULL,
-                    traitsDist = dissimilarity,
+                    sppDist = dissimilarity,
                     asList = FALSE)
   composition <- x$simulation$composition
   nSim <- nrow(composition)
@@ -345,11 +345,11 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       traitsSub <- scale(traits[, dissimilarity, drop = FALSE])
       dis <- stats::dist(traitsSub)
       # resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
-      resDis <- calcRAO(composition, dis = dis, nRef = nRef)
+      resDis <- calcRAO(composition, sppDist = dis, nRef = nRef)
     } else if(inherits(dissimilarity, "dist")){
       # Calculate dissimilarities between communities
       # resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
-      resDis <- calcRAO(composition, dis = dissimilarity, nRef = nRef)
+      resDis <- calcRAO(composition, sppDist = dissimilarity, nRef = nRef)
     }
     # Remove matrix diagonal
     diagIndex <- cbind(seq(nRef), seq(nRef))

@@ -7,7 +7,7 @@
 \usage{
 optimiseSelection(
   x,
-  group = NULL,
+  siteGroup = NULL,
   includeReference = TRUE,
   maxComb = 1000,
   calcSimpsonBeta = TRUE,
@@ -18,9 +18,9 @@ optimiseSelection(
 \arguments{
 \item{x}{A object of class "simRestSelect" to perform the optimisation.}
 
-\item{group}{Character vector specifying a parameter name to define simulation groups.}
+\item{siteGroup}{Character vector specifying a parameter name to define simulation site groups.}
 
-\item{includeReference}{Logical argument to specify if include the reference sites on index calculations (default includeReference = TRUE).}
+\item{includeReference}{Logical argument specifying whether to include reference sites in index calculations (default includeReference = TRUE).}
 
 \item{maxComb}{Maximum number of simulation combinations to generate (default maxComb = 1000). If the total unique combinations exceed this limit, a random sample of combinations is generated.}
 
@@ -28,7 +28,7 @@ optimiseSelection(
 
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{rao}{Character vector specifying traits names to to calculate Rao's Quadratic Entropy, or distance matrix (class dist). Or a list for calculate multiples Rao.}
+\item{rao}{Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.}
 }
 \value{
 A list (class "simRestSelect") with the elements:
@@ -78,12 +78,12 @@ scenario
 scenarioSelected <- selectCommunities(x = scenario,
                                       testsPriority = c("simpson > 0.92",
                                                         "CWM_BT > 6"),
-                                      group = "Site",
-                                      singleselection = FALSE)
+                                      siteGroup = "Site",
+                                      singleSelection = FALSE)
 scenarioSelected
 # Optimise selection
 scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
-                                          group = "Site",
+                                          siteGroup = "Site",
                                           traits = cerrado.mini$traits,
                                           rao = c("SLA", "Height", "Seed"),
                                           calcSimpsonBeta = TRUE)
@@ -99,7 +99,7 @@ enhances ecosystem multifunctionality but species addition can increase it durin
 in preparation.
 }
 \seealso{
-\code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, ,
+\code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 \code{\link{extractResults}}, \code{\link{viewResults}}
 }
 \author{

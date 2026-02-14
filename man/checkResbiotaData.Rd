@@ -11,7 +11,7 @@ checkResbiotaData(
   restGroup = NULL,
   reference = NULL,
   supplementary = NULL,
-  traitsDist = NULL,
+  sppDist = NULL,
   cooccur = NULL,
   asList = TRUE
 )
@@ -27,7 +27,7 @@ checkResbiotaData(
 
 \item{supplementary}{Community matrix with species composition in the supplementary sites.}
 
-\item{traitsDist}{Distance matrix between species, based on functional trait values.}
+\item{sppDist}{Pairwise distance matrix between species (e.g., functional or phylogenetic distances).}
 
 \item{cooccur}{A matrix with co-occurrence probabilities between species.}
 

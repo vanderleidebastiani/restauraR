@@ -5,7 +5,7 @@
 #' @param restGroup Data frame or matrix with complementary information for restoration sites.
 #' @param reference Community matrix with species composition in the reference sites.
 #' @param supplementary Community matrix with species composition in the supplementary sites.
-#' @param traitsDist Distance matrix between species, based on functional trait values.
+#' @param sppDist Pairwise distance matrix between species (e.g., functional or phylogenetic distances).
 #' @param cooccur A matrix with co-occurrence probabilities between species.
 #' @param asList A logical argument to specify if return the results in as list format or trigger errors/warnings directly.
 #' @returns A list with the elements when `asList = TRUE`:
@@ -21,7 +21,7 @@ checkResbiotaData <- function (traits = NULL,
                                restGroup = NULL,
                                reference = NULL, 
                                supplementary = NULL,
-                               traitsDist = NULL,
+                               sppDist = NULL,
                                cooccur = NULL,
                                asList = TRUE)
 {
@@ -199,20 +199,20 @@ checkResbiotaData <- function (traits = NULL,
     }
     sppComp <- c(sppComp, colnames(supplementary))
   }
-  if(!is.null(traitsDist)){
-    # Check only if traitsDist is a matrix or distance matrix
+  if(!is.null(sppDist)){
+    # Check only if sppDist is a matrix or distance matrix
     if(asList){
-      checkMessage <- c(checkMessage,  fCheckDist(traitsDist, objName = "traitsDist"))
-      checkWarning <- c(checkWarning, fCheckNA(traitsDist, objName = "traitsDist"))  
+      checkMessage <- c(checkMessage,  fCheckDist(sppDist, objName = "sppDist"))
+      checkWarning <- c(checkWarning, fCheckNA(sppDist, objName = "sppDist"))  
     } else{
-      fCheckDist(traitsDist, objName = "traitsDist", asList = FALSE)
-      fCheckNA(traitsDist, objName = "traitsDist", asList = FALSE)
+      fCheckDist(sppDist, objName = "sppDist", asList = FALSE)
+      fCheckNA(sppDist, objName = "sppDist", asList = FALSE)
     }
-    if(inherits(traitsDist, c("data.frame", "dist", "matrix"))){
-      traitsDist <- as.matrix(traitsDist)
-      sppDist <- colnames(traitsDist)
+    if(inherits(sppDist, c("data.frame", "dist", "matrix"))){
+      sppDist <- as.matrix(sppDist)
+      sppNamesDist <- colnames(sppDist)
     } else{
-      sppDist <- NULL
+      sppNamesDist <- NULL
     }
   }
   if(!is.null(cooccur)){
@@ -250,11 +250,11 @@ checkResbiotaData <- function (traits = NULL,
         stop(paste0("The following ", nDiffSpp, " species are missing from the traits data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
       }
     }
-    if(!is.null(traitsDist) && !is.null(sppDist)){
-      matchNamesDist <- match(sppTraits, sppDist)
+    if(!is.null(sppDist) && !is.null(sppNamesDist)){
+      matchNamesDist <- match(sppTraits, sppNamesDist)
       if (sum(is.na(matchNamesDist)) > 0) {
         # List difference species
-        diffSpp <- setdiff(sppTraits, sppDist)
+        diffSpp <- setdiff(sppTraits, sppNamesDist)
         nDiffSpp <- length(diffSpp)
         # Return only 10 species names
         if(nDiffSpp>10){
