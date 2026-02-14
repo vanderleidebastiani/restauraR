@@ -365,8 +365,8 @@ thresholds <- c("CWM_Zoochory > 0.8", # Minimum 80% zoochorous species (CWM over
 # Select communities for each restoration site
 resultsSelection <- selectCommunities(resultsSim,
                                       testsPriority = thresholds, # Apply zoochory, diversity, and similarity criteria
-                                      group = "Site", # Grouping variable for site-independent selection
-                                      singleselection = TRUE) # Single community selection per group
+                                      siteGroup = "Site", # Grouping variable for site-independent selection
+                                      singleSelection = TRUE) # Single community selection per group
 ```
 
 ```{r, echo = FALSE}

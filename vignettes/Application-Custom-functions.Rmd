@@ -45,7 +45,6 @@ traits <- cerrado.mini$traits
 referenceSites <- cerrado.mini$reference
 # Species composition in restoration sites
 restorationSites <- cerrado.mini$restoration
-# Species composition in supplementary sites
 ```
 
 
@@ -61,7 +60,7 @@ set.seed(2025)
 
 ```{r}
 # Simulation scenario
-resultsSim <- simulateCommunities(trait = traits, # Species trait data
+resultsSim <- simulateCommunities(traits = traits, # Species trait data
                                   restComp = restorationSites, # Current species composition in restoration sites
                                   it = 1000, # Number of simulations
                                   rich = c(10, 15), # Species richness constraints, min = 10, max = 15 species
@@ -122,7 +121,7 @@ funCWM <- function(x, comm, traits){
   traits <- as.matrix(traits)
   matchNames <- match(colnames(comm), rownames(traits))
   traits <- traits[matchNames,]
-  res <- comm%*%traits
+  res <- as.data.frame(comm%*%traits)
   return(res)
 }
 ```
@@ -140,18 +139,18 @@ funFric <- function(x, comm, traits, ...){
 
 ```{r}
 # Compute all functional metric for simulated communities and reference sites
-resultsSim <- computeParameters(resultsSim,
+resultsSimCustom <- computeParameters(resultsSim,
                                 traits = traits,
                                 FUN = funCWM, # Custom function for CWM
                                 traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for custom CWM calculation
                                 reference = referenceSites)
-head(resultsSim$simulation$results)
-head(resultsSim$reference$results)
+head(resultsSimCustom$simulation$results)
+head(resultsSimCustom$reference$results)
 ```
 
 
 ```{r, eval = FALSE}
-resultsSim <- computeParameters(resultsSim,
+resultsSimFric <- computeParameters(resultsSim,
                                 traits = traits,
                                 FUN = funFric, # Custom function for functional richness (Fric)
                                 traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for FRic calculation

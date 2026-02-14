@@ -33,7 +33,7 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 
 ## The framework
 
-The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval.
+The framework generates communities with distinct species compositions drawn from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval.
 
 ```{r, message = FALSE, echo = FALSE, fig.cap="Flowchart with the main steps of the framework", fig.width = 6.5}
 require(DiagrammeR)
@@ -381,7 +381,7 @@ Selection can also be performed hierarchically following a priority order in a w
 priorityTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'")
 resSelectSimPriority <- selectCommunities(allScenarios, 
                                   testsPriority = priorityTargets,
-                                  singleselection = TRUE)
+                                  singleSelection = TRUE)
 resSelectSimPriority
 ```
 
