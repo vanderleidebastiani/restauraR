@@ -19,7 +19,7 @@ viewMultifunctionality(x, hideref = FALSE, ...)
 
 \item{hideref}{Logical indicating whether to exclude reference sites from visualisation (default hideref = FALSE).}
 
-\item{...}{Arguments passed to upset function.}
+\item{...}{Arguments passed to the upset function of the package ComplexUpset.}
 }
 \value{
 A ggplot plot object that can be further customised using standard ggplot2 syntax.

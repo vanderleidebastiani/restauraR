@@ -9,7 +9,7 @@
 #' @param xvar Character vector specifying the variable name for the x-axis in scatter plots.
 #' @param yvar Character vector specifying the variable name for the y-axis in scatter plots (default yvar = NULL).
 #' @param hideref Logical indicating whether to exclude reference sites from visualisation (default hideref = FALSE).
-#' @param ... Arguments passed to upset function.
+#' @param ... Arguments passed to the upset function of the package ComplexUpset.
 #' @returns A ggplot plot object that can be further customised using standard ggplot2 syntax.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}},\code{\link{computeParameters}}, \code{\link{selectCommunities}}

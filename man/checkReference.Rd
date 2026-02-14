@@ -19,19 +19,19 @@ checkReference(
 \method{print}{simRestCheck}(x, ...)
 }
 \arguments{
-\item{reference}{Community matrix with species composition in the reference sites. NAs not accepted.}
+\item{reference}{Matrix with species composition in the reference sites. NAs not accepted.}
 
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{cwm}{Character vector of traits names for calculating Community Weighted Mean (CWM). One CWM is calculated for each trait.}
+\item{cwm}{Character vector specifying traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.}
 
-\item{cwv}{Character vector of traits names for calculating Community Weighted Variance (CWV). One CWV is calculated for each trait.}
+\item{cwv}{Character vector specifying traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.}
 
-\item{rao}{Character vector of traits names for calculating Rao's Quadratic Entropy, a distance matrix (class dist), or a list for calculate multiples Rao.}
+\item{rao}{Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.}
 
-\item{supplementary}{Optional community matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
+\item{supplementary}{Matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).}
 
-\item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
+\item{props}{Numeric vector of probabilities with values between 0 and 1 to produce sample quantiles corresponding to the given probabilities (default props = NULL).}
 
 \item{x}{An object of class "simRestCheck" to print.}
 

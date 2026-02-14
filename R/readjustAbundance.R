@@ -1,4 +1,4 @@
-#' @title Internal function to randomly adjust species abundance or proportions vectors
+#' @title Internal function to randomly adjust vectors of species abundance or proportions
 #' @encoding UTF-8
 #' @importFrom stats rmultinom
 #' @param abund0 Numeric vector of species abundance or proportions to be adjusted.

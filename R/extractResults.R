@@ -1,5 +1,5 @@
 #' @title Extract components of simulation results
-#' @description Helper function to easily extract specific components from simulation results. Most extractions methods use standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+#' @description Helper function to easily extract specific components from simulation results. Most extraction methods use standard R list indexing. The option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities, that is, the species that are necessary to achieve the thresholds but are not available on the market.
 #' @encoding UTF-8
 #' @param x An object of class "simRest" or "simRestSelect" to extract the results.
 #' @param type An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.

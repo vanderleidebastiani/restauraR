@@ -34,15 +34,15 @@ generateCommunityMatrices(
 
 \item{it}{Number of iterations (communities) to generate.}
 
-\item{rich}{Numeric vector specifying the richness range in each community.}
+\item{rich}{Numeric vector of length 2 specifying the richness range in each community.}
 
-\item{maxDiver}{Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
+\item{maxDiver}{Character vector specifying trait names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{constCWM}{Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
+\item{constCWM}{Character vector specifying trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{phi}{Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.}
 
-\item{nInd}{Numeric vector with the number of individuals to draw. Used only in the method "individuals".}
+\item{nInd}{Numeric vector of length 2 specifying the number of individuals to draw. Used only in the method "individuals".}
 
 \item{cvAbund}{Coefficient of variation (cv) of the relative abundances in the species pool. Used only in the method "individuals".}
 

@@ -1,6 +1,6 @@
 #' @title Internal function to rearrange matrix structures
-#' @description \code{makeMatrixTemplate} Creates an empty template matrix. This function concatenates two or more data.frame (or matrix) 
-#' and return an empty data.table object (template) with 0 rows and columns equal to all unique columns of the input objects. 
+#' @description \code{makeMatrixTemplate} Creates an empty template matrix. This function concatenates two or more data.frames (or matrices) 
+#' and returns an empty data.table object (template) with 0 rows and column names equal to the union of all unique column names from the input objects. 
 #' 
 #' \code{rearrangementMatrix} rearranges one matrix following a template layout. The names of the columns are required to rearrange the matrices.
 #' @encoding UTF-8

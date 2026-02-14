@@ -1,5 +1,5 @@
 #' @title Creates a data profiling report
-#' @description Generate a data profiling report with descriptive statistics and univariate graphs.
+#' @description Generate an HTML data profiling report with descriptive statistics and univariate graphs.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_bar geom_histogram ggsave
 #' @importFrom tableHTML tableHTML add_css_table
@@ -7,7 +7,7 @@
 #' @importFrom utils browseURL
 #' @importFrom grDevices dev.list dev.off nclass.FD
 #' @param x A data.frame or matrix with the input data.
-#' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @param props Numeric vector of probabilities with values in between 0 and 1 to produce sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns The report in html format.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},

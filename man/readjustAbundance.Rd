@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{readjustAbundance}
 \alias{readjustAbundance}
-\title{Internal function to randomly adjust species abundance or proportions vectors}
+\title{Internal function to randomly adjust vectors of species abundance or proportions}
 \usage{
 readjustAbundance(abund0, minAbund, method)
 }
@@ -18,7 +18,7 @@ readjustAbundance(abund0, minAbund, method)
 A vector of adjusted species abundance or proportions.
 }
 \description{
-Internal function to randomly adjust species abundance or proportions vectors
+Internal function to randomly adjust vectors of species abundance or proportions
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}

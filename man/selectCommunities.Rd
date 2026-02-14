@@ -12,8 +12,8 @@ selectCommunities(
   x,
   testsFilter = NULL,
   testsPriority = NULL,
-  group = NULL,
-  singleselection = FALSE,
+  siteGroup = NULL,
+  singleSelection = FALSE,
   testsMultisite = NULL
 )
 
@@ -28,9 +28,9 @@ mergeSelection(...)
 
 \item{testsPriority}{Character vector of logical tests for hierarchical priority selection. Tests are evaluated in order until at least one community is selected.}
 
-\item{group}{Character vector specifying a parameter name to define groups for priority selection. This is only used for the priority selection.}
+\item{siteGroup}{Character vector specifying a parameter name to define site groups for priority selection. This is only used for the priority selection.}
 
-\item{singleselection}{Logical argument to specify if only one simulation is selected by group (default singleselection = FALSE). This is only used for the priority selection.}
+\item{singleSelection}{Logical argument to specify if only one simulation is selected by site group (default singleSelection = FALSE). This is only used for the priority selection.}
 
 \item{testsMultisite}{Character vector of logical tests for multi-site selection.}
 

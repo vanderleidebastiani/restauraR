@@ -43,7 +43,7 @@ A data.frame or matrix according to the chosen method:
 \item{supMultifunctionality}{Data frame with binary multifunctionality tests for supplementary sites.}
 }
 \description{
-Helper function to easily extract specific components from simulation results. Most extractions methods use standard R list indexing, but the option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities these are the species necessary to achieve the thresholds when selected communities have at least one species not available on the market.
+Helper function to easily extract specific components from simulation results. Most extraction methods use standard R list indexing. The option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities, that is, the species that are necessary to achieve the thresholds but are not available on the market.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

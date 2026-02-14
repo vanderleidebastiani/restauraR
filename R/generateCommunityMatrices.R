@@ -6,11 +6,11 @@
 #' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
 #' @param und Character vector specifying the trait name that indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
 #' @param it Number of iterations (communities) to generate.
-#' @param rich Numeric vector specifying the richness range in each community.
-#' @param maxDiver Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
-#' @param constCWM Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
+#' @param rich Numeric vector of length 2 specifying the richness range in each community.
+#' @param maxDiver Character vector specifying trait names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").
+#' @param constCWM Character vector specifying trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.
 #' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
-#' @param nInd Numeric vector with the number of individuals to draw. Used only in the method "individuals".
+#' @param nInd Numeric vector of length 2 specifying the number of individuals to draw. Used only in the method "individuals".
 #' @param cvAbund Coefficient of variation (cv) of the relative abundances in the species pool. Used only in the method "individuals".
 #' @param prob Character vector specifying the trait name that indicates the probabilities to draw individuals in each species. Used only in the method "individuals".
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").

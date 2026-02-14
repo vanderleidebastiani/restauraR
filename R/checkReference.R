@@ -2,13 +2,13 @@
 #' @description Calculate ecological parameters in reference communities: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy. 
 #' @encoding UTF-8
 #' @aliases print.simRestCheck
-#' @param reference Community matrix with species composition in the reference sites. NAs not accepted.
+#' @param reference Matrix with species composition in the reference sites. NAs not accepted.
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param cwm Character vector of traits names for calculating Community Weighted Mean (CWM). One CWM is calculated for each trait.
-#' @param cwv Character vector of traits names for calculating Community Weighted Variance (CWV). One CWV is calculated for each trait.
-#' @param rao Character vector of traits names for calculating Rao's Quadratic Entropy, a distance matrix (class dist), or a list for calculate multiples Rao.
-#' @param supplementary Optional community matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).
-#' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
+#' @param cwm Character vector specifying traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.
+#' @param cwv Character vector specifying traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.
+#' @param rao Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.
+#' @param supplementary Matrix with species composition in the supplementary sites. NAs not accepted. (default supplementary = NULL).
+#' @param props Numeric vector of probabilities with values between 0 and 1 to produce sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @param x An object of class "simRestCheck" to print.
 #' @param ... Additional arguments for respective methods.
 #' @returns A list (class "simRestCheck") with the elements:

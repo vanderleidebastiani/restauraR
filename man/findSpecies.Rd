@@ -10,9 +10,9 @@ findSpecies(traits, maxDiver, constCWM, n, phi)
 \arguments{
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{maxDiver}{Character vector specifying traits names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
+\item{maxDiver}{Character vector specifying trait names to functional diversity optimisation (Rao Quadratic Entropy), or distance matrix (object of class "dist").}
 
-\item{constCWM}{Character vector specifying traits names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
+\item{constCWM}{Character vector specifying trait names to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven across the range of each trait.}
 
 \item{n}{Number of species to select.}
 

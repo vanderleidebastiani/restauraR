@@ -1755,8 +1755,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     scenario <- tryCatch(selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
                                            testsFilter = inputParSelRV$testsFilter,
                                            testsPriority = inputParSelRV$testsPriority,
-                                           group = inputParSelRV$group,
-                                           singleselection = as.logical(input$singleSelectionInput) # straight input
+                                           siteGroup = inputParSelRV$group,
+                                           singleSelection = as.logical(input$singleSelectionInput) # straight input
     ), error = function(e) e)
     shiny::removeModal(session = session)
     if(inherits(scenario, what = "error")){

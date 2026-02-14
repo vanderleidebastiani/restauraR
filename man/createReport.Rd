@@ -10,13 +10,13 @@ createReport(x, props = NULL)
 \arguments{
 \item{x}{A data.frame or matrix with the input data.}
 
-\item{props}{Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).}
+\item{props}{Numeric vector of probabilities with values in between 0 and 1 to produce sample quantiles corresponding to the given probabilities (default props = NULL).}
 }
 \value{
 The report in html format.
 }
 \description{
-Generate a data profiling report with descriptive statistics and univariate graphs.
+Generate an HTML data profiling report with descriptive statistics and univariate graphs.
 }
 \seealso{
 \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
