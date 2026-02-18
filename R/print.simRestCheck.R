@@ -1,6 +1,7 @@
 #' @rdname checkReference
 #' @include checkReference.R
 #' @encoding UTF-8
+#' @keywords Auxiliary
 #' @export
 print.simRestCheck <- function(x, ...) {
   cat("Call:\n")
@@ -16,6 +17,7 @@ print.simRestCheck <- function(x, ...) {
   if(!is.null(x$reference$results)) x$reference$results <- as.matrix(x$reference$results)
   if(!is.null(x$reference$summary)) x$reference$summary <- as.matrix(x$reference$summary)
   if(!is.null(x$supplementary$results)) x$supplementary$results <- as.matrix(x$supplementary$results)
+  if(!is.null(x$supplementary$summary)) x$supplementary$summary <- as.matrix(x$supplementary$summary)
   # Collect list names to print
   cat(collectNames(x, prefix = "..$"), sep = "\n")
   invisible(x)
