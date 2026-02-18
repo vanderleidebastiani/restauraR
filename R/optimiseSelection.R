@@ -67,10 +67,10 @@
 #' scenarioSelected
 #' # Optimise selection
 #' scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
-#'                                           siteGroup = "Site",
-#'                                           traits = cerrado.mini$traits,
-#'                                           rao = c("SLA", "Height", "Seed"),
-#'                                           calcSimpsonBeta = TRUE)
+#'                                                siteGroup = "Site",
+#'                                                traits = cerrado.mini$traits,
+#'                                                rao = c("SLA", "Height", "Seed"),
+#'                                                calcSimpsonBeta = TRUE)
 #' scenarioSelectedMultisite
 #' head(scenarioSelectedMultisite$selection$multisite$results)
 #' @export

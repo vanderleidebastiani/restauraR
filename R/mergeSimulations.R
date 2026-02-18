@@ -1,6 +1,7 @@
 #' @rdname simulateCommunities
 #' @include simulateCommunities.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
 mergeSimulations <- function(...) {
   RES <- list(call = match.call())

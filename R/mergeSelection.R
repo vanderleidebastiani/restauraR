@@ -1,6 +1,7 @@
 #' @rdname selectCommunities
 #' @include selectCommunities.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
 mergeSelection <- function(...) {
   RES <- list(call = match.call())

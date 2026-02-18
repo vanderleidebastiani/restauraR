@@ -15,3 +15,4 @@ runResbiota(launchBrowser = TRUE, ...)
 \description{
 Launches a local version of the resbiota application.
 }
+\keyword{ApplicationFunction}

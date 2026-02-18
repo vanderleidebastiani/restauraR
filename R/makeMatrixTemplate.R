@@ -1,6 +1,7 @@
 #' @rdname rearrangementMatrix
 #' @include rearrangementMatrix.R
 #' @encoding UTF-8
+#' @keywords Auxiliary
 #' @export
 makeMatrixTemplate <- function(...){
   ARGS <- list(...)

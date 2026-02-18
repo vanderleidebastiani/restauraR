@@ -70,18 +70,17 @@
 #'                               cost = "Cost",
 #'                               dens = "Density",
 #'                               dissimilarity = c("SLA", "Height", "Seed"),
-#'                               reference = cerrado.mini$reference,
-#'                               supplementary = cerrado.mini$supplementary)
+#'                               reference = cerrado.mini$reference)
 #' scenario
 #' # Standardise parameters
-#' scenario <- standardiseParameters(x = scenario, 
+#' scenario <- standardiseParameters(x = scenario,
 #'                                   parameters = "dissimilarity",
 #'                                   method = "max")
 #' scenario
 #' # Compute multifunctionality
-#' scenario <- computeMultifunctionality(x = scenario, 
-#'                                  tests = c("CWM_BT > 8",
-#'                                            "rao > 2.5"))
+#' scenario <- computeMultifunctionality(x = scenario,
+#'                                  tests = c("CWM_BT > 5.9",
+#'                                            "rao > 0.2"))
 #' scenario
 #' @export
 computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao = NULL, cost = NULL, dens = NULL, traitsFUN = NULL, FUN = NULL, dissimilarity = NULL, reference = NULL, supplementary = NULL, ...){
