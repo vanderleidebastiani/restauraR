@@ -1,6 +1,7 @@
 #' @rdname computeParameters
 #' @include computeParameters.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
 computeMultifunctionality <- function(x, tests){
   # Check object class
@@ -11,6 +12,9 @@ computeMultifunctionality <- function(x, tests){
     xPar <- x$simulation$results
   } else{
     xPar <- x$selection$results
+  }
+  if(is.null(xPar)){
+    stop("The x argument must contain the parameters calculated")
   }
   # String to select the variable
   completeString <- adjString("xPar", tests)

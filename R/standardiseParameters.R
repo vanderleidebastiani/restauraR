@@ -1,6 +1,7 @@
 #' @rdname computeParameters
 #' @include computeParameters.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
 standardiseParameters <- function(x, parameters = NULL, method = c("max", "standardise")){
   # Check object class

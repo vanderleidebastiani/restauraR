@@ -4,7 +4,7 @@
 
 ### Description
 
-Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation. The function in the resbiota package contains an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The framework allows achieving functional targets following multiple approaches from empty communities and/or adding species to ongoing restoration sites. 
+The resbiota package provides an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing restoration sites.
 
 ### Installation
   

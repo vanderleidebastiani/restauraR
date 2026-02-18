@@ -1,6 +1,7 @@
 #' @rdname sampleAbundance
 #' @include sampleAbundance.R
 #' @encoding UTF-8
+#' @keywords Auxiliary
 #' @export
 sampleAbundanceGroups <- function(nRich1, nRich2, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL, group, probGroupRich, probGroupAbund){
   METHOD <- c("proportions", "individuals")

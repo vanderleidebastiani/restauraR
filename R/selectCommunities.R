@@ -10,6 +10,7 @@
 #' @param singleSelection Logical argument to specify if only one simulation is selected by site group (default singleSelection = FALSE). This is only used for the priority selection.
 #' @param testsMultisite Character vector of logical tests for multi-site selection.
 #' @param ... Objects of class "simRestSelect" to be concatenated. Additional arguments for respective methods.
+#' @param object Object of class "simRestSelect" to summarise.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
@@ -42,34 +43,33 @@
 #' head(cerrado.mini$traits)
 #' # Simulation
 #' scenario <- simulateCommunities(traits = cerrado.mini$traits,
-#'                          ava = "Available",
-#'                          maxDiver = c("SLA", "Height", "Seed"),
-#'                          constCWM = "BT",
-#'                          rich = c(10, 15),
-#'                          it = 100)
+#'                                 ava = "Available",
+#'                                 maxDiver = c("SLA", "Height", "Seed"),
+#'                                 constCWM = "BT",
+#'                                 rich = c(10, 15),
+#'                                 it = 100)
 #' scenario
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
 #'                               traits = cerrado.mini$traits,
-#'                     ava = "Available",
-#'                     cwm = "BT",
-#'                     rao = c("SLA", "Height", "Seed"),
-#'                     cost = "Cost",
-#'                     dens = "Density",
-#'                     reference = cerrado.mini$reference,
-#'                     supplementary = cerrado.mini$supplementary)
+#'                               ava = "Available",
+#'                               cwm = "BT",
+#'                               rao = c("SLA", "Height", "Seed"),
+#'                               cost = "Cost",
+#'                               dens = "Density",
+#'                               reference = cerrado.mini$reference)
 #' scenario
 #' # Select communities - Filter selection
-#' scenarioSelected <- selectCommunities(x = scenario,
-#'                                       testsFilter = c("CWM_BT > 6",
-#'                                                 "rao > 2.5"))
-#' scenarioSelected
+#' scenarioSelectedFilter <- selectCommunities(x = scenario,
+#'                                             testsFilter = c("CWM_BT > 5.9",
+#'                                                             "rao > 0.2"))
+#' scenarioSelectedFilter
 #' # Select communities - Priority selection
-#' scenarioSelected <- selectCommunities(x = scenario,
-#'                                       testsPriority = c("CWM_BT > 6",
-#'                                                 "rao > 2.5",
-#'                                                 "Cost == 'MIN'"))
-#' scenarioSelected
+#' scenarioSelectedPriority <- selectCommunities(x = scenario,
+#'                                               testsPriority = c("CWM_BT > 5.9",
+#'                                                                 "rao > 0.2",
+#'                                                                 "Cost == 'MIN'"))
+#' scenarioSelectedPriority
 #' @export
 selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteGroup = NULL, singleSelection = FALSE, testsMultisite = NULL){
   RES <- list(call = match.call())
@@ -232,7 +232,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
   # Multisite tests
   if(!is.null(testsMultisite)){
     if(is.null(xParMultisite) || is.null(xCombMultisite)){
-      stop("Multisite results were not calculated")
+      stop("The x argument must contain the multisite results")
     }
     # Selected positions
     # selectedPosMultisite <- c()

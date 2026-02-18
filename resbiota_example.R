@@ -3,16 +3,16 @@
 ## Packages ----
 require(resbiota)
 require(magrittr)
-# require(data.table)
+require(data.table)
 
 # Print data.frame as data.table class
-# getOption("datatable.print.class")
-# options("datatable.print.class" = TRUE)
-# getOption("datatable.print.nrows")
-# options("datatable.print.nrows" = 15)
-# print.data.frame <- function(x){
-#   print(data.table::data.table(x, keep.rownames = TRUE))
-# }
+getOption("datatable.print.class")
+options("datatable.print.class" = TRUE)
+getOption("datatable.print.nrows")
+options("datatable.print.nrows" = 15)
+print.data.frame <- function(x){
+  print(data.table::data.table(x, keep.rownames = TRUE))
+}
 
 ## Data ----
 load(file = "data/dados.rda")
@@ -42,17 +42,14 @@ createReport(dados$trait, props = c(0.1, 0.5, 0.75))
 
 # FINALIZAR ----
 # funcao para definir os target (percentil?)
-# referencia, pool, ...
-# testar se tem atributos apartir da literatura
-# etapa exploratoria
 # pensar em percentil na funcao da multi
-# incluir os graficos exploratorios
+
 ## Simulation ----
 
 ### Simulate communities starting without species ----
 resSIM0 <- simulateCommunities(dados$trait[70:110,], 
                                ava = dados$ava, 
-                               it = 500, #dados$it, 
+                               it = 100, #dados$it, 
                                rich = dados$rich, 
                                maxDiver = dados$cwm,
                                constCWM = dados$cwm,
@@ -76,7 +73,7 @@ resSIM0$simulation$baseline
 resSIM1 <- simulateCommunities(trait = dados$trait,
                                ava = dados$ava,
                                und = dados$und,
-                               it = 500, # dados$it,
+                               it = 100, # dados$it,
                                rich = c(10, 12),
                                maxDiver = dados$cwm,
                                constCWM = dados$cwm,
@@ -167,14 +164,6 @@ head(resParAllSIM$simulation$multifunctionality)
 head(resParAllSIM$simulation$multifunctionality)
 dim(resParAllSIM$simulation$multifunctionality)
 resParAllSIM$simulation$results
-
-### Dissimilarity ----
-# resParAllSIM <- computeDissimilarity(resParAllSIM, 
-#                                        dados$trait[,1:2])
-# resParAllSIM$simulation$results
-
-# TAREFAS ----
-# incluir dissimilaridade entre comunidades selecionadas
 
 # Select communities ----
 
@@ -269,14 +258,17 @@ viewMultifunctionality(resParAllSIM)
 viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "exclusive_intersection")
 viewMultifunctionality(resParAllSIM, min_degree = 3, max_degree = 6, mode = "inclusive_intersection")
 
-# CONFERIR ----
-# viewMultifunctionality(resParSelectExtra)
+resParSelectExtra$selection$multifunctionality
+resParSelectExtra$reference$multifunctionality
+viewMultifunctionality(resParSelectExtra, hideref = TRUE)
+viewMultifunctionality(resParSelectExtra, mode = "exclusive_intersection")
+viewMultifunctionality(resParSelectExtra, mode = "inclusive_intersection")
 
 # save.image("CCC_workspace_20240829")
 # load("CCC_workspace_20240829")
 
 resParAllSIM_TESTE <- computeParameters(allSIM, 
-                                        trait = dados$trait, 
+                                        traits = dados$trait, 
                                         # cwm = dados$cwm,
                                         rao = dados$cwm,
                                         # cwv = dados$cwm,
@@ -288,7 +280,7 @@ resParAllSIM_TESTE$simulation$results
 
 
 resParAllSIM_TESTE2 <- computeParameters(allSIM, 
-                                         trait = dados$trait, 
+                                         traits = dados$trait, 
                                          # cwm = dados$cwm,
                                          rao = list(dados$cwm, c("LMA", "Zooc")),
                                          # cwv = dados$cwm,
@@ -302,7 +294,7 @@ listarao <- list(dados$cwm, c("LMA", "Zooc"))
 names(listarao) <- c("Tudo", "LMAZooc")
 listarao
 resParAllSIM_TESTE3 <- computeParameters(resSIM1, 
-                                         trait = dados$trait, 
+                                         traits = dados$trait, 
                                          # cwm = dados$cwm,
                                          rao = listarao,
                                          # cwv = dados$cwm,
@@ -316,16 +308,16 @@ require(resbiota)
 data("cerrado.mini")
 head(cerrado.mini$traits)
 # Simulation
-scenario <- simulateCommunities(trait = cerrado.mini$traits,
+scenario <- simulateCommunities(traits = cerrado.mini$traits,
                                 ava = "Available",
-                                cwm = "BT",
-                                rao = c("SLA", "Height", "Seed"),
+                                constCWM = "BT",
+                                maxDiver = c("SLA", "Height", "Seed"),
                                 rich = c(10, 15),
                                 it = 100)
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              trait = cerrado.mini$traits,
+                              traits = cerrado.mini$traits,
                               ava = "Available",
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),
@@ -338,22 +330,22 @@ scenario$simulation$results
 
 # Select communities - Deterministic selection
 scenarioSelected <- selectCommunities(x = scenario,
-                                      testsDet = c("CWM_BT > 6",
+                                      testsFilter = c("CWM_BT > 6",
                                                    "rao > 2.5"))
 scenarioSelected
 # Select communities - Hierarchical selection
 scenarioSelected <- selectCommunities(x = scenario,
-                                      testsHie = c("CWM_BT > 6",
+                                      testsPriority = c("CWM_BT > 6",
                                                    "rao > 2.5",
-                                                   "cost == 'MIN'"))
+                                                   "Cost == 'MIN'"))
 scenarioSelected
 data("cerrado.mini")
 sum(cerrado.mini$traits$Available)
-scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
-                                 restComp = cerrado.mini$restoration,
+scenarioB <- simulateCommunities(traits = cerrado.mini$traits,
+                                 restComp = round(cerrado.mini$restoration*100),
                                  ava = "Available",
-                                 cwm = "BT",
-                                 rao = c("SLA", "Height", "Seed"),
+                                 constCWM = "BT",
+                                 maxDiver = c("SLA", "Height", "Seed"),
                                  rich = 18,
                                  it = 10,
                                  # max_add = 10,
@@ -363,70 +355,59 @@ scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
 scenarioB$simulation$composition
 
 scenarioB <- computeParameters(x = scenarioB,
-                               trait = cerrado.mini$traits,
+                               traits = cerrado.mini$traits,
                                ava = "Available",
                                cwm = "BT",
                                rao = c("SLA", "Height", "Seed"),
                                cost = "Cost",
                                dens = "Density",
-                               reference = cerrado.mini$reference,
-                               supplementary = cerrado.mini$supplementary)
+                               reference = round(cerrado.mini$reference*100),
+                               supplementary = round(cerrado.mini$supplementary*100))
 scenarioB
 str(scenarioB)
 colnames(scenarioB$simulation$results)
 scenarioB$simulation$results
 
-class(scenarioB$simulation$results$unavailable)
-
-all(scenarioB$simulation$results$unavailable == floor(scenarioB$simulation$results$unavailable))
-y <- 1:10
-y <- rep(NA, 10)
-y <- c(NA, 1:10)
-y 
-
-all(y == floor(y), na.rm = TRUE)
-all(is.na(y))
-
 
 # Select communities - Hierarchical selection
 scenarioSelectedB <- selectCommunities(x = scenarioB,
-                                       testsHie = c("CWM_BT > 6",
+                                       testsPriority = c("CWM_BT > 6",
                                                     "rao > 2.5"),
-                                       group = "NAME",
-                                       singleselection = TRUE)
+                                       siteGroup = "Site",
+                                       singleSelection = TRUE)
 scenarioSelectedB
 
 scenarioSelectedB$selection$results
 scenarioSelectedB$selection$composition
 
 scenarioSelectedB2 <- selectCommunities(x = scenarioB,
-                                       testsDet = c("CWM_BT > 6",
+                                       testsFilter = c("CWM_BT > 6",
                                                     "rao > 2.5"),
-                                       group = "NAME")
+                                       siteGroup = "NAME")
 scenarioSelectedB2
 scenarioSelectedB2$selection$results
 
-
-
-
-selectCommunities(scenarioA,
-                  testsDet = c("CWM_BT >= 8"))$selection$results
-selectCommunities(scenarioA,
-                  testsDet = c("CWM_BT >= 8", "richness < 20"))$selection$results
-selectCommunities(scenarioA,
-                  testsDet = c("CWM_BT >= 8", "richness < 20"),
-                  testsHie = c("CWM_BT == 'MAX'"))$selection$results
-
-
-selectCommunities(scenarioB,
-                  testsDet = c("CWM_BT >= 8"))$selection$results
-selectCommunities(scenarioB,
-                  testsDet = c("CWM_BT >= 8", "richness > 28"))$selection$results
-selectCommunities(scenarioB,
-                  testsHie = c("CWM_BT >= 8", "richness < 20"))$selection$results
-selectCommunities(scenarioB,
-                  testsHie = c("CWM_BT >= 8", "richness > 20", "cost == 'MIN'"),
-                  group = "NAME")$selection$results
+# 
+# 
+# 
+# selectCommunities(scenarioA,
+#                   testsFilter = c("CWM_BT >= 8"))$selection$results
+# selectCommunities(scenarioA,
+#                   testsFilter = c("CWM_BT >= 8", "richness < 20"))$selection$results
+# selectCommunities(scenarioA,
+#                   testsFilter = c("CWM_BT >= 8", "richness < 20"),
+#                   testsPriority = c("CWM_BT == 'MAX'"))$selection$results
+# 
+# 
+# selectCommunities(scenarioB,
+#                   testsDet = c("CWM_BT >= 8"))$selection$results
+# selectCommunities(scenarioB,
+#                   testsDet = c("CWM_BT >= 8", "richness > 28"))$selection$results
+# selectCommunities(scenarioB,
+#                   testsHie = c("CWM_BT >= 8", "richness < 20"))$selection$results
+# selectCommunities(scenarioB,
+#                   testsHie = c("CWM_BT >= 8", "richness > 20", "cost == 'MIN'"),
+#                   group = "NAME")$selection$results
 
 
 ## ABUNDANCIAs
@@ -434,14 +415,14 @@ data("cerrado.mini")
 head(cerrado.mini$traits)
 # Restoration new sites
 scenarioA <- simulateCommunities(trait = cerrado.mini$traits,
-                                 # ava = "Available",
-                                 cwm = c("Height", "Seed"),
-                                 rao = c("SLA", "Height", "Seed"),
+                                 constCWM = c("Height", "Seed"),
+                                 maxDiver = c("SLA", "Height", "Seed"),
                                  rich = c(10, 15),
                                  it = 100)
 scenarioA
+
 # Restoration existing sites
-cerrado.mini$traits$Tipo <- rep(c("A", "B"), each = 25)
+cerrado.mini$traits$Tipo <- factor(rep(c("A", "B"), each = 25))
 cerrado.mini$traits
 scenarioB <- simulateCommunities(trait = cerrado.mini$traits,
                                  # restComp = cerrado.mini$restoration,
@@ -476,16 +457,12 @@ scenario <- simulateCommunities(trait = cerrado.mini$traits,
                                  probGroupAbund = c("2777" = 0, "10000" = 0.5)
 )
 nrow(scenario$simulation$composition)
-
-
 plot(apply(scenarioB$simulation$composition, 2, sum), cerrado.mini$traits$SLA)
 plot(apply(scenarioB$simulation$composition, 2, sum), cerrado.mini$traits$Density)
 
 
-cerrado.mini$traits$Tipo <- factor(cerrado.mini$traits$Tipo)
-str(cerrado.mini$traits)
 scenario <- computeParameters(x = scenarioB,
-                              trait = cerrado.mini$traits,
+                              traits = cerrado.mini$traits,
                               ava = "Available",
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),
@@ -495,4 +472,13 @@ scenario <- computeParameters(x = scenarioB,
                               supplementary = cerrado.mini$supplementary)
 scenario
 scenario$simulation$results
+
+
+viewResults(scenario, xvar = "CWM_BT", showReference = TRUE)
+viewResults(scenario, xvar = "CWM_BT", showReference = FALSE)
+viewResults(scenario, xvar = "CWM_BT", yvar = "rao", showReference = TRUE)
+viewResults(scenario, xvar = "CWM_BT", yvar = "rao", showReference = FALSE)
+
+
+
 # END ----
