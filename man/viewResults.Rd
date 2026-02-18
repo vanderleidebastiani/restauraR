@@ -6,18 +6,20 @@
 \alias{viewMultifunctionality}
 \title{Visualise simulation results}
 \usage{
-viewResults(x, xvar, yvar = NULL, hideref = FALSE)
+viewResults(x, xvar, yvar = NULL, showReference = TRUE, showMultisite = FALSE)
 
-viewMultifunctionality(x, hideref = FALSE, ...)
+viewMultifunctionality(x, showReference = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "simRest" or "simRestSelect" to visualise results.}
 
-\item{xvar}{Character vector specifying the variable name for the x-axis in scatter plots.}
+\item{xvar}{Character vector specifying the variable name for the histogram or the x-axis in scatter plots.}
 
 \item{yvar}{Character vector specifying the variable name for the y-axis in scatter plots (default yvar = NULL).}
 
-\item{hideref}{Logical indicating whether to exclude reference sites from visualisation (default hideref = FALSE).}
+\item{showReference}{Logical indicating whether to include reference sites from visualisation (default showReference = TRUE).}
+
+\item{showMultisite}{Logical indicating whether to plot results from the multisite analysis; otherwise, the plot shows the basic results (default showMultisite = FALSE).}
 
 \item{...}{Arguments passed to the upset function of the package ComplexUpset.}
 }
@@ -25,7 +27,48 @@ viewMultifunctionality(x, hideref = FALSE, ...)
 A ggplot plot object that can be further customised using standard ggplot2 syntax.
 }
 \description{
-Generate graphical representations of simulated, selected communities and reference sites, including parameter distributions, trade-off analyses, and multifunctionality assessments.
+Generate graphical representations of simulated and selected communities, including histograms for parameter distributions, scatter plots for trade-off analyses, and upset plots for multifunctionality results. 
+Reference sites are highlighted as distinct points in scatter plots or as rug lines along the axes in histograms.
+}
+\examples{
+data("cerrado.mini")
+head(cerrado.mini$traits)
+# Simulation
+scenario <- simulateCommunities(traits = cerrado.mini$traits,
+                                ava = "Available",
+                                maxDiver = c("SLA", "Height", "Seed"),
+                                constCWM = "BT",
+                                rich = c(10, 15),
+                                it = 100)
+scenario
+# Compute functional parameters
+scenario <- computeParameters(x = scenario,
+                              traits = cerrado.mini$traits,
+                              ava = "Available",
+                              cwm = "BT",
+                              rao = c("SLA", "Height", "Seed"),
+                              cost = "Cost",
+                              dens = "Density",
+                              dissimilarity = c("SLA", "Height", "Seed"),
+                              reference = cerrado.mini$reference,
+                              supplementary = cerrado.mini$supplementary)
+scenario
+# Standardise parameters
+scenario <- standardiseParameters(x = scenario,
+                                  parameters = "dissimilarity",
+                                  method = "max")
+scenario
+# Compute multifunctionality
+scenario <- computeMultifunctionality(x = scenario,
+                                      tests = c("CWM_BT > 5.9",
+                                                "rao > 0.2"))
+scenario
+# View results - histogram
+viewResults(scenario, xvar = "CWM_BT")
+# View results - scatter plot
+viewResults(scenario, xvar = "CWM_BT", yvar = "rao")
+# View multifunctionality - upset plot
+viewMultifunctionality(scenario)
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
@@ -36,8 +79,7 @@ enhances ecosystem multifunctionality but species addition can increase it durin
 in preparation.
 }
 \seealso{
-\code{\link{simulateCommunities}},\code{\link{computeParameters}}, \code{\link{selectCommunities}}
-\code{\link{extractResults}}
+\code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, \code{\link{extractResults}}
 }
 \author{
 See \code{\link{resbiota-package}}.

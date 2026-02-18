@@ -8,11 +8,13 @@
 #' \strong{Workflow}
 #' 
 #' The basic workflow includes:
-#' - Set simulation input parameters and do the simulation (\code{simulateCommunities});
-#' - Compute and standardise parameters in each simulated community (\code{computeParameters}, \code{standardiseParameters});
-#' - Calculate multiple restoration targets (\code{computeMultifunctionality});
-#' - Selections of simulated communities (\code{selectCommunities});
-#' - Views, extract and save the results (\code{viewResults}, \code{viewMultifunctionality}, \code{extractResults}).
+#' \itemize{
+#'   \item Set simulation input parameters and do the simulation (\code{simulateCommunities});
+#'   \item Compute and standardise parameters in each simulated community (\code{computeParameters}, \code{standardiseParameters});
+#'   \item Calculate multiple restoration targets (\code{computeMultifunctionality});
+#'   \item Selections of simulated communities (\code{selectCommunities});
+#'   \item Views, extract and save the results (\code{viewResults}, \code{viewMultifunctionality}, \code{extractResults}).
+#' }
 #' 
 #' Note that (\code{simulateCommunities}) returns communities without calculated functional parameters. Use (\code{computeParameters}) to calculate CWM, Rao's, etc., before selection.
 #' 
@@ -56,7 +58,7 @@
 #' 
 #' \strong{The outputs}
 #' 
-#' The main outputs are a community matrix with species relative abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market. 
+#' The main outputs are a community matrix with species relative or raw abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship among these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market. 
 #' 
 #' \strong{Multifunctionality}
 #' 
@@ -70,7 +72,9 @@
 #' 
 #' The results visualisation functions are auxiliary to checking parameters in reference sites, analysing the distribution of functional parameters in simulated communities and showing final solutions of selected species composition. 
 #' 
-#' The function \code{viewResults} allows the visualisation of basic results using scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualisation includes all simulated communities and also allows the inclusion of observed relations in reference sites. 
+#' The function \code{viewResults} allows the visualisation of basic results using histograms for parameter distributions, scatter plots to show the trade-offs between several parameters, restoration costs, species richness and any calculated functional parameter. This visualisation includes all simulated communities and also allows the inclusion of observed relations in reference sites. 
+#'
+#' Reference sites are highlighted as distinct points in scatter plots or as rug lines along the axes in histograms.
 #' 
 #' The function \code{viewMultifunctionality} allows visualisation of multifunctionality sets, creating a graphical representation of the number of sites where each function has been restored, and the number of sites where combinations of functions were restored.
 #' 
@@ -81,6 +85,13 @@
 #' The function \code{mergeSimulations} concatenates simulated communities generated under different scenarios. For example, some restoration sites can be generated from empty communities, while in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated for subsequent steps, such as parameter calculations. 
 #' 
 #' The function \code{mergeSelection} concatenates different selection procedures. For example, if restoration sites have diverse desired restoration targets, the selection can be performed in distinct steps and then concatenated.
+#' 
+#' \strong{Multi-site approach}
+#' 
+#' Selecting communities based solely on the local community may not be optimal for restoration planning across a landscape. The \code{optimiseSelection} function optimises the selection of simulated communities based on ecological indices calculated across multiple sites. The function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination. Then, the selection of the simulated solutions can be performed on these multisite indices. 
+#'
+#' Two sets of indices are available: those derived from the multifunctionality matrix and those derived from species composition. The indices derived from the multifunctionality matrix include the landscape multifunctionality index, which represents the overall restoration success across the entire landscape; the beta multifunctionality index, which is calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites; and the average number of restored functions per site. The indices derived from species composition are calculetes Rao's quadratic entropy, either with or without considering species dissimilarities, and include total diversity across all samples, average Alpha and Beta diversity among-community diversity, and Fst, which can be interpreted as local species identity excess. These species composition indices are calculated using a modified version of the raoD function from the picante package.
+#' 
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist as.data.table
 #' @aliases mergeSimulations print.simRest
@@ -105,7 +116,8 @@
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
 #' @param ... Objects of class "simRest" to be concatenated. Additional arguments for respective methods.
-#' @param x Objects of class "simRest" to print.
+#' @param x Object of class "simRest" to print.
+#' @param object Object of class "simRest" to summarise.
 #' @returns A list (class "simRest") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
