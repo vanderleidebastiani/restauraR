@@ -994,14 +994,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   
-  output$radioHideRefViewParOutput <- renderUI({
-    shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
-                                     label = i18n$t("Hide reference sites"),
+  output$radioShowRefViewParOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "showRefViewParInput",
+                                     label = i18n$t("Show reference sites"),
                                      choices = stats::setNames(
                                        c(TRUE, FALSE),
                                        c(i18n$t("Yes"), i18n$t("No")) # Set labels
                                      ),
-                                     selected = FALSE,
+                                     selected = TRUE,
                                      inline = TRUE,
                                      status = "primary"
     )
@@ -1020,14 +1020,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     )
   })
   
-  output$radioHideRefViewMultiOutput <- renderUI({
-    shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
-                                     label = i18n$t("Hide reference sites"),
+  output$radioShowRefViewMultiOutput <- renderUI({
+    shinyWidgets::prettyRadioButtons(inputId = "showRefViewMultiInput",
+                                     label = i18n$t("Show reference sites"),
                                      choices = stats::setNames(
                                        c(TRUE, FALSE),
                                        c(i18n$t("Yes"), i18n$t("No")) # Set labels
                                      ),
-                                     selected = FALSE,
+                                     selected = TRUE,
                                      inline = TRUE,
                                      status = "primary"
     )
@@ -1875,7 +1875,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       scenario <- tryCatch(viewResults(x = scenario,
                                        xvar = input$xvarViewInput,
                                        yvar = input$yvarViewInput,
-                                       hideref = as.logical(input$hideRefViewParInput)
+                                       showReference = as.logical(input$showRefViewParInput)
       ), error = function(e) e)
       shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){
@@ -1997,7 +1997,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   # 				scenario$selection$multifunctionality  <- resMulti
   # 			}
   # 			scenario <- tryCatch(viewMultifunctionality(x = scenario,
-  # 														hideref = as.logical(input$hideRefViewMultiInput)
+  # 														showReference = as.logical(input$showRefViewMultiInput)
   # 			), error = function(e) e)
   # 			shiny::removeModal(session = session)
   # 			if(inherits(scenario, what = "error")){
@@ -2064,7 +2064,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         scenario$selection$multifunctionality  <- resMulti
       }
       scenario <- tryCatch(viewMultifunctionality(x = scenario,
-                                                  hideref = as.logical(input$hideRefViewMultiInput)
+                                                  showReference = as.logical(input$showRefViewMultiInput)
       ), error = function(e) e)
       shiny::removeModal(session = session)
       if(inherits(scenario, what = "error")){

@@ -1,8 +1,9 @@
 #' @rdname viewResults
 #' @include viewResults.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
-viewMultifunctionality <- function(x, hideref = FALSE, ...){
+viewMultifunctionality <- function(x, showReference = FALSE, ...){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
@@ -18,7 +19,7 @@ viewMultifunctionality <- function(x, hideref = FALSE, ...){
   # Remove first name (SIM)
   groupsMulti <- colnames(resMulti)[-1]
   resMulti <- resMulti[, -1, drop =  FALSE]
-  if(!hideref){
+  if(showReference){
     resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
     template0 <- makeMatrixTemplate(resMulti, resMultiRef)
     resMulti <- rearrangementMatrix(template = template0, resMulti, fillNA = FALSE)

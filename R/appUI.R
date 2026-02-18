@@ -1232,7 +1232,7 @@ body <- shinydashboard::dashboardBody(
                                                                                                                                 options = list("max-options" = 1),
                                                                                                                                 inline = FALSE
                                                                                                       ),
-                                                                                                      shiny::uiOutput("radioHideRefViewParOutput"),
+                                                                                                      shiny::uiOutput("radioShowRefViewParOutput"),
                                                                                                       # shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
                                                                                                       # 								 label = i18n$t("Hide reference sites"),
                                                                                                       # 								 choices = stats::setNames(
@@ -1297,7 +1297,7 @@ body <- shinydashboard::dashboardBody(
                                                                                                                                 options = list("max-options" = 1),
                                                                                                                                 inline = FALSE
                                                                                                       ),
-                                                                                                      shiny::uiOutput("radioHideRefViewMultiOutput"),
+                                                                                                      shiny::uiOutput("radioShowRefViewMultiOutput"),
                                                                                                       # shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
                                                                                                       # 								 label = i18n$t("Hide reference sites"),
                                                                                                       # 								 choices = stats::setNames(

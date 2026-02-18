@@ -59,7 +59,7 @@ resSummary <- function(x, props = NULL){
     RES <- lapply(as.data.frame(x), fResSummary, props = props)
     # RES <- do.call(rbind, RES)
     # RES <- t.data.frame(RES)
-    RES <- as.data.frame(RES)
+    RES <- as.data.frame(RES, check.names = FALSE)
   } else {
     # RES <- t.data.frame(fResSummary(x = x, props = props))
     # colnames(RES) <- "Var"

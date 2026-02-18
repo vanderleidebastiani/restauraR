@@ -322,31 +322,31 @@ head(resultsSim$simulation$results)
 viewResults(resultsSim, 
             xvar = "simpson", 
             yvar = "CWM_Zoochory", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "simpson", 
             yvar = "CWM_WoodDensity", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "CWM_Zoochory", 
             yvar = "rao", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "CWM_WoodDensity", 
             yvar = "rao", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "functionalDissimilarity", 
             yvar = "CWM_Zoochory", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "functionalDissimilarity", 
             yvar = "CWM_WoodDensity", 
-            hideref = FALSE)
+            showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "functionalDissimilarity", 
             yvar = "rao", 
-            hideref = FALSE)
+            showReference = TRUE)
 ```
 
 

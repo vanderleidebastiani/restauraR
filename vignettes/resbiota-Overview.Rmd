@@ -407,10 +407,10 @@ Multifunctionality results can be plotted for all simulations or selected simula
 
 ```{r}
 # View multifunctionality results
-# viewMultifunctionality(allScenarios)
+viewMultifunctionality(allScenarios)
 ```
 
 ```{r}
 # View multifunctionality results
-# viewMultifunctionality(resSelectSimMerged)
+viewMultifunctionality(resSelectSimMerged)
 ```
