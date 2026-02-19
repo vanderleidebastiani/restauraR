@@ -126,7 +126,7 @@ Each species in the pool can be described by functional traits that represent th
 
 The species assemblages are generated in the \code{simulateCommunities} function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets. 
 
-The sampling of species can be performed completely at random or selected species based on functional traits or a desired trait profile. If the `maxDiver` argument is specified, species selections optimise the functional diversity of a specific set of traits. Simultaneously, the `constCWM` argument can constrain the community-weighted mean trait values across the full range of each trait enabling local maximization of functional diversity within the specified community-weighted mean constraints.
+The sampling of species can be performed completely at random or select species based on functional traits or a desired trait profile. If the `maxDiver` argument is specified, species selections optimise the functional diversity of a specific set of traits. Simultaneously, the `constCWM` argument can constrain the community-weighted mean trait values across the full range of each trait enabling local maximization of functional diversity within the specified community-weighted mean constraints.
 
 To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with `maxDiver` and `constCWM` arguments. Furthermore, if the species available is informed in the `ava` argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
 
@@ -136,7 +136,7 @@ The framework returns a community matrix indicating the composition of individua
 
 After the initial step of species composition simulation, several functional parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters are used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions \code{computeParameters} and \code{computeMultifunctionality} can be used in this step. 
 
-The function \code{computeParameters} is mandatory and compute basic parameters: richness, Community Weighted Mean, Community Weighted Variance, Rao’s Quadratic Entropy and functional dissimilarity. The user must define which traits will be used to calculate each metric. Additionally, if species cost per individual and planting density information are provided, restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. Furthermore, it is optional to compute functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. 
+The function \code{computeParameters} is mandatory and computes basic parameters: richness, Community Weighted Mean, Community Weighted Variance, Rao’s Quadratic Entropy and functional dissimilarity. The user must define which traits will be used to calculate each metric. Additionally, if species cost per individual and planting density information are provided, restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. Furthermore, it is optional to compute functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. 
 
 The function \code{standardiseParameters} allows the standardisation of the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance. For example, the "max" method is useful to scale dissimilarity results by scaling the values in ranges from 0 (no dissimilarity) to 1 (maximum dissimilarity).
 
@@ -152,7 +152,7 @@ Two selection options can be used, individually or interchangeably: filter selec
 
 \strong{The reference sites}
 
-Reference sites can be included in the \code{computeParameters} step. Thus, all calculated parameters also are calculated for reference sites and can be used in posterior analysis or as an auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
+Reference sites can be included in the \code{computeParameters} step. Thus, all calculated parameters are also calculated for reference sites and can be used in posterior analysis or as an auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
 
 The resbiota package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species sites.
 
@@ -164,7 +164,7 @@ The main outputs are a community matrix with species relative or raw abundances 
 
 Restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests on each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The alpha multifunctionality index is defined as the number of individual tests that are true (i.e., the count of restored functions) for a given community.
 
-The selection of simulated species composition can be performed using the alpha multifunctionality index to maximize multifunctionality across restored sites. The alpha multifunctionality index also allows the selection of a simulated community when no solution satisfies all initial criteria, thus allowing users to select a less restricted solution.
+The selection of simulated species composition can be performed using the alpha multifunctionality index to maximise multifunctionality across restored sites. The alpha multifunctionality index also allows the selection of a simulated community when no solution satisfies all initial criteria, thus allowing users to select a less restricted solution.
 
 High values of the alpha multifunctionality index can be a preferred criterion for selection, meaning that, for each restoration site, the selection is performed in order to return a solution with the highest number of ecosystem functions recovered. 
 
@@ -180,7 +180,7 @@ The function \code{viewMultifunctionality} allows visualisation of multifunction
 
 \strong{Merge functions}
 
-The resbiota package includes functions to merge results sets from different operations. 
+The resbiota package includes functions to merge result sets from different operations. 
 
 The function \code{mergeSimulations} concatenates simulated communities generated under different scenarios. For example, some restoration sites can be generated from empty communities, while in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated for subsequent steps, such as parameter calculations. 
 
@@ -190,7 +190,7 @@ The function \code{mergeSelection} concatenates different selection procedures. 
 
 Selecting communities based solely on the local community may not be optimal for restoration planning across a landscape. The \code{optimiseSelection} function optimises the selection of simulated communities based on ecological indices calculated across multiple sites. The function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination. Then, the selection of the simulated solutions can be performed on these multisite indices. 
 
-Two sets of indices are available: those derived from the multifunctionality matrix and those derived from species composition. The indices derived from the multifunctionality matrix include the landscape multifunctionality index, which represents the overall restoration success across the entire landscape; the beta multifunctionality index, which is calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites; and the average number of restored functions per site. The indices derived from species composition are calculetes Rao's quadratic entropy, either with or without considering species dissimilarities, and include total diversity across all samples, average Alpha and Beta diversity among-community diversity, and Fst, which can be interpreted as local species identity excess. These species composition indices are calculated using a modified version of the raoD function from the picante package.
+Two sets of indices are available: those derived from the multifunctionality matrix and those derived from species composition. The indices derived from the multifunctionality matrix include the landscape multifunctionality index, which represents the overall restoration success across the entire landscape; the beta multifunctionality index, which is calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites; and the average number of restored functions per site. The indices derived from species composition are calculates Rao's quadratic entropy, either with or without considering species dissimilarities, and include total diversity across all samples, average Alpha and Beta diversity among-community diversity, and Fst, which can be interpreted as local species identity excess. These species composition indices are calculated using a modified version of the raoD function from the picante package.
 }
 \examples{
 data("cerrado.mini")
@@ -231,5 +231,4 @@ in preparation.
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
 \keyword{MainFunction}
