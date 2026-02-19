@@ -88,7 +88,6 @@ scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
                                                rao = c("SLA", "Height", "Seed"),
                                                calcSimpsonBeta = TRUE)
 scenarioSelectedMultisite
-head(scenarioSelectedMultisite$selection$multisite$results)
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

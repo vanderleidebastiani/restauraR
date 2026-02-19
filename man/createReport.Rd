@@ -25,4 +25,4 @@ Generate an HTML data profiling report with descriptive statistics and univariat
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{MainFunction}
+\keyword{Auxiliary}

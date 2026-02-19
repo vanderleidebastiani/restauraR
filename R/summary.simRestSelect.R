@@ -1,6 +1,7 @@
 #' @rdname selectCommunities
 #' @include selectCommunities.R
 #' @encoding UTF-8
+#' @keywords MainFunction
 #' @export
 summary.simRestSelect <- function(object, ...) {
   RES <- list()
@@ -19,7 +20,7 @@ summary.simRestSelect <- function(object, ...) {
     RES$summaryResults <- NULL
   }
   # Summary multifunctionality
-  if(!is.null(object$selection$multisite$results)) {
+  if(!is.null(object$selection$multifunctionality)) {
     RES$summaryMultifunctionality <- resSummary(object$selection$multifunctionality, ...)[2, -1]
   } else{
     RES$summaryMultifunctionality <- NULL

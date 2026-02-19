@@ -12,7 +12,7 @@
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
-#' @keywords MainFunction
+#' @keywords Auxiliary
 #' @export
 createReport <- function(x, props = NULL){
   # Get basic parameters

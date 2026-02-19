@@ -114,5 +114,4 @@ in preparation.
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
 \keyword{MainFunction}

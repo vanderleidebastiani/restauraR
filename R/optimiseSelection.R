@@ -72,7 +72,6 @@
 #'                                                rao = c("SLA", "Height", "Seed"),
 #'                                                calcSimpsonBeta = TRUE)
 #' scenarioSelectedMultisite
-#' head(scenarioSelectedMultisite$selection$multisite$results)
 #' @export
 optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
   # Check object class

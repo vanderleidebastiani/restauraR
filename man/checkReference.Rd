@@ -66,4 +66,3 @@ checkReference(reference = cerrado.mini$reference,
 See \code{\link{resbiota-package}}.
 }
 \keyword{Auxiliary}
-\keyword{MainFunction}

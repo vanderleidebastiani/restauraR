@@ -1,7 +1,7 @@
 #' @rdname selectCommunities
 #' @include selectCommunities.R
 #' @encoding UTF-8
-#' @keywords Auxiliary
+#' @keywords MainFunction
 #' @export
 print.summarySimRestSelect <- function(x, ...) {
   cat("Overview:\n")

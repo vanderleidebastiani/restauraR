@@ -1,7 +1,7 @@
 #' @rdname simulateCommunities
 #' @include simulateCommunities.R
 #' @encoding UTF-8
-#' @keywords Auxiliary
+#' @keywords MainFunction
 #' @export
 print.simRest <- function(x, ...) {
   cat("Call:\n")
