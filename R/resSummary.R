@@ -6,7 +6,6 @@
 #' @returns A data frame containing the following descriptive statistics: minimum, mean, median, maximum, and requested quantiles.
 #' @author See \code{\link{resbiota-package}}.
 #' @keywords InternalFunction
-#' @export
 resSummary <- function(x, props = NULL){
   if(!c(is.atomic(x) || c(inherits(x, what = "data.frame") || inherits(x, what = "matrix")))){
     stop("The x argument must be a vector, data.frame, or matrix")

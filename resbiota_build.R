@@ -28,3 +28,4 @@ system("R CMD check --as-cran resbiota_0.0.5.tar.gz")
 require(resbiota)
 ?resbiota::simulateCommunities
 runResbiota()
+browseVignettes("resbiota")
