@@ -2315,7 +2315,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     }
     if(!is.null(input$maxDiverSimInputInfo)){
       if(input$maxDiverSimInputInfo>infoRV$maxDiverSimInputInfo){
-        infoText <- i18n$t("Traits names to indicate which traits are used to maximize functional diversity (Rao Quadratic Entropy).")
+        infoText <- i18n$t("Traits names to indicate which traits are used to maximise functional diversity (Rao Quadratic Entropy).")
         infoRV$maxDiverSimInputInfo <- input$maxDiverSimInputInfo
       }
     }
