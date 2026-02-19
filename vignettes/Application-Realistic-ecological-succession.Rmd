@@ -35,7 +35,7 @@ This vignette illustrates a simplified implementation of the trait-based framewo
 
 The `FOM` dataset contains species functional traits for 124 species of the Araucaria moist forests, officially classified as mixed ombrophilous forest (Portuguese: "Floresta Ombrófila Mista - FOM") in the southern portion of the Atlantic Forest Biome in Brazil. Thus forest type is characterised by the critically endangered conifer *Araucaria angustifolia*, an iconic species which forms an emergent canopy layer. 
 
-Species composition of reference and restoration sites comes from The Forest and Floristic Inventory of Santa Catarina (IFFSC), a permanent program of the Government of the State of Santa Catarina. Field data are obtained by means of a systematic and continuous inventory of tree and shrub components with a plot size of 0.4 hectares.
+Species composition of reference and restoration sites comes from The Forest and Floristic Inventory of Santa Catarina (IFFSC), a permanent programme of the Government of the State of Santa Catarina. Field data are obtained by means of a systematic and continuous inventory of tree and shrub components with a plot size of 0.4 hectares.
 
 We filter only the sample plots of the drainage basin of the Pelotas River. The species occurrence in 17 sampling plots was used to define the species pool and to calculate species relative abundance in the regional pool. The species relative abundance was included as a species trait to weight species sampling. Two sampling plots were chosen as reference sites, based on the successional phase reported in the IFFSC, with characteristics of primary forest or an advanced stage of regeneration. The restoration sites were defined as one sampling plot with characteristics of mid-stage regeneration and one hypothetical site with no species. The pairwise co-occurrence probabilities were calculated with the package `cooccur` using a probabilistic model over the species composition of all 17 sampling plots. Co-occurrence probabilities smaller than 0.05 were set to zero.
 
@@ -88,7 +88,7 @@ ggplot2::ggplot(data = traits) +
   ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Number of species") +
   ggplot2::expand_limits(y = 100) +
-  themeResbiota(baseSize = 12)
+  resbiota:::themeResbiota(baseSize = 12)
 
 ggplot2::ggplot(data = traits) +
   ggplot2::aes(x = .data[["Zoochory"]]) +
@@ -97,21 +97,21 @@ ggplot2::ggplot(data = traits) +
                               labels = c("No", "Yes")) +
   ggplot2::labs(y = "Number of species") +
   ggplot2::expand_limits(y = 100) +
-  themeResbiota(baseSize = 12)
+  resbiota:::themeResbiota(baseSize = 12)
 
 ggplot2::ggplot(data = traits) +
   ggplot2::aes(x = .data[["WoodDensity"]]) +
   ggplot2::geom_histogram(bins = grDevices::nclass.FD(traits[,"WoodDensity"]), fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Number of species") +
   ggplot2::labs(x = "Wood density") +
-  themeResbiota(baseSize = 12)
+  resbiota:::themeResbiota(baseSize = 12)
 
 ggplot2::ggplot(data = data.frame(spp = factor(rownames(traits), levels = rownames(traits)[order(traits$relativeAbundance, decreasing = TRUE)]), traits)) +
   ggplot2::aes(x = .data[["spp"]], y = .data[["relativeAbundance"]]) +
   ggplot2::geom_col(fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Relative abundance") +
   ggplot2::labs(x = "Species rank") +
-  themeResbiota(baseSize = 12) +
+  resbiota:::themeResbiota(baseSize = 12) +
   ggplot2::theme(axis.text.x = ggplot2::element_blank())
 ```
 
@@ -134,7 +134,7 @@ set.seed(2025)
 
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits, # Species trait data
+resultsSim <- simulateCommunities(traits = traits, # Species trait data
                                   restComp = restorationSites, # Current species composition in restoration sites
                                   it = 1000, # Number of simulations
                                   rich = c(15, 20), # Species richness constraints, min = 15, max = 20 species
@@ -152,14 +152,14 @@ resultsSim
 
 ## Functional constraints
 
-The package implements two complementary approaches to constrain species sampling based on functional traits. The primary method maximizes functional diversity using Rao Quadratic Entropy (Rao). However, focusing solely on diversity maximisation may underrepresent the full range of Community Weighted Mean (CWM) of some traits. Therefore, the package also enables constraining the CWM values while simultaneously optimizing functional diversity, ensuring traits representation across both diversity and mean traits values. 
+The package implements two complementary approaches to constrain species sampling based on functional traits. The primary method maximises functional diversity using Rao Quadratic Entropy (Rao). However, focusing solely on diversity maximisation may underrepresent the full range of Community Weighted Mean (CWM) of some traits. Therefore, the package also enables constraining the CWM values while simultaneously optimising functional diversity, ensuring traits representation across both diversity and mean traits values. 
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits,
+resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
                                   it = 1000,
                                   rich = c(15, 20),
-                                  maxDiver = "WoodDensity", # Maximize functional diversity of wood density
+                                  maxDiver = "WoodDensity", # Maximise functional diversity of wood density
                                   constCWM = "Zoochory", # Constrain communities by zoochory dispersal trait
                                   nInd = 250,
                                   method = "individuals")
@@ -178,7 +178,7 @@ resultsSim
 Unconstrained sampling may result in ecologically unrealistic communities where rare species are overrepresented and common species underrepresented. To account for natural species distributions, the `prob` parameter can weight sampling probabilities according to regional species abundances. 
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits,
+resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
                                   it = 1000,
                                   rich = c(15, 20),
@@ -203,7 +203,7 @@ resultsSim
 While previous steps applied uniform richness ranges and abundance targets across all sites, actual restoration scenarios often require site-specific parameters. Those specific requirements may reflect pre-existing species composition or distinct restoration objectives. We can include a data frame with this additional information to define these parameters for each site. 
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits,
+resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
                                   restGroup = restorationInfo, # Data frame with site-specific restoration targets
                                   it = 1000,
@@ -229,7 +229,7 @@ Some species can not coexist in one site in a way that two species are either po
 
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits,
+resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
                                   restGroup = restorationInfo, 
                                   it = 1000,
@@ -255,20 +255,20 @@ resultsSim
 Some restoration projects try to create a succession plan to maximise long-term restoration success. One approach combines pioneer and later successional species to initiate ecological succession, where pioneer species create favourable conditions for the start of the succession and when they create conditions for the establishment and growth of later-successional species. The package enables this ecological strategy by allowing independent control of richness and abundance targets for each successional group. In our example, we prioritise later-successional species in both richness and abundance parameters to accelerate ecosystem development.
 
 ```{r}
-resultsSim <- simulateCommunities(trait = traits,
-                              restComp = restorationSites,
-                              restGroup = restorationInfo, 
-                              it = 1000,
-                              rich = c("nSppMin", "nSppMax"),
-                              maxDiver = "WoodDensity",
-                              constCWM = "Zoochory",
-                              nInd = "nIndividuals",
-                              method = "individuals",
-                              prob = "relativeAbundance",
-                              cooccur = cooccurrenceProb,
-                              group = "EcologicalSuccession", # Column in traits defining successional groups
-                              probGroupRich = c("Pioneer" = 0.2, "LaterSuccessional" = 0.8), # Richness targets across groups: 20% pioneer, 80% late successional species 
-                              probGroupAbund = c("Pioneer" = 0.3, "LaterSuccessional" = 0.7)) # Abundance targets across groups: 30% pioneer, 70% late successional individuals
+resultsSim <- simulateCommunities(traits = traits,
+                                  restComp = restorationSites,
+                                  restGroup = restorationInfo, 
+                                  it = 1000,
+                                  rich = c("nSppMin", "nSppMax"),
+                                  maxDiver = "WoodDensity",
+                                  constCWM = "Zoochory",
+                                  nInd = "nIndividuals",
+                                  method = "individuals",
+                                  prob = "relativeAbundance",
+                                  cooccur = cooccurrenceProb,
+                                  group = "EcologicalSuccession", # Column in traits defining successional groups
+                                  probGroupRich = c("Pioneer" = 0.2, "LaterSuccessional" = 0.8), # Richness targets across groups: 20% pioneer, 80% late successional species 
+                                  probGroupAbund = c("Pioneer" = 0.3, "LaterSuccessional" = 0.7)) # Abundance targets across groups: 30% pioneer, 70% late successional individuals
 ```
 
 ```{r, echo = FALSE}
@@ -311,40 +311,28 @@ resultsSim
 
 ## Explore the results
 
-The `viewResults` function can be used to plot the calculated metrics and help to define the filter thresholds. It returns a `ggplot` object, thus additional functions of the package `ggplot2` can be used to customise the plots, such as titles, labels and plot themes. All calculated metrics can be pairwise plotted against any other metrics.
+The `viewResults` function can be used to plot the calculated metrics and help to define the filter thresholds. It returns a `ggplot` object, thus additional functions of the package `ggplot2` can be used to customise the plots, such as titles, labels and plot themes. Calculated metrics can be plotted in histograms or pairwise against any other metrics.
 
 
 ```{r}
-head(resultsSim$simulation$results)
+# Result summaries
+summary(resultsSim)
 ```
 
 ```{r}
+# Note that parameter values in the reference sites are shown as rug lines along the axis
 viewResults(resultsSim, 
             xvar = "simpson", 
-            yvar = "CWM_Zoochory", 
-            showReference = TRUE)
-viewResults(resultsSim, 
-            xvar = "simpson", 
-            yvar = "CWM_WoodDensity", 
             showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "CWM_Zoochory", 
-            yvar = "rao", 
             showReference = TRUE)
 viewResults(resultsSim, 
             xvar = "CWM_WoodDensity", 
-            yvar = "rao", 
             showReference = TRUE)
+# Scatter plots
 viewResults(resultsSim, 
-            xvar = "functionalDissimilarity", 
-            yvar = "CWM_Zoochory", 
-            showReference = TRUE)
-viewResults(resultsSim, 
-            xvar = "functionalDissimilarity", 
-            yvar = "CWM_WoodDensity", 
-            showReference = TRUE)
-viewResults(resultsSim, 
-            xvar = "functionalDissimilarity", 
+            xvar = "CWM_WoodDensity", 
             yvar = "rao", 
             showReference = TRUE)
 ```
@@ -390,8 +378,8 @@ Community matrix for selected communities
 ```{r}
 # Species composition (or resultsSelection$selection$composition)
 compositionSelection <- extractResults(resultsSelection, 
-                                 type = "simComposition",
-                                 dbFormat = TRUE)
+                                       type = "simComposition",
+                                       dbFormat = TRUE)
 ```
 
 ```{r}
@@ -403,7 +391,7 @@ Metrics calculated for selected communities
 ```{r}
 # Functional metrics (or resultsSelection$selection$results)
 parametersSelection <- extractResults(resultsSelection, 
-                                type = "simResults")
+                                      type = "simResults")
 ```
 
 ```{r, echo = FALSE}

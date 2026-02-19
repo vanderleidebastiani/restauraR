@@ -64,7 +64,7 @@ resultsSim <- simulateCommunities(traits = traits, # Species trait data
                                   restComp = restorationSites, # Current species composition in restoration sites
                                   it = 1000, # Number of simulations
                                   rich = c(10, 15), # Species richness constraints, min = 10, max = 15 species
-                                  maxDiver = c("BT", "SLA", "Height", "Seed"),  # Maximize functional diversity of all traits
+                                  maxDiver = c("BT", "SLA", "Height", "Seed"),  # Maximise functional diversity of all traits
                                   constCWM = "BT", # Constrain communities by bark thickness trait
                                   method = "proportions" # Sampling method
 )
@@ -96,7 +96,7 @@ resultsSim
 
 ## Custom functions
 
-Several taxonomic, functional and phylogenetic metrics are available in the literature and in R, however, not included in standard version of the `computeParameters` function. The function includes an option to calculate any metric in a customized way, allowing the user to utilize a wide range of metric in the function.
+Several taxonomic, functional and phylogenetic metrics are available in the literature and in R, however, not included in standard version of the `computeParameters` function. The function includes an option to calculate any metric in a customised way, allowing the user to utilise a wide range of metrics in the function.
 
 The basic structure of the function includes the arguments x, comm and traits. The `x` argument is only used as an index to the `lapply` function; `comm` arguments specify the simulated and the reference communities concatenated, this species composition matrix is not standardised, thus it can contain raw abundances or species proportions according to the method chosen in the simulation procedure; `traits` arguments include original trait values according to the selected columns specified by the argument `traitsFUN`. The ellipses arguments are used to pass any object direct to the function. 
 
@@ -104,9 +104,9 @@ The basic structure of the function includes the arguments x, comm and traits. T
 ```{r, eval = FALSE}
 # Skeleton of FUN functions
 fun <- function(x, comm, traits, ...){
-  # x - mandatory argument, it is not used in the function
-  # comm - Raw species composition
-  # traits - Species traits after selected by the traitsFUN argument
+  # x - mandatory argument (not used in the function)
+  # comm - Raw species composition matrix
+  # traits - Species traits after being selected by the traitsFUN argument
   # ... - Additional arguments to function
   res <- data.frame(metric = res$metric) # Result must be a data.frame with one or more columns
   return(res)
@@ -126,7 +126,7 @@ funCWM <- function(x, comm, traits){
 }
 ```
 
-Another example can be performed using any functional metric included in the 'dbFD' function. In our example, we set this skeleton to calculate the functional richness. 
+Another example can be performed using any functional metric included in the `dbFD` function. In our example, we set this skeleton to calculate the functional richness. 
 
 ```{r, eval = FALSE}
 funFric <- function(x, comm, traits, ...){
@@ -140,10 +140,10 @@ funFric <- function(x, comm, traits, ...){
 ```{r}
 # Compute all functional metric for simulated communities and reference sites
 resultsSimCustom <- computeParameters(resultsSim,
-                                traits = traits,
-                                FUN = funCWM, # Custom function for CWM
-                                traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for custom CWM calculation
-                                reference = referenceSites)
+                                      traits = traits,
+                                      FUN = funCWM, # Custom function for CWM
+                                      traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for custom CWM calculation
+                                      reference = referenceSites)
 head(resultsSimCustom$simulation$results)
 head(resultsSimCustom$reference$results)
 ```
@@ -151,25 +151,12 @@ head(resultsSimCustom$reference$results)
 
 ```{r, eval = FALSE}
 resultsSimFric <- computeParameters(resultsSim,
-                                traits = traits,
-                                FUN = funFric, # Custom function for functional richness (Fric)
-                                traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for FRic calculation
-                                stand.FRic = TRUE, # Extra argument to dbFD function related to the Fric metric
-                                reference = referenceSites)
+                                    traits = traits,
+                                    FUN = funFric, # Custom function for functional richness (Fric)
+                                    traitsFUN = c("BT", "SLA", "Height", "Seed"), # Traits for FRic calculation
+                                    stand.FRic = TRUE, # Extra argument to dbFD function related to the Fric metric
+                                    reference = referenceSites)
 ```
 
 
 The inclusion of this flexibility allows computing taxonomic and phylogenetic metrics in addition to other functional metrics in a relatively easy way.
-
-
-
-
-
-
-
-
-
-
-
-
-
