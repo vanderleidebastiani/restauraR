@@ -8,8 +8,7 @@
 #' \item{average}{Average number of restored functions per site.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 calcMF <- function(x) {
   # Transform to matrix
   x <- as.matrix(x)

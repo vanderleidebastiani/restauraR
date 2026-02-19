@@ -77,4 +77,4 @@ Internal function to sample species abundance or proportions
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

@@ -18,8 +18,7 @@
 #' @returns A vector with species abundance or proportions.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL){
   METHOD <- c("proportions", "individuals")
   method <- pmatch(method, METHOD)

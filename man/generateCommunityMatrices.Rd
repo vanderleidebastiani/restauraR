@@ -72,4 +72,4 @@ Create simulated community matrices through constrained species assembly from a 
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

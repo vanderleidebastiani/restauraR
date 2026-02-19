@@ -28,4 +28,4 @@ Efficient implementation to calculate the Rao's quadratic entropy (RAO), based o
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

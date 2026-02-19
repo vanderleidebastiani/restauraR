@@ -7,13 +7,12 @@
 #' @aliases makeMatrixTemplate
 #' @importFrom data.table as.data.table rbindlist
 #' @param template A template matrix returned by \code{makeMatrixTemplate} function to guide rearrangement.
-#' @param x A data.frame or matrix to be reorganized.
+#' @param x A data.frame or matrix to be reorganised.
 #' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zeros (default fillNA = FALSE).
 #' @param ... Objects of class data.frame (or matrix) to be concatenated.
 #' @returns The \code{makeMatrixTemplate} function returns an empty data.table object with a reference structure, while \code{rearrangementMatrix} aligns existing data to that structure and returns the rearranged matrix.
 #' @author See \code{\link{resbiota-package}}.
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 rearrangementMatrix <- function(template, x, fillNA = FALSE){
   rowNameX <- rownames(x)
   template <- data.table::as.data.table(template[0,, drop = FALSE])

@@ -25,4 +25,4 @@ Compute multifunctionality indices including landscape-level multifunctionality,
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

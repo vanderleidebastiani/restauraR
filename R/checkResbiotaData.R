@@ -14,8 +14,7 @@
 #' \item{checkWarning}{Character vector containing warning messages.}
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{selectCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 checkResbiotaData <- function (traits = NULL, 
                                restComp = NULL, 
                                restGroup = NULL,

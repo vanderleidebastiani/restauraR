@@ -7,8 +7,7 @@
 #' @returns A vector of adjusted species abundance or proportions.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 readjustAbundance <- function(abund0, minAbund, method) {
   # Only if length of abund0 larger than 1
   if(length(abund0)>1){

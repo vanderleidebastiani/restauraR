@@ -5,8 +5,7 @@
 #' @returns A character vector with collected names.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 collectNames <- function(x, prefix = NULL) {
   if (!is.list(x)) return(NULL)
   res <- Map(paste, names(x), lapply(x, collectNames), sep = "$")

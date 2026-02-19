@@ -36,4 +36,4 @@ Create element combinations with group-based constraints.
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

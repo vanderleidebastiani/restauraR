@@ -22,8 +22,7 @@
 #' @returns A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
   # Remove undesired species
   if(!is.null(und)){
@@ -159,7 +158,7 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
   if(!is.null(maxDiver)){
     # Find distant species 
     sppMax <- findSpecies(traits, maxDiver, constCWM, rich[1], phi)
-    # Run simulation with species that maximize rao
+    # Run simulation with species that maximise rao
     if(length(sppMax) < rich[2]){
       nsp <- length(sppMax)
       vLen <- nsp
@@ -201,7 +200,7 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
       # Find distant species that are available
       avaLog <- as.logical(traits[,ava])
       sppMaxAva <- findSpecies(traits[avaLog, ], maxDiver, constCWM, rich[1], phi)
-      # Run simulation with species that maximize rao and are available
+      # Run simulation with species that maximise rao and are available
       if(length(sppMaxAva) < rich[2]){
         nsp <- length(sppMaxAva) 
         vLen <- nsp

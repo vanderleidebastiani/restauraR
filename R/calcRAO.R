@@ -8,8 +8,7 @@
 #' @returns A matrix with among-community diversities excluding within-community diversity.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 calcRAO <- function(comm, sppDist = NULL, nRef = NULL, averages = FALSE) {
   comm <- as.matrix(comm)
   comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")

@@ -24,4 +24,4 @@ Internal function to format a vector of logical expressions for evaluation withi
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

@@ -6,8 +6,7 @@
 #' @returns A numeric vector with the random division.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 randDivision <- function(n, k){
   if (k == 1 || n == 0) return(n)
   randNumeric <- stats::runif(n)

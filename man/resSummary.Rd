@@ -21,4 +21,4 @@ Internal function to calculate descriptive statistics
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

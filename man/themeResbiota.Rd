@@ -24,4 +24,4 @@ Internal function. A custom theme to use in ggplot2 objects
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

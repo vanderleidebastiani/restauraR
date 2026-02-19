@@ -24,4 +24,4 @@ Implementation is based on the matrix.t function from the SYNCSA package.
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

@@ -9,8 +9,7 @@
 #' @returns A binary matrix with all elements combinations.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 makeCombinations <- function(x, groups = NULL, minSubset = 1, maxSubset = 1, maxComb = 1000) {
   # Count combinations of the specified size
   fCountComb <- function(x, minSubset, maxSubset) {

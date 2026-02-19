@@ -24,4 +24,4 @@ Internal function to collect the names of lists
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

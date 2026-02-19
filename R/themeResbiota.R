@@ -6,8 +6,7 @@
 #' @returns A ggplot theme object.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 themeResbiota <- function(baseSize = 10, legendPosition = "right"){
   ggplot2::theme(
     # Titles

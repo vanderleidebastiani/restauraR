@@ -22,7 +22,7 @@
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
-#' @keywords MainFunction
+#' @keywords Auxiliary
 #' @examples
 #' data("cerrado.mini")
 #' checkReference(reference = cerrado.mini$reference,

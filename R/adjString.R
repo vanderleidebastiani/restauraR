@@ -5,8 +5,7 @@
 #' @returns The vector of formatted logical tests.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{selectCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 adjString <- function(prefix, logicTest){
   res <- vector("character", length = length(logicTest))
   for(k in 1:length(logicTest)){

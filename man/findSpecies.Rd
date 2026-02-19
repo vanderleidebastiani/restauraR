@@ -30,4 +30,4 @@ Internal function to select species to generate simulated communities
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

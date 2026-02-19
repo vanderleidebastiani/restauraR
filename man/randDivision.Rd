@@ -24,4 +24,4 @@ Internal function to randomly divide an integer into groups
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

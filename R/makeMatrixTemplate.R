@@ -1,8 +1,7 @@
 #' @rdname rearrangementMatrix
 #' @include rearrangementMatrix.R
 #' @encoding UTF-8
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 makeMatrixTemplate <- function(...){
   ARGS <- list(...)
   ARGS <- lapply(ARGS, function(x) x[0, , drop = FALSE])

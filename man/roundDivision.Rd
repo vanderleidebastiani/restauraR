@@ -24,4 +24,4 @@ Internal function to divide an integer into proportional groups
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

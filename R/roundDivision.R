@@ -5,8 +5,7 @@
 #' @returns An integer vector with distribution across groups. Any remaining part is randomly distributed among groups.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 roundDivision <- function(n, prop){
   prop <- prop/sum(prop)
   target <- n*prop

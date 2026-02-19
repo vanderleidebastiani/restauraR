@@ -7,8 +7,7 @@
 #' @returns A matrix with Community Weighted Variance.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 calcCWV <- function(comm, traits){
   temp <- SYNCSA::matrix.t(comm, traits, scale = FALSE)
   resW <- temp$matrix.w

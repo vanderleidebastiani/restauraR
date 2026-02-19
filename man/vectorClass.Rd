@@ -22,4 +22,4 @@ Internal function to return the class of a vector
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

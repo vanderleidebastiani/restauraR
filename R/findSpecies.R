@@ -10,8 +10,7 @@
 #' @returns A vector with names of selected species, chosen based on their traits and desired trait profile.
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 findSpecies <- function(traits, maxDiver, constCWM, n, phi){
   nSpeciesInt <- nrow(traits)
   species <- rownames(traits)

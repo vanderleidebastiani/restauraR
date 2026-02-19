@@ -4,8 +4,7 @@
 #' @returns The vector class. 
 #' @author See \code{\link{resbiota-package}}.
 #' @seealso \code{\link{simulateCommunities}}
-#' @keywords Auxiliary
-#' @export
+#' @keywords InternalFunction
 vectorClass <- function(x){
   res <- class(x)
   # res <- ifelse(res == "integer", "numeric", res)

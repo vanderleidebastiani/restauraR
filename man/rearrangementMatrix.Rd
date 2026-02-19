@@ -13,7 +13,7 @@ makeMatrixTemplate(...)
 \arguments{
 \item{template}{A template matrix returned by \code{makeMatrixTemplate} function to guide rearrangement.}
 
-\item{x}{A data.frame or matrix to be reorganized.}
+\item{x}{A data.frame or matrix to be reorganised.}
 
 \item{fillNA}{Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zeros (default fillNA = FALSE).}
 
@@ -31,4 +31,4 @@ and returns an empty data.table object (template) with 0 rows and column names e
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}

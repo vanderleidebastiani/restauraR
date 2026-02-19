@@ -48,4 +48,4 @@ Internal function to data validation for resbiota package inputs
 \author{
 See \code{\link{resbiota-package}}.
 }
-\keyword{Auxiliary}
+\keyword{InternalFunction}
