@@ -54,9 +54,14 @@ createReport <- function(x, props = NULL){
         themeResbiota(baseSize = 12)
     } else{
       # Freedman-Diaconis method
+      if(nrow(x)>1){
+        binsTemp <- grDevices::nclass.FD(x[,varName])
+      } else{
+        binsTemp <- 1
+      }
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
-        ggplot2::geom_histogram(bins = grDevices::nclass.FD(x[,varName]), fill = "#1d4b61", col = "#ffffff") +
+        ggplot2::geom_histogram(bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
         themeResbiota(baseSize = 12)
     }
     # Export temp plot

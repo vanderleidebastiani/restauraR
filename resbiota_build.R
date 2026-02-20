@@ -7,7 +7,7 @@ require(devtools)
 
 setwd("resbiota")
 devtools::document()
-devtools::build_manual()
+# devtools::build_manual()
 # devtools::build_vignettes()
 # devtools::clean_vignettes()
 # rmarkdown::render("vignettes/Framework-application.Rmd",

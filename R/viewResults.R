@@ -147,9 +147,14 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
           themeResbiota(baseSize = 15)
       } else{
         # Freedman-Diaconis method
+        if(nrow(resResults)>1){
+          binsTemp <- grDevices::nclass.FD(resResults[,xvar])  
+        } else{
+          binsTemp <- 1
+        }
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]]) +
-          ggplot2::geom_histogram(data = resResults, bins = grDevices::nclass.FD(resResults[,xvar]), fill = "#1d4b61", col = "#ffffff") +
+          ggplot2::geom_histogram(data = resResults, bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
           themeResbiota(baseSize = 15)
       }
     }
