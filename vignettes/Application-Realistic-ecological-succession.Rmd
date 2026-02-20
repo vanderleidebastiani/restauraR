@@ -128,16 +128,18 @@ Simulated communities can be set as empty communities when sites to restore star
 We used the individuals method to simulate communities, where species compositions in restoration sites are individual counts rather than proportions. Each simulation draws 250 individuals per site with richness ranging between 15 and 20 species. For each site, 1000 unique species compositions are created. In the posterior steps, we can select the communities to put into practice the recovery of the areas.
 
 ```{r}
-# Set seed to be able to repeat the same simulation in the future
+# Set seed
 set.seed(2025)
 ```
 
 
 ```{r}
 resultsSim <- simulateCommunities(traits = traits, # Species trait data
-                                  restComp = restorationSites, # Current species composition in restoration sites
+                                  # Current species composition in restoration sites
+                                  restComp = restorationSites, 
                                   it = 1000, # Number of simulations
-                                  rich = c(15, 20), # Species richness constraints, min = 15, max = 20 species
+                                  # Species richness constraints, min = 15, max = 20 species
+                                  rich = c(15, 20), 
                                   nInd = 250, # Number total of individuals 
                                   method = "individuals") # Sampling method
 ```
@@ -147,6 +149,7 @@ resultsSim$call <- "simulateCommunities(...)"
 ```
 
 ```{r}
+# Overview results
 resultsSim
 ```
 
@@ -159,8 +162,10 @@ resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
                                   it = 1000,
                                   rich = c(15, 20),
-                                  maxDiver = "WoodDensity", # Maximise functional diversity of wood density
-                                  constCWM = "Zoochory", # Constrain communities by zoochory dispersal trait
+                                  # Maximise functional diversity of wood density
+                                  maxDiver = "WoodDensity", 
+                                  # Constrain communities by zoochory dispersal trait
+                                  constCWM = "Zoochory", 
                                   nInd = 250,
                                   method = "individuals")
 ```
@@ -169,7 +174,7 @@ resultsSim <- simulateCommunities(traits = traits,
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
 
@@ -186,7 +191,8 @@ resultsSim <- simulateCommunities(traits = traits,
                                   constCWM = "Zoochory",
                                   nInd = 250,
                                   method = "individuals",
-                                  prob = "relativeAbundance") # Weight sampling by species relative abundance in regional pool
+                                  # Weight sampling by species relative abundance in the pool
+                                  prob = "relativeAbundance") 
 
 ```
 
@@ -194,7 +200,7 @@ resultsSim <- simulateCommunities(traits = traits,
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
 
@@ -205,12 +211,17 @@ While previous steps applied uniform richness ranges and abundance targets acros
 ```{r}
 resultsSim <- simulateCommunities(traits = traits,
                                   restComp = restorationSites,
-                                  restGroup = restorationInfo, # Data frame with site-specific restoration targets
+                                  # Data frame with site-specific restoration targets
+                                  restGroup = restorationInfo, 
                                   it = 1000,
-                                  rich = c("nSppMin", "nSppMax"), # Site-varying richness ranges. Use min/max richness columns from restGroup
+                                  # Site-varying richness ranges. Use min/max richness columns 
+                                  #    from restGroup
+                                  rich = c("nSppMin", "nSppMax"), 
                                   maxDiver = "WoodDensity",
                                   constCWM = "Zoochory",
-                                  nInd = "nIndividuals", # Site-varying abundance targets. Use individual counts column from restGroup
+                                  # Site-varying abundance targets. Use individual counts column 
+                                  #    from restGroup
+                                  nInd = "nIndividuals", 
                                   method = "individuals",
                                   prob = "relativeAbundance")
 ```
@@ -219,7 +230,7 @@ resultsSim <- simulateCommunities(traits = traits,
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
 
@@ -239,14 +250,15 @@ resultsSim <- simulateCommunities(traits = traits,
                                   nInd = "nIndividuals",
                                   method = "individuals",
                                   prob = "relativeAbundance",
-                                  cooccur = cooccurrenceProb) # Co-occurrence probabilities matrix to constrain species sampling
+                                  # Co-occurrence probabilities to constrain species sampling
+                                  cooccur = cooccurrenceProb) 
 ```
 
 ```{r, echo = FALSE}
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
 
@@ -266,16 +278,23 @@ resultsSim <- simulateCommunities(traits = traits,
                                   method = "individuals",
                                   prob = "relativeAbundance",
                                   cooccur = cooccurrenceProb,
-                                  group = "EcologicalSuccession", # Column in traits defining successional groups
-                                  probGroupRich = c("Pioneer" = 0.2, "LaterSuccessional" = 0.8), # Richness targets across groups: 20% pioneer, 80% late successional species 
-                                  probGroupAbund = c("Pioneer" = 0.3, "LaterSuccessional" = 0.7)) # Abundance targets across groups: 30% pioneer, 70% late successional individuals
+                                  # Column in traits defining successional groups
+                                  group = "EcologicalSuccession", 
+                                  # Richness targets across groups: 20% pioneer, 
+                                  #    80% late successional species 
+                                  probGroupRich = c("Pioneer" = 0.2, 
+                                                    "LaterSuccessional" = 0.8), 
+                                  # Abundance targets across groups: 30% pioneer, 
+                                  #    70% late successional individuals
+                                  probGroupAbund = c("Pioneer" = 0.3, 
+                                                     "LaterSuccessional" = 0.7)) 
 ```
 
 ```{r, echo = FALSE}
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
 
@@ -289,23 +308,26 @@ The inclusion of multiple parameters in the simulation function ultimately limit
 
 The `computeParameters` function calculates key ecological metrics as species richness, CWM, Rao's quadratic entropy, and functional dissimilarity with reference sites. Note that the function returns an object of class `simRest` (a list) that now includes all calculated metric and all additional input information for restoration sites.
 
-```{r}
+```{r, warning = FALSE}
 # Compute all functional metric for simulated communities and reference sites
 resultsSim <- computeParameters(resultsSim,
                                 traits = traits,
                                 rao = "WoodDensity", # Traits for Rao calculation
                                 cwm = c("Zoochory", "WoodDensity"), # Traits for CWM calculation
-                                dissimilarity =  "WoodDensity", # Traits for functional dissimilarity with reference sites
-                                reference = referenceSites) # Reference site for ecological metric comparison
+                                # Traits for functional dissimilarity with reference sites
+                                dissimilarity =  "WoodDensity", 
+                                # Reference site for ecological metric comparison
+                                reference = referenceSites) 
 ```
 
 ```{r, echo = FALSE}
 resultsSim$call <- "simulateCommunities(...)"
 ```
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 resultsSim
 ```
+
 
 # Select simulated communities using restoration targets
 
@@ -346,15 +368,19 @@ Simulated communities are selected through logical tests on calculated metrics. 
 # Set ecological thresholds for community selection
 thresholds <- c("CWM_Zoochory > 0.8", # Minimum 80% zoochorous species (CWM over binary trait)
                 "rao > 0.3", # Functional diversity minimum
-                "functionalDissimilarity < 0.5") # Maximum 0.5 functional dissimilarity from reference sites
+                # Maximum 0.5 functional dissimilarity from reference sites
+                "functionalDissimilarity < 0.5") 
 ```
 
 ```{r}
 # Select communities for each restoration site
 resultsSelection <- selectCommunities(resultsSim,
-                                      testsPriority = thresholds, # Apply zoochory, diversity, and similarity criteria
-                                      siteGroup = "Site", # Grouping variable for site-independent selection
-                                      singleSelection = TRUE) # Single community selection per group
+                                      # Apply zoochory, diversity, and similarity criteria
+                                      testsPriority = thresholds, 
+                                      # Grouping variable for site-independent selection
+                                      siteGroup = "Site", 
+                                      # Single community selection per group
+                                      singleSelection = TRUE) 
 ```
 
 ```{r, echo = FALSE}
@@ -363,12 +389,6 @@ resultsSelection$call <- "resultsSelection(...)"
 
 ```{r}
 resultsSelection
-```
-
-
-```{r}
-# Calculated metric of the selected communities
-resultsSelection$selection$results
 ```
 
 # Export the results

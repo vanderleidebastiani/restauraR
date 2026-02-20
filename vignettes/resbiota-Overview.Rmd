@@ -179,8 +179,8 @@ The resbiota package contains an integrative set of tools to create restoration 
 
 ```{r, message = FALSE}
 # Set seed
-set.seed(2024)
-# Package load
+set.seed(2026)
+# Load the package
 require(resbiota)
 ```
 
@@ -224,11 +224,21 @@ resCheck <- checkReference(reference = referenceSites, # Species composition in 
                            traits = traits, # Species traits data
                            cwm = "BT", # Trait for cwm calculation
                            rao = c("BT", "SLA", "Height", "Seed"), # Traits for Rao calculation
-                           supplementary = supplementarySites, # Species composition in supplementary sites
-                           props = 0.75 # Quantile to include in the summary
-)
+                           # Species composition in supplementary sites
+                           supplementary = supplementarySites, 
+                           props = 0.75) # Quantile to include in the summary
+```
+
+```{r, echo = FALSE}
+resCheck$call <- "checkReference(...)"
+```
+
+
+```{r}
+# Results
 resCheck
 ```
+
 
 ## Generate simulated communities
 
@@ -239,24 +249,39 @@ The simulations are performed using the `simulateCommunities` function by specif
 ```{r}
 # First scenario: starting with empty communities
 scenarioA <- simulateCommunities(traits = traits, # Species traits data
-                                 ava = "Available", # Column name that indicates the availability of species
+                                 # Column name that indicates the availability of species
+                                 ava = "Available", 
                                  it = 100, # Number of simulations
-                                 rich = c(10, 15),  # Species richness constraints, min = 10, max = 15
-                                 maxDiver = c("BT", "SLA", "Height", "Seed"), # Maximise functional diversity of all traits
-                                 constCWM = "BT", # Constrain communities by bark thickness trait
+                                 # Species richness constraints, min = 10, max = 15
+                                 rich = c(10, 15),  
+                                 # Maximise functional diversity of all traits
+                                 maxDiver = c("BT", "SLA", "Height", "Seed"), 
+                                 # Constrain communities by bark thickness trait
+                                 constCWM = "BT", 
                                  method = "proportions", # Sampling method
-                                 phi = 1, # Weight of quadratic entropy or entropy, phi = 1 to maximise functional diversity
-                                 prefix = "New" # Simulation name
-)
+                                 # Weight of quadratic entropy or entropy, phi = 1 
+                                 #    to maximise functional diversity
+                                 phi = 1, 
+                                 prefix = "New") # Simulation name
+```
+
+```{r, echo = FALSE}
+scenarioA$call <- "simulateCommunities(...)"
+```
+
+```{r}
+# Overview results
 scenarioA
 ```
+
 
 ### Simulate communities starting with existing species
 
 ```{r}
 # Second scenario: starting with existing species
 scenarioB <- simulateCommunities(traits = traits, 
-                                 restComp = restorationSites, # Species composition for restoration sites
+                                 # Species composition for restoration sites
+                                 restComp = restorationSites, 
                                  ava = "Available", 
                                  it = 100, 
                                  rich = c(10, 15), 
@@ -264,10 +289,19 @@ scenarioB <- simulateCommunities(traits = traits,
                                  constCWM = "BT", 
                                  method = "proportions",
                                  phi = 1,
-                                 prefix = "Ongoing" # Simulation name
-)
+                                 prefix = "Ongoing") # Simulation name
+```
+
+```{r, echo = FALSE}
+scenarioB$call <- "simulateCommunities(...)"
+```
+
+```{r}
+# Overview results
+# Note the total number of simulations
 scenarioB
 ```
+
 
 ### Merge simulation
 
@@ -276,7 +310,15 @@ Concatenates simulated communities generated under different scenarios.
 ```{r}
 # Merge all scenarios
 allScenarios <- mergeSimulations(scenarioA, scenarioB) # Scenarios to merge
-allScenarios 
+```
+
+```{r, echo = FALSE}
+allScenarios$call <- "mergeSimulations(...)"
+```
+
+```{r}
+# Note the total number of simulations
+allScenarios
 ```
 
 ## Calculate functional parameters
@@ -287,14 +329,27 @@ For each simulated community, you can count species unavailable, compute richnes
 # Compute functional parameters
 allScenarios <- computeParameters(x = allScenarios,
                                   traits = traits, 
-                                  ava = "Available", # Column name that indicates the availability of species
+                                  # Column name that indicates the availability of species
+                                  ava = "Available", 
                                   cwm = "BT", # Traits for CWM calculation
                                   rao = c("SLA", "Height", "Seed"), # Traits for Rao calculation
-                                  cost = "Cost", # Column name that indicates the cost per individual
+                                  # Column name that indicates the cost per individual
+                                  cost = "Cost", 
                                   dens = "Density", # Column name that species planting density
-                                  dissimilarity = c("SLA", "Height", "Seed"), # Traits for dissimilarity calculation
-                                  reference = referenceSites, # Species composition in the reference site
-                                  supplementary = supplementarySites) # Species composition in the supplementary sites
+                                  # Traits for dissimilarity calculation
+                                  dissimilarity = c("SLA", "Height", "Seed"), 
+                                  # Species composition in the reference site
+                                  reference = referenceSites, 
+                                  # Species composition in the supplementary sites
+                                  supplementary = supplementarySites) 
+```
+
+```{r, echo = FALSE}
+allScenarios$call <- "mergeSimulations(...)"
+```
+
+```{r}
+# Note that the results include the calculated parameters
 allScenarios
 ```
 
@@ -317,12 +372,12 @@ allScenariosAlternative <- computeParameters(x = allScenarios,
                                              traits = traits,
                                              ava = "Available",
                                              cwm = "BT",
-                                             rao = list2rao, # List with the two sets of trait names
+                                             # List with the two sets of trait names
+                                             rao = list2rao, 
                                              cost = "Cost",
                                              dens = "Density",
                                              reference = referenceSites, 
                                              supplementary = supplementarySites)
-allScenariosAlternative
 ```
 
 ### Standardise parameters
@@ -332,10 +387,19 @@ After the parameters are calculated, they can be standardized.
 ```{r}
 # Standardise parameters
 allScenarios <- standardiseParameters(allScenarios,
+                                      # Parameters to standardise
                                       parameters = c("dissimilarity", 
-                                                     "functionalDissimilarity"), # Parameters to standardise
+                                                     "functionalDissimilarity"), 
                                       method = "max")
-allScenarios
+```
+
+```{r, echo = FALSE}
+allScenarios$call <- "mergeSimulations(...)"
+```
+
+```{r}
+# Result summaries
+summary(allScenarios)
 ```
 
 ### Multifunctionality
@@ -345,9 +409,19 @@ The multifunctionality also can be computed after the basic parameter calculatio
 ```{r}
 # Compute multifunctionality
 allScenarios <- computeMultifunctionality(x = allScenarios, 
+                                          # Logical tests for multifunctionality assessment
                                           tests = c("CWM_BT > 6",
-                                                    "rao > 0.25")) # Logical tests for multifunctionality assessment
-# All parameters calculated
+                                                    "rao > 0.25")) 
+```
+
+```{r, echo = FALSE}
+allScenarios$call <- "mergeSimulations(...)"
+```
+
+```{r}
+# Result summaries
+# Note that the results now include the calculated multifunctionality
+summary(allScenarios)
 ```
 
 ## Select simulated communities
@@ -377,6 +451,14 @@ resSelectSim <- selectCommunities(resSelectSim,
 targetSelect3 <- c("alphamultifunctionality >= 2")
 resSelectSim <- selectCommunities(resSelectSim, 
                                    testsFilter = targetSelect3)
+```
+
+```{r, echo = FALSE}
+resSelectSim$call <- "selectCommunities(...)"
+```
+
+```{r}
+# Note the total number of selected simulations
 resSelectSim
 ```
 
@@ -403,6 +485,14 @@ resSelectSimPart2 <- selectCommunities(allScenarios,
 ```{r}
 # Then merge
 resSelectSimMerged <- mergeSelection(resSelectSimPart1, resSelectSimPart2) # Scenarios to merge
+```
+
+```{r, echo = FALSE}
+resSelectSimMerged$call <- "mergeSelection(...)"
+```
+
+```{r}
+# Note the total number of selected simulations
 resSelectSimMerged
 ```
 
@@ -413,14 +503,25 @@ Selection can also be performed hierarchically, following a priority order in a 
 ```{r}
 # Selection Sites with the prefix "New"
 # Note the use of the keyword MIN to select the minimal value of the parameter
-priorityTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'") # Logical tests for priority selection
+# Logical tests for priority selection
+priorityTargets <- c("CWM_BT > 6", "rao > 0.25", "Cost == 'MIN'") 
 resSelectSimPriority <- selectCommunities(allScenarios, 
                                           testsPriority = priorityTargets,
-                                          siteGroup = "Scenario", # Column name to define site groups
-                                          singleSelection = TRUE) # Select only one simulation by site group
-resSelectSimPriority
+                                          # Column name to define site groups
+                                          siteGroup = "Scenario", 
+                                          # Select only one simulation by site group
+                                          singleSelection = TRUE) 
 ```
 
+
+```{r, echo = FALSE}
+resSelectSimPriority$call <- "selectCommunities(...)"
+```
+
+```{r}
+# Note that only one one simulation was selected per site group
+resSelectSimPriority
+```
 
 ## Optimise selection
 
@@ -429,11 +530,25 @@ Generates all unique combinations of one simulated community per restoration sit
 ```{r}
 scenarioMultisite <- optimiseSelection(resSelectSimPart2,
                                        siteGroup = "Site", # Column name to define site groups
-                                       includeReference = TRUE, # Include reference sites in index calculations
+                                       # Include reference sites in index calculations
+                                       includeReference = TRUE, 
                                        traits = traits,
-                                       rao = c("SLA", "Height", "Seed"), # Traits for Rao calculation
-                                       calcSimpsonBeta = TRUE) # Calculate Simpson's beta diversity
+                                       # Traits for Rao calculation
+                                       rao = c("SLA", "Height", "Seed"), 
+                                       # Calculate Simpson's beta diversity
+                                       calcSimpsonBeta = TRUE) 
+```
+
+```{r, echo = FALSE}
+scenarioMultisite$call <- "selectCommunities(...)"
+```
+
+```{r}
+# Overview results
 scenarioMultisite
+```
+
+```{r}
 # Data.frame with multi-site indices
 head(scenarioMultisite$selection$multisite$results)
 ```
@@ -441,9 +556,18 @@ head(scenarioMultisite$selection$multisite$results)
 ### Select communities on multisite 
 
 ```{r}
-scenarioMultisiteSelected <- selectCommunities(scenarioMultisite,
-                                               testsMultisite = "alphaFunctionalDiversity == 'MAX'") # Logical tests for multi-site selection
-scenarioMultisiteSelected
+scenarioMultisiteSel <- selectCommunities(scenarioMultisite,
+                                       # Logical tests for multi-site selection
+                                       testsMultisite = "alphaFunctionalDiversity == 'MAX'") 
+```
+
+```{r, echo = FALSE}
+scenarioMultisiteSel$call <- "selectCommunities(...)"
+```
+
+```{r}
+# Result summaries
+summary(scenarioMultisiteSel)
 ```
 
 ## Visualise and explore the results
@@ -484,10 +608,10 @@ viewResults(resSelectSimMerged,
 ```{r}
 # Multisite results
 viewResults(scenarioMultisite, 
-            xvar = "betaDiversity", 
-            showMultisite = TRUE) + # Plot results from the multisite analysis
-  ggplot2::labs(x = "Beta diversity", y = "Count") +
-  ggplot2::labs(title = "Multisite results")
+             xvar = "betaDiversity", 
+             showMultisite = TRUE) + # Plot results from the multisite analysis
+   ggplot2::labs(x = "Beta diversity", y = "Count") +
+   ggplot2::labs(title = "Multisite results")
 ```
 
 Multifunctionality results can be plotted for all simulations or selected simulations, allowing visualisation of the global pattern of restoration goals.
@@ -508,13 +632,13 @@ The function `extractResults` can be used to easily extract specific components 
 
 ```{r}
 # Extract calculated parameters of selected simulation
-extractResults(scenarioMultisiteSelected, 
+extractResults(scenarioMultisiteSel, 
                type = "simResults")
 ```
 
 ```{r}
 # Species composition of selected simulation
-extractResults(scenarioMultisiteSelected, 
+extractResults(scenarioMultisiteSel, 
                type = "simComposition", 
                dbFormat = TRUE) # Reorganise the data in three columns format
 ```
