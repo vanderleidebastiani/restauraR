@@ -126,8 +126,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
     probSimInputInfo = 0,
     cvAbundSimInputInfo = 0,
     phiSimInputInfo = 0,
-    minAbuSliderSimAdjInputInfo = 0,
-    reallocateAdjSimInputInfo = 0,
+    # minAbuSliderSimAdjInputInfo = 0,
+    # reallocateAdjSimInputInfo = 0,
     # computeTab
     avaComInputInfo = 0,
     cwmComInputInfo = 0,
@@ -330,8 +330,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
                                     selected = input$removeSimulateInput)
     shinyWidgets::updatePickerInput(session, inputId = "scenarioSimulateSummaryInput", choices = names(resultsRV$simulate),
                                     selected = input$scenarioSimulateSummaryInput)
-    shinyWidgets::updatePickerInput(session, inputId = "scenarioSimAdjInput", choices = names(resultsRV$simulate),
-                                    selected = input$scenarioSimAdjInput)
+    # shinyWidgets::updatePickerInput(session, inputId = "scenarioSimAdjInput", choices = names(resultsRV$simulate),
+    #                                 selected = input$scenarioSimAdjInput)
     # Compute tab
     shinyWidgets::updatePickerInput(session, inputId = "scenarioComParInput", choices = names(resultsRV$simulate), 
                                     selected = input$scenarioComParInput)
@@ -908,23 +908,23 @@ appServer <- shiny::shinyServer(function(input, output, session) {
   })
   
   
-  output$radioScenarioSimAdjOutput <- renderUI({
-    shinyWidgets::prettyRadioButtons(inputId = "reallocateAdjSimInput",
-                                     # label = "Reallocate removed individuals",
-                                     label = htmltools::p(i18n$t("Reallocate removed individuals"),
-                                                          shiny::actionButton("reallocateAdjSimInputInfo",
-                                                                              label = "",
-                                                                              icon = shiny::icon("info"),
-                                                                              style = "padding:3px; font-size:60%")),
-                                     choices = stats::setNames(
-                                       c(TRUE, FALSE),
-                                       c(i18n$t("Yes"), i18n$t("No")) # Set labels
-                                     ),
-                                     selected = FALSE,
-                                     inline = TRUE,
-                                     status = "primary"
-    )
-  })
+  # output$radioScenarioSimAdjOutput <- renderUI({
+  #   shinyWidgets::prettyRadioButtons(inputId = "reallocateAdjSimInput",
+  #                                    # label = "Reallocate removed individuals",
+  #                                    label = htmltools::p(i18n$t("Reallocate removed individuals"),
+  #                                                         shiny::actionButton("reallocateAdjSimInputInfo",
+  #                                                                             label = "",
+  #                                                                             icon = shiny::icon("info"),
+  #                                                                             style = "padding:3px; font-size:60%")),
+  #                                    choices = stats::setNames(
+  #                                      c(TRUE, FALSE),
+  #                                      c(i18n$t("Yes"), i18n$t("No")) # Set labels
+  #                                    ),
+  #                                    selected = FALSE,
+  #                                    inline = TRUE,
+  #                                    status = "primary"
+  #   )
+  # })
   
   
   output$radioSpeficyMethodStanOutput <- renderUI({
@@ -2209,8 +2209,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       input$probSimInputInfo,
       input$cvAbundSimInputInfo,
       input$phiSimInputInfo,
-      input$minAbuSliderSimAdjInputInfo,
-      input$reallocateAdjSimInputInfo,
+      # input$minAbuSliderSimAdjInputInfo,
+      # input$reallocateAdjSimInputInfo,
       # computeTab
       input$avaComInputInfo,
       input$cwmComInputInfo,
@@ -2349,19 +2349,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
         infoRV$phiSimInputInfo <- input$phiSimInputInfo
       }
     }
-    if(!is.null(input$minAbuSliderSimAdjInputInfo)){
-      if(input$minAbuSliderSimAdjInputInfo>infoRV$minAbuSliderSimAdjInputInfo){
-        infoText <- i18n$t("Minimal abundance or proportion to keep in simulated communities.")
-        infoRV$minAbuSliderSimAdjInputInfo <- input$minAbuSliderSimAdjInputInfo
-      }
-    }
+    # if(!is.null(input$minAbuSliderSimAdjInputInfo)){
+    #   if(input$minAbuSliderSimAdjInputInfo>infoRV$minAbuSliderSimAdjInputInfo){
+    #     infoText <- i18n$t("Minimal abundance or proportion to keep in simulated communities.")
+    #     infoRV$minAbuSliderSimAdjInputInfo <- input$minAbuSliderSimAdjInputInfo
+    #   }
+    # }
     
-    if(!is.null(input$reallocateAdjSimInputInfo)){
-      if(input$reallocateAdjSimInputInfo>infoRV$reallocateAdjSimInputInfo){
-        infoText <- i18n$t("Reallocate removed individuals to species with some abundance.")
-        infoRV$reallocateAdjSimInputInfo <- input$reallocateAdjSimInputInfo
-      }
-    }
+    # if(!is.null(input$reallocateAdjSimInputInfo)){
+    #   if(input$reallocateAdjSimInputInfo>infoRV$reallocateAdjSimInputInfo){
+    #     infoText <- i18n$t("Reallocate removed individuals to species with some abundance.")
+    #     infoRV$reallocateAdjSimInputInfo <- input$reallocateAdjSimInputInfo
+    #   }
+    # }
     # computeTab
     if(!is.null(input$avaComInputInfo)){
       if(input$avaComInputInfo>infoRV$avaComInputInfo){

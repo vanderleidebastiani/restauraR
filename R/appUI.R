@@ -679,56 +679,56 @@ body <- shinydashboard::dashboardBody(
                                                                 ) # End column
                                                               ) # End row
                                               ),
-                                              shiny::tabPanel(i18n$t("Adjust Simulation"), 
-                                                              shiny::fluidRow(
-                                                                htmltools::br(),
-                                                                shiny::column(width = 8,
-                                                                              shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
-                                                                                                      title = i18n$t("Scenario"), 
-                                                                                                      collapsible = TRUE,
-                                                                                                      collapsed = FALSE,
-                                                                                                      shinyWidgets::pickerInput(inputId = "scenarioSimAdjInput",
-                                                                                                                                label = i18n$t("Choose scenario"),
-                                                                                                                                choices = NULL,
-                                                                                                                                multiple = TRUE,
-                                                                                                                                options = list("max-options" = 1),
-                                                                                                                                inline = FALSE
-                                                                                                      )
-                                                                              ),
-                                                                              shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
-                                                                                                      title = i18n$t("Adjust options"), 
-                                                                                                      collapsible = TRUE,
-                                                                                                      collapsed = FALSE,
-                                                                                                      shiny::numericInput(inputId = "minAbuSliderSimAdjInput",
-                                                                                                                          # label = "Range of richness",
-                                                                                                                          label = htmltools::p(i18n$t("Minimal abundance"), 
-                                                                                                                                               shiny::actionButton("minAbuSliderSimAdjInputInfo",
-                                                                                                                                                                   label = "",
-                                                                                                                                                                   icon = shiny::icon("info"),
-                                                                                                                                                                   style = "padding:3px; font-size:60%")),
-                                                                                                                          value = 0),
-                                                                                                      # shinyWidgets::sliderTextInput(inputId = "minAbuSliderSimAdjInput",
-                                                                                                      # 							  # label = "Range of richness",
-                                                                                                      # 							  label = htmltools::p(i18n$t("Minimal abundance"), 
-                                                                                                      # 							  					 shiny::actionButton("minAbuSliderSimAdjInputInfo",
-                                                                                                      # 							  					 					label = "",
-                                                                                                      # 							  					 					icon = shiny::icon("info"),
-                                                                                                      # 							  					 					style = "padding:3px; font-size:60%")),
-                                                                                                      # 							  choices = c(0, 1),
-                                                                                                      # 							  selected = 0
-                                                                                                      # ),
-                                                                                                      shiny::uiOutput("radioScenarioSimAdjOutput")
-                                                                              )
-                                                                ), # End column
-                                                                shiny::column(width = 4,
-                                                                              shinyWidgets::actionBttn(inputId = "doAdjustSim",
-                                                                                                       label = i18n$t("Adjust"),
-                                                                                                       style = "fill",
-                                                                                                       size = "lg",
-                                                                                                       color = "success"),
-                                                                ) # End column
-                                                              ) # End row
-                                              ), # End tabPanel
+                                              # shiny::tabPanel(i18n$t("Adjust Simulation"), 
+                                              #                 shiny::fluidRow(
+                                              #                   htmltools::br(),
+                                              #                   shiny::column(width = 8,
+                                              #                                 shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+                                              #                                                         title = i18n$t("Scenario"), 
+                                              #                                                         collapsible = TRUE,
+                                              #                                                         collapsed = FALSE,
+                                              #                                                         shinyWidgets::pickerInput(inputId = "scenarioSimAdjInput",
+                                              #                                                                                   label = i18n$t("Choose scenario"),
+                                              #                                                                                   choices = NULL,
+                                              #                                                                                   multiple = TRUE,
+                                              #                                                                                   options = list("max-options" = 1),
+                                              #                                                                                   inline = FALSE
+                                              #                                                         )
+                                              #                                 ),
+                                              #                                 shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+                                              #                                                         title = i18n$t("Adjust options"), 
+                                              #                                                         collapsible = TRUE,
+                                              #                                                         collapsed = FALSE,
+                                              #                                                         shiny::numericInput(inputId = "minAbuSliderSimAdjInput",
+                                              #                                                                             # label = "Range of richness",
+                                              #                                                                             label = htmltools::p(i18n$t("Minimal abundance"), 
+                                              #                                                                                                  shiny::actionButton("minAbuSliderSimAdjInputInfo",
+                                              #                                                                                                                      label = "",
+                                              #                                                                                                                      icon = shiny::icon("info"),
+                                              #                                                                                                                      style = "padding:3px; font-size:60%")),
+                                              #                                                                             value = 0),
+                                              #                                                         # shinyWidgets::sliderTextInput(inputId = "minAbuSliderSimAdjInput",
+                                              #                                                         # 							  # label = "Range of richness",
+                                              #                                                         # 							  label = htmltools::p(i18n$t("Minimal abundance"), 
+                                              #                                                         # 							  					 shiny::actionButton("minAbuSliderSimAdjInputInfo",
+                                              #                                                         # 							  					 					label = "",
+                                              #                                                         # 							  					 					icon = shiny::icon("info"),
+                                              #                                                         # 							  					 					style = "padding:3px; font-size:60%")),
+                                              #                                                         # 							  choices = c(0, 1),
+                                              #                                                         # 							  selected = 0
+                                              #                                                         # ),
+                                              #                                                         shiny::uiOutput("radioScenarioSimAdjOutput")
+                                              #                                 )
+                                              #                   ), # End column
+                                              #                   shiny::column(width = 4,
+                                              #                                 shinyWidgets::actionBttn(inputId = "doAdjustSim",
+                                              #                                                          label = i18n$t("Adjust"),
+                                              #                                                          style = "fill",
+                                              #                                                          size = "lg",
+                                              #                                                          color = "success"),
+                                              #                   ) # End column
+                                              #                 ) # End row
+                                              # ), # End tabPanel
                                               shiny::tabPanel(i18n$t("Simulation Summary"), 
                                                               shiny::fluidRow(
                                                                 htmltools::br(),
