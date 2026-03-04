@@ -38,13 +38,13 @@ The dataset is detailed in the overview vignette.
 # Load the package
 require(resbiota)
 # Load cerrado data
-data(cerrado.mini)
+data(cerrado)
 # Traits data
-traits <- cerrado.mini$traits
+traits <- cerrado$traits
 # Species composition in reference sites
-referenceSites <- cerrado.mini$reference
+referenceSites <- cerrado$reference
 # Species composition in restoration sites
-restorationSites <- cerrado.mini$restoration
+restorationSites <- cerrado$restoration
 ```
 
 

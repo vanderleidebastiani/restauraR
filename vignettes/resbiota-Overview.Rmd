@@ -186,9 +186,9 @@ require(resbiota)
 
 ### The dataset
 
-The `cerrado.mini` is a toy dataset containing only 50 sampled species of the full `cerrado` dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset is designed to illustrate the main features of the resbiota package, including scenarios with reference sites, restoration sites and supplementary sites.
+The `cerrado` is a toy dataset containing only 50 sampled species of the full cerrado dataset. The original data set includes traits of 483 species used in restoration projects in the savannas in the Cerrado biome. This toy dataset is designed to illustrate the main features of the resbiota package, including scenarios with reference sites and restoration sites.
 
-The dataset is arranged as a list: the `traits` object contains traits data, the `reference` object contains the composition of 2 reference sites, the `restoration` object contains the composition of 2 restoration sites and the `supplementary` contains the composition of 2 supplementary sites. The supplementary sites are similar to reference sites but included for illustrative purposes, allowing parameters to be calculated and plotted to aid interpretation.
+The dataset is arranged as a list: the `traits` object contains traits data, the `reference` object contains the composition of 6 reference sites and the `restoration` object contains the hypothetical composition of 2 restoration sites. 
 
 The `traits` data frame includes four traits: `BT` (bark thickness), `SLA` (specific leaf area), `Height` (maximum height) and `Seed` (seed mass). Additionally, the `Available` column indicates species availability on the market, the `Cost` column provides the cost per individual and the  `Density` column provides the planting density for each species. The species names are arranged as the row names of the data frame.
 
@@ -196,22 +196,19 @@ The composition data are matrix and contain modified relative abundances. The sp
 
 ```{r}
 # Load cerrado data
-data(cerrado.mini)
+data(cerrado)
 # Traits data
-traits <- cerrado.mini$traits
+traits <- cerrado$traits
 # Species composition in reference sites
-referenceSites <- cerrado.mini$reference
+referenceSites <- cerrado$reference
 # Species composition in restoration sites
-restorationSites <- cerrado.mini$restoration
-# Species composition in supplementary sites
-supplementarySites <- cerrado.mini$supplementary
+restorationSites <- cerrado$restoration
 ```
 
 ```{r, echo = FALSE}
 knitr::kable(head(traits), digits = 3, row.names = TRUE, caption = "Traits data (first 6 rows only)")
 knitr::kable(head(referenceSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Reference sites (first 3 columns only)")
 knitr::kable(head(restorationSites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Restoration sites (first 3 columns only)")
-knitr::kable(head(supplementarySites, n = c(6, 3)), digits = 3, row.names = TRUE, caption = "Supplementary sites (first 3 columns only)")
 ```
 
 ## Check species pool and reference sites
@@ -224,8 +221,6 @@ resCheck <- checkReference(reference = referenceSites, # Species composition in 
                            traits = traits, # Species traits data
                            cwm = "BT", # Trait for cwm calculation
                            rao = c("BT", "SLA", "Height", "Seed"), # Traits for Rao calculation
-                           # Species composition in supplementary sites
-                           supplementary = supplementarySites, 
                            props = 0.75) # Quantile to include in the summary
 ```
 
@@ -339,9 +334,7 @@ allScenarios <- computeParameters(x = allScenarios,
                                   # Traits for dissimilarity calculation
                                   dissimilarity = c("SLA", "Height", "Seed"), 
                                   # Species composition in the reference site
-                                  reference = referenceSites, 
-                                  # Species composition in the supplementary sites
-                                  supplementary = supplementarySites) 
+                                  reference = referenceSites) 
 ```
 
 ```{r, echo = FALSE}
@@ -376,8 +369,7 @@ allScenariosAlternative <- computeParameters(x = allScenarios,
                                              rao = list2rao, 
                                              cost = "Cost",
                                              dens = "Density",
-                                             reference = referenceSites, 
-                                             supplementary = supplementarySites)
+                                             reference = referenceSites)
 ```
 
 ### Standardise parameters
@@ -534,9 +526,9 @@ scenarioMultisite <- optimiseSelection(resSelectSimPart2,
                                        includeReference = TRUE, 
                                        traits = traits,
                                        # Traits for Rao calculation
-                                       rao = c("SLA", "Height", "Seed"), 
+                                       beta = c("SLA", "Height", "Seed"), 
                                        # Calculate Simpson's beta diversity
-                                       calcSimpsonBeta = TRUE) 
+                                       calcTaxonomicBeta = TRUE) 
 ```
 
 ```{r, echo = FALSE}
