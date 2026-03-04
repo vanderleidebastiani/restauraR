@@ -1,13 +1,15 @@
 #' @title Optimise community selection based on a multi-site approach
 #' @description Calculate the functional parameters of selected simulated community sets to optimise multi-site simulation selections. This function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination.
 #' @encoding UTF-8
+#' @importFrom BAT beta.multi
 #' @param x A object of class "simRestSelect" to perform the optimisation.
 #' @param siteGroup Character vector specifying a parameter name to define simulation site groups.
 #' @param includeReference Logical argument specifying whether to include reference sites in index calculations (default includeReference = TRUE).
 #' @param maxComb Maximum number of simulation combinations to generate (default maxComb = 1000). If the total unique combinations exceed this limit, a random sample of combinations is generated.
-#' @param calcSimpsonBeta  Logical argument to specify if calculates Simpson's beta diversity (Rao's quadratic entropy without functional distances) (default calcSimpsonBeta = TRUE).
+#' @param calcTaxonomicBeta  Logical argument to specify if calculates taxonomic beta diversity (default calcTaxonomicBeta = TRUE).
+#' @param method Method to calculate the beta diversity, partial match to "betaRao", "betaJaccard" or "betaSoerensen" (default method = "betaRao") .
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
-#' @param rao Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.
+#' @param beta Character vector specifying trait names to calculate beta diversity, or distance matrix (class dist). This argument can be a list to calculate multiple beta indices using different trait sets or species distance matrices.
 #' @returns A list (class "simRestSelect") with the elements:
 #' \item{call}{The arguments used.}
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
@@ -36,11 +38,11 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @examples
-#' data("cerrado.mini")
-#' head(cerrado.mini$traits)
+#' data("cerrado")
+#' head(cerrado$traits)
 #' # Simulation
-#' scenario <- simulateCommunities(traits = cerrado.mini$traits,
-#'                                 restComp = cerrado.mini$restoration,
+#' scenario <- simulateCommunities(traits = cerrado$traits,
+#'                                 restComp = cerrado$restoration,
 #'                                 maxDiver = c("SLA", "Height", "Seed"),
 #'                                 constCWM = "BT",
 #'                                 rich = c(10, 15),
@@ -48,10 +50,10 @@
 #' scenario
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
-#'                               traits = cerrado.mini$traits,
+#'                               traits = cerrado$traits,
 #'                               cwm = "BT",
 #'                               rao = c("SLA", "Height", "Seed"),
-#'                               reference = cerrado.mini$reference)
+#'                               reference = cerrado$reference)
 #' scenario
 #' # Compute multifunctionality
 #' scenario <- computeMultifunctionality(scenario,
@@ -68,12 +70,12 @@
 #' # Optimise selection
 #' scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
 #'                                                siteGroup = "Site",
-#'                                                traits = cerrado.mini$traits,
-#'                                                rao = c("SLA", "Height", "Seed"),
-#'                                                calcSimpsonBeta = TRUE)
+#'                                                traits = cerrado$traits,
+#'                                                beta = c("SLA", "Height", "Seed"),
+#'                                                calcTaxonomicBeta = TRUE)
 #' scenarioSelectedMultisite
 #' @export
-optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxComb = 1000, calcSimpsonBeta = TRUE, traits = NULL, rao = NULL){
+optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxComb = 1000, calcTaxonomicBeta = TRUE, method = "betaRao", traits = NULL, beta = NULL){
   # Check object class
   if(!inherits(x, "simRestSelect")){
     stop("The x argument must be of class simRestSelect")
@@ -82,6 +84,19 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   # if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
   #   stop("The x argument must be of class simRest or simRestSelect")
   # }
+  METHOD <- c("betaRao", "betaJaccard", "betaSoerensen")
+  methodTest <- pmatch(method, METHOD)
+  if (length(methodTest) > 1) {
+    stop("Only one method can be specified")
+  }
+  if (is.na(methodTest)) {
+    stop("Invalid method. Choose either picanteRao or BATBeta")
+  }
+  if(methodTest == 2){
+    betaMultiMethod <- "jaccard"
+  } else if(methodTest == 3) {
+    betaMultiMethod <- "soerensen"
+  }
   if(inherits(x, "simRest")){
     xComp <- x$simulation$composition
     xGroup <- x$simulation$group
@@ -103,10 +118,16 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
     nColRes <- nColRes + 3
     colnamesRes <- c(colnamesRes, "landscapeMultifunctionality", "raoMultifunctionality", "averageFunctions")
   }
-  if(calcSimpsonBeta){
-    # Set the number of result columns
-    nColRes <- nColRes + 4
-    colnamesRes <- c(colnamesRes,  "totalDiversity", "alphaDiversity", "betaDiversity", "Fst")
+  if(calcTaxonomicBeta){
+    if(methodTest == 1){ # picanteRao
+      # Set the number of result columns
+      nColRes <- nColRes + 4
+      colnamesRes <- c(colnamesRes,  "totalDiversity", "alphaDiversity", "betaDiversity", "Fst")  
+    } else{
+        # Set the number of result columns
+        nColRes <- nColRes + 5
+        colnamesRes <- c(colnamesRes,  "Btotal", "Brepl", "Brich", "Bgain", "Bloss")  
+    }
   }
   # Set siteGroups
   if(!is.null(siteGroup)){
@@ -144,43 +165,61 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   }
   # Make groups combinations
   dbCombinations <- makeCombinations(dbCombinations$v1, dbCombinations$v2, minSubset = 1, maxSubset = 1, maxComb = maxComb)
-  # Prepare distance matrix to rao 
-  if(!is.null(traits) && !is.null(rao)){
+  # Prepare distance matrix to beta 
+  if(!is.null(traits) && !is.null(beta)){
     traitsNames <- colnames(traits)
-    if(inherits(rao, "list")){
-      DIST <- vector("list", length = length(rao))
-      for(i in 1:length(rao)){
-        if(inherits(rao[[i]], "character")){
-          if(!all(rao[[i]] %in% traitsNames)){
-            stop("Each element in the rao list must be either a character vector of specifying one or more columns from the traits data frame or a distance matrix")
+    if(inherits(beta, "list")){
+      DIST <- vector("list", length = length(beta))
+      for(i in 1:length(beta)){
+        if(inherits(beta[[i]], "character")){
+          if(!all(beta[[i]] %in% traitsNames)){
+            stop("Each element in the beta list must be either a character vector of specifying one or more columns from the traits data frame or a distance matrix")
           }
-          traitSub <- scale(traits[, rao[[i]], drop = FALSE] )
+          traitSub <- scale(traits[, beta[[i]], drop = FALSE] )
           dis <- stats::dist(traitSub)
           DIST[[i]] <-  as.matrix(dis)
-        } else if(inherits(rao[[i]], "dist")){
-          DIST[[i]] <-  as.matrix(rao[[i]])
-        }
+        } else if(inherits(beta[[i]], "dist")){
+          DIST[[i]] <-  as.matrix(beta[[i]])
+        } 
       }
-      if(is.null(names(rao))){
-        names(DIST) <- paste0("rao_", seq_len(length(rao)))
+      if(is.null(names(beta))){
+        names(DIST) <- paste0("beta_", seq_len(length(beta)))
       } else{
-        names(DIST) <- paste0("rao_", names(rao))
+        names(DIST) <- paste0("beta_", names(beta))
       }
-      nColRes <- nColRes + length(DIST)*4
-      colnamesRes <- c(colnamesRes, outer(c("totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional"), paste0("_",names(DIST)), paste0))
+      # nColRes <- nColRes + length(DIST)*4
+      # colnamesRes <- c(colnamesRes, outer(c("totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional"), paste0("_", names(DIST)), paste0))
+      if(methodTest == 1){ # picanteRao
+        # Set the number of result columns
+        nColRes <- nColRes + length(DIST)*4
+        colnamesRes <- c(colnamesRes, outer(c("totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional"), paste0("_", names(DIST)), paste0))
+      } else{
+        # Set the number of result columns
+        nColRes <- nColRes + length(DIST)*5
+        colnamesRes <- c(colnamesRes, outer(c("BtotalFunctional", "BreplFunctional", "BrichFunctional", "BgainFunctional", "BlossFunctional"), paste0("_", names(DIST)), paste0))
+      }
     } else{ # If a vector
-      if(inherits(rao, "character")){
-        if(!all(rao %in% traitsNames)){
-          stop("The rao argument must be either a character vector specifying a single columm from the traits data frame, a distance matrix, or a list ontaining these elements")
+      if(inherits(beta, "character")){
+        if(!all(beta %in% traitsNames)){
+          stop("The beta argument must be either a character vector specifying a single columm from the traits data frame, a distance matrix, or a list ontaining these elements")
         }
-        traitsSub <- scale(traits[, rao, drop = FALSE] )
+        traitsSub <- scale(traits[, beta, drop = FALSE] )
         dis <- stats::dist(traitsSub)
         DIST <- as.matrix(dis)
-      } else if(inherits(rao, "dist")){
-        DIST <- as.matrix(rao)
+      } else if(inherits(beta, "dist")){
+        DIST <- as.matrix(beta)
       }
-      nColRes <- nColRes + 4
-      colnamesRes <- c(colnamesRes, "totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional")
+      # nColRes <- nColRes + 4
+      # colnamesRes <- c(colnamesRes, "totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional")
+      if(methodTest == 1){ # picanteRao
+        # Set the number of result columns
+        nColRes <- nColRes + 4
+        colnamesRes <- c(colnamesRes, "totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional")
+      } else{
+        # Set the number of result columns
+        nColRes <- nColRes + 5
+        colnamesRes <- c(colnamesRes, "BtotalFunctional", "BreplFunctional", "BrichFunctional", "BgainFunctional", "BlossFunctional")
+      }
     }
   }
   resCombinations <- matrix(NA, nrow(dbCombinations), ncol = nColRes)
@@ -194,29 +233,35 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       subMF <- xMulti[whichComb,, drop = FALSE]
       resultsTemp <- c(resultsTemp, unlist(calcMF(subMF)))
     }
-    if(calcSimpsonBeta){
-      resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], averages = TRUE)))
+    if(calcTaxonomicBeta){
+      if(methodTest == 1){ # picanteRao
+        resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, averages = TRUE)))  
+      } else{
+        resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, func = betaMultiMethod, abund = TRUE)[,1]))  
+      }
     }
-    if(!is.null(traits) && !is.null(rao)){
+    if(!is.null(traits) && !is.null(beta)){
       if(inherits(DIST, "list")){
         for(j in 1:length(DIST)){
-          resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], sppDist = DIST[[j]], averages = TRUE)))
+          if(methodTest == 1){ # picanteRao
+            resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, sppDist = DIST[[j]], averages = TRUE)))   
+          } else{
+            resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST[[j]], func = betaMultiMethod, abund = TRUE)[,1]))  
+          }
+          
         }
       } else{
-        resultsTemp <- c(resultsTemp, unlist(calcRAO(xComp[whichComb,, drop = FALSE], sppDist = DIST, averages = TRUE)))
+        if(methodTest == 1){ # picanteRao
+          resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, sppDist = DIST, averages = TRUE)))  
+        } else{
+          resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST, func = betaMultiMethod, abund = TRUE)[,1]))  
+        }
+        
       }
     }
     resCombinations[i,] <- resultsTemp
-    # require(betapart)
-    # scenario$simulation$composition
-    # decostand(scenario$simulation$composition, method = "pa")
-    # beta.multi(decostand(scenario$simulation$composition, method = "pa")[1:4,], index.family="sor")
-    # compTemp <- xComp[whichComb,]
-    # compTemp[compTemp>0] <- 1
-    # resCombinations[i,] <- unlist(calcRAO2(compTemp))
-    # resCombinations[i,] <- unlist(beta.multi(compTemp, index.family="sor"))
-    # beta.multi(compTemp, index.family="sor")
-    # functional.beta.multi(compTemp, traits = cerrado.mini$traits[,1:4], index.family = "sor")
+    # unlist(betapart::functional.beta.multi(decostand(subComp, method = "pa"), traits[, beta, drop = FALSE], index.family = "sor"))
+    # unlist(betapart::functional.beta.multi(decostand(subComp, method = "pa"), traits[, beta, drop = FALSE], index.family = "jac"))
   }
   # Set names
   rownames(resCombinations) <- rownames(dbCombinations)

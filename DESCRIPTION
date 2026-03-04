@@ -29,7 +29,10 @@ Imports:
     shinydashboard,
     shinyWidgets,
     shinyjs,
-    shinydashboardPlus
+    shinydashboardPlus,
+    patchwork,
+    rlang,
+    BAT
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -80,6 +83,7 @@ Collate:
     'summary.simRest.R'
     'summary.simRestSelect.R'
     'themeResbiota.R'
+    'upset.R'
     'vectorClass.R'
     'viewResults.R'
     'viewMultifunctionality.R'

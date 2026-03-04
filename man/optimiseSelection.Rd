@@ -10,9 +10,10 @@ optimiseSelection(
   siteGroup = NULL,
   includeReference = TRUE,
   maxComb = 1000,
-  calcSimpsonBeta = TRUE,
+  calcTaxonomicBeta = TRUE,
+  method = "betaRao",
   traits = NULL,
-  rao = NULL
+  beta = NULL
 )
 }
 \arguments{
@@ -24,11 +25,13 @@ optimiseSelection(
 
 \item{maxComb}{Maximum number of simulation combinations to generate (default maxComb = 1000). If the total unique combinations exceed this limit, a random sample of combinations is generated.}
 
-\item{calcSimpsonBeta}{Logical argument to specify if calculates Simpson's beta diversity (Rao's quadratic entropy without functional distances) (default calcSimpsonBeta = TRUE).}
+\item{calcTaxonomicBeta}{Logical argument to specify if calculates taxonomic beta diversity (default calcTaxonomicBeta = TRUE).}
+
+\item{method}{Method to calculate the beta diversity, partial match to "betaRao", "betaJaccard" or "betaSoerensen" (default method = "betaRao") .}
 
 \item{traits}{Data frame or matrix with species traits. Traits as columns and species as rows.}
 
-\item{rao}{Character vector specifying trait names to calculate Rao's Quadratic Entropy, or distance matrix (class dist). This argument can be a list to calculate multiple Rao indices using different trait sets or species distance matrices.}
+\item{beta}{Character vector specifying trait names to calculate beta diversity, or distance matrix (class dist). This argument can be a list to calculate multiple beta indices using different trait sets or species distance matrices.}
 }
 \value{
 A list (class "simRestSelect") with the elements:
@@ -52,11 +55,11 @@ A list (class "simRestSelect") with the elements:
 Calculate the functional parameters of selected simulated community sets to optimise multi-site simulation selections. This function generates all unique combinations of one simulated community per restoration site and calculates multi-site indices for each combination.
 }
 \examples{
-data("cerrado.mini")
-head(cerrado.mini$traits)
+data("cerrado")
+head(cerrado$traits)
 # Simulation
-scenario <- simulateCommunities(traits = cerrado.mini$traits,
-                                restComp = cerrado.mini$restoration,
+scenario <- simulateCommunities(traits = cerrado$traits,
+                                restComp = cerrado$restoration,
                                 maxDiver = c("SLA", "Height", "Seed"),
                                 constCWM = "BT",
                                 rich = c(10, 15),
@@ -64,10 +67,10 @@ scenario <- simulateCommunities(traits = cerrado.mini$traits,
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              traits = cerrado.mini$traits,
+                              traits = cerrado$traits,
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),
-                              reference = cerrado.mini$reference)
+                              reference = cerrado$reference)
 scenario
 # Compute multifunctionality
 scenario <- computeMultifunctionality(scenario,
@@ -84,9 +87,9 @@ scenarioSelected
 # Optimise selection
 scenarioSelectedMultisite <- optimiseSelection(scenarioSelected,
                                                siteGroup = "Site",
-                                               traits = cerrado.mini$traits,
-                                               rao = c("SLA", "Height", "Seed"),
-                                               calcSimpsonBeta = TRUE)
+                                               traits = cerrado$traits,
+                                               beta = c("SLA", "Height", "Seed"),
+                                               calcTaxonomicBeta = TRUE)
 scenarioSelectedMultisite
 }
 \references{

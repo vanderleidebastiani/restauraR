@@ -12,6 +12,14 @@ devtools::document()
 # devtools::clean_vignettes()
 # rmarkdown::render("vignettes/Framework-application.Rmd",
 #                   output_format = rmarkdown::pdf_document(keep_tex = FALSE))
+# rmarkdown::render("vignettes/Application-Custom-functions.Rmd",
+#                   output_format = rmarkdown::word_document())
+# rmarkdown::render("vignettes/Application-Realistic-ecological-succession.Rmd",
+#                   output_format = rmarkdown::word_document())
+# rmarkdown::render("vignettes/resbiota-Overview.Rmd",
+#                   output_format = rmarkdown::word_document())
+# rmarkdown::render("vignettes/Framework-application.Rmd",
+#                   output_format = rmarkdown::word_document())
 
 # system("R CMD build .")
 setwd("..")
