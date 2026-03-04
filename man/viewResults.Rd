@@ -31,10 +31,10 @@ Generate graphical representations of simulated and selected communities, includ
 Reference sites are highlighted as distinct points in scatter plots or as rug lines along the axes in histograms.
 }
 \examples{
-data("cerrado.mini")
-head(cerrado.mini$traits)
+data("cerrado")
+head(cerrado$traits)
 # Simulation
-scenario <- simulateCommunities(traits = cerrado.mini$traits,
+scenario <- simulateCommunities(traits = cerrado$traits,
                                 ava = "Available",
                                 maxDiver = c("SLA", "Height", "Seed"),
                                 constCWM = "BT",
@@ -43,15 +43,14 @@ scenario <- simulateCommunities(traits = cerrado.mini$traits,
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              traits = cerrado.mini$traits,
+                              traits = cerrado$traits,
                               ava = "Available",
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),
                               cost = "Cost",
                               dens = "Density",
                               dissimilarity = c("SLA", "Height", "Seed"),
-                              reference = cerrado.mini$reference,
-                              supplementary = cerrado.mini$supplementary)
+                              reference = cerrado$reference)
 scenario
 # Standardise parameters
 scenario <- standardiseParameters(x = scenario,

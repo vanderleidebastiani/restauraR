@@ -193,10 +193,10 @@ Selecting communities based solely on the local community may not be optimal for
 Two sets of indices are available: those derived from the multifunctionality matrix and those derived from species composition. The indices derived from the multifunctionality matrix include the landscape multifunctionality index, which represents the overall restoration success across the entire landscape; the beta multifunctionality index, which is calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites; and the average number of restored functions per site. The indices derived from species composition are calculates Rao's quadratic entropy, either with or without considering species dissimilarities, and include total diversity across all samples, average Alpha and Beta diversity among-community diversity, and Fst, which can be interpreted as local species identity excess. These species composition indices are calculated using a modified version of the raoD function from the picante package.
 }
 \examples{
-data("cerrado.mini")
-head(cerrado.mini$traits)
+data("cerrado")
+head(cerrado$traits)
 # Restoration new sites
-scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
+scenarioA <- simulateCommunities(traits = cerrado$traits,
                          ava = "Available",
                          maxDiver = c("SLA", "Height", "Seed"),
                          constCWM = "BT",
@@ -204,8 +204,8 @@ scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
                          it = 100)
 scenarioA
 # Restoration existing sites
-scenarioB <- simulateCommunities(traits = cerrado.mini$traits, 
-                                 restComp = cerrado.mini$restoration, 
+scenarioB <- simulateCommunities(traits = cerrado$traits, 
+                                 restComp = cerrado$restoration, 
                                  ava = "Available", 
                                  maxDiver = c("SLA", "Height", "Seed"), 
                                  constCWM = "BT",

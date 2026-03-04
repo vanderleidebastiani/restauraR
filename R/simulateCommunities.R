@@ -137,10 +137,10 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @examples
-#' data("cerrado.mini")
-#' head(cerrado.mini$traits)
+#' data("cerrado")
+#' head(cerrado$traits)
 #' # Restoration new sites
-#' scenarioA <- simulateCommunities(traits = cerrado.mini$traits,
+#' scenarioA <- simulateCommunities(traits = cerrado$traits,
 #'                          ava = "Available",
 #'                          maxDiver = c("SLA", "Height", "Seed"),
 #'                          constCWM = "BT",
@@ -148,8 +148,8 @@
 #'                          it = 100)
 #' scenarioA
 #' # Restoration existing sites
-#' scenarioB <- simulateCommunities(traits = cerrado.mini$traits, 
-#'                                  restComp = cerrado.mini$restoration, 
+#' scenarioB <- simulateCommunities(traits = cerrado$traits, 
+#'                                  restComp = cerrado$restoration, 
 #'                                  ava = "Available", 
 #'                                  maxDiver = c("SLA", "Height", "Seed"), 
 #'                                  constCWM = "BT",

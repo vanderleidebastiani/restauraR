@@ -24,9 +24,9 @@
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @keywords Auxiliary
 #' @examples
-#' data("cerrado.mini")
-#' checkReference(reference = cerrado.mini$reference,
-#'                traits = cerrado.mini$traits,
+#' data("cerrado")
+#' checkReference(reference = cerrado$reference,
+#'                traits = cerrado$traits,
 #'                cwm = "BT",
 #'                rao = c("SLA", "Height", "Seed"),
 #'                props = c(0.75, 0.9))

@@ -39,10 +39,10 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @examples
-#' data("cerrado.mini")
-#' head(cerrado.mini$traits)
+#' data("cerrado")
+#' head(cerrado$traits)
 #' # Simulation
-#' scenario <- simulateCommunities(traits = cerrado.mini$traits,
+#' scenario <- simulateCommunities(traits = cerrado$traits,
 #'                                 ava = "Available",
 #'                                 maxDiver = c("SLA", "Height", "Seed"),
 #'                                 constCWM = "BT",
@@ -51,13 +51,13 @@
 #' scenario
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
-#'                               traits = cerrado.mini$traits,
+#'                               traits = cerrado$traits,
 #'                               ava = "Available",
 #'                               cwm = "BT",
 #'                               rao = c("SLA", "Height", "Seed"),
 #'                               cost = "Cost",
 #'                               dens = "Density",
-#'                               reference = cerrado.mini$reference)
+#'                               reference = cerrado$reference)
 #' scenario
 #' # Select communities - Filter selection
 #' scenarioSelectedFilter <- selectCommunities(x = scenario,

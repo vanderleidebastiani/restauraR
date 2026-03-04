@@ -51,9 +51,9 @@ A list (class "simRestCheck") with the elements:
 Calculate ecological parameters in reference communities: richness, Community Weighted Mean, Community Weighted Variance and Rao's Quadratic Entropy.
 }
 \examples{
-data("cerrado.mini")
-checkReference(reference = cerrado.mini$reference,
-               traits = cerrado.mini$traits,
+data("cerrado")
+checkReference(reference = cerrado$reference,
+               traits = cerrado$traits,
                cwm = "BT",
                rao = c("SLA", "Height", "Seed"),
                props = c(0.75, 0.9))

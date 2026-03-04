@@ -3,7 +3,7 @@
 #' Reference sites are highlighted as distinct points in scatter plots or as rug lines along the axes in histograms.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual theme element_text geom_bar geom_histogram
-#' @importFrom ComplexUpset upset intersection_size
+#' @importFrom ComplexUpset intersection_size
 #' @importFrom grDevices nclass.FD
 #' @aliases viewMultifunctionality
 #' @param x An object of class "simRest" or "simRestSelect" to visualise results.
@@ -24,10 +24,10 @@
 #' in preparation.
 #' @keywords MainFunction
 #' @examples
-#' data("cerrado.mini")
-#' head(cerrado.mini$traits)
+#' data("cerrado")
+#' head(cerrado$traits)
 #' # Simulation
-#' scenario <- simulateCommunities(traits = cerrado.mini$traits,
+#' scenario <- simulateCommunities(traits = cerrado$traits,
 #'                                 ava = "Available",
 #'                                 maxDiver = c("SLA", "Height", "Seed"),
 #'                                 constCWM = "BT",
@@ -36,15 +36,14 @@
 #' scenario
 #' # Compute functional parameters
 #' scenario <- computeParameters(x = scenario,
-#'                               traits = cerrado.mini$traits,
+#'                               traits = cerrado$traits,
 #'                               ava = "Available",
 #'                               cwm = "BT",
 #'                               rao = c("SLA", "Height", "Seed"),
 #'                               cost = "Cost",
 #'                               dens = "Density",
 #'                               dissimilarity = c("SLA", "Height", "Seed"),
-#'                               reference = cerrado.mini$reference,
-#'                               supplementary = cerrado.mini$supplementary)
+#'                               reference = cerrado$reference)
 #' scenario
 #' # Standardise parameters
 #' scenario <- standardiseParameters(x = scenario,

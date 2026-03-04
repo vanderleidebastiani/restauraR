@@ -39,17 +39,18 @@ viewMultifunctionality <- function(x, showReference = FALSE, ...){
     #                          height_ratio = 0.8, 
     #                          ...) + 
     #   ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
-    p <- upset(resMulti, intersect = groupsMulti,
-                             keep_empty_groups = TRUE,
-                             name = "Groups",
-                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = "#1d4b61") +
-                                                       ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"))),
-                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = "#1d4b61")) + 
-                               ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold")),
-                             sort_intersections_by = "degree",
-                             width_ratio = 0.2,
-                             height_ratio = 0.8, 
-                             ...) + 
+    p <- upset(resMulti, 
+               intersect = groupsMulti,
+               keep_empty_groups = TRUE,
+               name = "Groups",
+               base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = "#1d4b61") +
+                                         ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"))),
+               set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = "#1d4b61")) + 
+                 ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold")),
+               sort_intersections_by = "degree",
+               width_ratio = 0.2,
+               height_ratio = 0.8, 
+               ...) + 
       ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
   } else{
     p <- ggplot2::ggplot() +

@@ -67,10 +67,10 @@ A list (class "simRestSelect") with the elements:
 Select simulated communities using filter-based, priority-based, or multi-site selection methods to identify optimal restoration solutions.
 }
 \examples{
-data("cerrado.mini")
-head(cerrado.mini$traits)
+data("cerrado")
+head(cerrado$traits)
 # Simulation
-scenario <- simulateCommunities(traits = cerrado.mini$traits,
+scenario <- simulateCommunities(traits = cerrado$traits,
                                 ava = "Available",
                                 maxDiver = c("SLA", "Height", "Seed"),
                                 constCWM = "BT",
@@ -79,13 +79,13 @@ scenario <- simulateCommunities(traits = cerrado.mini$traits,
 scenario
 # Compute functional parameters
 scenario <- computeParameters(x = scenario,
-                              traits = cerrado.mini$traits,
+                              traits = cerrado$traits,
                               ava = "Available",
                               cwm = "BT",
                               rao = c("SLA", "Height", "Seed"),
                               cost = "Cost",
                               dens = "Density",
-                              reference = cerrado.mini$reference)
+                              reference = cerrado$reference)
 scenario
 # Select communities - Filter selection
 scenarioSelectedFilter <- selectCommunities(x = scenario,
