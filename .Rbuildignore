@@ -4,14 +4,5 @@
 ^Meta$
 
 resbiota_build.R
-resbiota_example.R
 README.md
 LICENSE
-
-^data/dados.rda
-^vignettes/Vignette-Title1.Rmd
-^vignettes/Framework-application.Rmd
-^vignettes/resSEL.rds
-^vignettes/resSIM.rds
-^vignettes/resSIM0.rds
-

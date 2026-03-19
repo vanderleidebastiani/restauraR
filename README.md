@@ -1,4 +1,4 @@
-# R Package - resbiota - v0.0.5
+# R Package - resbiota - v0.0.6
 
 **resbiota - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches**
 
