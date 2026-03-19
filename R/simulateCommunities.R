@@ -206,6 +206,12 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
       stop("Co-occurrence matrix with negative values")
     }
   }
+  # Create restComp if information is only available in the restGroup
+  if(is.null(restComp) && !is.null(restGroup)){
+    restComp <- matrix(0, nrow = nrow(restGroup), ncol = nrow(traits))
+    rownames(restComp) <- rownames(restGroup)
+    colnames(restComp) <- rownames(traits)
+  }
   # Basic parameters without information of restoration sites
   if(is.null(restComp)){
     # Transform the rich argument in range vector
