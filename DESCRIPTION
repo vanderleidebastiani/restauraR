@@ -1,8 +1,8 @@
-Package: resbiota
+Package: restauraR
 Type: Package
-Title: Resbiota - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
+Title: RestauraR - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
 Version: 0.0.6
-Date: 2026-03-04
+Date: 2026-03-18
 Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
 Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
 Depends: R (>= 3.5)
@@ -36,7 +36,7 @@ Collate:
     'calcRAO.R'
     'cerrado.R'
     'checkReference.R'
-    'checkResbiotaData.R'
+    'checkRestauraRData.R'
     'collectNames.R'
     'computeParameters.R'
     'computeMultifunctionality.R'
@@ -61,14 +61,14 @@ Collate:
     'randDivision.R'
     'readjustAbundance.R'
     'resSummary.R'
-    'resbiota-package.R'
+    'restauraR-package.R'
     'roundDivision.R'
     'sampleAbundance.R'
     'sampleAbundanceGroups.R'
     'standardiseParameters.R'
     'summary.simRest.R'
     'summary.simRestSelect.R'
-    'themeResbiota.R'
+    'themeRestauraR.R'
     'upset.R'
     'vectorClass.R'
     'viewResults.R'

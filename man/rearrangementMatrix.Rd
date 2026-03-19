@@ -29,6 +29,6 @@ and returns an empty data.table object (template) with 0 rows and column names e
 \code{rearrangementMatrix} rearranges one matrix following a template layout. The names of the columns are required to rearrange the matrices.
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

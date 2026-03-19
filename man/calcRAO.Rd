@@ -26,6 +26,6 @@ Efficient implementation to calculate the Rao's quadratic entropy (RAO), based o
 \code{\link{simulateCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

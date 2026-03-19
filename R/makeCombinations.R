@@ -7,7 +7,7 @@
 #' @param maxSubset Maximum number of elements to include in each combination.
 #' @param maxComb Maximum number of combinations to generate.
 #' @returns A binary matrix with all elements combinations.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
 makeCombinations <- function(x, groups = NULL, minSubset = 1, maxSubset = 1, maxComb = 1000) {

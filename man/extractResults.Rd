@@ -58,6 +58,6 @@ in preparation.
 \code{\link{viewResults}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{MainFunction}

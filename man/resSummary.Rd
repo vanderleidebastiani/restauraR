@@ -19,6 +19,6 @@ A data frame containing the following descriptive statistics: minimum, mean, med
 Internal function to calculate descriptive statistics
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

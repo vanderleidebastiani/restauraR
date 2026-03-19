@@ -4,10 +4,10 @@
 #' @param baseSize Base font size for text elements (default baseSize = 10).
 #' @param legendPosition Position of the legends (default legendPosition = "left").
 #' @returns A ggplot theme object.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
-themeResbiota <- function(baseSize = 10, legendPosition = "right"){
+themeRestauraR <- function(baseSize = 10, legendPosition = "right"){
   ggplot2::theme(
     # Titles
     plot.tag = ggplot2::element_text(size = baseSize),

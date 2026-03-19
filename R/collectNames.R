@@ -3,7 +3,7 @@
 #' @param x A list object from which to extract element names.
 #' @param prefix A prefix to include in collected names (default prefix = NULL).
 #' @returns A character vector with collected names.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
 collectNames <- function(x, prefix = NULL) {

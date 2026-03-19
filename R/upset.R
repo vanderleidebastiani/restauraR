@@ -442,7 +442,7 @@ upset_stripes <- function(mapping = ggplot2::aes(), geom = ggplot2::geom_segment
 upset_themes <- function() {
   list(intersections_matrix =
          ggplot2::theme_minimal() +
-         # resbiota:::themeResbiota() +
+         # restauraR:::themeRestauraR() +
          ggplot2::theme(
            # hide intersections
            axis.text.x = ggplot2::element_blank(),
@@ -451,14 +451,14 @@ upset_themes <- function() {
            axis.title.y = ggplot2::element_blank()
          ),
        'Intersection size' = ggplot2::theme_minimal() +
-         # resbiota:::themeResbiota() +
+         # restauraR:::themeRestauraR() +
          ggplot2::theme(
            axis.text.x = ggplot2::element_blank(),
            axis.title.x = ggplot2::element_blank()
          ),
        overall_sizes =
          ggplot2::theme_minimal()+
-         # resbiota:::themeResbiota() +
+         # restauraR:::themeRestauraR() +
          ggplot2::theme(
            # hide groups
            axis.title.y = ggplot2::element_blank(),
@@ -467,7 +467,7 @@ upset_themes <- function() {
          ),
        default =
          ggplot2::theme_minimal()+
-         # resbiota:::themeResbiota() +
+         # restauraR:::themeRestauraR() +
          ggplot2::theme(
            axis.text.x = ggplot2::element_blank(),
            axis.title.x = ggplot2::element_blank()

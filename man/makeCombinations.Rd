@@ -34,6 +34,6 @@ Create element combinations with group-based constraints.
 \code{\link{simulateCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

@@ -8,7 +8,7 @@
 #' @param n Number of species to select.
 #' @param phi Numeric parameter bounded between 0 and 1 that weights the relative importance of either quadratic entropy or entropy.
 #' @returns A vector with names of selected species, chosen based on their traits and desired trait profile.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords InternalFunction
 findSpecies <- function(traits, maxDiver, constCWM, n, phi){

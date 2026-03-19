@@ -5,7 +5,7 @@
 #' @param minAbund Minimum abundance or proportion threshold to maintain for each species in simulated communities.
 #' @param method The method used to obtain the samples, "proportions" or "individuals".
 #' @returns A vector of adjusted species abundance or proportions.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords InternalFunction
 readjustAbundance <- function(abund0, minAbund, method) {

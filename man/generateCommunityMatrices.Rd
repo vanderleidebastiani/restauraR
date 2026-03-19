@@ -70,6 +70,6 @@ Create simulated community matrices through constrained species assembly from a 
 \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

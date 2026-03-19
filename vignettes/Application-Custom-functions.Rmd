@@ -36,7 +36,7 @@ The dataset is detailed in the overview vignette.
 
 ```{r message=FALSE, results= "markup"}
 # Load the package
-require(resbiota)
+require(restauraR)
 # Load cerrado data
 data(cerrado)
 # Traits data

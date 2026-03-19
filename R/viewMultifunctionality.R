@@ -54,7 +54,7 @@ viewMultifunctionality <- function(x, showReference = FALSE, ...){
       ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"))
   } else{
     p <- ggplot2::ggplot() +
-      themeResbiota(baseSize = 15)
+      themeRestauraR(baseSize = 15)
   }
   return(p)
 }

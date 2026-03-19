@@ -22,6 +22,6 @@ Internal function to randomly divide an integer into groups
 \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

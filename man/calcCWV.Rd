@@ -22,6 +22,6 @@ Implementation is based on the matrix.t function from the SYNCSA package.
 \code{\link{simulateCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

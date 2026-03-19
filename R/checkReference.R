@@ -19,7 +19,7 @@
 #' \item{reference$summary}{Data frame with the descriptive statistics of calculated parameters for reference sites.}
 #' \item{supplementary$results}{Data frame with calculated parameters for supplementary sites.}
 #' \item{supplementary$summary}{Data frame with the descriptive statistics of calculated parameters for supplementary sites.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @keywords Auxiliary

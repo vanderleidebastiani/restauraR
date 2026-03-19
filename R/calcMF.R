@@ -6,7 +6,7 @@
 #' \item{landscape}{Landscape multifunctionality index, representing the overall restoration success across the entire landscape.}
 #' \item{beta}{Beta multifunctionality index, calculated as Rao's quadratic entropy on the multifunctionality matrix, quantifying functional diversity among sites.}
 #' \item{average}{Average number of restored functions per site.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
 calcMF <- function(x) {
@@ -26,7 +26,7 @@ calcMF <- function(x) {
   names(beta) <- NULL
   # Score <- sqrt(scales::rescale(landscape) * scales::rescale(beta))
   # picante::raoD(comm)
-  # resbiota::calcRAO(x, averages = T)
+  # restauraR::calcRAO(x, averages = T)
   # beta <- picante::raoD(x)$beta
   # res <- c(landscape = landscape, beta = beta, average = average)
   res <- list()

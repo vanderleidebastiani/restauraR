@@ -22,6 +22,6 @@ Internal function to format a vector of logical expressions for evaluation withi
 \code{\link{selectCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

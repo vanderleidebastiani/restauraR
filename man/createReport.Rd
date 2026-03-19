@@ -23,6 +23,6 @@ Generate an HTML data profiling report with descriptive statistics and univariat
 \code{\link{extractResults}}, \code{\link{viewResults}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{Auxiliary}

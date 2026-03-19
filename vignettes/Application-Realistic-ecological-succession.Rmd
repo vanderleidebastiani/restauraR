@@ -55,7 +55,7 @@ The dataset is arranged as a list:
 
 ```{r message=FALSE, results= "markup"}
 # Load the package
-require(resbiota)
+require(restauraR)
 # Load FOM data
 data(FOM)
 # Traits data
@@ -88,7 +88,7 @@ ggplot2::ggplot(data = traits) +
   ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Number of species") +
   ggplot2::expand_limits(y = 100) +
-  resbiota:::themeResbiota(baseSize = 12)
+  restauraR:::themeRestauraR(baseSize = 12)
 
 ggplot2::ggplot(data = traits) +
   ggplot2::aes(x = .data[["Zoochory"]]) +
@@ -97,21 +97,21 @@ ggplot2::ggplot(data = traits) +
                               labels = c("No", "Yes")) +
   ggplot2::labs(y = "Number of species") +
   ggplot2::expand_limits(y = 100) +
-  resbiota:::themeResbiota(baseSize = 12)
+  restauraR:::themeRestauraR(baseSize = 12)
 
 ggplot2::ggplot(data = traits) +
   ggplot2::aes(x = .data[["WoodDensity"]]) +
   ggplot2::geom_histogram(bins = grDevices::nclass.FD(traits[,"WoodDensity"]), fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Number of species") +
   ggplot2::labs(x = "Wood density") +
-  resbiota:::themeResbiota(baseSize = 12)
+  restauraR:::themeRestauraR(baseSize = 12)
 
 ggplot2::ggplot(data = data.frame(spp = factor(rownames(traits), levels = rownames(traits)[order(traits$relativeAbundance, decreasing = TRUE)]), traits)) +
   ggplot2::aes(x = .data[["spp"]], y = .data[["relativeAbundance"]]) +
   ggplot2::geom_col(fill = "#1d4b61", col = "#ffffff") +
   ggplot2::labs(y = "Relative abundance") +
   ggplot2::labs(x = "Species rank") +
-  resbiota:::themeResbiota(baseSize = 12) +
+  restauraR:::themeRestauraR(baseSize = 12) +
   ggplot2::theme(axis.text.x = ggplot2::element_blank())
 ```
 

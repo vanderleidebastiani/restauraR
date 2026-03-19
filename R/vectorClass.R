@@ -2,7 +2,7 @@
 #' @encoding UTF-8
 #' @param x A vector.
 #' @returns The vector class. 
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
 vectorClass <- function(x){

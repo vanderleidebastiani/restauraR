@@ -28,6 +28,6 @@ Internal function to select species to generate simulated communities
 \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

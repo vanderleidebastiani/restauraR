@@ -22,6 +22,6 @@ Internal function to collect the names of lists
 \code{\link{simulateCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

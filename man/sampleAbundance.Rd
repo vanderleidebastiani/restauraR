@@ -75,6 +75,6 @@ Internal function to sample species abundance or proportions
 \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

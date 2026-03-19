@@ -3,7 +3,7 @@
 #' @param prefix Character string specifying the name of the data frame object.
 #' @param logicTest The vector containing logical expressions to be evaluated.
 #' @returns The vector of formatted logical tests.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{selectCommunities}}
 #' @keywords InternalFunction
 adjString <- function(prefix, logicTest){

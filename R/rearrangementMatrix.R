@@ -11,7 +11,7 @@
 #' @param fillNA Logical argument (TRUE or FALSE) to specify if missing cells (NA) should be replaced with zeros (default fillNA = FALSE).
 #' @param ... Objects of class data.frame (or matrix) to be concatenated.
 #' @returns The \code{makeMatrixTemplate} function returns an empty data.table object with a reference structure, while \code{rearrangementMatrix} aligns existing data to that structure and returns the rearranged matrix.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @keywords InternalFunction
 rearrangementMatrix <- function(template, x, fillNA = FALSE){
   rowNameX <- rownames(x)

@@ -5,7 +5,7 @@
 #' @param comm A community matrix with species composition in the reference sites. NAs not accepted.
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @returns A matrix with Community Weighted Variance.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
 calcCWV <- function(comm, traits){

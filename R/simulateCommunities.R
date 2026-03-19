@@ -34,7 +34,7 @@
 #' 
 #' \strong{Communities parameters}
 #' 
-#' After the initial step of species composition simulation, several functional parameters can be calculated for each community. In the resbiota package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters are used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions \code{computeParameters} and \code{computeMultifunctionality} can be used in this step. 
+#' After the initial step of species composition simulation, several functional parameters can be calculated for each community. In the restauraR package, this step is mandatory, given that those parameters are used to select a subset of simulated communities that fit the restoration target. Parameters such as species richness, Functional Diversity (FD), Community Weighted Means (CWM), the average functional dissimilarity between each simulated community, and restoration cost can be calculated. In general, those function parameters are used as a proxy for ecosystem functions relevant to the restoration under evaluation. The functions \code{computeParameters} and \code{computeMultifunctionality} can be used in this step. 
 #' 
 #' The function \code{computeParameters} is mandatory and computes basic parameters: richness, Community Weighted Mean, Community Weighted Variance, Rao’s Quadratic Entropy and functional dissimilarity. The user must define which traits will be used to calculate each metric. Additionally, if species cost per individual and planting density information are provided, restoration costs are estimated. When the availability of species is specified, the function counts species unavailable in each community. Furthermore, it is optional to compute functional dissimilarity between selected communities and reference sites. Functional dissimilarity is a pair-wise metric between each selected community and each reference site. If you have more than one reference site, functional dissimilarity will be the average dissimilarity between each selected community and the reference sites. Functional dissimilarity is calculated with the function discomQE from the package adiv using the default formula “QE”. Therefore, it corresponds to the Rao’s dissimilarity between communities. 
 #' 
@@ -54,7 +54,7 @@
 #' 
 #' Reference sites can be included in the \code{computeParameters} step. Thus, all calculated parameters are also calculated for reference sites and can be used in posterior analysis or as an auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem. 
 #' 
-#' The resbiota package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species sites.
+#' The restauraR package also allows the inclusion of supplementary sites to calculate the same set of functional parameters. These supplementary sites are only used to compare proposals, for example, to evaluate the parameters in naturally regenerated species sites.
 #' 
 #' \strong{The outputs}
 #' 
@@ -62,7 +62,7 @@
 #' 
 #' \strong{Multifunctionality}
 #' 
-#' Restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the resbiota package, the matrix of multifunctionality can be calculated using simple logical tests on each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The alpha multifunctionality index is defined as the number of individual tests that are true (i.e., the count of restored functions) for a given community.
+#' Restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. In the restauraR package, the matrix of multifunctionality can be calculated using simple logical tests on each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The alpha multifunctionality index is defined as the number of individual tests that are true (i.e., the count of restored functions) for a given community.
 #' 
 #' The selection of simulated species composition can be performed using the alpha multifunctionality index to maximise multifunctionality across restored sites. The alpha multifunctionality index also allows the selection of a simulated community when no solution satisfies all initial criteria, thus allowing users to select a less restricted solution.
 #' 
@@ -80,7 +80,7 @@
 #' 
 #' \strong{Merge functions}
 #' 
-#' The resbiota package includes functions to merge result sets from different operations. 
+#' The restauraR package includes functions to merge result sets from different operations. 
 #' 
 #' The function \code{mergeSimulations} concatenates simulated communities generated under different scenarios. For example, some restoration sites can be generated from empty communities, while in another scenario, the species composition can be generated based on established communities. Thus, both scenarios can be concatenated for subsequent steps, such as parameter calculations. 
 #' 
@@ -125,7 +125,7 @@
 #' \item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references 
@@ -186,7 +186,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     }  
   }
   # Check data
-  checkResbiotaData(traits = traits, 
+  checkRestauraRData(traits = traits, 
                     restComp = restComp, 
                     restGroup = restGroup,
                     reference = NULL, 

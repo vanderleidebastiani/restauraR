@@ -13,7 +13,7 @@
 #' @param showMultisite Logical indicating whether to plot results from the multisite analysis; otherwise, the plot shows the basic results (default showMultisite = FALSE).
 #' @param ... Arguments passed to the upset function of the package ComplexUpset.
 #' @returns A ggplot plot object that can be further customised using standard ggplot2 syntax.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, \code{\link{extractResults}}
 #' @references
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
@@ -129,21 +129,21 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
           ggplot2::aes(x = .data[[xvar]]) +
           ggplot2::geom_bar(data = resResults, fill = "#1d4b61", col = "#ffffff") +
           ggplot2::geom_rug(data = ref, col = "#BD0026")+
-          themeResbiota(baseSize = 15)
+          themeRestauraR(baseSize = 15)
       } else{
         # Freedman-Diaconis method
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]]) +
           ggplot2::geom_histogram(data = resResults, bins = grDevices::nclass.FD(resResults[,xvar]), fill = "#1d4b61", col = "#ffffff") +
           ggplot2::geom_rug(data = ref, col = "#BD0026")+
-          themeResbiota(baseSize = 15)
+          themeRestauraR(baseSize = 15)
       }
     } else{
       if(inherits(resResults[,xvar], "factor") || inherits(resResults[,xvar], "character")){
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]]) +
           ggplot2::geom_bar(data = resResults, fill = "#1d4b61", col = "#ffffff") +
-          themeResbiota(baseSize = 15)
+          themeRestauraR(baseSize = 15)
       } else{
         # Freedman-Diaconis method
         if(nrow(resResults)>1){
@@ -154,7 +154,7 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]]) +
           ggplot2::geom_histogram(data = resResults, bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
-          themeResbiota(baseSize = 15)
+          themeRestauraR(baseSize = 15)
       }
     }
   } else {
@@ -167,7 +167,7 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
         ggplot2::geom_point(data = resResults, size = 1.2) +
         ggplot2::geom_point(data = ref, size = 1.7) +
         ggplot2::scale_color_manual(values = pal) +
-        themeResbiota(baseSize = 15)
+        themeRestauraR(baseSize = 15)
     } else{
       if(nrow(resResults)>0){
         if(!showMultisite){
@@ -175,19 +175,19 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
             ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
             ggplot2::geom_point(data = resResults, size = 1.2) +
             ggplot2::scale_color_manual(values = pal) +
-            themeResbiota(baseSize = 15)
+            themeRestauraR(baseSize = 15)
         } else{
           # Else multisite results
           p <- ggplot2::ggplot() +
             ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]]) +
             ggplot2::geom_point(data = resResults, size = 1.2, col = pal) +
-            themeResbiota(baseSize = 15) 
+            themeRestauraR(baseSize = 15) 
         }
       } else{
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
           ggplot2::geom_point(data = resResults, size = 1.2) +
-          themeResbiota(baseSize = 15)
+          themeRestauraR(baseSize = 15)
       }
     }
   }

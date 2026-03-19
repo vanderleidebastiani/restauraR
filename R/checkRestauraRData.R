@@ -1,4 +1,4 @@
-#' @title Internal function to data validation for resbiota package inputs
+#' @title Internal function to data validation for restauraR package inputs
 #' @encoding UTF-8
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp Community matrix with species composition in the restoration sites. NAs not accepted.
@@ -12,10 +12,10 @@
 #' \item{checkStatus}{The global validation status: "success", "warning", or "error".}
 #' \item{checkMessage}{Character vector containing error messages.}
 #' \item{checkWarning}{Character vector containing warning messages.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{selectCommunities}}
 #' @keywords InternalFunction
-checkResbiotaData <- function (traits = NULL, 
+checkRestauraRData <- function(traits = NULL, 
                                restComp = NULL, 
                                restGroup = NULL,
                                reference = NULL, 

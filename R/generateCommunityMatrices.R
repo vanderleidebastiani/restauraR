@@ -20,7 +20,7 @@
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
 #' @returns A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords InternalFunction
 generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){

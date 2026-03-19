@@ -4,7 +4,7 @@
 #' @param n An integer to be divided.
 #' @param k Number of groups.
 #' @returns A numeric vector with the random division.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords InternalFunction
 randDivision <- function(n, k){

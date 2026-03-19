@@ -9,7 +9,7 @@
 #' @param x A data.frame or matrix with the input data.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produce sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns The report in html format.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @keywords Auxiliary
@@ -23,9 +23,9 @@ createReport <- function(x, props = NULL){
   currentDevices <- grDevices::dev.list()
   on.exit( sapply(grDevices::dev.list(), function(dev) if(!(dev %in% currentDevices)) grDevices::dev.off(dev)) )
   # Load css file
-  cssFile <- system.file("style.css", package = "resbiota")
+  cssFile <- system.file("style.css", package = "restauraR")
   # Start html file
-  htmlFile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "resbiotaoutput", CSSFile = cssFile, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
+  htmlFile <- R2HTML::HTMLInitFile(outdir = dirTemp, filename = "restauraROutput", CSSFile = cssFile, useLaTeX = FALSE, useGrid = FALSE, HTMLframe = FALSE)
   # Include css file
   R2HTML::HTMLCSS(file = htmlFile, append = TRUE, CSSfile = cssFile)
   # Title
@@ -51,7 +51,7 @@ createReport <- function(x, props = NULL){
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
         ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
-        themeResbiota(baseSize = 12)
+        themeRestauraR(baseSize = 12)
     } else{
       # Freedman-Diaconis method
       if(nrow(x)>1){
@@ -62,7 +62,7 @@ createReport <- function(x, props = NULL){
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
         ggplot2::geom_histogram(bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
-        themeResbiota(baseSize = 12)
+        themeRestauraR(baseSize = 12)
     }
     # Export temp plot
     ggplot2::ggsave(file.path(dirTemp, pName),
@@ -82,7 +82,7 @@ createReport <- function(x, props = NULL){
     R2HTML::HTMLbr(file = htmlFile, append = TRUE)
   }
   # End html file
-  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>resbiota</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlFile)
+  cat("\n<hr size=1>\n<font size=-1>\n\t Generated on: <i>", date(), "</i> - <b>restauraR</b> \n<hr size=1>\n\t</body>\n</html>", sep = "", append = TRUE, file = htmlFile)
   fullPath <- paste("file://", htmlFile, sep = "")
   utils::browseURL(fullPath)
   invisible(fullPath)

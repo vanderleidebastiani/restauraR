@@ -16,7 +16,7 @@
 #' @param probGroupRich Vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Vector of probabilities to draw individuals or relative abundances in each group.
 #' @returns A vector with species abundance or proportions.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{generateCommunityMatrices}}
 #' @keywords InternalFunction
 sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, prob = NULL, returnProp = FALSE, method = "proportions", cooccur = NULL, minAbund = NULL){

@@ -4,7 +4,7 @@
 #' @param x A vector, data frame or matrix to calculate descriptive statistics. The statistics are calculated column-wise in data frame or matrix.
 #' @param props Numeric vector of probabilities with values in between 0 and 1 to produces sample quantiles corresponding to the given probabilities (default props = NULL).
 #' @returns A data frame containing the following descriptive statistics: minimum, mean, median, maximum, and requested quantiles.
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @keywords InternalFunction
 resSummary <- function(x, props = NULL){
   if(!c(is.atomic(x) || c(inherits(x, what = "data.frame") || inherits(x, what = "matrix")))){

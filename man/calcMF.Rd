@@ -23,6 +23,6 @@ Compute multifunctionality indices including landscape-level multifunctionality,
 \code{\link{simulateCommunities}}
 }
 \author{
-See \code{\link{resbiota-package}}.
+See \code{\link{restauraR-package}}.
 }
 \keyword{InternalFunction}

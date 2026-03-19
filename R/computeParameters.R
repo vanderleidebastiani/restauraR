@@ -39,7 +39,7 @@
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 #' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{selectCommunities}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
@@ -89,21 +89,21 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
     stop("The x argument must be of class simRest")
   }
   # Check data
-  checkResbiotaData(traits = traits, 
-                    restComp = NULL, 
-                    restGroup = NULL,
-                    reference = reference, 
-                    supplementary = supplementary,
-                    sppDist = rao,
-                    asList = FALSE)
+  checkRestauraRData(traits = traits, 
+                     restComp = NULL, 
+                     restGroup = NULL,
+                     reference = reference, 
+                     supplementary = supplementary,
+                     sppDist = rao,
+                     asList = FALSE)
   # Check dissimilarity if provided
-  checkResbiotaData(traits = traits, 
-                    restComp = NULL, 
-                    restGroup = NULL,
-                    reference = NULL, 
-                    supplementary = NULL,
-                    sppDist = dissimilarity,
-                    asList = FALSE)
+  checkRestauraRData(traits = traits, 
+                     restComp = NULL, 
+                     restGroup = NULL,
+                     reference = NULL, 
+                     supplementary = NULL,
+                     sppDist = dissimilarity,
+                     asList = FALSE)
   composition <- x$simulation$composition
   nSim <- nrow(composition)
   traitsNames <- colnames(traits)
@@ -309,7 +309,7 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
         COST <- composition%*%costMat
         out <- cbind(out, cost = COST)
       } #else{
-        # stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
+      # stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
       # }
     } else{ # # If all integer (individuals method)
       # COST <- apply(composition, 1, FUN = function(p){

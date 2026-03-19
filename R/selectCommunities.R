@@ -27,7 +27,7 @@
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' \item{supplementary$results}{A data frame with calculated parameters in supplementary sites.}
 #' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
-#' @author See \code{\link{resbiota-package}}.
+#' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{computeParameters}},
 #' \code{\link{extractResults}}, \code{\link{viewResults}}
 #' @references
