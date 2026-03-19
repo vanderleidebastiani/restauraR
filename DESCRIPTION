@@ -1,8 +1,8 @@
 Package: resbiota
 Type: Package
 Title: Resbiota - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
-Version: 0.0.5
-Date: 2026-02-10
+Version: 0.0.6
+Date: 2026-03-04
 Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
 Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
 Depends: R (>= 3.5)
@@ -19,17 +19,7 @@ Imports:
     utils,
     stats,
     grDevices,
-    shiny, 
-    htmltools,
     DiagrammeR,
-    shinyalert,
-    shiny.i18n,
-    sortable,
-    rhandsontable,
-    shinydashboard,
-    shinyWidgets,
-    shinyjs,
-    shinydashboardPlus,
     patchwork,
     rlang,
     BAT
@@ -41,9 +31,6 @@ RoxygenNote: 7.3.3
 Collate: 
     'FOM.R'
     'adjString.R'
-    'app.R'
-    'appServer.R'
-    'appUI.R'
     'calcCWV.R'
     'calcMF.R'
     'calcRAO.R'
@@ -76,7 +63,6 @@ Collate:
     'resSummary.R'
     'resbiota-package.R'
     'roundDivision.R'
-    'runResbiota.R'
     'sampleAbundance.R'
     'sampleAbundanceGroups.R'
     'standardiseParameters.R'
