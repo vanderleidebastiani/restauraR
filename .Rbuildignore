@@ -3,6 +3,6 @@
 ^doc$
 ^Meta$
 
-resbiota_build.R
+build.R
 README.md
 LICENSE

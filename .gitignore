@@ -119,3 +119,6 @@ $RECYCLE.BIN/
 # Vignettes auxiliar files
 /doc/
 /Meta/
+
+# Build file
+build.R
