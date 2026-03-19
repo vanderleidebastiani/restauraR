@@ -90,7 +90,7 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
     stop("Only one method can be specified")
   }
   if (is.na(methodTest)) {
-    stop("Invalid method. Choose either picanteRao or BATBeta")
+    stop("Invalid method. Choose either betaRao, betaJaccard or betaSoerensen")
   }
   if(methodTest == 2){
     betaMultiMethod <- "jaccard"
@@ -98,17 +98,19 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
     betaMultiMethod <- "soerensen"
   }
   if(inherits(x, "simRest")){
+    xPar <- x$simulation$results
     xComp <- x$simulation$composition
-    xGroup <- x$simulation$group
+    # xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
   } else{
+    xPar <- x$selection$results
     xComp <- x$selection$composition
-    xGroup <- x$selection$group
+    # xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
   }
   # Set the number and the names of result columns
-  nColRes <- 0
-  colnamesRes <- c()
+  nColRes <- 1
+  colnamesRes <- "totalRichness"
   if(!is.null(xMulti)){
     # Rownames of multifunctionality
     namesMulti <- xMulti[, 1]
@@ -131,7 +133,8 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   }
   # Set siteGroups
   if(!is.null(siteGroup)){
-    groupNames <- xGroup[, siteGroup]
+    # groupNames <- xGroup[, siteGroup]
+    groupNames <- xPar[, siteGroup]
   } else{
     groupNames <- rep("sim", nrow(xComp))
   }
@@ -139,7 +142,7 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   if(!is.null(x$reference) && includeReference){
     referenceComp  <- x$reference$composition
     # nRef <- nrow(reference)
-    template0 <- makeMatrixTemplate(xComp, referenceComp )
+    template0 <- makeMatrixTemplate(xComp, referenceComp)
     xComp <- rearrangementMatrix(template = template0, xComp, fillNA = TRUE)
     referenceComp  <- rearrangementMatrix(template = template0, referenceComp , fillNA = TRUE)
     # This sequence is important for split the results
@@ -229,6 +232,8 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
     whichComb <- names(which(dbCombinations[i,]==1))
     # Select species composition
     subComp <- xComp[whichComb,, drop = FALSE]
+    # Total richness
+    resultsTemp <- c(resultsTemp, sum(ifelse(colSums(ifelse(subComp>0, 1, 0), na.rm = TRUE)>0, 1, 0), na.rm = TRUE))
     if(!is.null(xMulti)){
       subMF <- xMulti[whichComb,, drop = FALSE]
       resultsTemp <- c(resultsTemp, unlist(calcMF(subMF)))
@@ -237,7 +242,12 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       if(methodTest == 1){ # picanteRao
         resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, averages = TRUE)))  
       } else{
-        resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, func = betaMultiMethod, abund = TRUE)[,1]))  
+        if(nrow(subComp)>1){
+          resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, func = betaMultiMethod, abund = TRUE)[,1]))  
+        } else {
+          resultsTemp <- c(resultsTemp, rep(NA, 5))
+        }
+        
       }
     }
     if(!is.null(traits) && !is.null(beta)){
@@ -246,7 +256,12 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
           if(methodTest == 1){ # picanteRao
             resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, sppDist = DIST[[j]], averages = TRUE)))   
           } else{
-            resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST[[j]], func = betaMultiMethod, abund = TRUE)[,1]))  
+            if(nrow(subComp)>1){
+              resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST[[j]], func = betaMultiMethod, abund = TRUE)[,1]))    
+            } else {
+              resultsTemp <- c(resultsTemp, rep(NA, 5))
+            }
+            
           }
           
         }
@@ -254,7 +269,11 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
         if(methodTest == 1){ # picanteRao
           resultsTemp <- c(resultsTemp, unlist(calcRAO(subComp, sppDist = DIST, averages = TRUE)))  
         } else{
-          resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST, func = betaMultiMethod, abund = TRUE)[,1]))  
+          if(nrow(subComp)>1){
+            resultsTemp <- c(resultsTemp, unlist(BAT::beta.multi(subComp, DIST, func = betaMultiMethod, abund = TRUE)[,1]))    
+          } else {
+            resultsTemp <- c(resultsTemp, rep(NA, 5))
+          }
         }
         
       }
