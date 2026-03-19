@@ -1,10 +1,10 @@
-# R Package - resbiota - v0.0.6
+# R Package - restauraR - v0.0.6
 
-**resbiota - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches**
+**restauraR - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches**
 
 ### Description
 
-The resbiota package provides an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing restoration sites.
+The restauraR package provides an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing restoration sites.
 
 ### Installation
   
@@ -12,10 +12,10 @@ To install the latest version of this package, use [`devtools`](https://CRAN.R-p
 
 ```r
 require(devtools)
-install_github("vanderleidebastiani/resbiota")
+install_github("vanderleidebastiani/restauraR")
 ```
 
-### Launch the resbiota Shiny Application
+### Launch the restauraR Shiny Application
 
 ```r
 require(resbiota)
