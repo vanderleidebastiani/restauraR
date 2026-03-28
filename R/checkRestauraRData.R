@@ -85,7 +85,7 @@ checkRestauraRData <- function(traits = NULL,
           stop(paste0("The ", objName, " must have row names"), call. = FALSE)
         }
       }
-      if (!any(rownames(x) == colnames(x))) {
+      if (!any(suppressWarnings(rownames(x) == colnames(x)))){
         if(asList){
           res <- c(res, paste0("Error: The ", objName, " must be a distance matrix or square matrix with matching row and column names in the same order"))
         } else{
