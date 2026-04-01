@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-This vignette illustrates the use of custom function to calculate functional parameters of the simulated communities.
+This vignette illustrates the use of custom functions to calculate functional parameters of the simulated communities.
 
 # The dataset
 
@@ -50,7 +50,7 @@ restorationSites <- cerrado$restoration
 
 # Generate simulated communities
 
-As explained in overview vignette, the simulation is performed using the `simulateCommunities` function, specifying input parameters. The function returns an object of class `simRest` (a list object) with basic information of input parameters and a list of results. 
+As explained in the Overview vignette, the simulation is performed using the `simulateCommunities` function, specifying input parameters. The function returns an object of class `simRest` (a list object) with basic information about the input parameters and a list of results. 
 
 
 ```{r}
@@ -83,7 +83,7 @@ resultsSim
 
 # Calculate functional metrics
 
-Again as explained in overview vignette, the `computeParameters` function calculates key ecological metrics as species richness, CWM, Rao's quadratic entropy, and taxonomic dissimilarity with reference sites. Note that the function returns an object of class `simRest` (a list) that now includes all calculated metric.
+The `computeParameters` function calculates key ecological metrics such as species richness, CWM, Rao's quadratic entropy, and taxonomic dissimilarity from reference sites. Note that the function returns an object of class `simRest` (a list) that now includes all calculated metrics.
 
 ```{r}
 # Compute all functional metric for simulated communities and reference sites
@@ -107,9 +107,9 @@ resultsSim
 
 # Custom functions
 
-Several taxonomic, functional and phylogenetic metrics are available in the literature and in R, however, not included in standard version of the `computeParameters` function. The function includes an option to calculate any metric in a customised way, allowing the user to utilise a wide range of metrics in the function.
+Several taxonomic, functional and phylogenetic metrics are available in the literature and in R, however, they are not included in the standard version of the `computeParameters` function. The function includes an option to calculate any metric in a customised way, allowing the user to use a wide range of metrics in the function.
 
-The basic structure of the function includes the arguments `x`, `comm` and `traits`. The `x` argument is only used as an index to the `lapply` function; `comm` arguments specify the simulated and the reference communities concatenated, this species composition matrix is not standardised, thus it can contain raw abundances or species proportions according to the method chosen in the simulation procedure; `traits` arguments include original trait values according to the selected columns specified by the argument `traitsFUN`. The ellipses arguments are used to pass any object direct to the function. 
+The basic structure of the function includes the arguments `x`, `comm` and `traits`. The `x` argument is only used as an index for the `lapply` function. The `comm` argument specifies the simulated and the reference communities concatenated. This species composition matrix is not standardised, thus it can contain raw abundances or species proportions according to the method chosen in the simulation procedure. The `traits` argument includes original trait values according to the selected columns specified by the argument `traitsFUN`. The ellipses argument is used to pass any additional arguments directly to the function. 
 
 
 ```{r, eval = FALSE}
@@ -137,7 +137,7 @@ funCWM <- function(x, comm, traits){
 }
 ```
 
-Another example can be performed using any functional metric included in the `dbFD` function of the package `FD`. In our example, we set this skeleton to calculate the functional richness. 
+Another example can be performed using any functional metric included in the `dbFD` function of the `FD` package. In our example, we set this skeleton to calculate the functional richness. 
 
 ```{r, eval = FALSE}
 funFric <- function(x, comm, traits, ...){
@@ -189,4 +189,4 @@ resultsSimFric <- computeParameters(resultsSim,
 ```
 
 
-The inclusion of this flexibility allows computing taxonomic and phylogenetic metrics in addition to other functional metrics in a relatively easy way.
+The inclusion of this flexibility allows computing taxonomic and phylogenetic metrics, in addition to other functional metrics, in a relatively easy way.
