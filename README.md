@@ -15,12 +15,9 @@ require(devtools)
 install_github("vanderleidebastiani/restauraR")
 ```
 
-### Launch the restauraR Shiny Application
+### restauraR Shiny Application
 
-```r
-require(restauraR)
-restauraR()
-```
+A Shiny application of restauraR package is provided in the [`restauraRApp`](https://github.com/vanderleidebastiani/restauraRApp) package.
 
 ### References
 
