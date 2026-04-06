@@ -141,7 +141,13 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
   if(!is.null(testsPriority)){
     # Set groups
     if(!is.null(siteGroup)){
-      uniqueGroups <- unique(selPar[,siteGroup])
+      varNames <- colnames(selPar)
+      if(!inherits(siteGroup, "character") || !all(siteGroup %in% varNames)){
+        stop("The siteGroup argument must be a character vector specifying one or more column names from the results")
+      }
+      groupNames <- apply(selPar[,siteGroup, drop = FALSE], 1, paste0, collapse = "_")
+      uniqueGroups <- unique(groupNames)
+      # uniqueGroups <- unique(selPar[,siteGroup])
       nGroups <- length(uniqueGroups)
     } else{
       nGroups <- 1
@@ -154,7 +160,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
       selPosTemp <- seq_len(nrow(selPar))
       if(!is.null(siteGroup)){
         # Filter in each siteGroup
-        selPosTemp <- selPosTemp[selPar[,siteGroup] == uniqueGroups[i]]
+        selPosTemp <- selPosTemp[groupNames == uniqueGroups[i]]
+        # selPosTemp <- selPosTemp[apply(selPar[,siteGroup, drop = FALSE], 1, paste0, collapse = "_") == uniqueGroups[i]]
+        # selPosTemp <- selPosTemp[selPar[,siteGroup] == uniqueGroups[i]]
       }
       # Filter parameters
       selParTemp <- selPar[selPosTemp, , drop = FALSE]

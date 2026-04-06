@@ -134,7 +134,12 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   # Set siteGroups
   if(!is.null(siteGroup)){
     # groupNames <- xGroup[, siteGroup]
-    groupNames <- xPar[, siteGroup]
+    varNames <- colnames(xPar)
+    if(!inherits(siteGroup, "character") || !all(siteGroup %in% varNames)){
+      stop("The siteGroup argument must be a character vector specifying one or more column names from the results")
+    }
+    groupNames <- apply(xPar[,siteGroup, drop = FALSE], 1, paste0, collapse = "_")
+    # groupNames <- xPar[, siteGroup]
   } else{
     groupNames <- rep("sim", nrow(xComp))
   }
