@@ -14,5 +14,5 @@
 #' @usage data(FOM)
 #' @keywords datasets
 #' @references 
-#' The Forest and Floristic Inventory of Santa Catarina (IFFSC)
+#' Vibrans, A. C. (edt.) et al. Inventário florístico florestal de Santa Catarina: volume III: floresta ombrófila mista. 1. ed. Blumenau: edifurb, 2013. 435 p., il.
 NULL

@@ -127,14 +127,14 @@
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{computeParameters}}, \code{\link{selectCommunities}}, 
-#' \code{\link{extractResults}}, \code{\link{viewResults}}
+#' \code{\link{extractResults}}, \code{\link{viewResults}}, \code{\link{optimiseSelection}}
 #' @references 
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 #' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 #' 
-#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
-#' in preparation.
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Debastiani, V. J., Carlucci, M. B., & Cianciaruso, M. V. (2026). Boosting 
+#' multifunctionality through adaptive trait-based species addition in ongoing restoration projects. 
+#' Ecological Applications, 36, e70197. https://doi.org/10.1002/eap.70197
 #' @keywords MainFunction
 #' @examples
 #' data("cerrado")
@@ -216,7 +216,6 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
   if(is.null(restComp)){
     # Transform the rich argument in range vector
     if(is.numeric(rich)){
-      # rich <- c(min(rich, na.rm = TRUE), max(rich, na.rm = TRUE)) 
       rich <- range(rich, na.rm = TRUE)
       if(!all(rich%%1 == 0)){
         stop("The rich argument must be a vector of integers")
@@ -227,7 +226,6 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     # Transform the nInd argument in range vector
     if(!is.null(nInd)){
       if(is.numeric(nInd)){
-        # nInd <- c(min(nInd, na.rm = TRUE), max(nInd, na.rm = TRUE))
         nInd <- range(nInd, na.rm = TRUE)
         if(!all(nInd%%1 == 0)){
           stop("The nInd argument must be a vector of integers")
@@ -250,11 +248,9 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     restCompBaseline[] <- 0
   } else {
     # Include species composition in restoration sites
-    # if(!is.null(restComp)){
     if(methodTest == 1){
       # Check if the sum of the rows is all 0 or 1
       rowSumsTemp <- rowSums(restComp)
-      # rowCheckAllZero <- isTRUE(all.equal(rowSumsTemp, !rep(0, nrow(restComp)), check.attributes = FALSE, check.class = FALSE))
       rowCheckAllZero <- rowSumsTemp == 0
       if(!all(rowCheckAllZero)){
         rowCheck <- isTRUE(all.equal(rowSumsTemp[rowSumsTemp!=0], rep(1, length(rowSumsTemp[rowSumsTemp!=0])), check.attributes = FALSE, check.class = FALSE))  
@@ -342,7 +338,6 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
     # If "proportions" method (re)calculate species proportions
     if(methodTest == 1){
-      # propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
       propMatrixTab <- sweep(propMatrixTab, MARGIN = 1, rowSums(propMatrixTab), FUN = "/")
     }
     rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
@@ -354,37 +349,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     } else{
       restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
     }
-    # rowNameProMatrix <- rownames(propMatrix)
-    # rowNameRest <- rownames(restComp)
-    # template0 <- makeMatrixTemplate(propMatrix, restComp)
-    # propMatrix <- rearrangementMatrix(template = template0, propMatrix, fillNA = TRUE)
-    # restComp <- rearrangementMatrix(template = template0, restComp, fillNA = TRUE)
-    # # Sum simulated species composition with species composition in the restoration sites
-    # propMatrixList <- lapply(1:nrow(restComp), function(i) sweep(propMatrix, MARGIN = 2, STATS = restComp[i, ], FUN = "+"))
-    # propMatrixTab <- do.call(rbind, propMatrixList)
-    # # Baseline composition
-    # restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
-    # # If "proportions" method (re)calculate species proportions
-    # if(methodTest == 1){
-    #   propMatrixTab <- propMatrixTab/rowSums(propMatrixTab)
-    # }
-    # rownames(propMatrixTab) <- as.vector(t(outer(rowNameRest, rowNameProMatrix, FUN = paste0)))
-    # restName <- rep(rowNameRest, each = length(rowNameProMatrix))
-    # # Organize restGroup informations
-    # if(!is.null(restGroup)){
-    #   restGroup <- restGroup[rep(seq_len(nrow(restGroup)), each = length(rowNameProMatrix)),, drop = FALSE]
-    #   restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName, restGroup)
-    # } else{
-    #   restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrixTab)), Site = restName)
-    # }
-  } #else { 
-  # # Organize restGroup informations
-  # restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
-  # propMatrixTab <- propMatrix
-  # # Baseline composition (all zero)
-  # restCompBaseline <- propMatrix
-  # restCompBaseline[] <- 0
-  # }
+  }
   # Organize restGroup informations
   if(!is.null(prefix)){
     restGroup <- data.frame(Scenario = prefix, restGroup)

@@ -22,6 +22,6 @@ data(FOM)
 The \code{FOM} dataset contains species functional traits for 124 species of the Araucaria moist forests, officially classified as mixed ombrophilous forest (Portuguese: "Floresta Ombrófila Mista - FOM") in the southern portion of the Atlantic Forest Biome in Brazil.
 }
 \references{
-The Forest and Floristic Inventory of Santa Catarina (IFFSC)
+Vibrans, A. C. (edt.) et al. Inventário florístico florestal de Santa Catarina: volume III: floresta ombrófila mista. 1. ed. Blumenau: edifurb, 2013. 435 p., il.
 }
 \keyword{datasets}

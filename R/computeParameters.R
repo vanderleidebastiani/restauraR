@@ -41,14 +41,14 @@
 #' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{selectCommunities}},
-#' \code{\link{extractResults}}, \code{\link{viewResults}}
+#' \code{\link{extractResults}}, \code{\link{viewResults}}, \code{\link{optimiseSelection}}
 #' @references
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 #' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 #' 
-#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
-#' in preparation.
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Debastiani, V. J., Carlucci, M. B., & Cianciaruso, M. V. (2026). Boosting 
+#' multifunctionality through adaptive trait-based species addition in ongoing restoration projects. 
+#' Ecological Applications, 36, e70197. https://doi.org/10.1002/eap.70197
 #' @keywords MainFunction
 #' @examples
 #' data("cerrado")
@@ -114,19 +114,6 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
   if(anyPositive && !allInteger && !rowCheck){
     stop("Simulation using species proportions must sum to 1 for each site")
   }
-  
-  
-  
-  
-  # # Extract baseline
-  # baseline <- x$simulation$baseline
-  # # Calculate additions
-  # # If proportions
-  # if(!allInteger){
-  #   compAdditions <- (composition*2) - baseline
-  # } else{ # If counts
-  #   compAdditions <- composition - baseline
-  # }
   # Merge compositions - simulations, reference and supplementary
   if(!is.null(reference) && is.null(supplementary)){
     nRef <- nrow(reference)
@@ -195,9 +182,6 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
     x$reference$composition <- reference
     x$supplementary$composition <- supplementary
   }
-  # # Calculate species proportions
-  # composition2 <- composition #to calculate CWM2
-  # composition <- sweep(composition, MARGIN = 1, rowSums(composition), FUN = "/")
   # Organize traits
   matchNames <- match(colnames(composition), rownames(traits))
   traits <- as.data.frame(traits[matchNames, , drop = FALSE])
@@ -227,15 +211,6 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
     colnames(CWM) <- paste0("CWM_", colnames(CWM))
     out <- cbind(out, CWM)
   }
-  # if(!is.null(cwm2)){
-  #   if(!inherits(cwm2, "character") || !all(cwm2 %in% traitsNames)){
-  #     stop("The cwm2 argument must be a character vector specifying one or more columns from the trait data frame")
-  #   }
-  #   traitSub <- traits[, cwm2, drop = FALSE]
-  #   CWM2 <- calcCWM2(composition, traitSub)
-  #   colnames(CWM2) <- paste0("CWM2_", colnames(CWM2))
-  #   out <- cbind(out, CWM2)
-  # }
   # CWV
   if(!is.null(cwv)){
     if(!inherits(cwv, "character") || !all(cwv %in% traitsNames)){
@@ -284,38 +259,24 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       out <- cbind(out, rao = RAO)
     }
   }
-  # Cost - It require species cost and planting density 
-  # if(!is.null(cost) || !is.null(dens)){
+  # Cost 
   if(!is.null(cost)){
     if(!inherits(cost, "character") || !all(cost %in% traitsNames) || length(cost)>1){
       stop("The cost argument must be a character vector specifying a single columm from the traits data frame")
     }
-    # costVect <- traits[, cost]
     costMat <- as.matrix(traits[, cost, drop = FALSE])
     # If not all integer (proportions method)
-    # allInteger <- FALSE
     if(!allInteger){
       if(!is.null(dens)){
         if(!inherits(dens, "character") || !all(dens %in% traitsNames) || length(dens)>1){
           stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
         }
-        # densVect <- traits[, dens]
         densMat <- as.matrix(traits[, dens, drop = FALSE])
         costMat <- costMat*densMat
-        # COST <- apply(composition, 1, FUN = function(p){
-        #   COST_i <- sum(p*costVect*densVect, na.rm = TRUE)
-        #   return(COST_i)
-        # })
         COST <- composition%*%costMat
         out <- cbind(out, cost = COST)
-      } #else{
-      # stop("The dens argument must be a character vector specifying a single columm from the traits data frame")
-      # }
-    } else{ # # If all integer (individuals method)
-      # COST <- apply(composition, 1, FUN = function(p){
-      #   COST_i <- sum(p*costVect, na.rm = TRUE)
-      #   return(COST_i)
-      # })
+      } 
+    } else{ # If all integer (individuals method)
       COST <- composition%*%costMat
       out <- cbind(out, cost = COST)
     }
@@ -325,11 +286,9 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
     nRef <- nrow(reference)
     resDis <- calcRAO(composition, nRef = nRef)
     # Remove matrix diagonal
-    # diag(resDis) <- NA
     diagIndex <- cbind(seq(nRef), seq(nRef))
     resDis[diagIndex] <- NA
     # # Keep only values related to reference sites
-    # resDis <- resDis[, seq.int(nRef), drop = FALSE]
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, dissimilarity = resDis)
@@ -343,19 +302,15 @@ computeParameters <- function(x, traits, ava = NULL, cwm = NULL, cwv = NULL, rao
       }
       traitsSub <- scale(traits[, dissimilarity, drop = FALSE])
       dis <- stats::dist(traitsSub)
-      # resDis <- as.matrix(adiv::discomQE(composition, dis = dis, formula = "QE"))
       resDis <- calcRAO(composition, sppDist = dis, nRef = nRef)
     } else if(inherits(dissimilarity, "dist")){
       # Calculate dissimilarities between communities
-      # resDis <- as.matrix(adiv::discomQE(composition, dis = dissimilarity, formula = "QE"))
       resDis <- calcRAO(composition, sppDist = dissimilarity, nRef = nRef)
     }
     # Remove matrix diagonal
     diagIndex <- cbind(seq(nRef), seq(nRef))
     resDis[diagIndex] <- NA
-    # diag(resDis) <- NA
     # Keep only values related to reference sites
-    # resDis <- resDis[, seq.int(nRef), drop = FALSE]
     # Calculate mean dissimilarities
     resDis <- apply(resDis, MARGIN = 1, mean, na.rm = TRUE)
     out <- cbind(out, functionalDissimilarity = resDis)

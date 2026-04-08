@@ -33,9 +33,9 @@
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 #' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 #' 
-#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
-#' in preparation.
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Debastiani, V. J., Carlucci, M. B., & Cianciaruso, M. V. (2026). Boosting 
+#' multifunctionality through adaptive trait-based species addition in ongoing restoration projects. 
+#' Ecological Applications, 36, e70197. https://doi.org/10.1002/eap.70197
 #' @keywords MainFunction
 #' @examples
 #' data("cerrado")
@@ -80,10 +80,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   if(!inherits(x, "simRestSelect")){
     stop("The x argument must be of class simRestSelect")
   }
-  # Check object class
-  # if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
-  #   stop("The x argument must be of class simRest or simRestSelect")
-  # }
   METHOD <- c("betaRao", "betaJaccard", "betaSoerensen")
   methodTest <- pmatch(method, METHOD)
   if (length(methodTest) > 1) {
@@ -100,12 +96,10 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   if(inherits(x, "simRest")){
     xPar <- x$simulation$results
     xComp <- x$simulation$composition
-    # xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
   } else{
     xPar <- x$selection$results
     xComp <- x$selection$composition
-    # xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
   }
   # Set the number and the names of result columns
@@ -133,7 +127,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   }
   # Set siteGroups
   if(!is.null(siteGroup)){
-    # groupNames <- xGroup[, siteGroup]
     varNames <- colnames(xPar)
     if(!inherits(siteGroup, "character") || !all(siteGroup %in% varNames)){
       stop("The siteGroup argument must be a character vector specifying one or more column names from the results")
@@ -146,7 +139,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
   # Merge compositions - simulations and reference
   if(!is.null(x$reference) && includeReference){
     referenceComp  <- x$reference$composition
-    # nRef <- nrow(reference)
     template0 <- makeMatrixTemplate(xComp, referenceComp)
     xComp <- rearrangementMatrix(template = template0, xComp, fillNA = TRUE)
     referenceComp  <- rearrangementMatrix(template = template0, referenceComp , fillNA = TRUE)
@@ -163,7 +155,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       xMulti <- rbind.data.frame(xMultiRef, xMulti)
       rownames(xMulti) <- c(namesMultiRef, namesMulti)
     }
-    # x$reference$composition <- reference
     dbCombinations <- data.frame(v1 = c(rownames(xComp)), v2 = c(rownames(referenceComp ), groupNames))
   } else{
     if(!is.null(xMulti)){
@@ -195,8 +186,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       } else{
         names(DIST) <- paste0("beta_", names(beta))
       }
-      # nColRes <- nColRes + length(DIST)*4
-      # colnamesRes <- c(colnamesRes, outer(c("totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional"), paste0("_", names(DIST)), paste0))
       if(methodTest == 1){ # picanteRao
         # Set the number of result columns
         nColRes <- nColRes + length(DIST)*4
@@ -217,8 +206,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       } else if(inherits(beta, "dist")){
         DIST <- as.matrix(beta)
       }
-      # nColRes <- nColRes + 4
-      # colnamesRes <- c(colnamesRes, "totalFunctionalDiversity", "alphaFunctionalDiversity", "betaFunctionalDiversity", "FstFunctional")
       if(methodTest == 1){ # picanteRao
         # Set the number of result columns
         nColRes <- nColRes + 4
@@ -284,8 +271,6 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
       }
     }
     resCombinations[i,] <- resultsTemp
-    # unlist(betapart::functional.beta.multi(decostand(subComp, method = "pa"), traits[, beta, drop = FALSE], index.family = "sor"))
-    # unlist(betapart::functional.beta.multi(decostand(subComp, method = "pa"), traits[, beta, drop = FALSE], index.family = "jac"))
   }
   # Set names
   rownames(resCombinations) <- rownames(dbCombinations)

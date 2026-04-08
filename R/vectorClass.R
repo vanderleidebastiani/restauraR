@@ -7,8 +7,6 @@
 #' @keywords InternalFunction
 vectorClass <- function(x){
   res <- class(x)
-  # res <- ifelse(res == "integer", "numeric", res)
-  # res <- ifelse(any(res == "ordered"), "factor", res)
   if (any(res %in% "ordered")) return("factor")
   if (any(res %in% c("integer", "numeric"))) return("numeric")
   return(res)

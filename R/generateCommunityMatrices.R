@@ -257,7 +257,6 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
     }
   }
   rownames(propMatrix) <- sprintf("sim%d", seq_len(nrow(propMatrix)))
-  # rownames(propMatrix) <- seq_len(nrow(propMatrix))
   colnames(propMatrix) <- species
   # propMatrix
   return(propMatrix)

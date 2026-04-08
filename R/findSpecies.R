@@ -16,9 +16,6 @@ findSpecies <- function(traits, maxDiver, constCWM, n, phi){
   species <- rownames(traits)
   if(inherits(maxDiver, "character")){
     t2d <- as.matrix(scale(traits[, maxDiver, drop = FALSE]))
-    # } else if(inherits(maxDiver, 'dist')){
-    #   t2d <- maxDiver
-    # }  
   } else {
     t2d <- as.matrix(maxDiver)
     # Organize distance matrix

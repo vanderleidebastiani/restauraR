@@ -29,14 +29,14 @@
 #' \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{checkReference}}, \code{\link{simulateCommunities}}, \code{\link{computeParameters}},
-#' \code{\link{extractResults}}, \code{\link{viewResults}}
+#' \code{\link{extractResults}}, \code{\link{viewResults}}, \code{\link{optimiseSelection}}
 #' @references
 #' Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
 #' restoration at large scales. Journal of Applied Ecology, 60, 1562–1571. https://doi.org/10.1111/1365-2664.14439
 #' 
-#' Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration 
-#' enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript 
-#' in preparation.
+#' Coutinho, A. G., Nunes, A., Branquinho, C., Debastiani, V. J., Carlucci, M. B., & Cianciaruso, M. V. (2026). Boosting 
+#' multifunctionality through adaptive trait-based species addition in ongoing restoration projects. 
+#' Ecological Applications, 36, e70197. https://doi.org/10.1002/eap.70197
 #' @keywords MainFunction
 #' @examples
 #' data("cerrado")
@@ -147,7 +147,6 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
       }
       groupNames <- apply(selPar[,siteGroup, drop = FALSE], 1, paste0, collapse = "_")
       uniqueGroups <- unique(groupNames)
-      # uniqueGroups <- unique(selPar[,siteGroup])
       nGroups <- length(uniqueGroups)
     } else{
       nGroups <- 1
@@ -161,8 +160,6 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
       if(!is.null(siteGroup)){
         # Filter in each siteGroup
         selPosTemp <- selPosTemp[groupNames == uniqueGroups[i]]
-        # selPosTemp <- selPosTemp[apply(selPar[,siteGroup, drop = FALSE], 1, paste0, collapse = "_") == uniqueGroups[i]]
-        # selPosTemp <- selPosTemp[selPar[,siteGroup] == uniqueGroups[i]]
       }
       # Filter parameters
       selParTemp <- selPar[selPosTemp, , drop = FALSE]
@@ -209,13 +206,6 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
           if(j < length(testsPriority)){
             next
           }
-          # # tipo dois, para por ai
-          # # if(nrow(selParTemp)>1){
-          #   sampleTemp <- sample(nrow(selParTemp), size = 1)
-          #   selPosTemp <- selPosTemp[sampleTemp]
-          #   selParTemp <- selParTemp[sampleTemp,]
-          # # }
-          # break
         }
         # If last test, sample 1
         if(j == length(testsPriority) && nrow(selParTemp)>1 && singleSelection){
@@ -242,8 +232,6 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     if(is.null(xParMultisite) || is.null(xCombMultisite)){
       stop("The x argument must contain the multisite results")
     }
-    # Selected positions
-    # selectedPosMultisite <- c()
     # Sequence for all rows
     selPosMultisiteTemp <- seq_len(nrow(selParMultisite))
     # Filter multi-site parameters
@@ -294,26 +282,17 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
       }
       # If last test, sample 1
       if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1){
-        # if(k == length(testsMultisite) && nrow(selParMultisiteTemp)>1 && singleSelection){
         sampleTemp <- sample(nrow(selParMultisiteTemp), size = 1)
         selPosMultisiteTemp <- selPosMultisiteTemp[sampleTemp]
         selParMultisiteTemp <- selParMultisiteTemp[sampleTemp, , drop = FALSE]
       }
     }
-    # Concatenate the selected positions
-    # selectedPosMultisite <- c(selectedPosMultisite, selPosMultisiteTemp)
-    # }
-    # selectedPosMultisite
     # Filter the multi-site results and combinations
     selParMultisite <- selParMultisite[selPosMultisiteTemp, , drop = FALSE] 
     selCombMultisite <- selCombMultisite[selPosMultisiteTemp, , drop = FALSE]
-    selParMultisite
-    selCombMultisite
     # Filter only 1 combination
     selCombNames <-  colnames(selCombMultisite)[as.logical(selCombMultisite[1,, drop = TRUE])]
-    selCombNames
     selCombsMultisite <- which(selPar$Simulation  %in% selCombNames)
-    selCombsMultisite
     # Multisite selection
     selPar <- selPar[selCombsMultisite, , drop = FALSE] 
     selCom <- selCom[selCombsMultisite, , drop = FALSE]
