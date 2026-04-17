@@ -21,6 +21,7 @@ findSpecies <- function(traits, maxDiver, constCWM, n, phi){
     # Organize distance matrix
     match.names <- match(species, colnames(t2d))
     t2d <- t2d[match.names, match.names, drop = FALSE]
+    t2d <- stats::as.dist(t2d)
   }
   if(!is.null(constCWM)){
     t2c <- as.matrix(traits[ , constCWM, drop = FALSE])
@@ -37,7 +38,7 @@ findSpecies <- function(traits, maxDiver, constCWM, n, phi){
       for(j in 1:length(cons_i)){
         jj <- cons_i[j]
         names(jj) <- colnames(t2c_i)
-        invisible(utils::capture.output(selSpp_j <- Select::selectSpecies(t2c = t2c_i, constraints = jj, t2d = t2d, phi = phi, obj = "QH")))    
+        invisible(utils::capture.output(selSpp_j <- Select::selectSpecies(t2c = t2c_i, constraints = jj, t2d = t2d, phi = phi, obj = "QH", euclid = FALSE)))    
         selSpp_i[,j] <- selSpp_j$prob
       }
       selSpp[[i]] <- selSpp_i 
@@ -54,7 +55,7 @@ findSpecies <- function(traits, maxDiver, constCWM, n, phi){
       }
     }
   } else {
-    invisible(utils::capture.output(selSpp <- Select::selectSpecies(t2d = t2d, phi = phi, obj = "QH")))
+    invisible(utils::capture.output(selSpp <- Select::selectSpecies(t2d = t2d, phi = phi, obj = "QH", euclid = FALSE)))
     propMatrixSelSpp <- selSpp$prob
     sppMax <- c()
     propMin <- 0.1
