@@ -1,10 +1,24 @@
 Package: restauraR
 Type: Package
-Title: RestauraR - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
+Title: Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
 Version: 0.0.6
 Date: 2026-03-18
-Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
-Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
+Authors@R: c(person(given = c("Vanderlei", "J."),
+                      family = "Debastiani",
+                      role = c("aut", "cre"),
+                      email = "vanderleidebastiani@yahoo.com.br"),
+               person(given = c("André", "G."),
+                      family = "Coutinho",
+                      role = "aut",
+                      email = "andreganemcoutinho@gmail.com"),
+               person(given = c("Marcos", "B."),
+                      family = "Carlucci",
+                      role = "aut",
+                      email = "carlucci@ufpr.br"),
+               person(given = c("Marcus", "V."),
+                      family = "Cianciaruso",
+                      role = "aut",
+                      email = "cianciaruso@gmail.com"))
 Depends: R (>= 3.5)
 Imports:
     Select,
