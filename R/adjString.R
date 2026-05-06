@@ -7,10 +7,16 @@
 #' @seealso \code{\link{selectCommunities}}
 #' @keywords InternalFunction
 adjString <- function(prefix, logicTest){
+  if(any(grepl("&&|\\|\\|", logicTest))){
+    stop("Logical tests can not contain double logical operators, such as double vertical bar or double ampersand")
+  }
   res <- vector("character", length = length(logicTest))
   for(k in 1:length(logicTest)){
     multipleTests <- strsplit(logicTest[k], "&|\\|")[[1]]
     if(length(multipleTests)>1){
+      if(grepl("&", logicTest[k]) && grepl("\\|", logicTest[k])){
+        stop("Logical tests can contain only the OR operator (vertical bar) or the AND operator (ampersand)")
+      }
       # Remove whitespace
       multipleTests <- trimws(multipleTests, which = "both")
       if(grepl("&", logicTest[k])){

@@ -26,9 +26,21 @@
 #' 
 #' The species assemblages are generated in the \code{simulateCommunities} function. The species richness within simulated communities varies within a range defined by the user. Thus, it could be specified using the observed range in reference communities or desired restoration targets. 
 #' 
-#' The sampling of species can be performed completely at random or select species based on functional traits or a desired trait profile. If the `maxDiver` argument is specified, species selections optimise the functional diversity of a specific set of traits. Simultaneously, the `constCWM` argument can constrain the community-weighted mean trait values across the full range of each trait enabling local maximization of functional diversity within the specified community-weighted mean constraints.
+#' The sampling of species can be performed completely at random or select species based on functional traits or a desired trait profile. If the `maxDiver` argument is specified, species selections optimise the functional diversity of a specific set of traits. Simultaneously, the `constCWM` argument can constrain the community-weighted mean trait values across the full range of each trait enabling local maximization of functional diversity within the specified community-weighted mean constraints. 
 #' 
 #' To obtain a high number of restoration solutions, all runs of the \code{simulateCommunities} function return a set of simulated communities with random species distribution, and composition based on rules set with `maxDiver` and `constCWM` arguments. Furthermore, if the species available is informed in the `ava` argument, the sample of species compositions is performed also with only available species on the market. Thus, the function returns a wide range of variability in composition to posterior selection, including compositions with available and not available species in the market.
+#' 
+#' Local species abundances or proportions can be simulated using two main strategies, depending on the chosen method. For `method = "proportions"`, a log‑normal is drawn (with mean equal to zero and standard deviation equal to 1 on the log scale) and then scaled to sum to 1. For `method = "individuals"`, a log‑normal distribution is drawn and then used to define the multinomial probabilities for allocating individuals among species. The implementation follows a simplified version of the abundance simulation approach used in the `mobsim` package. Thus, the log-normal distribution is used, with the expected abundance defined by the mean number of individuals per species. The log-normal distribution is parameterised by the coefficient of variation (CV). Therefore, the given coefficient of variation argument defines the spread of species abundance, which is negatively correlated to the evenness of species distribution. Alternatively, when the `prob` argument is given, the probabilities of drawing individuals for each species are specified directly in the multinomial sampling. 
+#' 
+#' When using the coefficient of variation option, the probabilities are calculated as:
+#' \deqn{\bar{\text{x}} = \frac{\text{N}_\text{Ind}}{\text{N}_\text{Spp}}}
+#' \deqn{\text{sd} = \bar{\text{x}} \times \text{cvAbund}}
+#' \deqn{\sigma = \sqrt{\log\left(\frac{\text{sd}^2}{\bar{\text{x}}^2} + 1\right)}}
+#' \deqn{\mu = \log(\bar{\text{x}}) - \frac{\sigma^2}{2}}
+#'
+#' Furthermore, if the `cooccur` argument is supplied, the co‑occurrence matrix is used to constrain species co‑occurrence in the sampling process. Finally, when the `group` argument is given, richness and/or abundances can be split among groups according to specifications in the `probGroupRich` and `probGroupAbund` arguments.
+#'
+#' As a post-processing step, if `minAdbund` is supplied, the abundances are recursively adjusted by removing individuals or proportions from species above the threshold. The readjustment may reduce total abundance to the minimum if the minimum is too high relative to the total.
 #' 
 #' The framework returns a community matrix indicating the composition of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 #' 
@@ -178,8 +190,11 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     stop("The argument it must be at least 4")
   }
   if(!is.null(minAbund)){
-    if(methodTest == 1 && ((min(minAbund)<0) || max(minAbund)>1)){ # Method individuals
-      stop("For the proportions method, the minAbund argument must be NULL or a proportion value")
+    if(length(minAbund)>1 | !is.numeric(minAbund)){
+      stop("The argument minAbund must be a scalar")
+    }
+    if(methodTest == 1 && ((minAbund<0) || minAbund>1)){ # Method individuals
+      stop("For the proportions method, the minAbund argument must be NULL or a proportion value (between 0 and 1)")
     }
     if(methodTest == 2 && !(minAbund%%1 == 0)){ # Method individuals
       stop("For the individuals method, the minAbund argument must be NULL or a positive integer")
@@ -194,6 +209,60 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
                     sppDist = maxDiver,
                     cooccur = cooccur,
                     asList = FALSE)
+  # Traits names to check the arguments
+  traitsNames <- colnames(traits)
+  if(!is.null(ava)){
+    if(!inherits(ava, "character") || !all(ava %in% traitsNames) || length(ava)>1){
+      stop("The ava argument must be a character vector specifying a single columm name from the traits data frame")
+    }
+    # Check if binary
+    if(!all(traits[,ava] %in% c(0, 1))){
+      stop("The ava column must contain only binary or logical values (1 = available, 0 = unavailable)")
+    }
+  }
+  if(!is.null(und)){
+    if(!inherits(und, "character") || !all(und %in% traitsNames) || length(und)>1){
+      stop("The und argument must be a character vector specifying a single columm name from the traits data frame")
+    }
+    # Check if binary
+    if(!all(traits[,und] %in% c(0, 1))){
+      stop("The und column must contain only binary or logical values (1 = undesired, 0 = desired)")
+    }
+  }
+  if(!is.null(group)){
+    if(!inherits(group, "character") || !all(group %in% traitsNames) || length(group)>1){
+      stop("The group argument must be a character vector specifying a single columm name from the traits data frame")
+    }
+  }
+  if(!is.null(prob)){
+    if(!inherits(prob, "character") || !all(prob %in% traitsNames) || length(prob)>1){
+      stop("The prob argument must be a character vector specifying a single columm name from the traits data frame")
+    }
+    # Check if numeric and positive
+    if(!is.numeric(traits[,prob]) || !all(traits[,prob]>=0)){
+      stop("The prob column must contain only positive values")
+    }
+  }
+  if(!is.null(constCWM)){
+    if(!inherits(constCWM, "character") || !all(constCWM %in% traitsNames)){
+      stop("The constCWM argument must be a character vector specifying one or more column names from the traits data frame")
+    }
+  }
+  if(length(phi)>1 || !is.numeric(phi)){
+    stop("The argument phi must be a scalar")
+  }
+  if(phi<0 || phi>1){
+    stop("The argument phi must be between 0 and 1")
+  }
+  # Check cvAbund only in the individuals method
+  if (methodTest == 2){
+    if(length(cvAbund)>1 || !is.numeric(cvAbund)){
+      stop("The argument cvAbund must be a scalar")
+    }
+    if(cvAbund<=0){
+      stop("The argument cvAbund must be a positive number")
+    }  
+  }
   if(!is.null(cooccur)){
     # Organize co-occurrence matrix 
     matchNames <- match(rownames(traits), rownames(cooccur))
@@ -203,7 +272,13 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     diag(cooccur) <- 0
     # Check if any negative value
     if(min(cooccur)<0){
-      stop("Co-occurrence matrix with negative values")
+      stop("Co-occurrence matrix contains negative values")
+    }
+  }
+  # Check if restComp and restGroup are compatible
+  if(!is.null(restComp) && !is.null(restGroup)){
+    if(nrow(restComp) != nrow(restGroup)){
+      stop("The argument restGroup must have the same number of rows as restComp argument when both are provided")  
     }
   }
   # Create restComp if information is only available in the restGroup
@@ -278,8 +353,8 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
         if(!inherits(rich, "character") || !all(rich %in% restGroupNames)){
           stop("The rich argument must specify one or more valid column names from the restGroup data frame")
         } else{
-          richDF <- restGroup[, rich, drop = FALSE]  
-          if(!all(richDF%%1 == 0) || any(is.na(richDF))){
+          richDF <- restGroup[, rich, drop = FALSE] 
+          if(!all(richDF%%1 == 0) || any(is.na(richDF)) || any(richDF<=0)){
             stop("The columns specified by the rich argument in restGroup data frame must contain only integer values")
           }
           parRichList <- apply(richDF, MARGIN = 1, range, na.rm = TRUE, simplify = FALSE)
@@ -303,7 +378,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
             stop("The argument nInd must specify one or more valid column names from the restGroup data frame")
           } else{
             nIndDF <- restGroup[, nInd, drop = FALSE]
-            if(!all(nIndDF%%1 == 0) || any(is.na(nIndDF))){
+            if(!all(nIndDF%%1 == 0) || any(is.na(nIndDF)) || any(nIndDF<=0)){
               stop("The columns specified by the nInd argument in restGroup data frame must contain only integers values")
             }
             parIndList <- apply(nIndDF, MARGIN = 1, range, na.rm = TRUE, simplify = FALSE)
