@@ -1,4 +1,4 @@
-# R Package - restauraR - v0.0.6
+# R Package - restauraR - v0.0.7
 
 **restauraR - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches**
 
@@ -8,11 +8,11 @@ The restauraR package provides an integrative set of tools to create restoration
 
 ### Installation
   
-To install the latest version of this package, use [`devtools`](https://CRAN.R-project.org/package=devtools):
+To install the latest version of this package, use [`pak`](https://CRAN.R-project.org/package=pak):
 
 ```r
-require(devtools)
-install_github("vanderleidebastiani/restauraR")
+require(pak)
+pak::pak("vanderleidebastiani/restauraR")
 ```
 
 ### restauraR Shiny Application

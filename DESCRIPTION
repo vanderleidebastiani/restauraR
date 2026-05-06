@@ -1,8 +1,8 @@
 Package: restauraR
 Type: Package
 Title: Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
-Version: 0.0.6
-Date: 2026-03-18
+Version: 0.0.7
+Date: 2026-05-04
 Authors@R: c(person(given = c("Vanderlei", "J."),
                       family = "Debastiani",
                       role = c("aut", "cre"),
@@ -34,14 +34,11 @@ Imports:
     stats,
     grDevices,
     DiagrammeR,
-    patchwork,
-    rlang,
     BAT
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
 Collate: 
     'FOM.R'
     'adjString.R'
@@ -83,7 +80,7 @@ Collate:
     'summary.simRest.R'
     'summary.simRestSelect.R'
     'themeRestauraR.R'
-    'upset.R'
     'vectorClass.R'
     'viewResults.R'
     'viewMultifunctionality.R'
+Config/roxygen2/version: 8.0.0
