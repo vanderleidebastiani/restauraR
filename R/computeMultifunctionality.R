@@ -19,7 +19,9 @@ computeMultifunctionality <- function(x, tests){
   # String to select the variable
   completeString <- adjString("xPar", tests)
   # Evaluation
-  testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+  exprs <- lapply(completeString, function(x) parse(text = x, keep.source = FALSE))
+  testsEval <- sapply(exprs, function(x) as.numeric(eval(x, envir = list(xPar = xPar))))
+  # testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
   if(!inherits(testsEval, "matrix")){
     testsEval <- t(as.matrix(testsEval))  
   }
@@ -39,7 +41,9 @@ computeMultifunctionality <- function(x, tests){
   if(!is.null(x$reference$results)){
     xPar <- x$reference$results
     # Evaluation
-    testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+    exprs <- lapply(completeString, function(x) parse(text = x, keep.source = FALSE))
+    testsEval <- sapply(exprs, function(x) as.numeric(eval(x, envir = list(xPar = xPar))))
+    # testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
     if(!inherits(testsEval, "matrix")){
       testsEval <- t(as.matrix(testsEval))  
     }
@@ -55,7 +59,9 @@ computeMultifunctionality <- function(x, tests){
   if(!is.null(x$supplementary$results)){
     xPar <- x$supplementary$results
     # Evaluation
-    testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
+    exprs <- lapply(completeString, function(x) parse(text = x, keep.source = FALSE))
+    testsEval <- sapply(exprs, function(x) as.numeric(eval(x, envir = list(xPar = xPar))))
+    # testsEval <- sapply(completeString, function(a) as.numeric(eval(parse(text = a))))
     if(!inherits(testsEval, "matrix")){
       testsEval <- t(as.matrix(testsEval))  
     }

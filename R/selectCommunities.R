@@ -107,7 +107,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     # Adjust string to test
     completeString <- adjString("xPar", testsFilter)
     # Evaluate test
-    testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
+    exprs <- lapply(completeString, function(x) parse(text = x, keep.source = FALSE))
+    testsEval <- sapply(exprs, function(x) eval(x, envir = list(xPar = xPar)))
+    # testsEval <- sapply(completeString, function(a) eval(parse(text=a)))
     pos <- apply(testsEval, 1, all)
     # Remove NA (set to FALSE)
     pos[is.na(pos)] <- FALSE
@@ -180,7 +182,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
           # String to select the variable
           completeStringTemp <- paste0('selParTemp', '$', testVarTemp)
           # Evaluation
-          testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+          exprsTemp <- lapply(completeStringTemp, function(x) parse(text = x, keep.source = FALSE))
+          testsEvalTemp <- sapply(exprsTemp, function(x) eval(x, envir = list(selParTemp = selParTemp)))[,1]
+          # testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
           # If MAX
           if(grepl("MAX", testValueTemp)){
             testsEvalTemp <- testsEvalTemp == max(testsEvalTemp, na.rm = TRUE)
@@ -193,7 +197,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
           # String to select the variable
           completeStringTemp <- adjString("selParTemp", testsPriority[j])
           # Evaluation
-          testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+          exprsTemp <- lapply(completeStringTemp, function(x) parse(text = x, keep.source = FALSE))
+          testsEvalTemp <- sapply(exprsTemp, function(x) eval(x, envir = list(selParTemp = selParTemp)))[,1]
+          # testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
         }
         # Remove NA (set to FALSE)
         testsEvalTemp[is.na(testsEvalTemp)] <- FALSE
@@ -253,7 +259,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
         # String to select the variable
         completeStringTemp <- paste0('selParMultisiteTemp', '$', testVarTemp)
         # Evaluation
-        testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+        exprsTemp <- lapply(completeStringTemp, function(x) parse(text = x, keep.source = FALSE))
+        testsEvalTemp <- sapply(exprsTemp, function(x) eval(x, envir = list(selParMultisiteTemp = selParMultisiteTemp)))[,1]
+        # testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
         # If MAX
         if(grepl("MAX", testValueTemp)){
           testsEvalTemp <- testsEvalTemp == max(testsEvalTemp, na.rm = TRUE)
@@ -266,7 +274,9 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
         # String to select the variable
         completeStringTemp <- adjString("selParMultisiteTemp", testsMultisite[k])
         # Evaluation
-        testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
+        exprsTemp <- lapply(completeStringTemp, function(x) parse(text = x, keep.source = FALSE))
+        testsEvalTemp <- sapply(exprsTemp, function(x) eval(x, envir = list(selParMultisiteTemp = selParMultisiteTemp)))[,1]
+        # testsEvalTemp <- sapply(completeStringTemp, function(a) eval(parse(text = a)))[,1]
       }
       # Remove NA (set to FALSE)
       testsEvalTemp[is.na(testsEvalTemp)] <- FALSE
