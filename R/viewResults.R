@@ -3,7 +3,7 @@
 #' Reference sites are highlighted as distinct points in scatter plots or as rug lines along the axes in histograms.
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual theme element_text geom_bar geom_histogram
-#' @importFrom ComplexUpset intersection_size
+#' @importFrom ComplexUpset upset intersection_size upset_set_size
 #' @importFrom grDevices nclass.FD
 #' @aliases viewMultifunctionality
 #' @param x An object of class "simRest" or "simRestSelect" to visualise results.
