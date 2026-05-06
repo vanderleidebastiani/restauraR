@@ -47,7 +47,6 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, pr
 	  # If have enough species to sample
 	  if(sum(probOcorr>0)>=(nSppi-1)){
 	    sampledOcor <- sample(seq.int(sPool), nSppi-1, prob = probOcorr)
-	    sampledOcor
 	  } else{
 	    # If all null (zero)
 	    if(sum(probOcorr>0) == 0){
@@ -80,8 +79,8 @@ sampleAbundance <- function(nRich1, nRich2, sPool, nInd1, nInd2, cvAbund = 1, pr
 		  sdAbund <- meanAbund * cvAbund
 		  sigma <- sqrt(log(sdAbund^2/meanAbund^2 + 1))
 		  mu <- log(meanAbund) - sigma^2/2
-		  exp(mu + sigma^2/2) # mean
-		  sqrt(exp(2*mu+sigma^2)*(exp(sigma^2)-1)) # sd
+		  # exp(mu + sigma^2/2) # mean
+		  # sqrt(exp(2*mu+sigma^2)*(exp(sigma^2)-1)) # sd
 		  # Random log normal distribution
 		  pLogNor <- stats::rlnorm(nSppi, meanlog = mu, sdlog = sigma)
 		} else{
