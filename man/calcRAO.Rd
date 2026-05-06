@@ -17,7 +17,7 @@ calcRAO(comm, sppDist = NULL, nRef = NULL, averages = FALSE)
 \item{averages}{Logical argument to specify if return only average for alpha and beta diversities (default averages = FALSE)}
 }
 \value{
-A matrix with among-community diversities excluding within-community diversity.
+A matrix with among-community diversities excluding within-community diversity. If averages argument is true, return a list with the average alpha and beta diversities and the total.
 }
 \description{
 Efficient implementation to calculate the Rao's quadratic entropy (RAO), based on the discomQE function of the adiv package and on the raoD function of the picante package.

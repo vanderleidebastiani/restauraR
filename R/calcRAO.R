@@ -5,7 +5,7 @@
 #' @param sppDist Pairwise distance matrix between species (e.g., functional or phylogenetic distances).
 #' @param nRef Number of reference sites (the first in the species composition matrix) to calculate among-community diversities only partially. 
 #' @param averages Logical argument to specify if return only average for alpha and beta diversities (default averages = FALSE)
-#' @returns A matrix with among-community diversities excluding within-community diversity.
+#' @returns A matrix with among-community diversities excluding within-community diversity. If averages argument is true, return a list with the average alpha and beta diversities and the total.
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
 #' @keywords InternalFunction
