@@ -138,9 +138,9 @@ When using the coefficient of variation option, the probabilities are calculated
 \deqn{\sigma = \sqrt{\log\left(\frac{\text{sd}^2}{\bar{\text{x}}^2} + 1\right)}}
 \deqn{\mu = \log(\bar{\text{x}}) - \frac{\sigma^2}{2}}
 
-Furthermore, if the `cooccur` argument is supplied, the co‑occurrence matrix is used to constrain species co‑occurrence in the sampling process. Finally, when the `group` argument is given, richness and/or abundances can be split among groups according to specifications in the `probGroupRich` and `probGroupAbund` arguments.
+Furthermore, if the `cooccur` argument is supplied, the co‑occurrence matrix is used to constrain species co‑occurrence in the sampling process. Finally, when the `group` argument is given, richness and/or abundances can be split among groups according to specifications in the `probGroupRich` and `probGroupAbund` arguments. When using a co‑occurrence matrix or splitting richness among groups, the actual species richness in a simulated community may fall below the specified range if the co‑occurrence probabilities are too restrictive or if some groups have too few species.
 
-As a post-processing step, if `minAdbund` is supplied, the abundances are recursively adjusted by removing individuals or proportions from species above the threshold. The readjustment may reduce total abundance to the minimum if the minimum is too high relative to the total.
+As a post-processing step, if `minAbund` is supplied, the abundances are recursively adjusted by removing individuals or proportions from species above the threshold. The readjustment may reduce total abundance to the minimum if the minimum is too high relative to the total.
 
 The framework returns a community matrix indicating the composition of individuals that need to be added for each species. If no established communities are informed, the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, if established communities are set, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species). Thus, it is possible to increase the number of ecosystem functions in ongoing restoration sites and follow an approach of adaptive management.
 
