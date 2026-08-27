@@ -273,10 +273,12 @@ optimiseSelection <- function(x, siteGroup = NULL, includeReference = TRUE, maxC
     resCombinations[i,] <- resultsTemp
   }
   # Set names
-  rownames(resCombinations) <- rownames(dbCombinations)
+  # rownames(resCombinations) <- rownames(dbCombinations)
   colnames(resCombinations) <- colnamesRes
   # Set results
   x$selection$multisite$combinations <- dbCombinations
-  x$selection$multisite$results <- as.data.frame(resCombinations)
+  # x$selection$multisite$results <- as.data.frame(resCombinations)
+  x$selection$multisite$results <- data.frame(Combination = rownames(dbCombinations), resCombinations)
+  rownames(x$selection$multisite$results) <- NULL
   return(x)
 }

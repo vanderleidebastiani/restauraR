@@ -61,6 +61,9 @@
 #' viewResults(scenario, xvar = "CWM_BT", yvar = "rao")
 #' # View multifunctionality - upset plot
 #' viewMultifunctionality(scenario)
+#' # Interactive graphs (only histogram and scatter plot)
+#' # require(plotly)
+#' # plotly::ggplotly(viewResults(scenario, xvar = "CWM_BT", yvar = "rao"))
 #' @export
 viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisite = FALSE){
   # Check object class
@@ -164,7 +167,8 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
       ref$Legend <- factor(ref$Legend, levels = levels(resResults$Legend))
       p <- ggplot2::ggplot() +
         ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-        ggplot2::geom_point(data = resResults, size = 1.2) +
+        # ggplot2::geom_point(data = resResults, size = 1.2) +
+        suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Simulation"]]))) +
         ggplot2::geom_point(data = ref, size = 1.7) +
         ggplot2::scale_color_manual(values = pal) +
         themeRestauraR(baseSize = 15)
@@ -173,20 +177,23 @@ viewResults <- function(x, xvar, yvar = NULL, showReference = TRUE, showMultisit
         if(!showMultisite){
           p <- ggplot2::ggplot() +
             ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-            ggplot2::geom_point(data = resResults, size = 1.2) +
+            # ggplot2::geom_point(data = resResults, size = 1.2) +
+            suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Simulation"]]))) +
             ggplot2::scale_color_manual(values = pal) +
             themeRestauraR(baseSize = 15)
         } else{
           # Else multisite results
           p <- ggplot2::ggplot() +
             ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]]) +
-            ggplot2::geom_point(data = resResults, size = 1.2, col = pal) +
+            # ggplot2::geom_point(data = resResults, size = 1.2, col = pal) +
+            suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, col = pal, mapping = ggplot2::aes(customdata = .data[["Combination"]]))) +
             themeRestauraR(baseSize = 15) 
         }
       } else{
         p <- ggplot2::ggplot() +
           ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-          ggplot2::geom_point(data = resResults, size = 1.2) +
+          # ggplot2::geom_point(data = resResults, size = 1.2) +
+          suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Simulation"]]))) +
           themeRestauraR(baseSize = 15)
       }
     }

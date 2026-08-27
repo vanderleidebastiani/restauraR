@@ -68,6 +68,9 @@ viewResults(scenario, xvar = "CWM_BT")
 viewResults(scenario, xvar = "CWM_BT", yvar = "rao")
 # View multifunctionality - upset plot
 viewMultifunctionality(scenario)
+# Interactive graphs (only histogram and scatter plot)
+# require(plotly)
+# plotly::ggplotly(viewResults(scenario, xvar = "CWM_BT", yvar = "rao"))
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
