@@ -35,6 +35,7 @@ Imports:
     grDevices,
     DiagrammeR,
     BAT
+Suggests: plotly
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)
 Encoding: UTF-8
