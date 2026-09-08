@@ -30,7 +30,8 @@ simulateCommunities(
   minAbund = NULL,
   group = NULL,
   probGroupRich = NULL,
-  probGroupAbund = NULL
+  probGroupAbund = NULL,
+  progressbar = FALSE
 )
 
 mergeSimulations(...)
@@ -81,6 +82,8 @@ mergeSimulations(...)
 \item{probGroupRich}{Numeric vector of probabilities to draw species richness in each group.}
 
 \item{probGroupAbund}{Numeric vector of probabilities to draw individuals or relative abundances in each group.}
+
+\item{progressbar}{Logical argument to specify if display a progress bar on the R console (Default progressbar = FALSE).}
 
 \item{...}{Objects of class "simRest" to be concatenated. Additional arguments for respective methods.}
 

@@ -106,6 +106,7 @@
 #' 
 #' @encoding UTF-8
 #' @importFrom data.table rbindlist as.data.table
+#' @importFrom utils txtProgressBar
 #' @aliases mergeSimulations print.simRest
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param restComp Matrix with species composition for restoration sites. NAs not accepted.
@@ -127,6 +128,7 @@
 #' @param group Character vector specifying the trait name that indicates the group to which the species belongs.
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
+#' @param progressbar Logical argument to specify if display a progress bar on the R console (Default progressbar = FALSE).
 #' @param ... Objects of class "simRest" to be concatenated. Additional arguments for respective methods.
 #' @param x Object of class "simRest" to print.
 #' @param object Object of class "simRest" to summarise.
@@ -172,7 +174,7 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, maxDiver = NULL, constCWM = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, minAbund = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL){
+simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, maxDiver = NULL, constCWM = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, minAbund = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL, progressbar = FALSE){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
@@ -287,6 +289,18 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     rownames(restComp) <- rownames(restGroup)
     colnames(restComp) <- rownames(traits)
   }
+  # Get the number of total simulations
+  nTotal <- it
+  nCurrent <- 0
+  if(!is.null(restComp)){
+    nTotal <- it*nrow(restComp)
+  }
+  # Create text progress bar
+  if(progressbar){
+    progBar <- utils::txtProgressBar(style = 3)  
+  } else{
+    progBar <- NULL
+  }
   # Basic parameters without information of restoration sites
   if(is.null(restComp)){
     # Transform the rich argument in range vector
@@ -314,7 +328,8 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
                              rich = rich, maxDiver = maxDiver, constCWM = constCWM, phi = phi, 
                              nInd = nInd, cvAbund = cvAbund, prob = prob, method = method,
                              cooccur = cooccur, minAbund = minAbund,
-                             group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
+                             group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund,
+                             progressbar = progBar, nTotal = nTotal, nCurrent = nCurrent)
     # Organize restGroup informations
     restGroup <- data.frame(Simulation = paste0(prefix, rownames(propMatrix)))
     propMatrixTab <- propMatrix
@@ -396,8 +411,10 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
                                         rich = parRichList[[i]], maxDiver = maxDiver, constCWM = constCWM, phi = phi, 
                                         nInd = parIndList[[i]], cvAbund = cvAbund, prob = prob, method = method, 
                                         cooccur = cooccur, minAbund = minAbund,
-                                        group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund)
-      
+                                        group = group, probGroupRich = probGroupRich, probGroupAbund = probGroupAbund,
+                                        progressbar = progBar, nTotal = nTotal, nCurrent = nCurrent)
+      # Update current simulation
+      nCurrent <- it*i
     }
     rowNameProMatrix <- rownames(propMatrixList[[1]])
     rowNameRest <- rownames(restComp)
@@ -437,6 +454,10 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
   RES$simulation$composition <- propMatrixTab
   RES$simulation$group <- restGroup
   RES$simulation$baseline <- restCompBaseline
+  # Close text progress bar 
+  if(progressbar){
+    close(progBar)
+  }
   class(RES) <- "simRest"
   return(RES)
 }

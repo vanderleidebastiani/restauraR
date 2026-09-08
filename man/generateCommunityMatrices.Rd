@@ -22,7 +22,10 @@ generateCommunityMatrices(
   minAbund,
   group,
   probGroupRich,
-  probGroupAbund
+  probGroupAbund,
+  progressbar,
+  nTotal,
+  nCurrent
 )
 }
 \arguments{
@@ -59,6 +62,12 @@ generateCommunityMatrices(
 \item{probGroupRich}{Numeric vector of probabilities to draw species richness in each group.}
 
 \item{probGroupAbund}{Numeric vector of probabilities to draw individuals or relative abundances in each group.}
+
+\item{progressbar}{An object of class txtProgressBar.}
+
+\item{nTotal}{Total number of iterations to the progress bar.}
+
+\item{nCurrent}{Current iteration to the progress bar.}
 }
 \value{
 A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.

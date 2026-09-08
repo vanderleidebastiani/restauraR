@@ -2,6 +2,7 @@
 #' @description Create simulated community matrices through constrained species assembly from a regional pool. Supports multiple ecological constraints, including functional diversity optimisation, community-weighted mean constraints, co-occurrence patterns, and group-based sampling.
 #' @encoding UTF-8
 #' @importFrom stats rlnorm
+#' @importFrom utils setTxtProgressBar
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
 #' @param und Character vector specifying the trait name that indicates undesired species in traits data (binary: 1 = undesired, 0 = desired).
@@ -19,11 +20,15 @@
 #' @param group Character vector specifying the trait name that indicates the group to which the species belongs.
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
 #' @param probGroupAbund Numeric vector of probabilities to draw individuals or relative abundances in each group.
+#' @param progressbar An object of class txtProgressBar.
+#' @param nTotal Total number of iterations to the progress bar.
+#' @param nCurrent Current iteration to the progress bar.
 #' @returns A community matrix with sites as rows and species as columns, containing either relative species proportions or raw species abundances counts.
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{findSpecies}}
 #' @keywords InternalFunction
-generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund){
+generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, constCWM, phi, nInd, cvAbund, prob, method, cooccur, minAbund, group, probGroupRich, probGroupAbund,
+                                      progressbar, nTotal, nCurrent){
   # Remove undesired species
   if(!is.null(und)){
     undLog <- as.logical(traits[,und])
@@ -98,6 +103,10 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
     cooccurTemp <- cooccur[avaLog, avaLog, drop = FALSE]
     propMatrixAva <- matrix(0, ncol = nSpecies, nrow = itAva)
     for(i in 1:itAva){
+      if (!is.null(progressbar)) {
+        nCurrent <- nCurrent + 1
+        utils::setTxtProgressBar(progressbar, nCurrent/nTotal)
+      }
       if(!is.null(group)){
         propMatrixAva[i, avaLog] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                           nRich2 = nsp, 
@@ -128,6 +137,10 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
   # Run simulation with all species
   propMatrixPool <- matrix(0, ncol = nSpecies, nrow = itAll)
   for(i in 1:itAll){
+    if (!is.null(progressbar)) {
+      nCurrent <- nCurrent + 1
+      utils::setTxtProgressBar(progressbar, nCurrent/nTotal)
+    }
     if(!is.null(group)){
       propMatrixPool[i, ] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                    nRich2 = rich[2], 
@@ -170,6 +183,10 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
     sppMaxPos <- species %in% sppMax
     cooccurTemp <- cooccur[sppMaxPos, sppMaxPos, drop = FALSE]
     for(i in 1:itMax){
+      if (!is.null(progressbar)) {
+        nCurrent <- nCurrent + 1
+        utils::setTxtProgressBar(progressbar, nCurrent/nTotal)
+      }
       if(!is.null(group)){
         propMatrixSelSpp[i, sppMaxPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                 nRich2 = nsp, 
@@ -212,6 +229,10 @@ generateCommunityMatrices <- function(traits, ava, und, it, rich, maxDiver, cons
       sppMaxAvaPos <- species %in% sppMaxAva
       cooccurTemp <- cooccur[sppMaxAvaPos, sppMaxAvaPos, drop = FALSE]
       for(i in 1:itMaxAva){
+        if (!is.null(progressbar)) {
+          nCurrent <- nCurrent + 1
+          utils::setTxtProgressBar(progressbar, nCurrent/nTotal)
+        }
         if(!is.null(group)){
           propMatrixSelSppAva[i, sppMaxAvaPos] <- sampleAbundanceGroups(nRich1 = rich[1],
                                                                         nRich2 = nsp, 
