@@ -2,7 +2,7 @@
 #' @encoding UTF-8
 #' @importFrom ggplot2 theme element_text element_line element_blank element_rect
 #' @param baseSize Base font size for text elements (default baseSize = 10).
-#' @param legendPosition Position of the legends (default legendPosition = "left").
+#' @param legendPosition Position of the legends (default legendPosition = "right").
 #' @returns A ggplot theme object.
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}
@@ -26,9 +26,10 @@ themeRestauraR <- function(baseSize = 10, legendPosition = "right"){
     legend.title = ggplot2::element_text(size = baseSize*0.8, face = "bold"),
     legend.text = ggplot2::element_text(size = baseSize*0.7),
     # Background
+    panel.border = ggplot2::element_rect(fill = NA, linewidth = 0.5),
     plot.background = ggplot2::element_rect(fill = "#ffffff", color = NA),
     panel.background = ggplot2::element_rect(fill  = "#ffffff", color = NA),
     legend.background = ggplot2::element_rect(fill = "#ffffff", color = NA),
-    strip.background = ggplot2::element_rect(fill = "#dbdbdb", color = NA)
+    strip.background = ggplot2::element_rect(fill = "#dbdbdb", color = "#000000")
   )
 }

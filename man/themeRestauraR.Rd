@@ -10,7 +10,7 @@ themeRestauraR(baseSize = 10, legendPosition = "right")
 \arguments{
 \item{baseSize}{Base font size for text elements (default baseSize = 10).}
 
-\item{legendPosition}{Position of the legends (default legendPosition = "left").}
+\item{legendPosition}{Position of the legends (default legendPosition = "right").}
 }
 \value{
 A ggplot theme object.
