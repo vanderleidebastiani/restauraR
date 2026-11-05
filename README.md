@@ -1,4 +1,4 @@
-# R Package - restauraR - v0.0.7
+# R Package - restauraR - v0.0.8
 
 **restauraR - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches**
 

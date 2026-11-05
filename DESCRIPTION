@@ -1,8 +1,8 @@
 Package: restauraR
 Type: Package
 Title: Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
-Version: 0.0.7
-Date: 2026-05-04
+Version: 0.0.8
+Date: 2026-11-05
 Authors@R: c(person(given = c("Vanderlei", "J."),
                       family = "Debastiani",
                       role = c("aut", "cre"),
@@ -28,6 +28,8 @@ Imports:
     R2HTML,
     tableHTML,
     ComplexUpset,
+    ggridges,
+    scales,
     knitr,
     rprojroot,
     utils,
@@ -53,7 +55,10 @@ Collate:
     'computeParameters.R'
     'computeMultifunctionality.R'
     'createReport.R'
+    'extractNamesLogicTest.R'
+    'extractParameters.R'
     'extractResults.R'
+    'extractValuesLogicTest.R'
     'findSpecies.R'
     'generateCommunityMatrices.R'
     'globals.R'
@@ -65,6 +70,15 @@ Collate:
     'simulateCommunities.R'
     'mergeSimulations.R'
     'optimiseSelection.R'
+    'viewResults2.R'
+    'plotResultsConvexHull.R'
+    'plotResultsDumbbell.R'
+    'plotResultsHistogram.R'
+    'plotResultsParallelCoordinate.R'
+    'plotResultsRidges.R'
+    'plotResultsScatter.R'
+    'plotResultsSpeciesRank.R'
+    'plotResultsUpset.R'
     'print.simRest.R'
     'print.simRestCheck.R'
     'print.simRestSelect.R'
