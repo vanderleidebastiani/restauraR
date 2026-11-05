@@ -56,7 +56,7 @@ standardiseParameters <- function(x, parameters = NULL, method = c("max", "stand
       xPar <- sweep(xPar, MARGIN = 2, STATS = apply(xPar, MARGIN = 2, max, na.rm = TRUE), FUN = "/")
     }
     if(stmethod == 2){
-      xPar <- scale(xPar)
+      xPar <- scale(xPar, center = TRUE, scale = TRUE)
     }
     # Results organization
     if(!is.null(x$reference$results) || !is.null(x$supplementary$results)){
