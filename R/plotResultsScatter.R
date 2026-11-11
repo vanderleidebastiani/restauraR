@@ -37,7 +37,7 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
       }
       # Check parameters
       if (length(parameters) != 2) {
-        stop("The argument parameters must be lenght of 2")
+        stop("The argument parameters must be length of 2")
       }
       varNamesTestsEval <- extractNamesLogicTest(parameters[1], parameters[2], completeString)
       valuesTestsEval <- extractValuesLogicTest(completeString)
@@ -46,7 +46,7 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
         names(pal) <- c("Simulation selected - unavailable", "Simulation selected - available", "Simulation not selected - unavailable", "Simulation not selected - available", "References", "Supplementary")
         resResults$Legend <- ifelse(resResults$unavailable == 0 & selTemp, 
                                     "Simulation selected - available",
-                                    ifelse(resResults$unavailable == 1 & selTemp,
+                                    ifelse(resResults$unavailable > 0 & selTemp,
                                            "Simulation selected - unavailable",
                                            ifelse(resResults$unavailable == 0 & !selTemp,
                                                   "Simulation not selected - available",
