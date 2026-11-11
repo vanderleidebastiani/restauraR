@@ -10,7 +10,7 @@ plotResultsParallelCoordinate <- function(x, parameters, highlight = c("ResultTy
   }
   # Check parameters
   if(length(parameters)<2){
-    stop("Parallel coordinate require at least two parameters for plotting")
+    stop("Parallel coordinate plots require at least two parameters")
   }
   # Check names
   varNames <- colnames(x$selection$results)
@@ -27,7 +27,7 @@ plotResultsParallelCoordinate <- function(x, parameters, highlight = c("ResultTy
   }
   varClass <- sapply(x$selection$results[, parameters, drop = FALSE], vectorClass)
   if(any(!varClass %in% c("numeric"))){
-    stop("All parameters need to be of numeric class")
+    stop("All parameters must be numeric")
   }
   # Extract parameters data
   res <- extractParameters(x, parameters, showSimulation = TRUE, showReference = showReference, showSupplementary = showSupplementary)  
@@ -48,7 +48,7 @@ plotResultsParallelCoordinate <- function(x, parameters, highlight = c("ResultTy
     refNames <- unique(dataPlot$Site[dataPlot$ResultType == "Reference"])
     supNames <- unique(dataPlot$Site[dataPlot$ResultType == "Supplementary"])
     if(any(supNames %in% simNames) && showSupplementary){
-      stop("The supplementary sites have the same names as the Simulation sites. Highlighting individual sites is not permitted")
+      stop("Supplementary and simulation sites share names. Highlighting by sites is not possible")
     }
     # Set colours
     blues <- if(length(simNames) == 0) character(0) else if (length(simNames) == 1) "#1d4b61" else scales::pal_hue(h = c(195, 217), c = 100, l = 10)(length(simNames))

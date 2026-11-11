@@ -37,7 +37,7 @@ plotResultsHistogram <- function(x, parameters, showReference = TRUE, showSupple
   }
   # Check parameters
   if (length(parameters) > 1) {
-    stop("Only one parameter can be specified")
+    stop("Only one parameter can be specified") 
   }
   # Get reference and supplementary results
   # Force hide reference if column names not found in reference results

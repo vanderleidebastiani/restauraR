@@ -10,7 +10,7 @@ plotResultsConvexHull <- function(x, parameters, traits, showReference = TRUE, s
   }
   # Check parameters
   if (length(parameters) != 2) {
-    stop("The argument parameters must be lenght of 2")
+    stop("The argument parameters must be length of 2")
   }
   xvar <- parameters[1]
   yvar <- parameters[2]
