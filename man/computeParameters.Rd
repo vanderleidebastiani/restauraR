@@ -80,11 +80,26 @@ A list (class "simRest" or "simRestSelect") with the elements:
 \item{supplementary$multifunctionality}{A data frame with binary multifunctionality tests to supplementary sites.}
 }
 \description{
-\code{computeParameters} Calculate basic parameters in each simulated community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao's quadratic entropy and functional dissimilarity.
+Compute functional parameters, standardise them, and combine them into multifunctionality indices for simulated communities.
+}
+\details{
+\strong{Overview}
 
-\code{standardiseParameters} Standardises the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
+The functions in this topic operate sequentially on an object of class "simRest" (or "simRestSelect"). \code{computeParameters} calculates the functional parameters of every 
+simulated community, \code{standardiseParameters} rescales those parameters, and \code{computeMultifunctionality} converts threshold-based logical tests into a binary 
+multifunctionality matrix and an alpha multifunctionality index.
 
-\code{computeMultifunctionality} Computes binary multifunctionality matrix and alpha multifunctionality index based on specific test criteria.
+\strong{computeParameters}
+
+Calculate basic parameters in each simulated community: richness, count species unavailable, Community Weighted Mean, Community Weighted Variance, Rao's quadratic entropy and functional dissimilarity.
+
+\strong{standardiseParameters}
+
+Standardises the calculated parameters. Two methods are available: "max", which divides the values by the maximum, and "standardise", which scales the calculated parameters to zero mean and unit variance.
+
+\strong{computeMultifunctionality}
+
+Computes binary multifunctionality matrix and alpha multifunctionality index based on specific test criteria.
 }
 \examples{
 data("cerrado")
