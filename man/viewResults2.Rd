@@ -25,7 +25,8 @@ viewResults2(
   showReference = TRUE,
   showSupplementary = FALSE,
   showMultisite = FALSE,
-  testsFilter = NULL
+  testsFilter = NULL,
+  showAvailability = FALSE
 )
 
 plotResultsConvexHull(
@@ -67,7 +68,8 @@ plotResultsScatter(
   showReference = TRUE,
   showSupplementary = FALSE,
   showMultisite = FALSE,
-  testsFilter = NULL
+  testsFilter = NULL,
+  showAvailability = FALSE
 )
 
 plotResultsSpeciesRank(
@@ -98,6 +100,8 @@ plotResultsUpset(x, showReference = FALSE, ...)
 
 \item{testsFilter}{Character vector of logical tests used to highlight selected simulations in scatter plot. See details.}
 
+\item{showAvailability}{Logical indicating whether to plot highlight species availability in each simulation (default showAvailability = FALSE).}
+
 \item{...}{Arguments passed to the upset function of the package ComplexUpset.}
 }
 \value{
@@ -127,8 +131,8 @@ Reference and supplementary sites can be added as rug lines along the x-axis. Ex
 
 Draws a scatter plot of two parameters (one per axis) to explore trade-offs and bivariate relationships among parameters of simulated 
 or selected communities, or of multisite results. Reference and supplementary sites can be added as distinct points. The argument testsFilter can be supplied to 
-classify simulations based on logical thresholds, highlighting selected versus non-selected simulations, and drawing vertical and horizontal threshold lines. Exactly
-two parameters, one for each axis, must be supplied.
+classify simulations based on logical thresholds, highlighting selected versus non-selected simulations, and drawing vertical and horizontal threshold lines. The
+argument showAvailability can be used to highlight species availability in each simulation. Exactly two parameters, one for each axis, must be supplied.
 
 \strong{"RidgesPlot"}
 
@@ -274,6 +278,11 @@ viewResults2(scenarioSelectedSingle,
              type = "DumbbellPlot", 
              parameters = "rao", 
              showReference = TRUE)
+# Interactive graphs
+# require(plotly)
+# plotly::ggplotly(viewResults2(scenario, 
+#                               type = "ScatterPlot", 
+#                               parameters = c("simpson", "rao")))
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 

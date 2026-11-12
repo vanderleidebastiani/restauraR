@@ -60,7 +60,7 @@ plotResultsHistogram <- function(x, parameters, showReference = TRUE, showSupple
   if(inherits(tableResults[, parameters], "factor") || inherits(tableResults[, parameters], "character")){
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[parameters]]) +
-      ggplot2::geom_bar(data = tableResults, fill = "#1d4b61", col = "#ffffff") +
+      ggplot2::geom_bar(data = tableResults, fill = paletteRestauraR()[["DarkBlue"]], col = paletteRestauraR()[["White"]]) +
       ggplot2::labs(y = "Count") +
       themeRestauraR(baseSize = 15)
   } else{
@@ -76,20 +76,21 @@ plotResultsHistogram <- function(x, parameters, showReference = TRUE, showSupple
     }
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[parameters]]) +
-      ggplot2::geom_histogram(data = tableResults, bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
+      ggplot2::geom_histogram(data = tableResults, bins = binsTemp, fill = paletteRestauraR()[["DarkBlue"]], col = paletteRestauraR()[["White"]]) +
       ggplot2::labs(y = "Count") +
       themeRestauraR(baseSize = 15)
   }
   if(showReference || showSupplementary){
-    pal <- c("#BD0026", "#C37614")
+    # pal <- c("#BD0026", "#C37614")
+    pal <- paletteRestauraR()[c("Magenta", "Orange")]
     names(pal) <- c("Reference", "Supplementary")
     if(showReference){
         p <- p + 
-          ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1, inherit.aes = FALSE)
+          ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1.2, inherit.aes = FALSE)
     } 
     if(showSupplementary){
       p <- p + 
-        ggplot2::geom_rug(data = suple, mapping = ggplot2::aes(x = .data[[parameters]], col = "Supplementary"), linewidth = 1, inherit.aes = FALSE)
+        ggplot2::geom_rug(data = suple, mapping = ggplot2::aes(x = .data[[parameters]], col = "Supplementary"), linewidth = 1.2, inherit.aes = FALSE)
     }
     p <- p +
       ggplot2::scale_colour_manual(values = pal) +

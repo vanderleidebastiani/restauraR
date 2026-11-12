@@ -70,6 +70,7 @@ Collate:
     'simulateCommunities.R'
     'mergeSimulations.R'
     'optimiseSelection.R'
+    'paletteRestauraR.R'
     'viewResults2.R'
     'plotResultsConvexHull.R'
     'plotResultsDumbbell.R'

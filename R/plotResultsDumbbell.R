@@ -43,21 +43,22 @@ plotResultsDumbbell <- function(x, parameters, showReference = TRUE){
   dataPlot0 <- extractParameters(x, parameters, showSimulation = TRUE, showSupplementary = TRUE, showReference = FALSE)
   dataPlot0$ResultType <- ifelse(dataPlot0$ResultType == "Supplementary", "Before", "After")
   dataPlot0$ResultType <- factor(dataPlot0$ResultType, levels = c("Before", "After"))
-  pal <- c("#C37614", "#1d4b61", "#BD0026")
+  # pal <- c("#C37614", "#1d4b61", "#BD0026")
+  pal <- paletteRestauraR()[c("Orange", "DarkBlue","Magenta")]
   names(pal) <- c("Before", "After", "Reference")
   if(showReference){
     p <- ggplot2::ggplot()+
       ggplot2::aes(xmin = .data[["value0"]], xmax = .data[["value1"]], y = .data[["Site"]]) +
-      ggplot2::geom_linerange(data = dataPlot, linewidth = 1.5, col = "grey75") +
+      ggplot2::geom_linerange(data = dataPlot, linewidth = 1.5, col = paletteRestauraR()[["LightGray"]]) +
       suppressWarnings(ggplot2::geom_point(data = dataPlot0, mapping = ggplot2::aes(x = .data[[parameters]], y = .data[["Site"]], col = .data[["ResultType"]], customdata = .data[["Simulation"]]), size = 6, inherit.aes = FALSE)) +
-      ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1, inherit.aes = FALSE) +
+      ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1.2, inherit.aes = FALSE) +
       ggplot2::scale_colour_manual(values = pal) +
       ggplot2::labs(x = parameters, colour = "Legend") +
       themeRestauraR(baseSize = 15)
   } else{
     p <- ggplot2::ggplot()+
       ggplot2::aes(xmin = .data[["value0"]], xmax = .data[["value1"]], y = .data[["Site"]]) +
-      ggplot2::geom_linerange(data = dataPlot, linewidth = 1.5, col = "grey75") +
+      ggplot2::geom_linerange(data = dataPlot, linewidth = 1.5, col = paletteRestauraR()[["LightGray"]]) +
       suppressWarnings(ggplot2::geom_point(data = dataPlot0, mapping = ggplot2::aes(x = .data[[parameters]], y = .data[["Site"]], col = .data[["ResultType"]], customdata = .data[["Simulation"]]), size = 6, inherit.aes = FALSE)) +
       ggplot2::scale_colour_manual(values = pal) +
       ggplot2::labs(x = parameters, colour = "Legend") +

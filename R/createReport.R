@@ -50,19 +50,23 @@ createReport <- function(x, props = NULL){
     if(inherits(x[,varName], "factor") || inherits(x[,varName], "character")){
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
-        ggplot2::geom_bar(fill = "#1d4b61", col = "#ffffff") +
-        themeRestauraR(baseSize = 12)
+        ggplot2::geom_bar(fill = paletteRestauraR()[["DarkBlue"]], col = paletteRestauraR()[["White"]]) +
+        themeRestauraR(baseSize = 15)
     } else{
       # Freedman-Diaconis method
       if(nrow(x)>1){
-        binsTemp <- grDevices::nclass.FD(x[,varName])
+        if(length(unique(x[,varName]))<2){
+          binsTemp <- 1
+        } else{
+          binsTemp <- grDevices::nclass.FD(x[,varName])
+        }
       } else{
         binsTemp <- 1
       }
       p1 <- ggplot2::ggplot(data = x) +
         ggplot2::aes(x = .data[[varName]]) +
-        ggplot2::geom_histogram(bins = binsTemp, fill = "#1d4b61", col = "#ffffff") +
-        themeRestauraR(baseSize = 12)
+        ggplot2::geom_histogram(bins = binsTemp, fill = paletteRestauraR()[["DarkBlue"]], col = paletteRestauraR()[["White"]]) +
+        themeRestauraR(baseSize = 15)
     }
     # Export temp plot
     ggplot2::ggsave(file.path(dirTemp, pName),
@@ -76,8 +80,8 @@ createReport <- function(x, props = NULL){
     cat(tableHTML::add_css_table(tableHTML::tableHTML(dfSummary, rownames = FALSE, round = 3), css = list('text-align', 'center')), file = htmlFile, append = TRUE)
     # Include plot
     R2HTML::HTMLInsertGraph(GraphFileName = pName, Caption = "", GraphBorder = 1,
-                    Align = "left", WidthHTML = 600, HeightHTML = 500,
-                    file = htmlFile, append = TRUE)
+                            Align = "left", WidthHTML = 600, HeightHTML = 500,
+                            file = htmlFile, append = TRUE)
     # New line
     R2HTML::HTMLbr(file = htmlFile, append = TRUE)
   }

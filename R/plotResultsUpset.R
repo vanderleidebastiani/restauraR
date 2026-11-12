@@ -30,12 +30,12 @@ plotResultsUpset <- function(x, showReference = FALSE, ...){
     p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
                              keep_empty_groups = TRUE,
                              name = "Groups",
-                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = "#1d4b61") +
-                                                       ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"),
+                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = paletteRestauraR()[["DarkBlue"]]) +
+                                                       ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"),
                                                                       panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank())+
                                                        themeRestauraR(baseSize = 15)),
-                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = "#1d4b61")) +
-                               ggplot2::theme(axis.title = ggplot2::element_text(size = 12*0.9, face = "bold"),
+                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = paletteRestauraR()[["DarkBlue"]])) +
+                               ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"),
                                               panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank()) +
                                themeRestauraR(baseSize = 15),
                              sort_intersections_by = "degree",

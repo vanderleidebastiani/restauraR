@@ -21,8 +21,8 @@
 #' 
 #' Draws a scatter plot of two parameters (one per axis) to explore trade-offs and bivariate relationships among parameters of simulated 
 #' or selected communities, or of multisite results. Reference and supplementary sites can be added as distinct points. The argument testsFilter can be supplied to 
-#' classify simulations based on logical thresholds, highlighting selected versus non-selected simulations, and drawing vertical and horizontal threshold lines. Exactly
-#' two parameters, one for each axis, must be supplied.
+#' classify simulations based on logical thresholds, highlighting selected versus non-selected simulations, and drawing vertical and horizontal threshold lines. The
+#' argument showAvailability can be used to highlight species availability in each simulation. Exactly two parameters, one for each axis, must be supplied.
 #' 
 #' \strong{"RidgesPlot"}
 #' 
@@ -79,6 +79,7 @@
 #' @param showSupplementary Logical indicating whether to include supplementary sites from visualisation (default showSupplementary = FALSE).
 #' @param showMultisite Logical indicating whether to plot results from the multisite analysis; otherwise, the plot shows the basic results (default showMultisite = FALSE).
 #' @param testsFilter Character vector of logical tests used to highlight selected simulations in scatter plot. See details.
+#' @param showAvailability Logical indicating whether to plot highlight species availability in each simulation (default showAvailability = FALSE).
 #' @param ... Arguments passed to the upset function of the package ComplexUpset.
 #' @returns A ggplot plot object (or an object from the ComplexUpset package for UpsetPlot) that can be further customised using standard ggplot2 syntax.
 #' @author See \code{\link{restauraR-package}}.
@@ -198,8 +199,13 @@
 #'              type = "DumbbellPlot", 
 #'              parameters = "rao", 
 #'              showReference = TRUE)
+#' # Interactive graphs
+#' # require(plotly)
+#' # plotly::ggplotly(viewResults2(scenario, 
+#' #                               type = "ScatterPlot", 
+#' #                               parameters = c("simpson", "rao")))
 #' @export
-viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site", "Simulation"), traits = NULL, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL){
+viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site", "Simulation"), traits = NULL, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL, showAvailability = FALSE){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
@@ -209,7 +215,7 @@ viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site"
   typeTest <- match.arg(type, TYPE)
   p <- switch(typeTest,
     "Histogram" = plotResultsHistogram(x = x, parameters = parameters, showReference = showReference, showSupplementary = showSupplementary, showMultisite = showMultisite),
-    "ScatterPlot" = plotResultsScatter(x = x, parameters = parameters, showReference = showReference, showSupplementary = showSupplementary, showMultisite = showMultisite, testsFilter = testsFilter),
+    "ScatterPlot" = plotResultsScatter(x = x, parameters = parameters, showReference = showReference, showSupplementary = showSupplementary, showMultisite = showMultisite, testsFilter = testsFilter, showAvailability = showAvailability),
     "RidgesPlot" = plotResultsRidges(x = x, parameters = parameters, showReference = showReference, showSupplementary = showSupplementary),
     "ParallelCoordinate" = plotResultsParallelCoordinate(x = x, parameters = parameters, highlight = highlight, showReference = showReference, showSupplementary = showSupplementary),
     "SpeciesRank" = plotResultsSpeciesRank(x = x, highlight = highlight, showReference = showReference, showSupplementary = showSupplementary),

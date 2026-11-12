@@ -34,18 +34,19 @@ plotResultsRidges <- function(x, parameters, showReference = TRUE, showSupplemen
   }
   p <- ggplot2::ggplot() +
     ggplot2::aes(x = .data[[parameters]], y = .data[["Site"]]) +
-    ggridges::geom_density_ridges(data = dataPlot, fill = "#227AB5", col = "#1d4b61") +
+    ggridges::geom_density_ridges(data = dataPlot, fill = paletteRestauraR()[["LightBlue"]], col = paletteRestauraR()[["DarkBlue"]]) +
     themeRestauraR(baseSize = 15)
   if(showReference || showSupplementary){
-    pal <- c("#BD0026", "#C37614")
+    # pal <- c("#BD0026", "#C37614")
+    pal <- paletteRestauraR()[c("Magenta", "Orange")]
     names(pal) <- c("Reference", "Supplementary")
     if(showReference){
       p <- p +
-        ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1, inherit.aes = FALSE)
+        ggplot2::geom_rug(data = ref, mapping = ggplot2::aes(x = .data[[parameters]], col = "Reference"), linewidth = 1.2, inherit.aes = FALSE)
     }
     if(showSupplementary){
       p <- p +
-        ggplot2::geom_rug(data = suple, mapping = ggplot2::aes(x = .data[[parameters]], col = "Supplementary"), linewidth = 1, inherit.aes = FALSE)
+        ggplot2::geom_rug(data = suple, mapping = ggplot2::aes(x = .data[[parameters]], col = "Supplementary"), linewidth = 1.2, inherit.aes = FALSE)
     }
     p <- p +
       ggplot2::scale_colour_manual(values = pal) +

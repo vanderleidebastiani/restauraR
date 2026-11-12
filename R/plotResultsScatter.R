@@ -3,7 +3,7 @@
 #' @encoding UTF-8
 #' @keywords MainFunction
 #' @export
-plotResultsScatter <- function(x, parameters, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL){
+plotResultsScatter <- function(x, parameters, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL, showAvailability = FALSE){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
@@ -12,13 +12,16 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
     if(inherits(x, "simRest")){
       resResults <- x$simulation$results
       if(!is.null(testsFilter)){
-        pal <- c("#A6CEE4", "#227AB5", "#b5b5b5","#000000", "#BD0026", "#C37614")
+        # pal <- c("#A6CEE4", "#227AB5", "#b5b5b5","#000000", "#BD0026", "#C37614")
+        pal <- paletteRestauraR()[c("LightBlue", "DarkBlue", "LightGray", "DarkGray", "Magenta", "Orange")]
       } else{
-        pal <- c("#b5b5b5","#000000", "#BD0026", "#C37614")  
+        # pal <- c("#b5b5b5","#000000", "#BD0026", "#C37614")  
+        pal <- paletteRestauraR()[c("LightGray", "DarkGray", "Magenta", "Orange")]
       }
     } else{
       resResults <- x$selection$results
-      pal <- c("#A6CEE4", "#227AB5", "#BD0026", "#C37614")
+      # pal <- c("#A6CEE4", "#227AB5", "#BD0026", "#C37614")
+      pal <- paletteRestauraR()[c("LightBlue", "DarkBlue", "Magenta", "Orange")]
     }
     if(is.null(resResults)){
       stop("The x argument must contain the parameters calculated")
@@ -41,9 +44,9 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
       }
       varNamesTestsEval <- extractNamesLogicTest(parameters[1], parameters[2], completeString)
       valuesTestsEval <- extractValuesLogicTest(completeString)
-      if(!is.null(resResults$unavailable)){
+      if(showAvailability && !is.null(resResults$unavailable)){
         # Set names in the palette
-        names(pal) <- c("Simulation selected - unavailable", "Simulation selected - available", "Simulation not selected - unavailable", "Simulation not selected - available", "References", "Supplementary")
+        names(pal) <- c("Simulation selected - unavailable", "Simulation selected - available", "Simulation not selected - unavailable", "Simulation not selected - available", "Reference", "Supplementary")
         resResults$Legend <- ifelse(resResults$unavailable == 0 & selTemp, 
                                     "Simulation selected - available",
                                     ifelse(resResults$unavailable > 0 & selTemp,
@@ -53,36 +56,39 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
                                                   "Simulation not selected - unavailable")))
         resResults$Legend <- factor(resResults$Legend, c("Simulation selected - available", "Simulation selected - unavailable", 
                                                          "Simulation not selected - available", "Simulation not selected - unavailable", 
-                                                         "References", "Supplementary"))
+                                                         "Reference", "Supplementary"))
       } else{
         # Set names in the palette
         pal <- pal[c(2, 4:6)]
-        names(pal) <- c("Simulation selected", "Simulation not selected", "References", "Supplementary")
+        names(pal) <- c("Simulation selected", "Simulation not selected", "Reference", "Supplementary")
         resResults$Legend <- ifelse(selTemp, "Simulation selected", "Simulation not selected")
-        resResults$Legend <- factor(resResults$Legend, levels = c("Simulation selected", "Simulation not selected", "References", "Supplementary"))
+        resResults$Legend <- factor(resResults$Legend, levels = c("Simulation selected", "Simulation not selected", "Reference", "Supplementary"))
       }
     } else{
       # Set legend to unavailable and available species
-      if(!is.null(resResults$unavailable)){
+      if(showAvailability && !is.null(resResults$unavailable)){
         # Set names in the palette
-        names(pal) <- c("Unavailable", "Available", "References", "Supplementary")
-        resResults$Legend <- ifelse(resResults$unavailable == 0, "Available", "Unavailable")
-        resResults$Legend <- factor(resResults$Legend, levels = c("Available", "Unavailable", "References", "Supplementary"))
+        names(pal) <- c("Simulation - unavailable", "Simulation - available", "Reference", "Supplementary")
+        resResults$Legend <- ifelse(resResults$unavailable == 0, "Simulation - available", "Simulation - unavailable")
+        resResults$Legend <- factor(resResults$Legend, levels = c("Simulation - available", "Simulation - unavailable", "Reference", "Supplementary"))
       } else{
         # Set names in the palette
         pal <- pal[2:4]
-        names(pal) <- c("Simulation", "References", "Supplementary")
+        names(pal) <- c("Simulation", "Reference", "Supplementary")
         resResults$Legend <- "Simulation"
-        resResults$Legend <- factor(resResults$Legend, levels = c("Simulation", "References", "Supplementary"))
+        resResults$Legend <- factor(resResults$Legend, levels = c("Simulation", "Reference", "Supplementary"))
       }
     }
   } else{
     if(inherits(x, "simRest")){
       resResults <- x$simulation$multisite$results
-      pal <- c("#000000")
+      # pal <- c("#000000")
+      pal <- paletteRestauraR()[["DarkGray"]]
+      
     } else{
       resResults <- x$selection$multisite$results
-      pal <- c("#1d4b61")
+      # pal <- c("#1d4b61")
+      pal <- paletteRestauraR()[["DarkBlue"]]
     }
     if(is.null(resResults)){
       stop("The x argument must contain the multisite results")
@@ -122,7 +128,7 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
     }  
   }
   if(showReference && !is.null(ref)){
-    ref$Legend <- "References"
+    ref$Legend <- "Reference"
     ref$Legend <- factor(ref$Legend, levels = levels(resResults$Legend))
   }
   if(showSupplementary && !is.null(suple)){
@@ -132,7 +138,7 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
   if(!showMultisite){
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]], col = .data[["Legend"]]) +
-      suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Simulation"]]))) +
+      suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.6, mapping = ggplot2::aes(customdata = .data[["Simulation"]]))) +
       themeRestauraR(baseSize = 15)
     if(showReference || showSupplementary){
       if(showReference){
@@ -156,7 +162,7 @@ plotResultsScatter <- function(x, parameters, showReference = TRUE, showSuppleme
     # Else multisite results
     p <- ggplot2::ggplot() +
       ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]]) +
-      suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.2, col = pal, mapping = ggplot2::aes(customdata = .data[["Combination"]]))) +
+      suppressWarnings(ggplot2::geom_point(data = resResults, size = 1.6, col = pal, mapping = ggplot2::aes(customdata = .data[["Combination"]]))) +
       themeRestauraR(baseSize = 15)
   }
   return(p)

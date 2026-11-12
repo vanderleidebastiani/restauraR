@@ -60,12 +60,13 @@ plotResultsConvexHull <- function(x, parameters, traits, showReference = TRUE, s
   }
   dataPlot$Legend <- factor(dataPlot$Legend, levels = c("Simulation", "Reference", "Supplementary"))
   traits <- data.frame(Species = rownames(traits), traits)
-  pal <- c("#1d4b61", "#BD0026", "#C37614")
+  # pal <- c("#1d4b61", "#BD0026", "#C37614")
+  pal <- paletteRestauraR()[c("DarkBlue", "Magenta", "Orange")]
   names(pal) <- c("Simulation", "Reference", "Supplementary")
   p <- ggplot2::ggplot() +
     ggplot2::aes(x = .data[[xvar]], y = .data[[yvar]]) +
     ggplot2::geom_polygon(data = dataPlot, mapping = ggplot2::aes(group = .data[["Legend"]], fill = .data[["Legend"]]), alpha = 0.5) +
-    suppressWarnings(ggplot2::geom_point(data = traits, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Species"]]))) +
+    suppressWarnings(ggplot2::geom_point(data = traits, size = 1.6, mapping = ggplot2::aes(customdata = .data[["Species"]]))) +
     ggplot2::scale_fill_manual(values = pal) +
     themeRestauraR(baseSize = 15)
   return(p)

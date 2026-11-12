@@ -61,8 +61,7 @@ DiagrammeR::grViz(
       
       optimiseSelection[label = <Optimise multi-site selection<br/><i>optimiseSelection</i>>, fillcolor = MediumSeaGreen]
       
-      viewResults[label = <Visualise basic results<br/><i>viewResults</i>>, fillcolor = Goldenrod]
-      viewMultifunctionality[label = <Visualise multifunctionality sets<br/><i>viewMultifunctionality</i>>, fillcolor = Goldenrod]
+      viewResults[label = <Visualise results<br/><i>viewResults</i>>, fillcolor = Goldenrod]
       extractResults[label = <Extract and export results<br/><i>extractResults</i>>, fillcolor = Goldenrod]
       mergeSelection[label = <Merge selections scenarios<br/><i>mergeSelection</i>>, fillcolor = Plum]
       mergeSimulations[label = <Merge simulations scenarios<br/><i>mergeSimulations</i>>, fillcolor = Plum]
@@ -91,10 +90,8 @@ DiagrammeR::grViz(
       mergeSelection -> selectCommunities
       selectCommunities -> optimiseSelection 
       optimiseSelection -> viewResults 
-      optimiseSelection -> viewMultifunctionality 
       optimiseSelection -> extractResults
       selectCommunities -> viewResults
-      selectCommunities -> viewMultifunctionality
       selectCommunities -> extractResults
       
       # Rank

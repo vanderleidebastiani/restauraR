@@ -9,13 +9,7 @@ plotResultsSpeciesRank <- function(x, highlight = c("ResultType", "Site", "Simul
     stop("The x argument must be of class simRestSelect")
   }
   HIGHLIGHT <- c("ResultType", "Site", "Simulation")
-  highlightTest <- pmatch(highlight, HIGHLIGHT)
-  if (length(highlightTest) > 1) {
-    stop("Only one option can be specified in highlight argument")
-  }
-  if (is.na(highlightTest)) {
-    stop("Invalid highlight argument. Choose either ResultType, Site ou Simulation")
-  }
+  highlight <- match.arg(highlight, HIGHLIGHT)
   dataPlot <- extractResults(x, type = "simComposition", dbFormat = TRUE)
   dataPlot$Rank <- stats::ave(-dataPlot$Abundance, dataPlot$Site, FUN = rank)
   dataPlot$ResultType <- "Simulation"
@@ -50,7 +44,8 @@ plotResultsSpeciesRank <- function(x, highlight = c("ResultType", "Site", "Simul
   # Define unique names for drawing lines
   dataPlot$lineGroup <- paste0(dataPlot$ResultType, dataPlot$Simulation, dataPlot$Site)
   if(highlight == "ResultType"){
-    pal <- c("#1d4b61", "#BD0026", "#C37614")
+    # pal <- c("#1d4b61", "#BD0026", "#C37614")
+    pal <- paletteRestauraR()[c("DarkBlue", "Magenta", "Orange")]
     names(pal) <- c("Simulation", "Reference", "Supplementary")
     # Reorder levels
     dataPlot$ResultType <- factor(dataPlot$ResultType, levels = c("Simulation", "Reference", "Supplementary"))
@@ -63,9 +58,9 @@ plotResultsSpeciesRank <- function(x, highlight = c("ResultType", "Site", "Simul
       stop("The supplementary sites have the same names as the Simulation sites. Highlighting individual sites is not permitted")
     }
     # Set colours
-    blues <- if(length(simNames) == 0) character(0) else if (length(simNames) == 1) "#1d4b61" else scales::pal_hue(h = c(195, 217), c = 100, l = 10)(length(simNames))
-    reds <- if(length(refNames) == 0) character(0) else if (length(refNames) == 1) "#BD0026" else scales::pal_hue(h = c(218, 255), c = 100, l = 10)(length(refNames))
-    yellows <- if(length(supNames) == 0) character(0) else if (length(supNames) == 1) "#C37614" else scales::pal_hue(h = c(45, 75), c = 100, l = 60)(length(supNames))
+    blues <- if(length(simNames) == 0) character(0) else if (length(simNames) == 1) paletteRestauraR()[["DarkBlue"]] else scales::pal_hue(h = c(195, 217), c = 100, l = 10)(length(simNames))
+    reds <- if(length(refNames) == 0) character(0) else if (length(refNames) == 1) paletteRestauraR()[["Magenta"]] else scales::pal_hue(h = c(326, 346), c = 100, l = 10)(length(refNames))
+    yellows <- if(length(supNames) == 0) character(0) else if (length(supNames) == 1) paletteRestauraR()[["Orange"]] else scales::pal_hue(h = c(45, 75), c = 100, l = 60)(length(supNames))
     pal <- c(blues, reds, yellows)
     names(pal) <- c(simNames, refNames, supNames)
     # Reorder levels
@@ -74,16 +69,17 @@ plotResultsSpeciesRank <- function(x, highlight = c("ResultType", "Site", "Simul
   if(highlight == "Simulation"){
     simNames <- unique(dataPlot$Simulation)
     simNames <- simNames[!is.na(simNames)]
-    blues <- if(length(simNames) == 0) character(0) else if (length(simNames) == 1) "#1d4b61" else scales::pal_hue(h = c(195, 217), c = 100, l = 10)(length(simNames))
-    pal <- c("#BD0026", "#C37614", blues)
+    blues <- if(length(simNames) == 0) character(0) else if (length(simNames) == 1) paletteRestauraR()[["DarkBlue"]] else scales::pal_hue(h = c(195, 217), c = 100, l = 10)(length(simNames))
+    # pal <- c("#BD0026", "#C37614", blues)
+    pal <- c(paletteRestauraR()[c("Magenta", "Orange")], blues)
     names(pal) <- c("Reference", "Supplementary", simNames)
     dataPlot$Simulation <- ifelse(is.na(dataPlot$Simulation), dataPlot$ResultType, dataPlot$Simulation)
     dataPlot$Simulation <- factor(dataPlot$Simulation, levels = c(simNames, "Reference", "Supplementary"))
   }
   p <- ggplot2::ggplot() +
     ggplot2::aes(x = .data[["Rank"]], y = .data[["Abundance"]], col = .data[[highlight]]) +
-    suppressWarnings(ggplot2::geom_point(data = dataPlot, size = 1.2, mapping = ggplot2::aes(customdata = .data[["Species"]]))) +
-    suppressWarnings(ggplot2::geom_line(data = dataPlot, mapping = ggplot2::aes(group = .data[["lineGroup"]]), linewidth	= 0.4)) +
+    suppressWarnings(ggplot2::geom_point(data = dataPlot, size = 1.6, mapping = ggplot2::aes(customdata = .data[["Species"]]))) +
+    suppressWarnings(ggplot2::geom_line(data = dataPlot, mapping = ggplot2::aes(group = .data[["lineGroup"]]), linewidth	= 0.6)) +
     ggplot2::scale_color_manual(values = pal) +
     ggplot2::labs(colour = "Legend") +
     themeRestauraR(baseSize = 15)
