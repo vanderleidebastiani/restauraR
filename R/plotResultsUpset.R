@@ -31,20 +31,24 @@ plotResultsUpset <- function(x, showReference = FALSE, ...){
                              keep_empty_groups = TRUE,
                              name = "Groups",
                              base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = paletteRestauraR()[["DarkBlue"]]) +
-                                                       ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"),
-                                                                      panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank())+
-                                                       themeRestauraR(baseSize = 15)),
+                                                       themeRestauraR(baseSize = 15) +
+                                                       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), 
+                                                                      panel.grid.minor = ggplot2::element_blank(),
+                                                                      axis.text.x = ggplot2::element_blank())),
                              set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = paletteRestauraR()[["DarkBlue"]])) +
-                               ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"),
-                                              panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank()) +
-                               themeRestauraR(baseSize = 15),
+                               themeRestauraR(baseSize = 15) +
+                               ggplot2::theme(panel.grid.major = ggplot2::element_blank(), 
+                                              panel.grid.minor = ggplot2::element_blank(),
+                                              axis.text.y = ggplot2::element_blank()),
                              sort_intersections_by = "degree",
+                             matrix = ComplexUpset::intersection_matrix(geom = ggplot2::geom_point(size = 5)),
+                             stripes = ComplexUpset::upset_stripes(colors = paletteRestauraR()[["White"]]),
                              width_ratio = 0.2,
-                             height_ratio = 0.8,
-                             ...) +
-      ggplot2::theme(axis.title = ggplot2::element_text(size = 15*0.9, face = "bold"),
-                     panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank()) +
-      themeRestauraR(baseSize = 15)
+                             height_ratio = 0.8) +
+      themeRestauraR(baseSize = 15) +
+      ggplot2::theme(panel.grid.major = ggplot2::element_blank(), 
+                     panel.grid.minor = ggplot2::element_blank(),
+                     axis.text.x = ggplot2::element_blank())
   } else{
     p <- ggplot2::ggplot() +
       themeRestauraR(baseSize = 15)
