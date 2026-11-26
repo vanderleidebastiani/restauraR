@@ -13,6 +13,7 @@ checkRestauraRData(
   supplementary = NULL,
   sppDist = NULL,
   cooccur = NULL,
+  restRemove = NULL,
   asList = TRUE
 )
 }
@@ -30,6 +31,8 @@ checkRestauraRData(
 \item{sppDist}{Pairwise distance matrix between species (e.g., functional or phylogenetic distances).}
 
 \item{cooccur}{A matrix with co-occurrence probabilities between species.}
+
+\item{restRemove}{Matrix with species proportion to remove in restoration sites.}
 
 \item{asList}{A logical argument to specify if return the results in as list format or trigger errors/warnings directly.}
 }

@@ -7,6 +7,7 @@
 #' @param supplementary Community matrix with species composition in the supplementary sites.
 #' @param sppDist Pairwise distance matrix between species (e.g., functional or phylogenetic distances).
 #' @param cooccur A matrix with co-occurrence probabilities between species.
+#' @param restRemove Matrix with species proportion to remove in restoration sites.
 #' @param asList A logical argument to specify if return the results in as list format or trigger errors/warnings directly.
 #' @returns A list with the elements when `asList = TRUE`:
 #' \item{checkStatus}{The global validation status: "success", "warning", or "error".}
@@ -22,6 +23,7 @@ checkRestauraRData <- function(traits = NULL,
                                supplementary = NULL,
                                sppDist = NULL,
                                cooccur = NULL,
+                               restRemove = NULL,
                                asList = TRUE)
 {
   RES <- list()
@@ -232,6 +234,24 @@ checkRestauraRData <- function(traits = NULL,
   } else{
     sppCooc <- NULL
   }
+  if(!is.null(restRemove)){
+    if(asList){
+      checkMessage <- c(checkMessage,  fCheckBasic(restRemove, objName = "restRemove"))
+      checkWarning <- c(checkWarning, fCheckNA(restRemove, objName = "restRemove"))
+    } else{
+      fCheckBasic(restRemove, objName = "restRemove", asList = FALSE)
+      fCheckNA(restRemove, objName = "restRemove", asList = FALSE)
+    }
+    varType <- sapply(restRemove, vectorClass)
+    if (any(varType == "character") | any(varType == "factor")) {
+      if(asList){
+        checkMessage <- c(checkMessage, "Error: The restRemove data must contain only numeric or binary variables")  
+      } else{
+        stop("The restRemove data must contain only numeric or binary variables", call. = FALSE)
+      }
+    }
+    sppComp <- c(sppComp, colnames(restRemove))
+  }
   if(!is.null(traits)){
     sppComp <- unique(sppComp)
     matchNames <- match(sppComp, sppTraits)
@@ -280,6 +300,51 @@ checkRestauraRData <- function(traits = NULL,
           checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSppCooc, " species are missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "))
         } else{
           stop(paste0("The following ", nDiffSppCooc, " species are missing from the co-occurrence matrix: ", paste0(diffSppCooc, collapse = "; "), collapse = " "), call. = FALSE)
+        }
+      }
+    }
+  }
+  # Check if restComp and restRemove are compatible
+  if(!is.null(restRemove)){
+    if(is.null(restComp)){
+      if(asList){
+        checkMessage <- c(checkMessage, "Error: When the argument restRemove is not null, the argument restComp must also be non-null")  
+      } else{
+        stop("When the argument restRemove is not null, the argument restComp must also be non-null", call. = FALSE) 
+      }
+    } else{
+      sppRestComp <- colnames(restComp)
+      sppRestRemove <- colnames(restRemove)
+      siteRestComp <- rownames(restComp)
+      siteRestRemove <- rownames(restRemove)
+      matchSppNames <- match(sppRestRemove, sppRestComp)
+      if (sum(is.na(matchSppNames)) > 0) {
+        # List difference species
+        diffSpp <- setdiff(sppRestRemove, sppRestComp)
+        nDiffSpp <- length(diffSpp)
+        # Return only 10 species names
+        if(nDiffSpp>10){
+          diffSpp <- c(diffSpp[1:5], "...", diffSpp[(nDiffSpp-4):nDiffSpp])
+        }
+        if(asList){
+          checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSpp, " species of restRemove are missing from the restComp data: ", paste0(diffSpp, collapse = "; "), collapse = " "))  
+        } else{
+          stop(paste0("The following ", nDiffSpp, " species of restRemove are missing from the restComp data: ", paste0(diffSpp, collapse = "; "), collapse = " "), call. = FALSE)
+        }
+      }
+      matchSiteNames <- match(siteRestRemove, siteRestComp)
+      if (sum(is.na(matchSiteNames)) > 0) {
+        # List difference sites
+        diffSite <- setdiff(siteRestRemove, siteRestComp)
+        nDiffSite <- length(diffSite)
+        # Return only 10 species names
+        if(nDiffSite>10){
+          diffSite <- c(diffSite[1:5], "...", diffSite[(nDiffSite-4):nDiffSite])
+        }
+        if(asList){
+          checkMessage <- c(checkMessage, paste0("Error: The following ", nDiffSite, " sites of restRemove data are missing from the restComp data: ", paste0(diffSite, collapse = "; "), collapse = " "))  
+        } else{
+          stop(paste0("The following ", nDiffSite, " sites of restRemove data are missing from the restComp data: ", paste0(diffSite, collapse = "; "), collapse = " "), call. = FALSE)
         }
       }
     }
