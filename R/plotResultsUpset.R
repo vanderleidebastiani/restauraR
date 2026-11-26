@@ -3,24 +3,39 @@
 #' @encoding UTF-8
 #' @keywords MainFunction
 #' @export
-plotResultsUpset <- function(x, showReference = FALSE, ...){
+plotResultsUpset <- function(x, typeMultifunctionality = c("simulation", "reference", "supplementary", "simulationPlusReference")){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
   }
-  if(inherits(x, "simRest")){
-    resMulti <- x$simulation$multifunctionality
-  } else{
-    resMulti <- x$selection$multifunctionality
+  typeMULTI <- c("simulation", "reference", "supplementary", "simulationPlusReference")
+  typeMultifunctionality <- match.arg(typeMultifunctionality, typeMULTI)
+  if(typeMultifunctionality %in% c("simulation", "simulationPlusReference")){
+    pal <- paletteRestauraR()[["DarkBlue"]]
+    if(inherits(x, "simRest")){
+      resMulti <- x$simulation$multifunctionality[, -1, drop =  FALSE]
+    } else{
+      resMulti <- x$selection$multifunctionality[, -1, drop =  FALSE]
+    }
+    if(typeMultifunctionality == "simulationPlusReference"){
+      resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
+    }
+  }
+  if(typeMultifunctionality == "reference"){
+    pal <- paletteRestauraR()[["Magenta"]]
+    resMulti <- x$reference$multifunctionality[, -1, drop =  FALSE]
+  }
+  if(typeMultifunctionality == "supplementary"){
+    pal <- paletteRestauraR()[["Orange"]]
+    resMulti <- x$supplementary$multifunctionality[, -1, drop =  FALSE]
   }
   if(is.null(resMulti)){
     stop("The x argument must contain multifunctionality results")
   }
-  # Remove first name (SIM)
-  groupsMulti <- colnames(resMulti)[-1]
-  resMulti <- resMulti[, -1, drop =  FALSE]
-  if(showReference && !is.null(x$reference)){
-    resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
+  # First column previously removed (Simulation or site)
+  groupsMulti <- colnames(resMulti)
+  if(typeMultifunctionality == "simulationPlusReference" && !is.null(resMultiRef)){
+    # resMultiRef <- x$reference$multifunctionality[, -1, drop =  FALSE]
     template0 <- makeMatrixTemplate(resMulti, resMultiRef)
     resMulti <- rearrangementMatrix(template = template0, resMulti, fillNA = FALSE)
     resMultiRef <- rearrangementMatrix(template = template0, resMultiRef, fillNA = FALSE)
@@ -30,19 +45,19 @@ plotResultsUpset <- function(x, showReference = FALSE, ...){
     p <- ComplexUpset::upset(resMulti, intersect = groupsMulti,
                              keep_empty_groups = TRUE,
                              name = "Groups",
-                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = paletteRestauraR()[["DarkBlue"]]) +
+                             base_annotations = list("Intersection size" = ComplexUpset::intersection_size(counts = FALSE, fill = pal) +
                                                        themeRestauraR(baseSize = 15) +
                                                        ggplot2::theme(panel.grid.major = ggplot2::element_blank(), 
                                                                       panel.grid.minor = ggplot2::element_blank(),
                                                                       axis.text.x = ggplot2::element_blank())),
-                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = paletteRestauraR()[["DarkBlue"]])) +
+                             set_sizes = ComplexUpset::upset_set_size(geom = ggplot2::geom_bar(width = 0.6, fill = pal)) +
                                themeRestauraR(baseSize = 15) +
                                ggplot2::theme(panel.grid.major = ggplot2::element_blank(), 
                                               panel.grid.minor = ggplot2::element_blank(),
                                               axis.text.y = ggplot2::element_blank()),
                              sort_intersections_by = "degree",
                              matrix = ComplexUpset::intersection_matrix(geom = ggplot2::geom_point(size = 5)),
-                             stripes = ComplexUpset::upset_stripes(colors = paletteRestauraR()[["White"]]),
+                             stripes = ComplexUpset::upset_stripes(colors = c(paletteRestauraR()[["White"]], paletteRestauraR()[["White"]])),
                              width_ratio = 0.2,
                              height_ratio = 0.8) +
       themeRestauraR(baseSize = 15) +

@@ -59,8 +59,9 @@
 #' \strong{"UpsetPlot"}
 #' 
 #' Draws an UpSet plot of the multifunctionality results, showing the number of simulations that simultaneously achieve each combination of 
-#' functions. Intersection sizes are shown as bars above the matrix, and set sizes are shown on the left. When the showReference argument is TRUE, the reference 
-#' multifunctionality results are appended to the matrix.
+#' functions. Intersection sizes are shown as bars above the matrix, and set sizes are shown on the left. The typeMultifunctionality argument 
+#' specify if "simulation", "reference" or "supplementary" multifunctionality results are shown. When the typeMultifunctionality argument is 
+#' "simulationPlusReference", the simulations and reference multifunctionality results are appended to the matrix.
 #' 
 #' @encoding UTF-8
 #' @importFrom ggplot2 ggplot aes geom_point geom_bar geom_histogram geom_line geom_rug geom_polygon geom_linerange geom_vline geom_hline theme element_text scale_color_manual scale_fill_manual labs
@@ -80,7 +81,7 @@
 #' @param showMultisite Logical indicating whether to plot results from the multisite analysis; otherwise, the plot shows the basic results (default showMultisite = FALSE).
 #' @param testsFilter Character vector of logical tests used to highlight selected simulations in scatter plot. See details.
 #' @param showAvailability Logical indicating whether to plot highlight species availability in each simulation (default showAvailability = FALSE).
-#' @param ... Arguments passed to the upset function of the package ComplexUpset.
+#' @param typeMultifunctionality = c("simulation", "reference", "supplementary", "simulationPlusReference") description
 #' @returns A ggplot plot object (or an object from the ComplexUpset package for UpsetPlot) that can be further customised using standard ggplot2 syntax.
 #' @author See \code{\link{restauraR-package}}.
 #' @seealso \code{\link{simulateCommunities}}, \code{\link{computeParameters}}, 
@@ -205,7 +206,7 @@
 #' #                               type = "ScatterPlot", 
 #' #                               parameters = c("simpson", "rao")))
 #' @export
-viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site", "Simulation"), traits = NULL, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL, showAvailability = FALSE){
+viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site", "Simulation"), traits = NULL, showReference = TRUE, showSupplementary = FALSE, showMultisite = FALSE, testsFilter = NULL, showAvailability = FALSE, typeMultifunctionality = c("simulation", "reference", "supplementary", "simulationPlusReference")){
   # Check object class
   if(!c(inherits(x, "simRest") || inherits(x, "simRestSelect"))){
     stop("The x argument must be of class simRest or simRestSelect")
@@ -221,7 +222,7 @@ viewResults2 <- function(x, type, parameters, highlight = c("ResultType", "Site"
     "SpeciesRank" = plotResultsSpeciesRank(x = x, highlight = highlight, showReference = showReference, showSupplementary = showSupplementary),
     "DumbbellPlot" = plotResultsDumbbell(x = x, parameters = parameters, showReference = showReference),
     "ConvexHull" = plotResultsConvexHull(x = x, parameters = parameters, traits = traits, showReference = showReference, showSupplementary = showSupplementary),
-    "UpsetPlot" = plotResultsUpset(x = x, showReference = showReference)
+    "UpsetPlot" = plotResultsUpset(x = x, typeMultifunctionality = typeMultifunctionality)
   )
   if(is.null(p)){
     p <- ggplot2::ggplot() +

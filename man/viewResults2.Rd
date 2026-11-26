@@ -26,7 +26,9 @@ viewResults2(
   showSupplementary = FALSE,
   showMultisite = FALSE,
   testsFilter = NULL,
-  showAvailability = FALSE
+  showAvailability = FALSE,
+  typeMultifunctionality = c("simulation", "reference", "supplementary",
+    "simulationPlusReference")
 )
 
 plotResultsConvexHull(
@@ -79,7 +81,11 @@ plotResultsSpeciesRank(
   showSupplementary = FALSE
 )
 
-plotResultsUpset(x, showReference = FALSE, ...)
+plotResultsUpset(
+  x,
+  typeMultifunctionality = c("simulation", "reference", "supplementary",
+    "simulationPlusReference")
+)
 }
 \arguments{
 \item{x}{An object of class "simRest" or "simRestSelect" to visualise results.}
@@ -102,7 +108,7 @@ plotResultsUpset(x, showReference = FALSE, ...)
 
 \item{showAvailability}{Logical indicating whether to plot highlight species availability in each simulation (default showAvailability = FALSE).}
 
-\item{...}{Arguments passed to the upset function of the package ComplexUpset.}
+\item{typeMultifunctionality}{= c("simulation", "reference", "supplementary", "simulationPlusReference") description}
 }
 \value{
 A ggplot plot object (or an object from the ComplexUpset package for UpsetPlot) that can be further customised using standard ggplot2 syntax.
@@ -169,8 +175,9 @@ names, one for each axis, must be supplied in the parameters argument.
 \strong{"UpsetPlot"}
 
 Draws an UpSet plot of the multifunctionality results, showing the number of simulations that simultaneously achieve each combination of 
-functions. Intersection sizes are shown as bars above the matrix, and set sizes are shown on the left. When the showReference argument is TRUE, the reference 
-multifunctionality results are appended to the matrix.
+functions. Intersection sizes are shown as bars above the matrix, and set sizes are shown on the left. The typeMultifunctionality argument 
+specify if "simulation", "reference" or "supplementary" multifunctionality results are shown. When the typeMultifunctionality argument is 
+"simulationPlusReference", the simulations and reference multifunctionality results are appended to the matrix.
 }
 \examples{
 data("cerrado")
