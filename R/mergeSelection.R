@@ -33,6 +33,15 @@ mergeSelection <- function(...) {
   rownames(baseline) <- baseRowNames
   baseline[is.na(baseline)] <- 0
   RES$selection$baseline <- baseline
+  # Composition to remove
+  baseRemove <- lapply(ARGS, function(x) x$selection$remove)
+  baseRemove <- lapply(baseRemove, data.table::as.data.table, keep.rownames = TRUE)
+  baseRemove <- data.table::rbindlist(baseRemove, use.names = TRUE, fill = TRUE)
+  baseRemoveRowNames <- baseRemove$rn
+  baseRemove <- as.matrix(baseRemove[, -1, drop = FALSE])
+  rownames(baseRemove) <- baseRemoveRowNames
+  baseRemove[is.na(baseRemove)] <- 0
+  RES$selection$remove <- baseRemove
   # Results
   results <- lapply(ARGS, function(x) x$selection$results)
   results <- lapply(results, data.table::as.data.table, keep.rownames = FALSE)

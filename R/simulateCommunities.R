@@ -124,6 +124,7 @@
 #' @param prefix Character prefix for naming simulation outputs.
 #' @param method Method to obtain the samples, "proportions" or "individuals" (Default method = "proportions").
 #' @param cooccur Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns.
+#' @param restRemove Matrix with species proportion to remove in restoration sites.
 #' @param minAbund Minimal abundance or proportion threshold to maintain for each species in simulated communities. 
 #' @param group Character vector specifying the trait name that indicates the group to which the species belongs.
 #' @param probGroupRich Numeric vector of probabilities to draw species richness in each group.
@@ -137,6 +138,7 @@
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
 #' \item{simulation$group}{A data frame with complementary information for restoration sites.}
 #' \item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+#' \item{simulation$remove}{A matrix with with species removed for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
 #' \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 #' @author See \code{\link{restauraR-package}}.
@@ -174,7 +176,7 @@
 #' allScenarios <- mergeSimulations(scenarioA, scenarioB)
 #' allScenarios
 #' @export
-simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, maxDiver = NULL, constCWM = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, minAbund = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL, progressbar = FALSE){
+simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava = NULL, und = NULL, it = 1000, rich, maxDiver = NULL, constCWM = NULL, prob = NULL, phi = 1, nInd = NULL, cvAbund = 1, prefix = NULL, method = "proportions", cooccur = NULL, restRemove = NULL, minAbund = NULL, group = NULL, probGroupRich = NULL, probGroupAbund = NULL, progressbar = FALSE){
   RES <- list(call = match.call())
   # Check method
   METHOD <- c("proportions", "individuals")
@@ -210,6 +212,7 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
                     supplementary = NULL,
                     sppDist = maxDiver,
                     cooccur = cooccur,
+                    restRemove = restRemove,
                     asList = FALSE)
   # Traits names to check the arguments
   traitsNames <- colnames(traits)
@@ -289,6 +292,30 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     rownames(restComp) <- rownames(restGroup)
     colnames(restComp) <- rownames(traits)
   }
+  if(!is.null(restRemove)){
+    # Set NA to zero
+    restRemove[is.na(restRemove)] <- 0
+    # Check range values
+    if(min(restRemove)<0 || max(restRemove)>1){
+      stop("The matrix of the argument restRemove must be proportion value to remove (between 0 and 1)")
+    }
+    # restComp is previously checked
+    # Columns rearrangement
+    restRemove <- rearrangementMatrix(template = restComp, restRemove, fillNA = TRUE)
+    # Rows rearrangement
+    restRemove <- t(rearrangementMatrix(template = t(restComp), t(restRemove), fillNA = TRUE))
+    # Calculate proportions to remove
+    restRemove <- restComp*restRemove
+    if(methodTest == 2){
+      restRemove <- round(restRemove)
+    }
+    # Effectively remove
+    restComp <- restComp-restRemove
+    # If "proportions" method (re)calculate species proportions
+    if(methodTest == 1){
+      restComp <- sweep(restComp, MARGIN = 1, rowSums(restComp), FUN = "/")
+    }
+  }
   # Get the number of total simulations
   nTotal <- it
   nCurrent <- 0
@@ -336,6 +363,9 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     # Baseline composition (all zero)
     restCompBaseline <- propMatrix
     restCompBaseline[] <- 0
+    # Remove composition (all zero)
+    restCompRemove <- propMatrix
+    restCompRemove[] <- 0
   } else {
     # Include species composition in restoration sites
     if(methodTest == 1){
@@ -428,6 +458,13 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
     propMatrixTab <- do.call(rbind, propMatrixList)
     # Baseline composition
     restCompBaseline <- restComp[rep(seq_len(nrow(restComp)), each = length(rowNameProMatrix)),, drop = FALSE]
+    # Remove composition
+    if(!is.null(restRemove)){
+      restCompRemove <- restRemove[rep(seq_len(nrow(restRemove)), each = length(rowNameProMatrix)),, drop = FALSE]
+    } else{
+      restCompRemove <- restCompBaseline
+      restCompRemove[] <- 0
+    }
     # If "proportions" method (re)calculate species proportions
     if(methodTest == 1){
       propMatrixTab <- sweep(propMatrixTab, MARGIN = 1, rowSums(propMatrixTab), FUN = "/")
@@ -450,10 +487,12 @@ simulateCommunities <- function(traits, restComp = NULL, restGroup = NULL, ava =
   rownames(propMatrixTab) <- paste0(prefix, rownames(propMatrixTab))
   rownames(restGroup) <- NULL
   rownames(restCompBaseline) <- rownames(propMatrixTab)
+  rownames(restCompRemove) <- rownames(propMatrixTab)
   # Organize the results
   RES$simulation$composition <- propMatrixTab
   RES$simulation$group <- restGroup
   RES$simulation$baseline <- restCompBaseline
+  RES$simulation$remove <- restCompRemove
   # Close text progress bar 
   if(progressbar){
     close(progBar)

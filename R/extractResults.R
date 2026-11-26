@@ -2,7 +2,7 @@
 #' @description Helper function to easily extract specific components from simulation results. Most extraction methods use standard R list indexing. The option "simUnavailableSpecies" (type argument) identifies unavailable species present in selected communities, that is, the species that are necessary to achieve the thresholds but are not available on the market.
 #' @encoding UTF-8
 #' @param x An object of class "simRest" or "simRestSelect" to extract the results.
-#' @param type An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.
+#' @param type An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simSubtractions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.
 #' @param dbFormat Logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance". 
 #' @param traits Data frame or matrix with species traits. Traits as columns and species as rows.
 #' @param ava Character vector specifying the trait name that indicates the availability of species in traits data (binary: 1 = available, 0 = unavailable).
@@ -11,6 +11,7 @@
 #' \item{simGroup}{Data frame with complementary information for simulated sites.}
 #' \item{simBaseline}{Matrix with baseline species composition for simulated communities.}
 #' \item{simAdditions}{Matrix with species additions for simulated communities.}
+#' \item{simSubtractions}{Matrix with species subtractions (to remove) for simulated communities.}
 #' \item{simResults}{Data frame with calculated parameters in each simulated community.}
 #' \item{simMultifunctionality}{Data frame with binary multifunctionality tests.}
 #' \item{simMultisiteResults}{Data frame with calculated parameters in each communities combinations.}
@@ -43,6 +44,7 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
                   "simGroup", 
                   "simBaseline", 
                   "simAdditions",
+                  "simSubtractions",
                   "simResults", 
                   "simMultifunctionality",
                   "simMultisiteResults",
@@ -115,6 +117,15 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
              }
            }
          },
+         simSubtractions = {
+           if(inherits(x, "simRest")){
+             # Extract species to subtractions
+             res <- x$simulation$remove
+           } else{
+             # Extract species to subtractions
+             res <- x$selection$remove
+           }
+         },
          simResults = {
            if(inherits(x, "simRest")){
              res <- x$simulation$results
@@ -179,7 +190,7 @@ extractResults <- function(x, type = "simResults", dbFormat = FALSE, traits = NU
            res <- x$supplementary$multifunctionality
          }
   )
-  if(type %in% c("simComposition", "simBaseline", "simAdditions", "refComposition", "supComposition") && dbFormat && !is.null(res)){
+  if(type %in% c("simComposition", "simBaseline", "simAdditions", "simSubtractions", "refComposition", "supComposition") && dbFormat && !is.null(res)){
     res <- data.frame(expand.grid(rownames(res), colnames(res)), as.vector(res))
     res <- res[(res[, 3] > 0) & !is.na(res[, 3]), , drop = FALSE]
     res <- res[sort.list(res[, 1]), , drop = FALSE]

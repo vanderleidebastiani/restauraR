@@ -39,6 +39,7 @@ A list (class "simRestSelect") with the elements:
 \item{selection$composition}{A matrix with species composition for selected communities.}
 \item{selection$group}{A data frame with complementary information for selected sites.}
 \item{selection$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+\item{selection$remove}{A matrix with with species removed for simulated communities (contains all zeros when restComp is not provided.)}
 \item{selection$results}{A data frame with calculated parameters in each selected community.}
 \item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
 \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}

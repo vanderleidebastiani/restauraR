@@ -33,6 +33,15 @@ mergeSimulations <- function(...) {
   rownames(baseline) <- baseRowNames
   baseline[is.na(baseline)] <- 0
   RES$simulation$baseline <- baseline
+  # Composition to remove
+  baseRemove <- lapply(ARGS, function(x) x$simulation$remove)
+  baseRemove <- lapply(baseRemove, data.table::as.data.table, keep.rownames = TRUE)
+  baseRemove <- data.table::rbindlist(baseRemove, use.names = TRUE, fill = TRUE)
+  baseRemoveRowNames <- baseRemove$rn
+  baseRemove <- as.matrix(baseRemove[, -1, drop = FALSE])
+  rownames(baseRemove) <- baseRemoveRowNames
+  baseRemove[is.na(baseRemove)] <- 0
+  RES$simulation$remove <- baseRemove
   # Results
   results <- lapply(ARGS, function(x) x$simulation$results)
   checkNull <- sapply(results, function(x) is.null(x))

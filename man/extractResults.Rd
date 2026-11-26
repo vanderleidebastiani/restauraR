@@ -16,7 +16,7 @@ extractResults(
 \arguments{
 \item{x}{An object of class "simRest" or "simRestSelect" to extract the results.}
 
-\item{type}{An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.}
+\item{type}{An option to extract results, partial match to "simComposition", "simGroup", "simBaseline", "simAdditions", "simSubtractions", "simResults", "simMultifunctionality", "simMultisiteResults", "simMultisiteCombinations", "simUnavailableSpecies", "refComposition", "refResults", "refMultifunctionality", "supComposition", "supResults", "supMultifunctionality". See value below.}
 
 \item{dbFormat}{Logical argument to specify if return species composition in database format, a data.frame with three columns: "Site", "Species", "Abundance".}
 
@@ -30,6 +30,7 @@ A data.frame or matrix according to the chosen method:
 \item{simGroup}{Data frame with complementary information for simulated sites.}
 \item{simBaseline}{Matrix with baseline species composition for simulated communities.}
 \item{simAdditions}{Matrix with species additions for simulated communities.}
+\item{simSubtractions}{Matrix with species subtractions (to remove) for simulated communities.}
 \item{simResults}{Data frame with calculated parameters in each simulated community.}
 \item{simMultifunctionality}{Data frame with binary multifunctionality tests.}
 \item{simMultisiteResults}{Data frame with calculated parameters in each communities combinations.}

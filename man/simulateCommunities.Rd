@@ -27,6 +27,7 @@ simulateCommunities(
   prefix = NULL,
   method = "proportions",
   cooccur = NULL,
+  restRemove = NULL,
   minAbund = NULL,
   group = NULL,
   probGroupRich = NULL,
@@ -75,6 +76,8 @@ mergeSimulations(...)
 
 \item{cooccur}{Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns.}
 
+\item{restRemove}{Matrix with species proportion to remove in restoration sites.}
+
 \item{minAbund}{Minimal abundance or proportion threshold to maintain for each species in simulated communities.}
 
 \item{group}{Character vector specifying the trait name that indicates the group to which the species belongs.}
@@ -97,6 +100,7 @@ A list (class "simRest") with the elements:
 \item{simulation$composition}{A matrix with species composition for simulated communities.}
 \item{simulation$group}{A data frame with complementary information for restoration sites.}
 \item{simulation$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+\item{simulation$remove}{A matrix with with species removed for simulated communities (contains all zeros when restComp is not provided.)}
 \item{reference$composition}{A matrix with species composition for reference sites}
 \item{supplementary$composition}{A matrix with species composition for supplementary sites.}
 }

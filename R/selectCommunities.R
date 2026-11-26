@@ -16,6 +16,7 @@
 #' \item{selection$composition}{A matrix with species composition for selected communities.}
 #' \item{selection$group}{A data frame with complementary information for selected sites.}
 #' \item{selection$baseline}{A matrix with with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+#' \item{selection$remove}{A matrix with with species removed for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{selection$results}{A data frame with calculated parameters in each selected community.}
 #' \item{selection$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{selection$thresholds}{A vector with the count of selected communities at each threshold. When simulations are merged, it is not shown.}
@@ -83,6 +84,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     xGroup <- x$simulation$group
     xMulti <- x$simulation$multifunctionality
     xBase <- x$simulation$baseline
+    xRemove <- x$simulation$remove
     # Multisite
     xParMultisite <- NULL
     xCombMultisite <- NULL
@@ -94,6 +96,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     xGroup <- x$selection$group
     xMulti <- x$selection$multifunctionality
     xBase <- x$selection$baseline
+    xRemove <- x$selection$remove
     # Multi-site
     xParMultisite <- x$selection$multisite$results
     xCombMultisite <- x$selection$multisite$combinations
@@ -118,6 +121,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     selCom <- xComp[pos, , drop = FALSE]
     selGroup <- xGroup[pos, , drop = FALSE]
     selBase <- xBase[pos, , drop = FALSE]
+    selRemove <- xRemove[pos, , drop = FALSE]
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti[pos, , drop = FALSE]
@@ -128,6 +132,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     selCom <- xComp
     selGroup <- xGroup
     selBase <- xBase
+    selRemove <- xRemove
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- xMulti
@@ -228,6 +233,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     selCom <- selCom[selectedPos, , drop = FALSE]
     selGroup <- selGroup[selectedPos, , drop = FALSE]
     selBase <- selBase[selectedPos, , drop = FALSE]
+    selRemove <- selRemove[selectedPos, , drop = FALSE]
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- selMulti[selectedPos, , drop = FALSE]
@@ -308,6 +314,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
     selCom <- selCom[selCombsMultisite, , drop = FALSE]
     selGroup <- selGroup[selCombsMultisite, , drop = FALSE]
     selBase <- selBase[selCombsMultisite, , drop = FALSE]
+    selRemove <- selRemove[selCombsMultisite, , drop = FALSE]
     # Multifunctionality
     if(!is.null(xMulti)){
       selMulti <- selMulti[selCombsMultisite, , drop = FALSE]
@@ -319,6 +326,7 @@ selectCommunities <- function(x, testsFilter = NULL, testsPriority = NULL, siteG
   RES$selection$composition <- selCom
   RES$selection$group <- selGroup
   RES$selection$baseline <- selBase
+  RES$selection$remove <- selRemove
   RES$selection$results <- selPar
   # Multifunctionality
   if(!is.null(xMulti)){

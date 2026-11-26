@@ -45,6 +45,7 @@
 #' \item{simulation$composition}{A matrix with species composition for simulated communities.}
 #' \item{simulation$group}{A data frame with complementary information for restoration sites.}
 #' \item{simulation$baseline}{A matrix with baseline species composition for simulated communities (contains all zeros when restComp is not provided.)}
+#' \item{simulation$remove}{A matrix with with species removed for simulated communities (contains all zeros when restComp is not provided.)}
 #' \item{simulation$results}{A data frame with calculated parameters in each simulated community.}
 #' \item{simulation$multifunctionality}{A data frame with binary multifunctionality tests.}
 #' \item{reference$composition}{A matrix with species composition for reference sites}
